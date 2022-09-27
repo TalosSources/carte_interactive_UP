@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'smartakartan4.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backend.postgis',  # <-
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',  # <-
         'HOST': '127.0.0.1',  # <- TODO
         'PORT': 5432,
         'NAME': 'smarta_kartan_db',
