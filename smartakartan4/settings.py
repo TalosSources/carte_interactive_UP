@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bpxf1_ptsh&l9ee#veu9plmu4h+dlt%ddd&i)95ewv)aj7!(bv'
+SECRET_KEY = 'django-insecure-bpxf1_ptsh&l9ee#veu9plmu4h+dlt%ddd&i)95ewv)aj7!(bv'  # <- TODO
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'main_page.apps.MainPageConfig',
     'rest_framework_gis',  # <-
     'rest_framework',  # <-
     'django.contrib.gis',  # GeoDjango <-
@@ -76,7 +77,7 @@ WSGI_APPLICATION = 'smartakartan4.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',  # <-
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',  # <- postgis is a special version of postgresql
         'HOST': '127.0.0.1',  # <- TODO
         'PORT': 5432,
         'NAME': 'smarta_kartan_db',

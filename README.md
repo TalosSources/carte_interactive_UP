@@ -52,6 +52,7 @@ The PostgreSQL database runs as a service in the background (see also `DATABASES
 * Listing all users: `\du`
 * Changing the password: `\password [user name]` --- this must be done when logged in as the admin user `postgres`, even if changing the password for another user)
 * Connecting to a database: `\c [db name]` or `\connect [db name]`
+* Listing all tables in a database: `\dt`
 * Executing a database command: `[db command];` --- Please note the `;` at the end
 * Exit to shell: `ctrl+d`, `\q` or `exit`
 
@@ -93,3 +94,41 @@ Django version 4.1.1, using settings 'smartakartan4.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
+
+
+`python manage.py migrate` <----
+
+
+## Appendix: Creating an admin user
+
+If you need to access the admin interface (for example at `http://127.0.0.1:8000/admin/`) you can use this command:
+`python manage.py createsuperuser`
+
+
+## Appendix: Updating (migrating) the database to match the Django model
+
+If we haven't done the migration we will get an error message when trying to access the relevant part of the admin interface
+
+1. Update `model.py`
+2. `python manage.py makemigrations`
+3. `python manage.py migrate`
+
+This will update the database.  We can see the results like this:
+```
+arbetstraning@sunyata-HP-Laptop:~$ sudo -u postgres psql
+[...]
+postgres=# \c smarta_kartan_db 
+[...]
+smarta_kartan_db=# \dt
+                   List of relations
+ Schema |            Name            | Type  |  Owner   
+--------+----------------------------+-------+----------
+ public | [table_name]               | table | postgres
+[...]
+ public | [table_name]               | table | postgres
+```
+
+## Appendix: Starting the development server <-
+
+TODO
+
