@@ -21,7 +21,7 @@ The website itself is available here: https://www.smartakartan.se/
 
 ## Setup on Ubuntu/Debian
 
-This has been tested on Ubuntu 22.04
+### Installation of dependencies
 
 OS:
 * `sudo apt install gdal-bin`
@@ -33,16 +33,53 @@ PIP: `pip3 install -r requirements.txt` (will install the various dependencies f
 
 (`INSTALLED_APPS` in [`settings.py`](smartakartan4/settings.py) uses some of the above)
 
-## Getting started
+### Setup of PostgreSQL database
 
-Useful tutorials:
-* https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/
+In a terminal:
+1. Enter PostgreSQL shell: `sudo -u postgres psql`
+1. Create db: `CREATE DATABASE smarta_kartan_db;`
+1. Connect to db: `\connect smarta_kartan_db`
+1. Exit to OS shell: `exit`
+1. Verify that the db is running in the OS: `ss -nlt|grep 5432`
+  * You should see a line like this: `LISTEN 0  244  127.0.0.1:5432  0.0.0.0:*`
+  * You can compare these values to the values found in the `DATABASES` dict inside `settings.py`
+
+### Starting the server
+
+1. Update `python3 manage.py migrate`
+1. Start the server: `python3 manage.py runserver 8000`
+
+### Trying out the website
+
+1. Create an admin user: `python3 manage.py createsuperuser`
+1. Try the admin interface by going to http://127.0.0.1:8000/admin/
+1. Try the normal/standard/user website by going to http://127.0.0.1:8000/
+
+
+## Documentation
+
+Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/docs/-/blob/main/smarta-kartan-req-spec.md)
+
+
+| Tech       | Tutorials    |Reference| Books        |Notes |
+|------------|--------------|---|--------------|---|
+| Javascript |              |   | [jsdg][b_jsdg] |---|
+| Leaflet    | [1][t_llqs]  |   |              |   |
+| Python     |              |   |              |---|
+| Django     | [1][t_django] |   |              |   |
+| PostgreSQL | [1][t_ispsu] |   |              |   |
+
+[b_jsdg]: https://www.oreilly.com/library/view/javascript-the-definitive/9781491952016/
+[t_llqs]: https://leafletjs.com/examples/quick-start/
+[t_django]: https://docs.djangoproject.com/en/4.1/intro/tutorial01/
+[t_ispsu]: https://www.cherryservers.com/blog/how-to-install-and-setup-postgresql-server-on-ubuntu-20-04
+
+Overarching tutorials:
+* https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/ ***Recommended***
 * https://docs.djangoproject.com/en/4.1/ref/contrib/gis/tutorial/
-* https://leafletjs.com/examples/quick-start/
-* https://docs.djangoproject.com/en/4.1/intro/tutorial01/ (first of 7 parts)
-* https://www.cherryservers.com/blog/how-to-install-and-setup-postgresql-server-on-ubuntu-20-04
 
-## Appendix A: PostgreSQL
+
+## Appendix A: PostgreSQL guidance
 
 The PostgreSQL database runs as a service in the background (see also `DATABASES` in [`settings.py`](smartakartan4/settings.py) for connection details)
 
@@ -57,55 +94,10 @@ The PostgreSQL database runs as a service in the background (see also `DATABASES
 * Exit to shell: `ctrl+d`, `\q` or `exit`
 
 Please note:
-* the default user and the default database name are the same: `postgres`
-* Each time you 
+* The default username and the default database name are the same: `postgres`
+* Each time you _______
 
-`CREATE DATABASE smarta_kartan_db;`
-\c smarta_kartan_db
-
-```
-postgres=# \c smarta_kartan_db
-You are now connected to database "smarta_kartan_db" as user "postgres".
-smarta_kartan_db=#
-```
-
-`ss -nlt|grep 5432`
-
-```
-arbetstraning@sunyata-HP-Laptop:~$ ss -nlt|grep 5432
-LISTEN 0      244             127.0.0.1:5432       0.0.0.0:*          
-arbetstraning@sunyata-HP-Laptop:~$ 
-```
-
-Comparing these values to the values found in `settings.py`
-
-
-```
-/home/arbetstraning/PycharmProjects/smartakartan4/venv/bin/python /home/arbetstraning/PycharmProjects/smartakartan4/manage.py runserver 8000 
-Watching for file changes with StatReloader
-Performing system checks...
-
-System check identified no issues (0 silenced).
-
-You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
-Run 'python manage.py migrate' to apply them.
-September 27, 2022 - 07:23:13
-Django version 4.1.1, using settings 'smartakartan4.settings'
-Starting development server at http://127.0.0.1:8000/
-Quit the server with CONTROL-C.
-```
-
-
-`python manage.py migrate` <----
-
-
-## Appendix: Creating an admin user
-
-If you need to access the admin interface (for example at `http://127.0.0.1:8000/admin/`) you can use this command:
-`python manage.py createsuperuser`
-
-
-## Appendix: Updating (migrating) the database to match the Django model
+## Appendix B: Updating (migrating) the database to match the Django model
 
 If we haven't done the migration we will get an error message when trying to access the relevant part of the admin interface
 
@@ -127,8 +119,3 @@ smarta_kartan_db=# \dt
 [...]
  public | [table_name]               | table | postgres
 ```
-
-## Appendix: Starting the development server <-
-
-TODO
-
