@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'main_page.apps.MainPageConfig',
+    'main_page',
     'rest_framework_gis',  # <-
     'rest_framework',  # <-
     'django.contrib.gis',  # GeoDjango <-

@@ -1,13 +1,13 @@
 from django.contrib.gis import admin as gisadmin
-from .models import Address, Initiative
+from . import models
 
 
-@gisadmin.register(Address)
-class AddressAdmin(gisadmin.OSMGeoAdmin):
-    list_display = ("name", "location")
+@gisadmin.register(models.Location)
+class LocationAdmin(gisadmin.OSMGeoAdmin):
+    list_display = ("address", "coordinates")
 
 
-@gisadmin.register(Initiative)
+@gisadmin.register(models.Initiative)
 class InitiativeAdmin(gisadmin.ModelAdmin):
     pass
 

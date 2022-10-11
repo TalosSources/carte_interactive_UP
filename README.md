@@ -11,6 +11,7 @@ The website itself is available here: https://www.smartakartan.se/
 * Django
   * GeoDjango
   * DjangoAdmin
+  * Django REST framework
   * ...
 * Postgresql
   * PostGIS
@@ -37,6 +38,7 @@ PIP: `pip3 install -r requirements.txt` (will install the various dependencies f
 
 In a terminal:
 1. Enter PostgreSQL shell: `sudo -u postgres psql`
+1. Change password for the `postgres` user: `\password [user name]`
 1. Create db: `CREATE DATABASE smarta_kartan_db;`
 1. Connect to db: `\connect smarta_kartan_db`
 1. Exit to OS shell: `exit`
@@ -60,19 +62,25 @@ In a terminal:
 
 Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/docs/-/blob/main/smarta-kartan-req-spec.md)
 
+| Tech                       | Quickstart | Tutorials     | Reference   | Articles, Books | Notes |
+|----------------------------|------------|---------------|-------------|-----------------|-------|
+| Javascript                 |            | [1][t_mjs]    | [1][r_mjs]  | [jsdg][b_jsdg]  | ---   |
+| Leaflet                    |            | [1][t_llqs]   |             |                 |       |
+| Python                     |            |               |             |                 | ---   |
+| Django                     |            | [1][t_django] |             |                 |       |
+| PostgreSQL                 |            | [1][t_ispsu]  |             |                 |       |
+| DjangoRestFramework        |            | [1][t_drf]    |             |                 |       |
+| django-rest-framework-gis  |            |               | [1][r_drfg] |                 |       |
 
-| Tech       | Tutorials    |Reference| Books        |Notes |
-|------------|--------------|---|--------------|---|
-| Javascript |              |   | [jsdg][b_jsdg] |---|
-| Leaflet    | [1][t_llqs]  |   |              |   |
-| Python     |              |   |              |---|
-| Django     | [1][t_django] |   |              |   |
-| PostgreSQL | [1][t_ispsu] |   |              |   |
 
 [b_jsdg]: https://www.oreilly.com/library/view/javascript-the-definitive/9781491952016/
 [t_llqs]: https://leafletjs.com/examples/quick-start/
 [t_django]: https://docs.djangoproject.com/en/4.1/intro/tutorial01/
 [t_ispsu]: https://www.cherryservers.com/blog/how-to-install-and-setup-postgresql-server-on-ubuntu-20-04
+[t_drf]: https://www.django-rest-framework.org/tutorial/1-serialization/
+[t_mjs]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript
+[r_mjs]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
+[r_drfg]: https://github.com/openwisp/django-rest-framework-gis
 
 Overarching tutorials:
 * https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/ ***Recommended***
@@ -93,6 +101,8 @@ The PostgreSQL database runs as a service in the background (see also `DATABASES
 * Executing a database command: `[db command];` --- Please note the `;` at the end
 * Exit to shell: `ctrl+d`, `\q` or `exit`
 
+More here: https://www.geeksforgeeks.org/postgresql-psql-commands/
+
 Please note:
 * The default username and the default database name are the same: `postgres`
 * Each time you _______
@@ -109,7 +119,7 @@ This will update the database.  We can see the results like this:
 ```
 arbetstraning@sunyata-HP-Laptop:~$ sudo -u postgres psql
 [...]
-postgres=# \c smarta_kartan_db 
+postgres=# \c smarta_kartan_db
 [...]
 smarta_kartan_db=# \dt
                    List of relations
@@ -119,3 +129,61 @@ smarta_kartan_db=# \dt
 [...]
  public | [table_name]               | table | postgres
 ```
+
+## Appendix C: Useful tools
+
+* OS: Ubuntu
+* IDE: Pycharm
+* API testing client: https://httpie.io/
+
+***
+
+# django-rest-framework-gis
+
+> GeoFeatureModelSerializer is a subclass of rest_framework.ModelSerializer which will output data in a format that is GeoJSON compatible.
+
+> GeoFeatureModelSerializer requires you to define a geo_field to be serialized as the "geometry".
+
+> The primary key of the model (usually the "id" attribute) is automatically used as the id field of each GeoJSON Feature Object.
+
+---https://github.com/openwisp/django-rest-framework-gis#geofeaturemodelserializer
+
+
+# GeoJSON
+
+Official: https://geojson.org/
+For experimenting with a map: https://geojson.io/
+Wikipedia: https://en.wikipedia.org/wiki/GeoJSON (see examples and below them [geometries](https://en.wikipedia.org/wiki/GeoJSON#Geometries))
+
+# GIS (Geographic information system)
+
+> A geographic information system (GIS) is a type of database containing geographic data (that is, descriptions of
+> phenomena for which location is relevant), combined with software tools for managing, analyzing, and visualizing
+> those data.
+
+---https://en.wikipedia.org/wiki/Geographic_information_system
+
+# GeoDjango
+
+Uses this namespace: `django.contrib.gis`
+
+https://gis.stackexchange.com/questions/tagged/geodjango?tab=Votes
+
+https://docs.djangoproject.com/en/4.1/ref/contrib/gis/functions/
+
+***
+
+# Problems and solutions
+
+## No installed app with label 'main_page/'.
+
+`python manage.py makemigrations main_page/`
+
+Solution: Remove the slash at the end `python manage.py makemigrations main_page` or simply run `python manage.py makemigrations`
+
+## "No changes detected" after running `python manage.py makemigrations`
+
+Unclear what the solution is, but try to create a migrations file. `python manage.py makemigrations` should work for
+this purpose, if not you may want to try `python manage.py startapp [app-name]` and try again (despite getting an
+error message)
+
