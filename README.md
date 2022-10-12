@@ -62,15 +62,15 @@ In a terminal:
 
 Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/docs/-/blob/main/smarta-kartan-req-spec.md)
 
-| Tech                       | Quickstart | Tutorials     | Reference   | Articles, Books | Notes |
-|----------------------------|------------|---------------|-------------|-----------------|-------|
-| Javascript                 |            | [1][t_mjs]    | [1][r_mjs]  | [jsdg][b_jsdg]  | ---   |
-| Leaflet                    |            | [1][t_llqs]   |             |                 |       |
-| Python                     |            |               |             |                 | ---   |
-| Django                     |            | [1][t_django] |             |                 |       |
-| PostgreSQL                 |            | [1][t_ispsu]  |             |                 |       |
-| DjangoRestFramework        |            | [1][t_drf]    |             |                 |       |
-| django-rest-framework-gis  |            |               | [1][r_drfg] |                 |       |
+| Tech                      | Quickstart  | Tutorials     | Reference   | Articles, Books | Notes |
+|---------------------------|-------------|---------------|-------------|-----------------|-------|
+| Javascript                |             | [1][t_mjs]    | [1][r_mjs]  | [jsdg][b_jsdg]  | ---   |
+| Leaflet                   | [1][t_llqs] |               |             |                 |       |
+| Python                    |             |               |             |                 | ---   |
+| Django                    |             | [1][t_django] |             |                 |       |
+| PostgreSQL                |             | [1][t_ispsu]  |             |                 |       |
+| DjangoRestFramework       |             | [1][t_drf]    |             |                 |       |
+| django-rest-framework-gis |             |               | [1][r_drfg] |                 |       |
 
 
 [b_jsdg]: https://www.oreilly.com/library/view/javascript-the-definitive/9781491952016/
