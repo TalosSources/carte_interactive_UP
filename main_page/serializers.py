@@ -1,4 +1,6 @@
+import rest_framework.serializers
 import rest_framework_gis.serializers
+
 from . import models
 
 
@@ -12,3 +14,9 @@ class LocationSerializer(rest_framework_gis.serializers.GeoFeatureModelSerialize
         geo_field = "coordinates"  # -must match the PointField variable in models.py
         # -https://github.com/openwisp/django-rest-framework-gis#using-geometryserializermethodfield-as-geo_field
         model = models.Location
+
+
+class InitiativeSerializer(rest_framework.serializers.ModelSerializer):
+    class Meta:
+        model = models.Initiative
+        fields = ['id', 'name']

@@ -2,25 +2,25 @@
 
 This is the repo for version 4.0 of Smarta Kartan, a future version.
 
-The code for the current version at the time of writing is available here: https://github.com/GoteborgsStad/smartakartan3.0
-
-The website itself is available here: https://www.smartakartan.se/
+The code for the current version (at the time of writing) is available here: https://github.com/GoteborgsStad/smartakartan3.0
 
 ## Tech
 
-* Django
+* Django (Python)
   * GeoDjango
   * DjangoAdmin
   * Django REST framework
   * ...
 * Postgresql
   * PostGIS
-* Leaflet
+* Leaflet (Javascript)
 * REST
 * GDAL
 * ...
 
 ## Setup on Ubuntu/Debian
+
+Tested on Ubuntu 22.04 LTS
 
 ### Installation of dependencies
 
@@ -38,56 +38,84 @@ PIP: `pip3 install -r requirements.txt` (will install the various dependencies f
 
 In a terminal:
 1. Enter PostgreSQL shell: `sudo -u postgres psql`
-1. Change password for the `postgres` user: `\password [user name]`
+1. Change password for the `postgres` user: `\password postgres`
 1. Create db: `CREATE DATABASE smarta_kartan_db;`
 1. Connect to db: `\connect smarta_kartan_db`
 1. Exit to OS shell: `exit`
-1. Verify that the db is running in the OS: `ss -nlt|grep 5432`
+1. Verify that the db is running in the OS: `ss -nlt |grep 5432`
   * You should see a line like this: `LISTEN 0  244  127.0.0.1:5432  0.0.0.0:*`
   * You can compare these values to the values found in the `DATABASES` dict inside `settings.py`
 
 ### Starting the server
 
 1. Update `python3 manage.py migrate`
-1. Start the server: `python3 manage.py runserver 8000`
+1. Start the server: `python3 manage.py runserver 8009`
 
 ### Trying out the website
 
 1. Create an admin user: `python3 manage.py createsuperuser`
-1. Try the admin interface by going to http://127.0.0.1:8000/admin/
-1. Try the normal/standard/user website by going to http://127.0.0.1:8000/
+1. Try the admin interface by going to http://127.0.0.1:8009/admin/
+1. Try the normal/standard/user website by going to http://127.0.0.1:8009/
 
 
 ## Documentation
 
 Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/docs/-/blob/main/smarta-kartan-req-spec.md)
 
-| Tech                      | Quickstart  | Tutorials     | Reference   | Articles, Books | Notes |
-|---------------------------|-------------|---------------|-------------|-----------------|-------|
-| Javascript                |             | [1][t_mjs]    | [1][r_mjs]  | [jsdg][b_jsdg]  | ---   |
-| Leaflet                   | [1][t_llqs] |               |             |                 |       |
-| Python                    |             |               |             |                 | ---   |
-| Django                    |             | [1][t_django] |             |                 |       |
-| PostgreSQL                |             | [1][t_ispsu]  |             |                 |       |
-| DjangoRestFramework       |             | [1][t_drf]    |             |                 |       |
-| django-rest-framework-gis |             |               | [1][r_drfg] |                 |       |
+### Dependencies: Backend
+
+PostgreSQL:
+* Setup on Ubuntu (unofficial): https://www.cherryservers.com/blog/how-to-install-and-setup-postgresql-server-on-ubuntu-20-04
+* Top-level docs page: https://postgis.net/documentation/
+
+Python:
+* Reference: https://docs.python.org/3/
+
+Django:
+* Tutorial in 7 parts: https://docs.djangoproject.com/en/4.1/intro/tutorial01/
+* Top-level docs page: https://docs.djangoproject.com/en/4.1/
+
+GeoDjango:
+* Tutorial: https://docs.djangoproject.com/en/4.1/ref/contrib/gis/tutorial/
+* Top-level docs page: https://docs.djangoproject.com/en/4.1/ref/contrib/gis/
+
+Django REST framework:
+* Quickstart tutorial: https://www.django-rest-framework.org/tutorial/quickstart/
+* Tutorial in 6 parts: https://www.django-rest-framework.org/tutorial/1-serialization/
+
+django-rest-framework-gis:
+* General documentation: https://github.com/openwisp/django-rest-framework-gis#django-rest-framework-gis
+
+### Dependencies: Frontend
+
+Javascript:
+* Tutorial: https://developer.mozilla.org/en-US/docs/Learn/JavaScript
+* Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
+* Book: https://www.oreilly.com/library/view/javascript-the-definitive/9781491952016/
+
+Leaflet:
+* Quickstart tutorial: https://leafletjs.com/examples/quick-start/
+
+React:
+* Tutorial: https://reactjs.org/tutorial/tutorial.html
+* Tool: React Developer Tools (browser plugin)
+
+React+Django:
+* Tutorial: https://blog.logrocket.com/using-react-django-create-app-tutorial/
+  * Section "Building the React app"
+  * "The focus of this tutorial is to show you how to consume a Django API quickly from a React app."
+  * API_URL
+
+Bootstrap?
+
+### Backend + Frontend
+
+Overarching:
+* Tutorial: https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/ *Recommended*
 
 
-[b_jsdg]: https://www.oreilly.com/library/view/javascript-the-definitive/9781491952016/
-[t_llqs]: https://leafletjs.com/examples/quick-start/
-[t_django]: https://docs.djangoproject.com/en/4.1/intro/tutorial01/
-[t_ispsu]: https://www.cherryservers.com/blog/how-to-install-and-setup-postgresql-server-on-ubuntu-20-04
-[t_drf]: https://www.django-rest-framework.org/tutorial/1-serialization/
-[t_mjs]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript
-[r_mjs]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
-[r_drfg]: https://github.com/openwisp/django-rest-framework-gis
 
-Overarching tutorials:
-* https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/ ***Recommended***
-* https://docs.djangoproject.com/en/4.1/ref/contrib/gis/tutorial/
-
-
-## Appendix A: PostgreSQL guidance
+## Appendix: PostgreSQL guidance
 
 The PostgreSQL database runs as a service in the background (see also `DATABASES` in [`settings.py`](smartakartan4/settings.py) for connection details)
 
@@ -107,7 +135,7 @@ Please note:
 * The default username and the default database name are the same: `postgres`
 * Each time you _______
 
-## Appendix B: Updating (migrating) the database to match the Django model
+## Appendix: Updating (migrating) the database to match the Django model
 
 If we haven't done the migration we will get an error message when trying to access the relevant part of the admin interface
 
@@ -129,12 +157,6 @@ smarta_kartan_db=# \dt
 [...]
  public | [table_name]               | table | postgres
 ```
-
-## Appendix C: Useful tools
-
-* OS: Ubuntu
-* IDE: Pycharm
-* API testing client: https://httpie.io/
 
 ***
 
@@ -169,8 +191,6 @@ Uses this namespace: `django.contrib.gis`
 
 https://gis.stackexchange.com/questions/tagged/geodjango?tab=Votes
 
-https://docs.djangoproject.com/en/4.1/ref/contrib/gis/functions/
-
 ***
 
 # Problems and solutions
@@ -186,4 +206,8 @@ Solution: Remove the slash at the end `python manage.py makemigrations main_page
 Unclear what the solution is, but try to create a migrations file. `python manage.py makemigrations` should work for
 this purpose, if not you may want to try `python manage.py startapp [app-name]` and try again (despite getting an
 error message)
+
+***
+
+* Install: Install NodeJS `sudo snap install node --classic` (other options available)
 
