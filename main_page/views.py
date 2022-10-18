@@ -16,5 +16,10 @@ class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.InitiativeSerializer
 
 
+class InitiativeDetailView(django.views.generic.DetailView):
+    model = models.Initiative
+    template_name = "main_page/detail.html"
+
+
 class MainPageView(django.views.generic.TemplateView):
     template_name = "main_page/index.html"

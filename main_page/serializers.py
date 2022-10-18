@@ -16,7 +16,7 @@ class LocationSerializer(rest_framework_gis.serializers.GeoFeatureModelSerialize
         model = models.Location
 
 
-class InitiativeSerializer(rest_framework.serializers.ModelSerializer):
+class InitiativeSerializer(rest_framework.serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Initiative
-        fields = ['id', 'name']
+        fields = ['url', 'id', 'name']
