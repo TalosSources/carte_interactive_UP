@@ -12,7 +12,7 @@ async function render_initiatives() {
     cards_div_elem.innerHTML += "<ul>";
     for (let card_object of cards_response_array) {
         console.log(card_object);
-        cards_div_elem.innerHTML += `<li>${card_object.name}</li>`;
+        cards_div_elem.innerHTML += `<li><a href="${card_object.user_url}">${card_object.name}</a></li>`;
     }
     cards_div_elem.innerHTML += "</ul>";
 }
