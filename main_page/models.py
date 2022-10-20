@@ -18,7 +18,8 @@ class Initiative(models.Model):
 class Location(models.Model):
     address = models.CharField(max_length=127)
     coordinates = models.PointField()
-    initiative = models.ForeignKey(Initiative, on_delete=models.CASCADE)
+    # Please note the `related_name` kw parameter
+    initiative = models.ForeignKey(Initiative, related_name='locations', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.address
