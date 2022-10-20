@@ -62,7 +62,24 @@ In a terminal:
 
 Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/docs/-/blob/main/smarta-kartan-req-spec.md)
 
-### Dependencies: Backend
+### Setting up a local dev environment
+
+(This is in addition to the setup section above)
+
+Install NodeJS: `sudo snap install node --classic`
+
+
+## Documentation for Dependencies
+
+### Hardware and OS
+
+Server:
+* _
+
+Ubuntu:
+* _
+
+### Backend
 
 PostgreSQL:
 * Setup on Ubuntu (unofficial): https://www.cherryservers.com/blog/how-to-install-and-setup-postgresql-server-on-ubuntu-20-04
@@ -78,6 +95,8 @@ Django:
 GeoDjango:
 * Tutorial: https://docs.djangoproject.com/en/4.1/ref/contrib/gis/tutorial/
 * Top-level docs page: https://docs.djangoproject.com/en/4.1/ref/contrib/gis/
+* Uses this namespace: `django.contrib.gis`
+* https://gis.stackexchange.com/questions/tagged/geodjango?tab=Votes
 
 Django REST framework:
 * Quickstart tutorial: https://www.django-rest-framework.org/tutorial/quickstart/
@@ -86,7 +105,7 @@ Django REST framework:
 django-rest-framework-gis:
 * General documentation: https://github.com/openwisp/django-rest-framework-gis#django-rest-framework-gis
 
-### Dependencies: Frontend
+### Frontend
 
 Javascript:
 * Tutorial: https://developer.mozilla.org/en-US/docs/Learn/JavaScript
@@ -100,18 +119,26 @@ React:
 * Tutorial: https://reactjs.org/tutorial/tutorial.html
 * Tool: React Developer Tools (browser plugin)
 
+Bootstrap:
+* _
+
+### Standards and other concepts
+
+GeoJSON:
+* Official: https://geojson.org/
+* For experimenting with a map: https://geojson.io/
+* Wikipedia: https://en.wikipedia.org/wiki/GeoJSON (see examples and below them [geometries](https://en.wikipedia.org/wiki/GeoJSON#Geometries))
+
+GIS:
+* https://en.wikipedia.org/wiki/Geographic_information_system
+
+### Overarching/combinations
+
+Maps with Django, etc:
+* https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/ *Recommended*
+
 React+Django:
 * Tutorial: https://blog.logrocket.com/using-react-django-create-app-tutorial/
-  * Section "Building the React app"
-  * "The focus of this tutorial is to show you how to consume a Django API quickly from a React app."
-  * API_URL
-
-Bootstrap?
-
-### Backend + Frontend
-
-Overarching:
-* Tutorial: https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/ *Recommended*
 
 
 
@@ -160,39 +187,6 @@ smarta_kartan_db=# \dt
 
 ***
 
-# django-rest-framework-gis
-
-> GeoFeatureModelSerializer is a subclass of rest_framework.ModelSerializer which will output data in a format that is GeoJSON compatible.
-
-> GeoFeatureModelSerializer requires you to define a geo_field to be serialized as the "geometry".
-
-> The primary key of the model (usually the "id" attribute) is automatically used as the id field of each GeoJSON Feature Object.
-
----https://github.com/openwisp/django-rest-framework-gis#geofeaturemodelserializer
-
-
-# GeoJSON
-
-Official: https://geojson.org/
-For experimenting with a map: https://geojson.io/
-Wikipedia: https://en.wikipedia.org/wiki/GeoJSON (see examples and below them [geometries](https://en.wikipedia.org/wiki/GeoJSON#Geometries))
-
-# GIS (Geographic information system)
-
-> A geographic information system (GIS) is a type of database containing geographic data (that is, descriptions of
-> phenomena for which location is relevant), combined with software tools for managing, analyzing, and visualizing
-> those data.
-
----https://en.wikipedia.org/wiki/Geographic_information_system
-
-# GeoDjango
-
-Uses this namespace: `django.contrib.gis`
-
-https://gis.stackexchange.com/questions/tagged/geodjango?tab=Votes
-
-***
-
 # Problems and solutions
 
 ## No installed app with label 'main_page/'.
@@ -208,6 +202,4 @@ this purpose, if not you may want to try `python manage.py startapp [app-name]` 
 error message)
 
 ***
-
-* Install: Install NodeJS `sudo snap install node --classic` (other options available)
 

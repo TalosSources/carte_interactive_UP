@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Main Page</title>
-    <link rel="stylesheet" href="{% static 'main_page/style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'detail/style.css' %}"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
           integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
           crossorigin=""/>
@@ -14,11 +14,14 @@
 </head>
 <body>
 <h3>Map (locations)</h3>
-<!--
 <div id="map">
-    <script src="{% static 'main_page/map.js' %}"></script>
+    <script>
+        <!-- Defining a variable for the JS file loaded just below -->
+        const initiative_api_url = "/api/initiatives/{{ initiative.id }}";
+    </script>
+    <script src="{% static 'detail/map.js' %}">
+    </script>
 </div>
--->
 <div>
     <h3>Test initiative detail view</h3>
     <p>Initiative name: {{ initiative.name }}</p>

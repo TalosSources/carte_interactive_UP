@@ -6,6 +6,14 @@ from . import models
 
 class LocationSerializer(rest_framework_gis.serializers.GeoFeatureModelSerializer):
     """
+    > GeoFeatureModelSerializer is a subclass of rest_framework.ModelSerializer which will output data in a format that
+    > is GeoJSON compatible.
+
+    > GeoFeatureModelSerializer requires you to define a geo_field to be serialized as the "geometry".
+
+    > The primary key of the model (usually the "id" attribute) is automatically used as the id field of each GeoJSON
+    > Feature Object.
+
     https://github.com/openwisp/django-rest-framework-gis#geofeaturemodelserializer
     """
 

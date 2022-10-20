@@ -18,8 +18,8 @@ class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
 
 class InitiativeDetailView(django.views.generic.DetailView):
     model = models.Initiative
-    template_name = "main_page/detail.html"
+    template_name = "detail.html"
 
 
 class MainPageView(django.views.generic.TemplateView):
-    template_name = "main_page/index.html"
+    template_name = "index.html"
