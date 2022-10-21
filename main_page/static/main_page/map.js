@@ -1,11 +1,21 @@
 const map = L.map('map');
 
+/*
 let initLatNr = 57.70; // "y"
 let initLngNr = 11.97; // "x"
 let initLatLng = L.latLng(initLatNr, initLngNr);
 let initZoomLevelNr = 12;
 map.setView(initLatLng, initZoomLevelNr);
-// [initLatNr, initLngNr]
+ */
+
+map.locate({setView: true, maxZoom: 15});
+/*
+function onLocationError(e) {
+    alert(e.message);
+}
+map.on('locationerror', onLocationError);
+ */
+// map.on('locationfound', onLocationFound)
 
 const maxZoomNr = 19;
 const attributionSg = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';

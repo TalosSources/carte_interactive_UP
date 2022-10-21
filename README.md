@@ -85,6 +85,9 @@ PostgreSQL:
 * Setup on Ubuntu (unofficial): https://www.cherryservers.com/blog/how-to-install-and-setup-postgresql-server-on-ubuntu-20-04
 * Top-level docs page: https://postgis.net/documentation/
 
+PostGIS:
+* https://postgis.net/documentation/
+
 Python:
 * Reference: https://docs.python.org/3/
 
@@ -113,7 +116,13 @@ Javascript:
 * Book: https://www.oreilly.com/library/view/javascript-the-definitive/9781491952016/
 
 Leaflet:
-* Quickstart tutorial: https://leafletjs.com/examples/quick-start/
+* Tutorials: https://leafletjs.com/examples.html
+  * Quickstart: https://leafletjs.com/examples/quick-start/
+  * Leaflet on Mobile: https://leafletjs.com/examples/mobile/ --- Fullscreen on mobile, and finding user location
+  * Using GeoJSON with Leaflet: https://leafletjs.com/examples/geojson/
+  * Markers With Custom Icons: https://leafletjs.com/examples/custom-icons/
+  * Accessible maps: https://leafletjs.com/examples/accessibility/
+* API reference: https://leafletjs.com/reference.html
 
 React:
 * Tutorial: https://reactjs.org/tutorial/tutorial.html
