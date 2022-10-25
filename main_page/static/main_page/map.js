@@ -1,14 +1,15 @@
 const map = L.map('map');
 
-/*
+// Setting the position and zoom..
+// ..if the user doesn't allow sharing of position
 let initLatNr = 57.70; // "y"
 let initLngNr = 11.97; // "x"
 let initLatLng = L.latLng(initLatNr, initLngNr);
 let initZoomLevelNr = 12;
 map.setView(initLatLng, initZoomLevelNr);
- */
 
-map.locate({setView: true, maxZoom: 15});
+// ..if the user does allow sharing of position
+map.locate({setView: true, maxZoom: 14});
 /*
 function onLocationError(e) {
     alert(e.message);
