@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']  # -added by Tord
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,7 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'main_page',
+    'website',
     'rest_framework_gis',  # <-
     'rest_framework',  # <-
     'django.contrib.gis',  # GeoDjango <-

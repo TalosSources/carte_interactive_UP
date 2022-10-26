@@ -8,7 +8,7 @@ from . import serializers
 class LocationViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     queryset = models.Location.objects.all()
     serializer_class = serializers.LocationSerializer
-    # TODO: Filter and bbox?
+    # TODO: Filter and bbox
 
 
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
@@ -21,5 +21,5 @@ class InitiativeDetailView(django.views.generic.DetailView):
     template_name = "detail.html"
 
 
-class MainPageView(django.views.generic.TemplateView):
+class WebsiteView(django.views.generic.TemplateView):
     template_name = "index.html"

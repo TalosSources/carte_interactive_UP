@@ -17,14 +17,14 @@ import rest_framework.routers
 from django.contrib import admin
 from django.urls import path, include
 
-from main_page import views
+from website import views
 
 router = rest_framework.routers.DefaultRouter()
 router.register(r"locations", views.LocationViewSet, basename="location")
 router.register(r"initiatives", views.InitiativeViewSet, basename="initiative")
 
 urlpatterns = [
-    path('', include('main_page.urls')),
-    path('api/', include(router.urls)),
-    path('admin/', admin.site.urls),
+    path('', include('website.urls')),  # standard website interface
+    path('api/', include(router.urls)),  # API interface
+    path('admin/', admin.site.urls),  # Admin interface
 ]

@@ -198,11 +198,11 @@ smarta_kartan_db=# \dt
 
 # Problems and solutions
 
-## No installed app with label 'main_page/'.
+## No installed app with label 'website/'.
 
-`python manage.py makemigrations main_page/`
+`python manage.py makemigrations website/`
 
-Solution: Remove the slash at the end `python manage.py makemigrations main_page` or simply run `python manage.py makemigrations`
+Solution: Remove the slash at the end `python manage.py makemigrations website` or simply run `python manage.py makemigrations`
 
 ## "No changes detected" after running `python manage.py makemigrations`
 
