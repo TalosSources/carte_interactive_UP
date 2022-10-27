@@ -1,0 +1,20 @@
+image: python:3.10
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+before_script:
+  - cat /etc/os-release
+  - python -V
+  - export DEBIAN_FRONTEND=noninteractive
+  - export TZ=Europe/Stockholm
+  - apt-get update -y && apt-get install -y gdal-bin postgresql postgresql-contrib libpq5 postgis
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install -r requirements.txt
+test:
+  script:
+    - ./manage.py test
