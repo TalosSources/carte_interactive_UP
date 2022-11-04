@@ -3,3 +3,7 @@ django-filter
 djangorestframework
 djangorestframework-gis
 psycopg2-binary
+# TODO:
+# > Note: The psycopg2-binary package is meant for beginners to start playing with Python and PostgreSQL without the need
+# > to meet the build requirements. For production use you are advised to use the source distribution.
+# --- https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/

@@ -18,9 +18,55 @@ The code for the current version (at the time of writing) is available here: htt
 * GDAL
 * ...
 
-## Setup on Ubuntu/Debian
+## Development setup - with docker
+(Ubuntu 22.04 LTS used)
 
+### Installing docker and docker compose
+
+https://docs.docker.com/get-docker/
+
+### Building image and starting the containers
+
+`docker-compose up --build -d`
+
+Explanation:
+* `-d` - run in "detached" (background) mode
+* `--build` - before starting the container we build the image
+* `up` - starting the container
+
+### Connecting to PostgreSQL and creating a new database
+We need to create the database manually (but only the first time), otherwise we will get "database "smarta_kartan_db" does not exist"
+Find container id using `docker ps`
+`docker exec -it [container id] psql -U postgres`
+Verify that the db is now created: `postgres=# \l`
+`postgres=# CREATE DATABASE smarta_kartan_db;`
+
+### Migrating
+
+docker-compose exec web python manage.py migrate
+(Verify that tables have been created:
+`docker exec -it [container id] psql -U postgres`
+`\dt`
+)
+
+### Starting the server
+
+docker-compose exec web python manage.py runserver 8000
+
+
+
+Typical process:
+* docker-compose up -d --build
+* docker-compose logs
+* docker-compose exec web python manage.py runserver 8000
+* Testing the website
+* docker-compose down
+
+
+## Setup - without docker - on Ubuntu/Debian
 Tested on Ubuntu 22.04 LTS
+
+*Please note*: To get this working you need to to into settings.py and change 'HOST': 'db' to 'HOST': '127.0.0.1'
 
 ### Installation of dependencies
 
@@ -75,9 +121,21 @@ Install NodeJS: `sudo snap install node --classic`
 
 Server:
 * _
+* 
 
 Ubuntu:
 * _
+
+### Docker
+
+Postgis image: https://registry.hub.docker.com/r/postgis/postgis/
+Postgres image: https://hub.docker.com/_/postgres
+
+Docker-compose docs: https://docs.docker.com/compose/
+
+Tutorials:
+* https://docs.docker.com/get-started/ - *Recommended*
+* https://learndjango.com/tutorials/django-docker-and-postgresql-tutorial - *Recommended*
 
 ### Backend
 
@@ -87,6 +145,11 @@ PostgreSQL:
 
 PostGIS:
 * https://postgis.net/documentation/
+
+Psycopg:
+* https://www.psycopg.org/
+* https://www.psycopg.org/docs/
+* https://pypi.org/project/psycopg2/
 
 Python:
 * Reference: https://docs.python.org/3/

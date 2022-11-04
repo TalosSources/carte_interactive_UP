@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    command: python /code/manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+  db:
+    image: postgis/postgis:14-3.3  # This version was recommended "for new users" 2022-11-03
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      TZ: Europe/Stockholm
+      POSTGRES_PASSWORD: nwKnN7kgftitCpc  # TODO: Security, see "Docker secrets" https://hub.docker.com/_/postgres
+      POSTGRES_DB: smarta_kartan_db  # If not given, the db will be named after the admin user (probably "postgres")
+
+volumes:
+  pg_data:
+
+# POSTGRES_HOST_AUTH_METHOD: trust
+
+# docker-compose up -d
+# docker-compose up -d --build
+# docker exec -it 4c659b04af92 psql

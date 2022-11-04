@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'smartakartan4.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',  # <- postgis is a special version of postgresql
-        'HOST': '127.0.0.1',  # <- TODO
+        'HOST': 'db',  # <- the docker network name alias. (Previously 127.0.0.1)
         'PORT': 5432,
         'NAME': 'smarta_kartan_db',
         'PASSWORD': 'nwKnN7kgftitCpc',  # <- TODO
@@ -109,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'  # <- TODO
 
-TIME_ZONE = 'UTC'  # <- TODO
+TIME_ZONE = 'Europe/Stockholm'  # <- TODO
 
 USE_I18N = True
 
