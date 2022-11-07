@@ -86,7 +86,8 @@ DATABASES = {
         'USER': 'postgres',
     }
 }
-if os.environ["NO_DOCKER"]:
+NO_DOCKER = "NO_DOCKER"
+if NO_DOCKER in os.environ and os.environ[NO_DOCKER]:
     DATABASES['default']['HOST'] = '127.0.0.1'
 
 # Password validation

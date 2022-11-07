@@ -9,4 +9,4 @@ psycopg2-binary
 # --- https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/
 
 # Development reqs
-coverage
+# coverage
