@@ -1,11 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="sk4 direct" type="Python.DjangoServer" factoryName="Django server">
+  <configuration default="false" name="sk4 NO_DOCKER" type="Python.DjangoServer" factoryName="Django server">
     <module name="smartakartan4" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
       <env name="DJANGO_SETTINGS_MODULE" value="smartakartan4.settings" />
+      <env name="NO_DOCKER" value="1" />
     </envs>
     <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
     <option name="WORKING_DIRECTORY" value="" />

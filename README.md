@@ -62,6 +62,9 @@ Typical process:
 * Testing the website
 * docker-compose down
 
+Migrating the database:
+* TODO
+
 
 ## Setup - without docker - on Ubuntu/Debian
 Tested on Ubuntu 22.04 LTS
@@ -136,6 +139,7 @@ Docker-compose docs: https://docs.docker.com/compose/
 Tutorials:
 * https://docs.docker.com/get-started/ - *Recommended*
 * https://learndjango.com/tutorials/django-docker-and-postgresql-tutorial - *Recommended*
+* https://github.com/docker/awesome-compose/tree/master/official-documentation-samples/django
 
 ### Backend
 
