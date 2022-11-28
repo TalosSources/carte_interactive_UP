@@ -35,15 +35,16 @@ Explanation:
 * `up` - starting the container
 
 ### Connecting to PostgreSQL and creating a new database
-We need to create the database manually (but only the first time), otherwise we will get "database "smarta_kartan_db" does not exist"
-Find container id using `docker ps`
-`docker exec -it [container id] psql -U postgres`
-Verify that the db is now created: `postgres=# \l`
-`postgres=# CREATE DATABASE smarta_kartan_db;`
+
+We need to create the database manually (but only the first time), otherwise we will get `database "smarta_kartan_db" does not exist`
+1. Find container id using `docker ps`
+1. Connect to the postgres: `docker exec -it [container id] psql -U postgres`
+1. Create the database: `postgres=# CREATE DATABASE smarta_kartan_db;`
+1. Verify that the database has been created: `postgres=# \l`
 
 ### Migrating
 
-docker-compose exec web python manage.py migrate
+`docker-compose exec web python manage.py migrate`
 (Verify that tables have been created:
 `docker exec -it [container id] psql -U postgres`
 `\dt`
@@ -51,16 +52,16 @@ docker-compose exec web python manage.py migrate
 
 ### Starting the server
 
-docker-compose exec web python manage.py runserver 8000
+`docker-compose exec web python manage.py runserver 8000`
 
 
 
 Typical process:
-* docker-compose up -d --build
-* docker-compose logs
-* docker-compose exec web python manage.py runserver 8000
-* Testing the website
-* docker-compose down
+* `docker-compose up -d --build`
+* `docker-compose logs`
+* `docker-compose exec web python manage.py runserver 8000`
+* `Testing the website`
+* `docker-compose down`
 
 Migrating the database:
 * TODO
@@ -69,7 +70,8 @@ Migrating the database:
 ## Setup - without docker - on Ubuntu/Debian
 Tested on Ubuntu 22.04 LTS
 
-*Please note*: To get this working you need to to into settings.py and change 'HOST': 'db' to 'HOST': '127.0.0.1'
+*Please note*: To run this you need to set the environment variable `NO_DOCKER` to 1. This will change
+the host IP to 127.0.0.1
 
 ### Installation of dependencies
 
@@ -215,6 +217,8 @@ Maps with Django, etc:
 
 React+Django:
 * Tutorial: https://blog.logrocket.com/using-react-django-create-app-tutorial/
+* Tutorial: https://www.digitalocean.com/community/tutorials/build-a-to-do-application-using-django-and-react
+* SO q+a: https://stackoverflow.com/questions/41867055/how-to-get-django-and-reactjs-to-work-together
 
 
 

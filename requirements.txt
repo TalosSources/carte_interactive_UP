@@ -2,6 +2,7 @@ Django
 django-filter
 djangorestframework
 djangorestframework-gis
+django-cors-headers
 psycopg2-binary
 # TODO:
 # > Note: The psycopg2-binary package is meant for beginners to start playing with Python and PostgreSQL without the need
