@@ -21,9 +21,15 @@ class App extends React.Component {
         };
     }
 
+    // Overridden (see details in documentation)
     componentDidMount() {
-        // Overridden (see details in documentation)
         this.refreshCardList();
+
+        // The id "map" has to be available before we can load the map script. Therefore we load this script here
+        const mapScript = document.createElement("script");
+        mapScript.src = "map.js";
+        mapScript.async = true;
+        document.body.appendChild(mapScript);
     }
 
     renderCard(cardElement) {
@@ -68,11 +74,15 @@ class App extends React.Component {
         return (
             <div className="App">
                 <h2>Smarta Kartan</h2>
+                <h3>Map</h3>
+                <div id="map"></div>
                 <h3>Cards</h3>
                 <ul>
                     {this.renderCardCollection()}
                 </ul>
+
             </div>
+
         );
     }
 }
