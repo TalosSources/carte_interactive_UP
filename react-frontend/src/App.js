@@ -65,10 +65,10 @@ class App extends React.Component {
     }
 
     render() {
-
         return (
             <div className="App">
-                <h3>Smarta Kartan</h3>
+                <h2>Smarta Kartan</h2>
+                <h3>Cards</h3>
                 <ul>
                     {this.renderCardCollection()}
                 </ul>
