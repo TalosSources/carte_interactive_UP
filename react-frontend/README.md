@@ -4,6 +4,7 @@
 
 * `npm install bootstrap@4.6.0`
 * `npm install reactstrap@8.9.0`
+* `npm i -D react-router-dom`																									
 
 
 
