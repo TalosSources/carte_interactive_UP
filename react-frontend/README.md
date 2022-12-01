@@ -1,10 +1,19 @@
 
 
+
+
+React is used for the frontend
+React-router
+We only use bootstrap's CSS, (so don't need things like reactstrap)
+
+
 # Setup
+
 
 * `npm install bootstrap@4.6.0`
 * `npm install reactstrap@8.9.0`
 * `npm i -D react-router-dom`																									
+* `npm audit fix --force` (alt nergradera react-router?)
 
 
 

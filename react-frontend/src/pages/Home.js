@@ -2,11 +2,11 @@ import React from "react";
 import '../App.css';
 
 function SkCard(props) {
-    // This is a React function component
-    // React CSS: https://www.w3schools.com/react/react_css.asp
+    // This is a React "function component"
+    // CSS in React: https://www.w3schools.com/react/react_css.asp
     return (
         <div style={{backgroundColor: "lightgreen"}}>
-            <p>{props.title} --- title here</p>
+            <a href={'details/' + props.id}>{props.title}</a>
         </div>
     );
 }
@@ -15,7 +15,6 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            maxNrToShowUnused: 5,
             cardList: [],
         };
     }
@@ -32,10 +31,14 @@ class App extends React.Component {
     }
 
     renderCard(cardElement) {
+        // console.log(`cardElement: ${cardElement}`);
+        console.log("cardElement:");
         console.log(cardElement);
         return (
             <SkCard
                 title={cardElement.name}
+                url={cardElement.url}
+                id={cardElement.id}
             />
         );
     }
@@ -46,9 +49,11 @@ class App extends React.Component {
         //     retReactNode.append();
         // });
         // console.log(retReactNode);
-        return this.state.cardList.map((element) => (
-            <div key={element.id}>{this.renderCard(element)}</div>
-        ));
+        return this.state.cardList.map(
+            (element) => (
+                <div key={element.id}>{this.renderCard(element)}</div>
+            )
+        );
     }
 
     refreshCardList() {
@@ -56,7 +61,7 @@ class App extends React.Component {
         fetch(initiatives_api_url)
             .then(response => response.json())
             .then(response_array => {
-                console.log(response_array);
+                console.log(`response_array: ${response_array}`);
                 this.setState({
                     cardList: response_array,
                 });

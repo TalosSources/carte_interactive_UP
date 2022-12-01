@@ -13,11 +13,10 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<Layout/>}>
                     <Route index element={<Home/>}/>
-                    <Route path="details" element={<Details/>}/>
+                    <Route path="/details/:initiativeId" element={<Details/>}/>
                     <Route path="*" element={<PageNotFound/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>
     );
-
 }

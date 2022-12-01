@@ -199,9 +199,9 @@ React:
 
 React Router:
 * Tutorial (official): https://github.com/remix-run/react-router/blob/main/docs/start/tutorial.md
-* Tutorial: https://v5.reactrouter.com/web/guides/quick-start
-* Tutorial: https://www.w3schools.com/react/react_router.asp
-* Tutorial: https://www.geeksforgeeks.org/reactjs-router
+* Tutorial: https://www.w3schools.com/react/react_router.asp (v6)
+* Tutorial: https://www.geeksforgeeks.org/reactjs-router (v6)
+* https://blog.webdevsimplified.com/2022-07/react-router/ (v6)
 
 Bootstrap:
 * _
