@@ -11,17 +11,18 @@ function SkCard(props) {
     );
 }
 
-class App extends React.Component {
+
+class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            cardList: [],
+            initiativeList: [],
         };
     }
 
     // Overridden (see details in documentation)
     componentDidMount() {
-        this.refreshCardList();
+        this.refreshInitiativeList();
 
         // The id "map" has to be available before we can load the map script. Therefore we load this script here
         const mapScript = document.createElement("script");
@@ -49,21 +50,21 @@ class App extends React.Component {
         //     retReactNode.append();
         // });
         // console.log(retReactNode);
-        return this.state.cardList.map(
-            (element) => (
-                <div key={element.id}>{this.renderCard(element)}</div>
+        return this.state.initiativeList.map(
+            (initiativeElement) => (
+                <div key={initiativeElement.id}>{this.renderCard(initiativeElement)}</div>
             )
         );
     }
 
-    refreshCardList() {
+    refreshInitiativeList() {
         const initiatives_api_url = "http://127.0.0.1:8009/api/initiatives/";
         fetch(initiatives_api_url)
             .then(response => response.json())
             .then(response_array => {
                 console.log(`response_array: ${response_array}`);
                 this.setState({
-                    cardList: response_array,
+                    initiativeList: response_array,
                 });
             })
             .catch(err => console.error(err));
@@ -76,7 +77,7 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="App">
+            <div className="Home">
                 <h2>Smarta Kartan</h2>
                 <h3>Map</h3>
                 <div id="map"></div>
@@ -91,4 +92,4 @@ class App extends React.Component {
     }
 }
 
-export default App;
+export default Home;
