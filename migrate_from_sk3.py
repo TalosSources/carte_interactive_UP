@@ -1,6 +1,7 @@
 # import json
 import sys
 
+import django.contrib.gis.geos
 import requests
 
 import website.models
@@ -21,11 +22,15 @@ curl --header "Authorization: Bearer LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7" https://s
 
 """
 
-# RJK: Response JSON (sub) Key
+# RJK: Response JSON (Sub) Key
 RJK_TITLE = "title"
 RJSK_RENDERED = "rendered"
 RJK_ACF = "acf"  # -advanced custom fields (WP)
 RJSK_SHORT_DESCRIPTION = "short_description"
+
+#
+RJK_LATITUDE = "latitude"
+RJK_LONGITUDE = "longitude"
 
 # FIELDS = ["id", "date", "slug"]
 FIELDS = []
@@ -62,7 +67,7 @@ bearer_token = "LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7"
 header_dict = {"Authorization": f"Bearer {bearer_token}"}
 
 for data_type_full_name in data_type_full_name_list:
-    if data_type_full_name not in ("goteborg_business",):
+    if data_type_full_name not in ("goteborg_business", "address_gbg",):
         # "address_gbg",
         continue
 
@@ -79,7 +84,8 @@ for data_type_full_name in data_type_full_name_list:
         print(f"WARNING response code was not 200 --- {response.status_code=}")
         continue
 
-    print(f"{response_json=}")
+    if FIELDS:
+        print(f"{response_json=}")
     print(f"Number of rows: {len(response_json)}")
 
     lowest_nr_of_cols = sys.maxsize
@@ -102,15 +108,39 @@ for data_type_full_name in data_type_full_name_list:
 
     for resp_row in response_json:
         title = resp_row[RJK_TITLE][RJSK_RENDERED]
-        description = resp_row[RJK_ACF][RJSK_SHORT_DESCRIPTION]
         print(f"{title=}")
-        print(f"{description=}")
-        initiative = website.models.Initiative.objects.create(
-            name=title,
-            description=description,
-            online_only=False
-        )
-        # -TODO: We may want to auto-generate the model in the future
+        if data_type_full_name == "goteborg_business":
+            # TODO: Ensure that initiatives are added before locations
+
+            description = resp_row[RJK_ACF][RJSK_SHORT_DESCRIPTION]
+            print(f"{description=}")
+            # TODO: Use .objects.create to actually add to the db
+            initiative = website.models.Initiative(
+                name=title,
+                description=description,
+                online_only=False
+            )
+            print(f"Added initiative with {initiative.id=}")
+            # -TODO: We may want to auto-generate the model in the future
+        elif data_type_full_name == "address_gbg":
+            latitude = resp_row[RJK_LATITUDE]
+            print(f"{latitude=}")
+            longitude = resp_row[RJK_LONGITUDE]
+            print(f"{longitude=}")
+            point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
+            # -please note order of lat and lng
+            ref_initiative_id = 1
+            ref_initiative = website.models.Initiative.objects.get(pk=ref_initiative_id)
+            # TODO: Use .objects.create to actually add to the db
+            location = website.models.Location(
+                address=title,
+                coordinates=point,
+                initiative=ref_initiative
+            )
+            print(f"Added location with {location.id=}")
+            # -TODO: We may want to auto-generate the model in the future
+        else:
+            raise NotImplementedError
 
 print("===")
 print(f"Total number of datatypes: {len(data_type_full_name_list)}")
