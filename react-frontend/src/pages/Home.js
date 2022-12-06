@@ -78,7 +78,7 @@ class Home extends React.Component {
     render() {
         return (
             <div className="Home">
-                <h2>Smarta Kartan</h2>
+                <h2>Smarta Kartan (React frontend)</h2>
                 <h3>Map</h3>
                 <div id="map"></div>
                 <h3>Cards</h3>

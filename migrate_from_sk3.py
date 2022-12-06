@@ -6,7 +6,6 @@ import requests
 
 import website.models
 
-# os.environ.setdefault("NO_DOCKER", "1")
 """
 ##########################
 To start this script:
@@ -23,17 +22,21 @@ curl --header "Authorization: Bearer LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7" https://s
 """
 
 # RJK: Response JSON (Sub) Key
+
+RJK_ID = "id"
+RJK_DATE = "date"
+RJK_SLUG = "slug"
 RJK_TITLE = "title"
 RJSK_RENDERED = "rendered"
 RJK_ACF = "acf"  # -advanced custom fields (WP)
 RJSK_SHORT_DESCRIPTION = "short_description"
-
-#
 RJK_LATITUDE = "latitude"
 RJK_LONGITUDE = "longitude"
 
-# FIELDS = ["id", "date", "slug"]
-FIELDS = []
+# PER_PAGE = 0
+PER_PAGE = 3
+# FIELDS = []
+FIELDS = [RJK_ID, RJK_DATE, RJK_SLUG, RJK_TITLE, RJK_ACF, RJK_LATITUDE, RJK_LONGITUDE]
 # data_type = "global_business"
 # See https://sk-wp.azurewebsites.net/wp-admin/admin.php?page=pods
 ADDRESS_DT = "address"
@@ -71,10 +74,17 @@ for data_type_full_name in data_type_full_name_list:
         # "address_gbg",
         continue
 
+    page_nr = 1
+
     print(f"=== {data_type_full_name=} ===")
     api_url = f"https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/{data_type_full_name}/"
     if FIELDS:
-        api_url += f"?_fields={','.join(FIELDS)}"
+        api_url += f"&_fields={','.join(FIELDS)}"
+        # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_fields
+    if PER_PAGE:
+        api_url += f"&per_page={PER_PAGE}&page={page_nr}"
+        # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
+    api_url = api_url.replace('&', '?', 1)
     print(f"{api_url=}")
 
     response = requests.get(api_url, headers=header_dict)
@@ -91,7 +101,6 @@ for data_type_full_name in data_type_full_name_list:
     lowest_nr_of_cols = sys.maxsize
     highest_nr_of_cols = 0
     nr_of_cols = -1
-    # {"code":"rest_no_route","message":"No route was found matching the URL and request method.","data":{"status":404}}
     if response_json:
         for row in response_json:
             nr_of_cols = len(row)
