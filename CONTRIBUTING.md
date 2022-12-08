@@ -73,8 +73,7 @@ Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/do
 TODO
 
 ## What can I do right now?
-
-TODO
+Check ready issues https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/boards/5077652
 
 ## Tips for implementing new pages
 - Register page in [react router](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/react-frontend/src/App.js).
