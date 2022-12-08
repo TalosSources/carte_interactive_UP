@@ -76,6 +76,11 @@ TODO
 
 TODO
 
+## Tips for implementing new pages
+- Register page in [react router](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/react-frontend/src/App.js).
+- Create page in [pages folder](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/tree/main/react-frontend/src/pages).
+- data transferred to react via REST API defined in [urls.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/smartakartan4/urls.py) and [views.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/website/views.py)
+
 <!--
 Reference:
 https://gitlab.com/mindfulness-at-the-computer/mindfulness-at-the-computer/-/blob/master/CONTRIBUTING.md
