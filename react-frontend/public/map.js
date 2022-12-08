@@ -38,7 +38,7 @@ myPointMarkerPopup.openPopup();
 */
 
 async function load_locations() {
-    const location_api_url = "http://127.0.0.1:8009/api/locations/";
+    const location_api_url = "http://127.0.0.1:8000/api/locations/";
     // TODO: in_bbox=_____
     const response = await fetch(location_api_url);
     const geojson = await response.json();

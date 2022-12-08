@@ -6,14 +6,15 @@
 
 1. Installing docker and docker compose, see: https://docs.docker.com/get-docker/
 1. Building image and starting the containers: `docker-compose up --build -d`
-1. Starting the server: `docker-compose exec web python manage.py runserver 8000`
+1. ___________react___________
+1. Use the website
+  * Admin interface: http://127.0.0.1:8000/admin/
+  * API: http://127.0.0.1:8000/api/
+  * Our React frontend: _____cd react-frontend/_______npm start________http://127.0.0.1:3000/
+  * Test Django: __________________
+1. `docker-compose down`
 
-Typical process:
-* `docker-compose up --build -d`
-* `docker-compose logs`
-* `docker-compose exec web python manage.py runserver 8000`
-* Testing the website
-* `docker-compose down`
+
 
 ## How to
 
@@ -67,6 +68,12 @@ Wiki pages:
 ## General Overview
 
 Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/docs/-/blob/main/smarta-kartan-req-spec.md)
+
+## Abbreviations
+
+* SK: Smarta Kartan (aka The Smart Map)
+* SK3: Version 3
+* SK4: Version 4
 
 ## Merge Requests and Workflow Overview
 

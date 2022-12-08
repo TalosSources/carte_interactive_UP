@@ -4,7 +4,7 @@ import {useParams} from "react-router-dom";
 const Details = () => {
     const {initiativeId} = useParams();
 
-    const initiative_api_url = "http://127.0.0.1:8009/api/initiatives/" + initiativeId;
+    const initiative_api_url = "http://127.0.0.1:8000/api/initiatives/" + initiativeId;
     const [initiative, setInitiative] = useState({});
 
     useEffect(() => {
@@ -48,7 +48,7 @@ const fetchData = async () => {
     console.log(json_data);
 };
 
-const initiative_api_url = "http://127.0.0.1:8009/api/initiatives/" + initiativeId;
+const initiative_api_url = "http://127.0.0.1:8000/api/initiatives/" + initiativeId;
 fetch(initiative_api_url)
     .then(response => response.json())
     .then(response_json => {
@@ -70,7 +70,7 @@ const fetchData = async () => {
 };
 useEffect(fetchData);
 
-const initiative_api_url = "http://127.0.0.1:8009/api/initiatives/" + initiativeId;
+const initiative_api_url = "http://127.0.0.1:8000/api/initiatives/" + initiativeId;
 const response = await fetch(initiative_api_url);
 const json_data = await response.json();
 
