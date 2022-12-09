@@ -1,19 +1,17 @@
 
 # Getting started for developers
 
-## Development setup - with docker
+## Setup (with docker)
 (Ubuntu 22.04 LTS used but this shouldn't be very important)
 
 1. Installing docker and docker compose, see: https://docs.docker.com/get-docker/
 1. Building image and starting the containers: `docker-compose up --build -d`
-1. ___________react___________
 1. Use the website
-  * Admin interface: http://127.0.0.1:8000/admin/
-  * API: http://127.0.0.1:8000/api/
-  * Our React frontend: _____cd react-frontend/_______npm start________http://127.0.0.1:3000/
-  * Test Django: __________________
+  * [Admin interface](http://127.0.0.1:8000/admin/) - Credentials: `admin`, `password`) TODO: Change and hide password
+  * [API](http://127.0.0.1:8000/api/) - it's possible to view the API in html by opening this link in a browser)
+  * [Our React frontend](http://127.0.0.1:3000/) - what the users see when visiting the (future) site
+  * Test Django: ____TODO____
 1. `docker-compose down`
-
 
 
 ## How to
@@ -36,12 +34,13 @@ We need to create the database manually (but only the first time), otherwise we 
 
 TODO
 
-
 ## Interactions with other developers
 
-Done via our slack
+Done mainly via our slack, and also via GitLab issues
 
 ## Decision process
+
+TODO
 
 ## Technical overview
 
@@ -54,8 +53,10 @@ Tech overview diagram: https://docs.google.com/drawings/d/15sx4YFCvtGF8nAua7IqMI
   * ...
 * Postgresql
   * PostGIS
-* Leaflet (Javascript)
-* React 
+* Javascript
+  * Leaflet
+  * React
+    * React Router (website is an SPA)
 * REST
 * GDAL
 * ...
@@ -65,7 +66,7 @@ Wiki pages:
 * https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/wikis/Help-using-dependencies
 * https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/wikis/Problems-and-solutions
 
-## General Overview
+## General Product Overview
 
 Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/docs/-/blob/main/smarta-kartan-req-spec.md)
 

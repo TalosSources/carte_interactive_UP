@@ -16,6 +16,12 @@ To start this script:
 REST and Python: Consuming APIs
 https://realpython.com/api-integration-in-python/#rest-and-python-consuming-apis
 
+Example API request:
+https://reqbin.com/yoftqza4
+
+"Manage Pods" page in WordPress:
+https://sk-wp.azurewebsites.net/wp-admin/admin.php?page=pods
+(Only available with WP login)
 
 curl --header "Authorization: Bearer LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7" https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/oversattning/
 
