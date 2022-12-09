@@ -81,8 +81,12 @@ Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/do
 TODO
 
 ## What can I do right now?
+Check ready issues https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/boards/5077652
 
-TODO
+## Tips for implementing new pages
+- Register page in [react router](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/react-frontend/src/App.js).
+- Create page in [pages folder](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/tree/main/react-frontend/src/pages).
+- data transferred to react via REST API defined in [urls.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/smartakartan4/urls.py) and [views.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/website/views.py)
 
 <!--
 Reference:
