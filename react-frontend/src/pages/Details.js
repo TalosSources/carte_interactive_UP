@@ -18,7 +18,12 @@ const Details = () => {
     }, []);
 
     return (
-        <h2>Details page, initiative ID: {initiativeId}, initiative name: {initiative.name}</h2>
+        <div>
+            <h2>Details page for Initiative</h2>
+            <h3>ID: {initiativeId}</h3>
+            <h3>Name: {initiative.name}</h3>
+            <p>Description: {initiative.description}</p>
+        </div>
     );
 };
 

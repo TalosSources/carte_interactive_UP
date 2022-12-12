@@ -35,7 +35,8 @@ RJK_SLUG = "slug"
 RJK_TITLE = "title"
 RJSK_RENDERED = "rendered"
 RJK_ACF = "acf"  # -advanced custom fields (WP)
-RJSK_SHORT_DESCRIPTION = "short_description"
+RJSK_SHORT_DESCRIPTION = "short_description"  # TODO
+RJSK_DESCRIPTION = "description"
 RJK_LATITUDE = "latitude"
 RJK_LONGITUDE = "longitude"
 
@@ -100,7 +101,7 @@ for data_type_full_name in data_type_full_name_list:
         print(f"WARNING response code was not 200 --- {response.status_code=}")
         continue
 
-    if FIELDS:
+    if FIELDS and RJK_ACF not in FIELDS:
         print(f"{response_json=}")
     print(f"Number of rows: {len(response_json)}")
 
@@ -127,7 +128,7 @@ for data_type_full_name in data_type_full_name_list:
         if data_type_full_name == "goteborg_business":
             # TODO: Ensure that initiatives are added before locations
 
-            description = resp_row[RJK_ACF][RJSK_SHORT_DESCRIPTION]
+            description = resp_row[RJK_ACF][RJSK_DESCRIPTION]
             print(f"{description=}")
             # TODO: Use .objects.create to actually add to the db
             initiative = website.models.Initiative(
