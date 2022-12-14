@@ -3,11 +3,10 @@ version: "3.8"
 services:
   web:
     build: .
-    command: python /code/manage.py runserver 0.0.0.0:8000  # Please note that manage is prepended by /code
+    environment:
+      - PUBLIC_URL=smartakartan.entrop.mywire.org
     ports:
-      - "8000:8000"
-    volumes:
-      - .:/code
+      - "8097:8000"
     depends_on:
       - db
   db:
@@ -26,4 +25,3 @@ volumes:
 
 # docker-compose up -d
 # docker-compose up -d --build
-# docker exec -it 4c659b04af92 psql

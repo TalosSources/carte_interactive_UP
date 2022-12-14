@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-bpxf1_ptsh&l9ee#veu9plmu4h+dlt%ddd&i)95ewv)aj7!(bv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ["PUBLIC_URL"]]
 
 # Application definition
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -128,3 +129,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSP_SCRIPT_SRC = [
+    "https://unpkg.com" ,
+    os.environ["PUBLIC_URL"]
+]
+CSP_DEFAULT_SRC = ["https://unpkg.com", "'self'", "https://tile.openstreetmap.org"]

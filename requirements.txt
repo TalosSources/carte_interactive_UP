@@ -1,5 +1,6 @@
 Django
 django-filter
+django-csp
 djangorestframework
 djangorestframework-gis
 psycopg2-binary
