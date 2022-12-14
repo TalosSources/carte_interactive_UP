@@ -7,12 +7,6 @@ import requests
 import website.models
 
 """
-##########################
-To run this script:
-1. `docker-compose up` (use `-d` if running in a single terminal)
-1. `docker-compose run api bash`
-1. `./manage.py shell < migrate_from_sk3.py`
-##########################
 
 WP documentation: Using the REST API
 https://developer.wordpress.org/rest-api/using-the-rest-api/
@@ -40,7 +34,7 @@ RJK_SLUG = "slug"
 RJK_TITLE = "title"
 RJSK_RENDERED = "rendered"
 RJK_ACF = "acf"  # -advanced custom fields (WP)
-RJSK_ACF_SHORT_DESCRIPTION = "short_description"  # TODO
+RJSK_ACF_SHORT_DESCRIPTION = "short_description"  # unused
 RJSK_ACF_DESCRIPTION_ID = "description"
 RJK_LATITUDE = "latitude"
 RJK_LONGITUDE = "longitude"
@@ -91,7 +85,7 @@ for data_type_full_name in data_type_full_name_list:
     if BUSINESS_DT not in data_type_full_name:
         continue
     """
-    if BUSINESS_DT not in data_type_full_name and ADDRESS_DT not in data_type_full_name:
+    if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
         continue
     if data_type_full_name not in ("goteborg_business", "address_gbg",):
         continue
@@ -100,7 +94,7 @@ for data_type_full_name in data_type_full_name_list:
 
     page_nr = 1
     while True:
-        print(f"Page nr: {page_nr}")
+        # print(f"Page nr: {page_nr}")
         api_url = f"https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/{data_type_full_name}/"
         if FIELDS:
             api_url += f"&_fields={','.join(FIELDS)}"
@@ -109,12 +103,12 @@ for data_type_full_name in data_type_full_name_list:
             api_url += f"&per_page={PER_PAGE}&page={page_nr}"
             # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
         api_url = api_url.replace('&', '?', 1)
-        print(f"{api_url=}")
+        # print(f"{api_url=}")
 
         response = requests.get(api_url, headers=header_dict)
         response_json = response.json()  # -can be a list or a dict
         if type(response_json) is dict and response_json.get("code", "") == "rest_post_invalid_page_number":
-            print("No more pages, exiting while loop")
+            print(f"No more data found for {page_nr=} Exiting while loop")
             break
 
         if response.status_code != 200:
@@ -123,7 +117,7 @@ for data_type_full_name in data_type_full_name_list:
 
         if FIELDS and RJK_ACF not in FIELDS:
             print(f"{response_json=}")
-        print(f"Number of rows: {len(response_json)}")
+        # print(f"Number of rows: {len(response_json)}")
 
         lowest_nr_of_cols = sys.maxsize
         highest_nr_of_cols = 0
@@ -138,7 +132,8 @@ for data_type_full_name in data_type_full_name_list:
                 print(f"{lowest_nr_of_cols=}")
                 print(f"{highest_nr_of_cols=}")
             else:
-                print(f"{nr_of_cols=}")
+                pass
+                # print(f"{nr_of_cols=}")
         else:
             print("WARNING: No rows in response")
             break
@@ -148,8 +143,7 @@ for data_type_full_name in data_type_full_name_list:
             title = resp_row[RJK_TITLE][RJSK_RENDERED]
             status = resp_row[RJK_STATUS]
             if status != STATUS_PUBLISH:
-                print(f"WARNING: {status=}")
-                # TODO: Do we want to include posts that are not published?
+                print(f"INFO: {status=}")
                 continue
 
             if ADDRESS_DT in data_type_full_name:
@@ -161,47 +155,48 @@ for data_type_full_name in data_type_full_name_list:
                 # print(f"{longitude=}")
                 geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
                 # -please note order of lat and lng
-                # TODO: Use .objects.create to actually add to the db
-                location = website.models.Location.objects.create(
+                new_location = website.models.Location(
                     id=wp_post_id,
                     title=title,
                     coordinates=geo_point
                 )
+                new_location.save(force_update=True)
                 # print(f"Added location with {location.id=}")
-                # -TODO: We may want to auto-generate the model in the future
 
             # print(f"{title=}")
             elif BUSINESS_DT in data_type_full_name:
-                # TODO: Ensure that initiatives are added before locations
-
                 description = resp_row[RJK_ACF][RJSK_ACF_DESCRIPTION_ID]
                 # print(f"{description=}")
                 if not description:
                     print(f"WARNING: Description for {title} is empty")
                     description = "-"
-                if len(description) > 8000:
+                if len(description) > 12000:
                     print(f"INFO: Description for {title} is very long: {len(description)} characters")
-                # TODO: Use .objects.create to actually add to the db
-                new_initiative = website.models.Initiative.objects.create(
+                new_initiative = website.models.Initiative(
                     id=wp_post_id,
                     title=title,
                     description=description
                 )
+                new_initiative.save(force_update=True)
+
                 # print(f"Added initiative with {initiative.id=}")
-                # -TODO: We may want to auto-generate the model in the future
-                """
+                # print(f"{type(resp_row)=}")
                 if RJK_ADDRESS_AND_COORDINATE in resp_row:
-                    address_and_coordinate_list = resp_row[RJK_ADDRESS_AND_COORDINATE]
-                    for aac_dict in address_and_coordinate_list:
+                    address_and_coordinate_list_or_bool = resp_row[RJK_ADDRESS_AND_COORDINATE]
+                    # print(f"{type(address_and_coordinate_list)=}")
+                    if type(address_and_coordinate_list_or_bool) is bool and not address_and_coordinate_list_or_bool:
+                        # This means that the initiative has no locations
+                        continue
+                    for aac_dict in address_and_coordinate_list_or_bool:
                         # Address comes first, so we can connect here (and don't have to save until later)
                         location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
                         location = website.models.Location.objects.get(pk=location_id)
                         # -only works when added to db, so will not work during testing
                         location.initiative = new_initiative
+                        location.save(force_update=True)
                 else:
                     if GLOBAL_R not in data_type_full_name:
                         print(f"WARNING: No location available for initiative: {new_initiative.title}")
-                """
             else:
                 print(f"INFO: Case (data type) not covered: {data_type_full_name=}")
         page_nr += 1
