@@ -28,11 +28,12 @@ class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
 
 
 class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
-    user_url = serializers.HyperlinkedIdentityField(view_name='initiative-detail', format='html')
-    # Field name must match `related_name` in model. DRF docs:
-    # https://www.django-rest-framework.org/api-guide/relations/#reverse-relations
+    """
+    Object name (and below field name) "locations" must match `related_name` in model. DRF docs:
+    https://www.django-rest-framework.org/api-guide/relations/#reverse-relations
+    """
     locations = LocationSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Initiative
-        fields = ['url', 'id', 'name', 'user_url', 'locations']
+        fields = ['url', 'id', 'name', 'description', 'locations']

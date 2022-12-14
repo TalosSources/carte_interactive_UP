@@ -1,11 +1,22 @@
 const map = L.map('map');
 
+// Setting the position and zoom..
+// ..if the user doesn't allow sharing of position
 let initLatNr = 57.70; // "y"
 let initLngNr = 11.97; // "x"
 let initLatLng = L.latLng(initLatNr, initLngNr);
 let initZoomLevelNr = 12;
 map.setView(initLatLng, initZoomLevelNr);
-// [initLatNr, initLngNr]
+
+// ..if the user does allow sharing of position
+map.locate({setView: true, maxZoom: 14});
+/*
+function onLocationError(e) {
+    alert(e.message);
+}
+map.on('locationerror', onLocationError);
+ */
+// map.on('locationfound', onLocationFound)
 
 const maxZoomNr = 19;
 const attributionSg = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
@@ -26,20 +37,16 @@ const myPointMarkerPopup = myPointMarker.bindPopup("Hello Leaflet (this takes ht
 myPointMarkerPopup.openPopup();
 */
 
-async function load_initiative() {
-    // initiative_api_url is defined in the html, in a separate <script> tag, just above the one which loads this file.
-    // We have to define it outside the .js file, because Django templates do not work in Javascript";
+async function load_locations() {
+    const location_api_url = "http://127.0.0.1:8000/api/locations/";
     // TODO: in_bbox=_____
-    const initiative_response = await fetch(initiative_api_url);
-    console.log(`initiative_response = ${initiative_response}`);
-    const initiative_json = await initiative_response.json();
-    console.log(`initiative_json = ${JSON.stringify(initiative_json, null, 4)}`);
-    return initiative_json;
+    const response = await fetch(location_api_url);
+    const geojson = await response.json();
+    return geojson;
 }
 
 async function render_locations() {
-    const initiative = await load_initiative();
-    const locations = initiative.locations;
+    const locations = await load_locations();
     const geo_json_ot = L.geoJSON(locations);
     geo_json_ot.addTo(map);
 }

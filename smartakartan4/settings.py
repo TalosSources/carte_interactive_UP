@@ -31,8 +31,9 @@ ALLOWED_HOSTS = [os.environ["PUBLIC_URL"]]
 
 INSTALLED_APPS = [
     'website',
-    'rest_framework_gis',  # <-
-    'rest_framework',  # <-
+    'corsheaders',
+    'rest_framework_gis',
+    'rest_framework',
     'django.contrib.gis',  # GeoDjango <-
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'csp.middleware.CSPMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # <-
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -135,3 +137,7 @@ CSP_SCRIPT_SRC = [
     os.environ["PUBLIC_URL"]
 ]
 CSP_DEFAULT_SRC = ["https://unpkg.com", "'self'", "https://tile.openstreetmap.org"]
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000'
+]
+
