@@ -4,8 +4,9 @@ WORKDIR /react-frontend
 
 COPY . .
 
+RUN npm install -g nodemon
 RUN npm install
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm","run","start-dev"]
