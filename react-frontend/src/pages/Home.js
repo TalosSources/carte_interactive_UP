@@ -91,7 +91,6 @@ class Home extends React.Component {
                 <h2>Smarta Kartan</h2>
                 <h3>Map</h3>
 
-                {/* <div id="map"></div> */}
                 <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false} style={{ "height": "40vh", "width": "100vw" }}>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
