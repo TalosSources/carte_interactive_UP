@@ -7,11 +7,9 @@ import requests
 import website.models
 
 """
-##########################
-To start this script:
-1. export NO_DOCKER=1
-2. ./manage.py shell < migrate_from_sk3.py
-##########################
+
+WP documentation: Using the REST API
+https://developer.wordpress.org/rest-api/using-the-rest-api/
 
 REST and Python: Consuming APIs
 https://realpython.com/api-integration-in-python/#rest-and-python-consuming-apis
@@ -23,36 +21,43 @@ https://reqbin.com/yoftqza4
 https://sk-wp.azurewebsites.net/wp-admin/admin.php?page=pods
 (Only available with WP login)
 
-curl --header "Authorization: Bearer LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7" https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/oversattning/
+curl --header "Authorization: Bearer LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7" "https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/oversattning/"
+(It's safest to always put the url within citation marks)
 
 """
 
 # RJK: Response JSON (Sub) Key
 
-RJK_ID = "id"
+RJK_ID = "id"  # -the WP post id
 RJK_DATE = "date"
 RJK_SLUG = "slug"
 RJK_TITLE = "title"
 RJSK_RENDERED = "rendered"
 RJK_ACF = "acf"  # -advanced custom fields (WP)
-RJSK_SHORT_DESCRIPTION = "short_description"  # TODO
-RJSK_DESCRIPTION = "description"
+RJSK_ACF_SHORT_DESCRIPTION = "short_description"  # unused
+RJSK_ACF_DESCRIPTION_ID = "description"
 RJK_LATITUDE = "latitude"
 RJK_LONGITUDE = "longitude"
+RJK_STATUS = "status"
+RJK_ADDRESS_AND_COORDINATE = "address_and_coordinate"
+RJSK_ADDRESS_AND_COORDINATE_ID = "id"  # -another field called "ID" is also available, which has the same value AFAIK
 
-# PER_PAGE = 0
-PER_PAGE = 3
+STATUS_PUBLISH = "publish"
+
+PER_PAGE = 100  # -max is 100: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
 # FIELDS = []
-FIELDS = [RJK_ID, RJK_DATE, RJK_SLUG, RJK_TITLE, RJK_ACF, RJK_LATITUDE, RJK_LONGITUDE]
+FIELDS = [RJK_ID, RJK_STATUS, RJK_DATE, RJK_SLUG, RJK_TITLE, RJK_ACF, RJK_LATITUDE, RJK_LONGITUDE,
+    RJK_ADDRESS_AND_COORDINATE]
 # data_type = "global_business"
 # See https://sk-wp.azurewebsites.net/wp-admin/admin.php?page=pods
 ADDRESS_DT = "address"
 PAGE_DT = "page"
 BUSINESS_DT = "business"
 GOTEBORG_R = "goteborg"
-OVERSATTNING = "oversattning"
-data_type_list = ["faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, "region", OVERSATTNING, "page_type", "tagg_grupp", "tagg"]
-region_list = ["gavle", "global", GOTEBORG_R, "karlstad", "malmo", "sjuharad", "stockholm", "umea"]
+OVERSATTNING_DT = "oversattning"
+GLOBAL_R = "global"
+data_type_list = ["faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, "region", OVERSATTNING_DT, "page_type", "tagg_grupp", "tagg"]
+region_list = ["gavle", GLOBAL_R, GOTEBORG_R, "karlstad", "malmo", "sjuharad", "stockholm", "umea"]
 # göteborg, karlstad, etc
 # Please note: address for Göteborg uses gbg instead
 data_type_full_name_list = []
@@ -68,95 +73,132 @@ for data_type in data_type_list:
             data_type_full_name = f"{region}_{data_type}"
             data_type_full_name_list.append(data_type_full_name)
     else:
-        if data_type == OVERSATTNING:
+        if data_type == OVERSATTNING_DT:
             data_type = "translations"  # -specified in the WP Pods field "REST Base (if any)"
         data_type_full_name_list.append(data_type)
-data_type_full_name_list.append("nonexisting")  # -for testing/verification purposes
+data_type_full_name_list.append("non-existing")  # -for testing/verification purposes
 
 bearer_token = "LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7"
 header_dict = {"Authorization": f"Bearer {bearer_token}"}
 
 for data_type_full_name in data_type_full_name_list:
-    if data_type_full_name not in ("goteborg_business", "address_gbg",):
-        # "address_gbg",
+    if BUSINESS_DT not in data_type_full_name:
         continue
+    """
+    if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
+        continue
+    if data_type_full_name not in ("goteborg_business", "address_gbg",):
+        continue
+    """
+    print(f"=== {data_type_full_name=} ===")
 
     page_nr = 1
+    while True:
+        # print(f"Page nr: {page_nr}")
+        api_url = f"https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/{data_type_full_name}/"
+        if FIELDS:
+            api_url += f"&_fields={','.join(FIELDS)}"
+            # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_fields
+        if PER_PAGE:
+            api_url += f"&per_page={PER_PAGE}&page={page_nr}"
+            # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
+        api_url = api_url.replace('&', '?', 1)
+        # print(f"{api_url=}")
 
-    print(f"=== {data_type_full_name=} ===")
-    api_url = f"https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/{data_type_full_name}/"
-    if FIELDS:
-        api_url += f"&_fields={','.join(FIELDS)}"
-        # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_fields
-    if PER_PAGE:
-        api_url += f"&per_page={PER_PAGE}&page={page_nr}"
-        # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
-    api_url = api_url.replace('&', '?', 1)
-    print(f"{api_url=}")
+        response = requests.get(api_url, headers=header_dict)
+        response_json = response.json()  # -can be a list or a dict
+        if type(response_json) is dict and response_json.get("code", "") == "rest_post_invalid_page_number":
+            print(f"No more data found for {page_nr=} Exiting while loop")
+            break
 
-    response = requests.get(api_url, headers=header_dict)
-    response_json = response.json()
+        if response.status_code != 200:
+            print(f"WARNING response code was not 200 --- {response.status_code=}")
+            break
 
-    if response.status_code != 200:
-        print(f"WARNING response code was not 200 --- {response.status_code=}")
-        continue
+        if FIELDS and RJK_ACF not in FIELDS:
+            print(f"{response_json=}")
+        # print(f"Number of rows: {len(response_json)}")
 
-    if FIELDS and RJK_ACF not in FIELDS:
-        print(f"{response_json=}")
-    print(f"Number of rows: {len(response_json)}")
-
-    lowest_nr_of_cols = sys.maxsize
-    highest_nr_of_cols = 0
-    nr_of_cols = -1
-    if response_json:
-        for row in response_json:
-            nr_of_cols = len(row)
-            lowest_nr_of_cols = min(lowest_nr_of_cols, nr_of_cols)
-            highest_nr_of_cols = max(highest_nr_of_cols, nr_of_cols)
-        if lowest_nr_of_cols != highest_nr_of_cols:
-            print("WARNING: The lowest_nr_of_cols per row and highest_nr_of_cols per row do not match")
-            print(f"{lowest_nr_of_cols=}")
-            print(f"{highest_nr_of_cols=}")
+        lowest_nr_of_cols = sys.maxsize
+        highest_nr_of_cols = 0
+        nr_of_cols = -1
+        if response_json:
+            for row in response_json:
+                nr_of_cols = len(row)
+                lowest_nr_of_cols = min(lowest_nr_of_cols, nr_of_cols)
+                highest_nr_of_cols = max(highest_nr_of_cols, nr_of_cols)
+            if lowest_nr_of_cols != highest_nr_of_cols:
+                print("WARNING: The lowest_nr_of_cols per row and highest_nr_of_cols per row do not match")
+                print(f"{lowest_nr_of_cols=}")
+                print(f"{highest_nr_of_cols=}")
+            else:
+                pass
+                # print(f"{nr_of_cols=}")
         else:
-            print(f"{nr_of_cols=}")
-    else:
-        print("WARNING: No rows in response")
+            print("WARNING: No rows in response")
+            break
 
-    for resp_row in response_json:
-        title = resp_row[RJK_TITLE][RJSK_RENDERED]
-        print(f"{title=}")
-        if data_type_full_name == "goteborg_business":
-            # TODO: Ensure that initiatives are added before locations
+        for resp_row in response_json:
+            wp_post_id = resp_row[RJK_ID]
+            title = resp_row[RJK_TITLE][RJSK_RENDERED]
+            status = resp_row[RJK_STATUS]
+            if status != STATUS_PUBLISH:
+                print(f"INFO: {status=}")
+                continue
 
-            description = resp_row[RJK_ACF][RJSK_DESCRIPTION]
-            print(f"{description=}")
-            # TODO: Use .objects.create to actually add to the db
-            initiative = website.models.Initiative(
-                name=title,
-                description=description,
-                online_only=False
-            )
-            print(f"Added initiative with {initiative.id=}")
-            # -TODO: We may want to auto-generate the model in the future
-        elif data_type_full_name == "address_gbg":
-            latitude = resp_row[RJK_LATITUDE]
-            print(f"{latitude=}")
-            longitude = resp_row[RJK_LONGITUDE]
-            print(f"{longitude=}")
-            point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
-            # -please note order of lat and lng
-            ref_initiative_id = 1
-            ref_initiative = website.models.Initiative.objects.get(pk=ref_initiative_id)
-            # TODO: Use .objects.create to actually add to the db
-            location = website.models.Location(
-                address=title,
-                coordinates=point,
-                initiative=ref_initiative
-            )
-            print(f"Added location with {location.id=}")
-            # -TODO: We may want to auto-generate the model in the future
-        else:
-            raise NotImplementedError
+            if ADDRESS_DT in data_type_full_name:
+                latitude: str = resp_row[RJK_LATITUDE]
+                latitude = latitude.replace(',', '.')
+                # print(f"{latitude=}")
+                longitude: str = resp_row[RJK_LONGITUDE]
+                longitude = longitude.replace(',', '.')
+                # print(f"{longitude=}")
+                geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
+                # -please note order of lat and lng
+                new_location = website.models.Location(
+                    id=wp_post_id,
+                    title=title,
+                    coordinates=geo_point
+                )
+                new_location.save(force_update=True)
+                # print(f"Added location with {location.id=}")
 
-print("===")
-print(f"Total number of datatypes: {len(data_type_full_name_list)}")
+            # print(f"{title=}")
+            elif BUSINESS_DT in data_type_full_name:
+                description = resp_row[RJK_ACF][RJSK_ACF_DESCRIPTION_ID]
+                # print(f"{description=}")
+                if not description:
+                    print(f"WARNING: Description for {title} is empty")
+                    description = "-"
+                if len(description) > 12000:
+                    print(f"INFO: Description for {title} is very long: {len(description)} characters")
+                new_initiative = website.models.Initiative(
+                    id=wp_post_id,
+                    title=title,
+                    description=description
+                )
+                new_initiative.save(force_update=True)
+
+                # print(f"Added initiative with {initiative.id=}")
+                # print(f"{type(resp_row)=}")
+                if RJK_ADDRESS_AND_COORDINATE in resp_row:
+                    address_and_coordinate_list_or_bool = resp_row[RJK_ADDRESS_AND_COORDINATE]
+                    # print(f"{type(address_and_coordinate_list)=}")
+                    if type(address_and_coordinate_list_or_bool) is bool and not address_and_coordinate_list_or_bool:
+                        # This means that the initiative has no locations
+                        continue
+                    for aac_dict in address_and_coordinate_list_or_bool:
+                        # Address comes first, so we can connect here (and don't have to save until later)
+                        location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
+                        location = website.models.Location.objects.get(pk=location_id)
+                        # -only works when added to db, so will not work during testing
+                        location.initiative = new_initiative
+                        location.save(force_update=True)
+                else:
+                    if GLOBAL_R not in data_type_full_name:
+                        print(f"WARNING: No location available for initiative: {new_initiative.title}")
+            else:
+                print(f"INFO: Case (data type) not covered: {data_type_full_name=}")
+        page_nr += 1
+
+# print(f"Total number of datatypes: {len(data_type_full_name_list)}")

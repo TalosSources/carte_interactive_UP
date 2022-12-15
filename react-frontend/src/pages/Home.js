@@ -37,7 +37,7 @@ class Home extends React.Component {
         console.log(cardElement);
         return (
             <SkCard
-                title={cardElement.name}
+                title={cardElement.title}
                 url={cardElement.url}
                 id={cardElement.id}
             />
