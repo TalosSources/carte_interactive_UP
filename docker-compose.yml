@@ -21,8 +21,6 @@ services:
     build: ./react-frontend
     ports:
       - "3000:3000"
-    volumes:
-      - ./react-frontend:/react-frontend
     depends_on:
       - api
 
