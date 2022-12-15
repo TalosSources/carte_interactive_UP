@@ -1,10 +1,19 @@
 version: "3.8"
 
 services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - web
+    ports:
+      - "8096:80"
   db:
     image: postgis/postgis:14-3.3  # This version was recommended "for new users" 2022-11-03
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - /var/lib/smartakartan_db:/var/lib/postgresql/data
     environment:
       TZ: Europe/Stockholm
       POSTGRES_PASSWORD: nwKnN7kgftitCpc  # TODO: Security, see "Docker secrets" https://hub.docker.com/_/postgres
@@ -13,21 +22,10 @@ services:
     build: .
     environment:
       - PUBLIC_URL=smartakartan.entrop.mywire.org
-    ports:
-      - "8097:8000"
     depends_on:
       - db
   web:
     build: ./react-frontend
-    ports:
-      - "3000:3000"
     depends_on:
       - api
 
-volumes:
-  pg_data:
-
-# POSTGRES_HOST_AUTH_METHOD: trust
-
-# docker-compose up -d
-# docker-compose up -d --build
