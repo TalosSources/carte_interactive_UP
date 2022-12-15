@@ -1,11 +1,21 @@
 import React from "react";
 import '../App.css';
+import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
+
+const mockData = {
+
+    name: "Test",
+    position: [51.506, -0.10],
+    description: "This is a test thing",
+    image: "https://picsum.photos/id/237/200/300"
+
+}
 
 function SkCard(props) {
     // This is a React "function component"
     // CSS in React: https://www.w3schools.com/react/react_css.asp
     return (
-        <div style={{backgroundColor: "lightgreen"}}>
+        <div style={{ backgroundColor: "lightgreen" }}>
             <a href={'details/' + props.id}>{props.title}</a>
         </div>
     );
@@ -78,9 +88,24 @@ class Home extends React.Component {
     render() {
         return (
             <div className="Home">
-                <h2>Smarta Kartan (React frontend)</h2>
+                <h2>Smarta Kartan</h2>
                 <h3>Map</h3>
-                <div id="map"></div>
+
+                {/* <div id="map"></div> */}
+                <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false} style={{ "height": "40vh", "width": "100vw" }}>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Marker position={[51.505, -0.09]}>
+                        <Popup>
+                            <img src={mockData.image} />
+                            <p>{mockData.description}
+                            </p>
+
+                        </Popup>
+                    </Marker>
+                </MapContainer>
                 <h3>Cards</h3>
                 <ul>
                     {this.renderCardCollection()}
