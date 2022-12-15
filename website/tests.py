@@ -87,7 +87,7 @@ class ApiTest(rest_framework.test.APITestCase):
 
         new_location = create_location()
         http_response = self.client.get(url)
-        self.assertContains(http_response, new_location.address)
+        self.assertContains(http_response, new_location.title)
         self.assertNotContains(http_response, "asdf")
 
     def test_location_detail_not_existing(self):

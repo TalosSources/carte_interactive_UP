@@ -7,7 +7,7 @@
 1. Installing docker and docker compose, see: https://docs.docker.com/get-docker/
 1. Building image and starting the containers: `docker-compose up --build`
 1. Use the website
-   * [Admin interface](http://127.0.0.1:8000/admin/) - Credentials: `admin`, `password`) TODO: Change and hide password
+   * [Admin interface](http://127.0.0.1:8000/admin/) - Credentials: `admin`, `password`, with email set to SunyataZero's gmail address) TODO: Change and hide password
    * [API](http://127.0.0.1:8000/api/) - it's possible to view the API in html by opening this link in a browser)
    * [Our React frontend](http://localhost:3000/) - what the users see when visiting the (future) site. (http://127.0.0.1:3000/ doesn't load data, `localhost` has to be used)
    * Test Django: ____TODO____
@@ -17,6 +17,25 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
 
 ## How to
 
+### Import SK3 data
+
+1. `docker-compose up -d`
+1. `docker-compose run api bash`
+1. `./manage.py shell < migrate_from_sk3.py`
+1. `exit`
+1. `docker-compose down`
+
+
+### Creating an admin superuser (to access `/admin/`)
+
+1. `docker-compose up` (use `-d` if running in a single terminal)
+1. `docker-compose run api bash`
+1. `./manage.py createsuperuser`
+
+### Clear the database
+
+-
+
 ### Creating a new database
 
 We need to create the database manually (but only the first time), otherwise we will get `database "smarta_kartan_db" does not exist`
@@ -24,16 +43,19 @@ We need to create the database manually (but only the first time), otherwise we 
 1. Connect to the postgres: `docker exec -it [container id] psql -U postgres`
 1. Create the database: `postgres=# CREATE DATABASE smarta_kartan_db;`
 1. Verify that the database has been created: `postgres=# \l`
-
-2. Migrating:
-1. `docker-compose exec web python manage.py migrate`
-1. Verify that tables have been created:
-  1. `docker exec -it [container id] psql -U postgres`
-  1. `\dt`
+1. Migrating the first time:
+   1. `docker-compose exec web python manage.py migrate`
+   1. Verify that tables have been created:
+      1. `docker exec -it [container id] psql -U postgres`
+      1. `\dt`
 
 ### Migrating the database
 
-TODO
+After a change in the model, we need to migrate the changes to the database:
+1. `docker-compose up` (use `-d` if running in a single terminal)
+1. `docker-compose run api bash`
+1. `./manage.py makemigrations`
+1. `./manage.py migrate`
 
 ## Interactions with other developers
 
