@@ -9,7 +9,7 @@ services:
       - api
       - web
     ports:
-      - "8096:80"
+      - "80:80"
   db:
     image: postgis/postgis:14-3.3  # This version was recommended "for new users" 2022-11-03
     volumes:
@@ -21,7 +21,7 @@ services:
   api:
     build: .
     environment:
-      - PUBLIC_URL=smartakartan.entrop.mywire.org
+      - PUBLIC_URL=example.com
     depends_on:
       - db
   web:
