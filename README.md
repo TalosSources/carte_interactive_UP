@@ -11,11 +11,13 @@ https://github.com/GoteborgsStad/smartakartan3.0
 $ git clone https://gitlab.com/kollaborativ-ekonomi/smartakartan4.git
 # Update docker-compose.yml to your liking. Especially the db-volume and URL.
 $ docker-compose up -d --build
+# Smartakartan now listens on port 80.
+$ docker-compose down
 ```
-Smartakartan now listens on port 80.
 
 ## Upgrade
 ```
+$ docker-compose down
 $ git pull
 $ docker-compose up -d --build
 ```
