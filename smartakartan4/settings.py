@@ -137,7 +137,4 @@ CSP_SCRIPT_SRC = [
     os.environ["PUBLIC_URL"]
 ]
 CSP_DEFAULT_SRC = ["https://unpkg.com", "'self'", "https://tile.openstreetmap.org"]
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
-]
 
