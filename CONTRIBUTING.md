@@ -20,7 +20,7 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
 ### Import SK3 data
 
 1. `docker-compose up -d`
-1. `docker-compose run api bash`
+1. `docker exec -it smartakartan4_api_i bash`
 1. `./manage.py shell < migrate_from_sk3.py`
 1. `exit`
 1. `docker-compose down`
