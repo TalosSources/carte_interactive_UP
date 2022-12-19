@@ -8,6 +8,12 @@ import website.models
 
 """
 
+#####
+How to use this script:
+
+
+#####
+
 WP documentation: Using the REST API
 https://developer.wordpress.org/rest-api/using-the-rest-api/
 
@@ -81,10 +87,19 @@ data_type_full_name_list.append("non-existing")  # -for testing/verification pur
 bearer_token = "LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7"
 header_dict = {"Authorization": f"Bearer {bearer_token}"}
 
+nr_updated = 0
+nr_added = 0
+nr_skipped = 0
+
 for data_type_full_name in data_type_full_name_list:
-    if BUSINESS_DT not in data_type_full_name:
+    if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
         continue
     """
+    DATA_TYPE_FILTER: list = []
+    if DATA_TYPE_FILTER and data_type_full_name not in DATA_TYPE_FILTER:
+        continue
+    if BUSINESS_DT not in data_type_full_name:
+        continue
     if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
         continue
     if data_type_full_name not in ("goteborg_business", "address_gbg",):
@@ -138,6 +153,8 @@ for data_type_full_name in data_type_full_name_list:
             print("WARNING: No rows in response")
             break
 
+        existing_obj = None
+
         for resp_row in response_json:
             wp_post_id = resp_row[RJK_ID]
             title = resp_row[RJK_TITLE][RJSK_RENDERED]
@@ -147,24 +164,41 @@ for data_type_full_name in data_type_full_name_list:
                 continue
 
             if ADDRESS_DT in data_type_full_name:
+                try:
+                    existing_obj = website.models.Location.objects.get(pk=wp_post_id)
+                except website.models.Location.DoesNotExist:
+                    pass
+
                 latitude: str = resp_row[RJK_LATITUDE]
                 latitude = latitude.replace(',', '.')
-                # print(f"{latitude=}")
                 longitude: str = resp_row[RJK_LONGITUDE]
                 longitude = longitude.replace(',', '.')
-                # print(f"{longitude=}")
                 geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
                 # -please note order of lat and lng
-                new_location = website.models.Location(
+
+                new_obj = website.models.Location(
                     id=wp_post_id,
                     title=title,
                     coordinates=geo_point
                 )
-                new_location.save(force_update=True)
-                # print(f"Added location with {location.id=}")
+
+                if existing_obj is not None:
+                    if existing_obj == new_obj:
+                        nr_skipped += 1
+                    else:
+                        new_obj.save()
+                        nr_updated += 1
+                else:
+                    new_obj.save()
+                    nr_added += 1
 
             # print(f"{title=}")
             elif BUSINESS_DT in data_type_full_name:
+                try:
+                    existing_obj = website.models.Initiative.objects.get(pk=wp_post_id)
+                except website.models.Initiative.DoesNotExist:
+                    pass
+
                 description = resp_row[RJK_ACF][RJSK_ACF_DESCRIPTION_ID]
                 # print(f"{description=}")
                 if not description:
@@ -172,12 +206,21 @@ for data_type_full_name in data_type_full_name_list:
                     description = "-"
                 if len(description) > 12000:
                     print(f"INFO: Description for {title} is very long: {len(description)} characters")
-                new_initiative = website.models.Initiative(
+                new_obj = website.models.Initiative(
                     id=wp_post_id,
                     title=title,
                     description=description
                 )
-                new_initiative.save(force_update=True)
+
+                if existing_obj is not None:
+                    if existing_obj == new_obj:
+                        nr_skipped += 1
+                    else:
+                        new_obj.save()
+                        nr_updated += 1
+                else:
+                    new_obj.save()
+                    nr_added += 1
 
                 # print(f"Added initiative with {initiative.id=}")
                 # print(f"{type(resp_row)=}")
@@ -192,13 +235,20 @@ for data_type_full_name in data_type_full_name_list:
                         location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
                         location = website.models.Location.objects.get(pk=location_id)
                         # -only works when added to db, so will not work during testing
-                        location.initiative = new_initiative
-                        location.save(force_update=True)
+                        location.initiative = new_obj
+                        location.save()
                 else:
                     if GLOBAL_R not in data_type_full_name:
-                        print(f"WARNING: No location available for initiative: {new_initiative.title}")
+                        print(f"WARNING: No location available for initiative: {new_obj.title}")
             else:
-                print(f"INFO: Case (data type) not covered: {data_type_full_name=}")
+                print(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
+                continue
+
+            # print(f"Added location with {location.id=}")
+
         page_nr += 1
 
+print(f"{nr_added=}")
+print(f"{nr_skipped=}")
+print(f"{nr_updated=}")
 # print(f"Total number of datatypes: {len(data_type_full_name_list)}")

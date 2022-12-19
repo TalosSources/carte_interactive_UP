@@ -10,7 +10,9 @@
    * [Admin interface](http://127.0.0.1:8000/admin/) - Credentials from createsuperuser step
    * [API](http://127.0.0.1:8000/api/) - it's possible to view the API in html by opening this link in a browser)
    * [Our React frontend](http://localhost:3000/) - what the users see when visiting the (future) site. (http://127.0.0.1:3000/ doesn't load data, `localhost` has to be used)
-   * Test Django: ____TODO____
+   * Run Django tests:
+     1. `docker-compose run api bash`
+     1. `./manage.py test`
 
 You can add `-d` (`docker-compose up --build -d`) to start docker compose in "detached mode", but then please remember to run `docker-compose down` when you are done, so that resources/ports are not taken/blocked from your system
 
@@ -30,7 +32,7 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
 
 ### Clear the database
 
--
+One way to do this is to go into the admin interface, select all rows for each data type, and then delete them all
 
 ### Creating a new database
 
