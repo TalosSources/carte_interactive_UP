@@ -18,7 +18,7 @@ class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
     """
 
     class Meta:
-        fields = ("id", "title", "initiative")  # -shown under "Properties" here: http://127.0.0.1:8000/api/locations/
+        fields = ('url', "id", "title", "initiative")  # -shown under "Properties" in the API JSON
         geo_field = "coordinates"  # this string value must match the PointField field name in models.py
         model = models.Location
         # TODO: bbox
