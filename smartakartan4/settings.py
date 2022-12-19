@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-bpxf1_ptsh&l9ee#veu9plmu4h+dlt%ddd&i)95ewv)aj7!(bv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ["PUBLIC_URL"]]
+HOST = os.environ["HOST"] if os.environ["HOST"] else "localhost"
+PUBLIC_URL = (os.environ["SCHEME"] if os.environ["SCHEME"] else 'http') + "://" + HOST
+
+ALLOWED_HOSTS = [HOST]
 
 # Application definition
 
@@ -134,7 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSP_SCRIPT_SRC = [
     "https://unpkg.com" ,
-    os.environ["PUBLIC_URL"]
+    HOST
 ]
 CSP_DEFAULT_SRC = ["https://unpkg.com", "'self'", "https://tile.openstreetmap.org"]
 

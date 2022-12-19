@@ -21,7 +21,8 @@ services:
   api:
     build: .
     environment:
-      - PUBLIC_URL=example.com
+      - HOST=example.com
+      - SCHEME=https
     depends_on:
       - db
   web:
