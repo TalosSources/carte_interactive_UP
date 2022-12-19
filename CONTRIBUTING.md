@@ -36,7 +36,7 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
 
 ### Clear the database
 
--
+One way to do this is to go into the admin interface, select all rows for each data type, and then delete them all
 
 ### Creating a new database
 
