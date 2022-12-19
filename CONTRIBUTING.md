@@ -7,7 +7,7 @@
 1. Installing docker and docker compose, see: https://docs.docker.com/get-docker/
 1. Building image and starting the containers: `docker-compose up --build`
 1. Use the website
-   * [Admin interface](http://127.0.0.1:8000/admin/) - Credentials: `admin`, `password`, with email set to SunyataZero's gmail address) TODO: Change and hide password
+   * [Admin interface](http://127.0.0.1:8000/admin/) - Credentials from createsuperuser step
    * [API](http://127.0.0.1:8000/api/) - it's possible to view the API in html by opening this link in a browser)
    * [Our React frontend](http://localhost:3000/) - what the users see when visiting the (future) site. (http://127.0.0.1:3000/ doesn't load data, `localhost` has to be used)
    * Test Django: ____TODO____
@@ -19,18 +19,14 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
 
 ### Import SK3 data
 
-1. `docker-compose up -d`
-1. `docker exec -it smartakartan4_api_i bash`
-1. `./manage.py shell < migrate_from_sk3.py`
-1. `exit`
+1. `docker-compose run api /code/manage.py shell < migrate_from_sk3.py`
 1. `docker-compose down`
 
 
 ### Creating an admin superuser (to access `/admin/`)
 
-1. `docker-compose up` (use `-d` if running in a single terminal)
-1. `docker-compose run api bash`
-1. `./manage.py createsuperuser`
+1. `docker-compose run api /code/manage.py createsuperuser`
+1. `docker-compose down`
 
 ### Clear the database
 
