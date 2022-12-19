@@ -139,5 +139,9 @@ CSP_SCRIPT_SRC = [
     "https://unpkg.com" ,
     HOST
 ]
-CSP_DEFAULT_SRC = ["https://unpkg.com", "'self'", "https://tile.openstreetmap.org"]
+CSP_DEFAULT_SRC = [
+    "https://unpkg.com",
+    "'self'",
+    "https://tile.openstreetmap.org"
+]
 
