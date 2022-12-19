@@ -137,11 +137,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSP_SCRIPT_SRC = [
     "https://unpkg.com" ,
+    "https://cdnjs.cloudflare.com",
+    "'unsafe-inline'",
     HOST
 ]
 CSP_DEFAULT_SRC = [
     "https://unpkg.com",
+    "'unsafe-inline'",
     "'self'",
-    "https://tile.openstreetmap.org"
+    "http://a.tile.openstreetmap.org",
+    "http://b.tile.openstreetmap.org",
+    "http://c.tile.openstreetmap.org",
+    "https://tile.openstreetmap.org",
+    "https://cdnjs.cloudflare.com",
 ]
 
