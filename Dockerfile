@@ -12,4 +12,4 @@ RUN apt-get update -y
 RUN apt-get install -y gdal-bin
 
 COPY . .
-ENTRYPOINT ["/code/entry.sh"]
+CMD ["/code/entry.sh"]
