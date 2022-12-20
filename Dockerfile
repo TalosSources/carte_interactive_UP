@@ -9,7 +9,7 @@ WORKDIR /code
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 RUN apt-get update -y
-RUN apt-get install -y gdal-bin
+RUN apt-get install -y gdal-bin netcat
 
 COPY . .
 CMD ["/code/entry.sh"]
