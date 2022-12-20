@@ -1,4 +1,5 @@
 # import json
+import logging
 import sys
 
 import django.contrib.gis.geos
@@ -6,7 +7,10 @@ import requests
 
 import website.models
 
+logging.basicConfig(level=logging.INFO)
 """
+
+How to use this script: See CONTRIBUTING.md
 
 WP documentation: Using the REST API
 https://developer.wordpress.org/rest-api/using-the-rest-api/
@@ -81,20 +85,28 @@ data_type_full_name_list.append("non-existing")  # -for testing/verification pur
 bearer_token = "LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7"
 header_dict = {"Authorization": f"Bearer {bearer_token}"}
 
+nr_added = 0
+nr_skipped = 0
+
 for data_type_full_name in data_type_full_name_list:
-    if BUSINESS_DT not in data_type_full_name:
+    if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
         continue
     """
+    DATA_TYPE_FILTER: list = []
+    if DATA_TYPE_FILTER and data_type_full_name not in DATA_TYPE_FILTER:
+        continue
+    if BUSINESS_DT not in data_type_full_name:
+        continue
     if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
         continue
     if data_type_full_name not in ("goteborg_business", "address_gbg",):
         continue
     """
-    print(f"=== {data_type_full_name=} ===")
+    logging.info(f"=== {data_type_full_name=} ===")
 
     page_nr = 1
     while True:
-        # print(f"Page nr: {page_nr}")
+        logging.debug(f"Page nr: {page_nr}")
         api_url = f"https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/{data_type_full_name}/"
         if FIELDS:
             api_url += f"&_fields={','.join(FIELDS)}"
@@ -103,21 +115,21 @@ for data_type_full_name in data_type_full_name_list:
             api_url += f"&per_page={PER_PAGE}&page={page_nr}"
             # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
         api_url = api_url.replace('&', '?', 1)
-        # print(f"{api_url=}")
+        logging.debug(f"{api_url=}")
 
         response = requests.get(api_url, headers=header_dict)
         response_json = response.json()  # -can be a list or a dict
         if type(response_json) is dict and response_json.get("code", "") == "rest_post_invalid_page_number":
-            print(f"No more data found for {page_nr=} Exiting while loop")
+            logging.info(f"No more data found for {page_nr=} Exiting while loop")
             break
 
         if response.status_code != 200:
-            print(f"WARNING response code was not 200 --- {response.status_code=}")
+            logging.warning(f"WARNING response code was not 200 --- {response.status_code=}")
             break
 
         if FIELDS and RJK_ACF not in FIELDS:
-            print(f"{response_json=}")
-        # print(f"Number of rows: {len(response_json)}")
+            logging.info(f"{response_json=}")
+        logging.debug(f"Number of rows: {len(response_json)}")
 
         lowest_nr_of_cols = sys.maxsize
         highest_nr_of_cols = 0
@@ -128,14 +140,14 @@ for data_type_full_name in data_type_full_name_list:
                 lowest_nr_of_cols = min(lowest_nr_of_cols, nr_of_cols)
                 highest_nr_of_cols = max(highest_nr_of_cols, nr_of_cols)
             if lowest_nr_of_cols != highest_nr_of_cols:
-                print("WARNING: The lowest_nr_of_cols per row and highest_nr_of_cols per row do not match")
-                print(f"{lowest_nr_of_cols=}")
-                print(f"{highest_nr_of_cols=}")
+                logging.warning("WARNING: The lowest_nr_of_cols per row and highest_nr_of_cols per row do not match")
+                logging.info(f"{lowest_nr_of_cols=}")
+                logging.info(f"{highest_nr_of_cols=}")
             else:
                 pass
-                # print(f"{nr_of_cols=}")
+                logging.debug(f"{nr_of_cols=}")
         else:
-            print("WARNING: No rows in response")
+            logging.warning("WARNING: No rows in response")
             break
 
         for resp_row in response_json:
@@ -143,44 +155,64 @@ for data_type_full_name in data_type_full_name_list:
             title = resp_row[RJK_TITLE][RJSK_RENDERED]
             status = resp_row[RJK_STATUS]
             if status != STATUS_PUBLISH:
-                print(f"INFO: {status=}")
+                logging.info(f"INFO: {status=}")
                 continue
 
+            existing_obj = None
+
             if ADDRESS_DT in data_type_full_name:
+                try:
+                    existing_obj = website.models.Location.objects.get(sk3_id=wp_post_id)
+                except website.models.Location.DoesNotExist:
+                    pass
+
                 latitude: str = resp_row[RJK_LATITUDE]
                 latitude = latitude.replace(',', '.')
-                # print(f"{latitude=}")
                 longitude: str = resp_row[RJK_LONGITUDE]
                 longitude = longitude.replace(',', '.')
-                # print(f"{longitude=}")
                 geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
                 # -please note order of lat and lng
-                new_location = website.models.Location(
-                    id=wp_post_id,
+
+                new_obj = website.models.Location(
+                    sk3_id=wp_post_id,
                     title=title,
                     coordinates=geo_point
                 )
-                new_location.save(force_update=True)
-                # print(f"Added location with {location.id=}")
 
-            # print(f"{title=}")
+                if existing_obj is not None:
+                    nr_skipped += 1
+                else:
+                    new_obj.save()
+                    nr_added += 1
+
+                logging.debug(f"{title=}")
             elif BUSINESS_DT in data_type_full_name:
+                try:
+                    existing_obj = website.models.Initiative.objects.get(sk3_id=wp_post_id)
+                except website.models.Initiative.DoesNotExist:
+                    pass
+
                 description = resp_row[RJK_ACF][RJSK_ACF_DESCRIPTION_ID]
-                # print(f"{description=}")
+                logging.debug(f"{description=}")
                 if not description:
-                    print(f"WARNING: Description for {title} is empty")
+                    logging.warning(f"WARNING: Description for {title} is empty")
                     description = "-"
                 if len(description) > 12000:
-                    print(f"INFO: Description for {title} is very long: {len(description)} characters")
-                new_initiative = website.models.Initiative(
-                    id=wp_post_id,
+                    logging.info(f"INFO: Description for {title} is very long: {len(description)} characters")
+                new_obj = website.models.Initiative(
+                    sk3_id=wp_post_id,
                     title=title,
                     description=description
                 )
-                new_initiative.save(force_update=True)
 
-                # print(f"Added initiative with {initiative.id=}")
-                # print(f"{type(resp_row)=}")
+                if existing_obj is not None:
+                    nr_skipped += 1
+                else:
+                    new_obj.save()
+                    nr_added += 1
+
+                # logging.debug(f"Added initiative with {initiative.id=}")
+                logging.debug(f"{type(resp_row)=}")
                 if RJK_ADDRESS_AND_COORDINATE in resp_row:
                     address_and_coordinate_list_or_bool = resp_row[RJK_ADDRESS_AND_COORDINATE]
                     # print(f"{type(address_and_coordinate_list)=}")
@@ -190,15 +222,19 @@ for data_type_full_name in data_type_full_name_list:
                     for aac_dict in address_and_coordinate_list_or_bool:
                         # Address comes first, so we can connect here (and don't have to save until later)
                         location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
-                        location = website.models.Location.objects.get(pk=location_id)
+                        location = website.models.Location.objects.get(sk3_id=location_id)
                         # -only works when added to db, so will not work during testing
-                        location.initiative = new_initiative
-                        location.save(force_update=True)
+                        location.initiative = new_obj
+                        location.save()
                 else:
                     if GLOBAL_R not in data_type_full_name:
-                        print(f"WARNING: No location available for initiative: {new_initiative.title}")
+                        logging.warning(f"WARNING: No location available for initiative: {new_obj.title}")
             else:
-                print(f"INFO: Case (data type) not covered: {data_type_full_name=}")
+                logging.info(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
+                continue
+
         page_nr += 1
 
-# print(f"Total number of datatypes: {len(data_type_full_name_list)}")
+logging.info(f"{nr_added=}")
+logging.info(f"{nr_skipped=}")
+logging.debug(f"Total number of datatypes: {len(data_type_full_name_list)}")
