@@ -10,11 +10,7 @@ import website.models
 logging.basicConfig(level=logging.INFO)
 """
 
-#####
-How to use this script:
-
-
-#####
+How to use this script: See CONTRIBUTING.md
 
 WP documentation: Using the REST API
 https://developer.wordpress.org/rest-api/using-the-rest-api/
@@ -89,7 +85,6 @@ data_type_full_name_list.append("non-existing")  # -for testing/verification pur
 bearer_token = "LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7"
 header_dict = {"Authorization": f"Bearer {bearer_token}"}
 
-nr_updated = 0
 nr_added = 0
 nr_skipped = 0
 
@@ -155,8 +150,6 @@ for data_type_full_name in data_type_full_name_list:
             logging.warning("WARNING: No rows in response")
             break
 
-        existing_obj = None
-
         for resp_row in response_json:
             wp_post_id = resp_row[RJK_ID]
             title = resp_row[RJK_TITLE][RJSK_RENDERED]
@@ -164,6 +157,8 @@ for data_type_full_name in data_type_full_name_list:
             if status != STATUS_PUBLISH:
                 logging.info(f"INFO: {status=}")
                 continue
+
+            existing_obj = None
 
             if ADDRESS_DT in data_type_full_name:
                 try:
@@ -185,11 +180,7 @@ for data_type_full_name in data_type_full_name_list:
                 )
 
                 if existing_obj is not None:
-                    if existing_obj == new_obj:
-                        nr_skipped += 1
-                    else:
-                        new_obj.save()
-                        nr_updated += 1
+                    nr_skipped += 1
                 else:
                     new_obj.save()
                     nr_added += 1
@@ -215,11 +206,7 @@ for data_type_full_name in data_type_full_name_list:
                 )
 
                 if existing_obj is not None:
-                    if existing_obj == new_obj:
-                        nr_skipped += 1
-                    else:
-                        new_obj.save()
-                        nr_updated += 1
+                    nr_skipped += 1
                 else:
                     new_obj.save()
                     nr_added += 1
@@ -246,11 +233,8 @@ for data_type_full_name in data_type_full_name_list:
                 logging.info(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
                 continue
 
-            logging.debug(f"Added location with {location.id=}")
-
         page_nr += 1
 
 logging.info(f"{nr_added=}")
 logging.info(f"{nr_skipped=}")
-logging.info(f"{nr_updated=}")
 logging.debug(f"Total number of datatypes: {len(data_type_full_name_list)}")

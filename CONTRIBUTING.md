@@ -38,6 +38,8 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
 
 One way to do this is to go into the admin interface, select all rows for each data type, and then delete them all
 
+Alternatively, dangerous: ./manage.py flush (the superuser will have to be recreated)
+
 ### Creating a new database
 
 We need to create the database manually (but only the first time), otherwise we will get `database "smarta_kartan_db" does not exist`
