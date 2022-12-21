@@ -21,8 +21,8 @@ services:
   api:
     build: .
     environment:
-      - HOST=example.com
-      - SCHEME=https
+      - HOST=localhost
+      - SCHEME=http
     depends_on:
       - db
   web:
