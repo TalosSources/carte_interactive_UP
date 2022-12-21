@@ -28,17 +28,8 @@ const osmTileLayerOptionsOt = {
 const osmTileLayer = L.tileLayer(osmUrlTemplateSg, osmTileLayerOptionsOt);
 osmTileLayer.addTo(map);
 
-/*
-let myPointLat = 51.5;
-let myPointLng = -0.04;
-let myPointMarker = L.marker([myPointLat, myPointLng]);
-myPointMarker.addTo(map);
-const myPointMarkerPopup = myPointMarker.bindPopup("Hello Leaflet (this takes html or text)");
-myPointMarkerPopup.openPopup();
-*/
-
 async function load_locations() {
-    const location_api_url = "http://127.0.0.1:8000/api/locations/";
+    const location_api_url = "/api/locations/";
     // TODO: in_bbox=_____
     const response = await fetch(location_api_url);
     const geojson = await response.json();

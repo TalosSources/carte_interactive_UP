@@ -58,7 +58,7 @@ class Home extends React.Component {
     }
 
     refreshInitiativeList() {
-        const initiatives_api_url = "http://127.0.0.1:8000/api/initiatives/";
+        const initiatives_api_url = "/api/initiatives/";
         fetch(initiatives_api_url)
             .then(response => response.json())
             .then(response_array => {
