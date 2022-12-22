@@ -68,7 +68,7 @@ OVERSATTNING_DT = "oversattning"
 GLOBAL_R = "global"
 
 
-def sk3_import():
+def import_sk3_data(i_args: [str]):
     data_type_list = ["faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, "region", OVERSATTNING_DT, "page_type", "tagg_grupp",
         "tagg"]
     region_list = ["gavle", GLOBAL_R, GOTEBORG_R, "karlstad", "malmo", "sjuharad", "stockholm", "umea"]
@@ -255,9 +255,9 @@ class Command(django.core.management.base.BaseCommand):
     help = "Migrate data from sk3. Arguments: ________"
 
     def add_arguments(self, parser):
-        parser.add_argument("sk3_data_types", nargs="+", type=str)
+        parser.add_argument("sk3_data_types", nargs="*", type=str)
 
     def handle(self, *args, **options):
-        print(args)
-        print(options)
-        sk3_import()
+        logging.debug(f"{args=}")
+        logging.debug(f"{options=}")
+        import_sk3_data(args)

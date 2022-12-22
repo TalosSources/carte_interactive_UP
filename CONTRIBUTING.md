@@ -7,23 +7,21 @@
 1. Installing docker and docker compose, see: https://docs.docker.com/get-docker/
 1. Building image and starting the containers: `docker-compose up --build`
 1. Use the website
-   * [Admin interface](http://127.0.0.1:8000/admin/) - Credentials from createsuperuser step
-   * [API](http://127.0.0.1:8000/api/) - it's possible to view the API in html by opening this link in a browser)
-   * [Our React frontend](http://localhost:3000/) - what the users see when visiting the (future) site. (http://127.0.0.1:3000/ doesn't load data, `localhost` has to be used)
+   * [Admin interface](http://localhost/admin/) - Credentials from createsuperuser step
+   * [API](http://localhost/api/) - it's possible to view the API in html by opening this link in a browser)
+   * [Our React frontend](http://localhost/) - what the users see when visiting the (future) site
    * Run Django tests:
-     1. `docker-compose run api bash`
-     1. `./manage.py test`
+     1. `docker-compose run api /code/manage.py test`
+     1. `docker-compose down`
 
 You can add `-d` (`docker-compose up --build -d`) to start docker compose in "detached mode", but then please remember to run `docker-compose down` when you are done, so that resources/ports are not taken/blocked from your system
-
 
 ## How to
 
 ### Import SK3 data
 
-1. `docker-compose run api /code/manage.py shell < migrate_from_sk3.py`
+1. `docker-compose run api /code/manage.py import_sk3_data`
 1. `docker-compose down`
-
 
 ### Creating an admin superuser (to access `/admin/`)
 
@@ -60,6 +58,10 @@ After a change in the model, we need to migrate the changes to the database:
 ## Interactions with other developers
 
 Done mainly via our slack, and also via GitLab issues
+
+## Work process
+
+TODO
 
 ## Decision process
 
