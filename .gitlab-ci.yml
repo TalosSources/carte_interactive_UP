@@ -39,7 +39,7 @@ django_test:
     - cat dct
     - sed -e "s|.*var/lib.*||" dct > docker-compose.yml
     - cat docker-compose.yml
-    - sudo docker-compose up #initialize db
+    - sudo docker-compose up -d #initialize db
     - sudo docker-compose run api /code/manage.py test
     - sudo docker-compose down
 
