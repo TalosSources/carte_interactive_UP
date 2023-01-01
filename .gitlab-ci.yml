@@ -35,8 +35,8 @@ variables:
 django_test:
   stage: test
   script:
-    - docker-compose run api /code/manage.py test
-    - docker-compose down
+    - sudo docker-compose run api /code/manage.py test
+    - sudo docker-compose down
 
 #deploy:
   #stage: deploy
