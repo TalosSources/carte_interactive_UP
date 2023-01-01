@@ -35,6 +35,8 @@ variables:
 django_test:
   stage: test
   script:
+    - sed -ie "s|.*var/lib.*||" docker-compose.yml
+    - sudo docker-compose up #initialize db
     - sudo docker-compose run api /code/manage.py test
     - sudo docker-compose down
 
