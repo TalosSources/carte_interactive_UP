@@ -43,39 +43,14 @@ django_test:
     - sudo docker-compose run api /code/manage.py test
     - sudo docker-compose down
 
-#deploy:
-  #stage: deploy
-  #image: "$CI_TEMPLATE_REGISTRY_HOST/gitlab-org/5-minute-production-app/deploy-template/stable"
-  #extends: .needs_aws_vars
-  #resource_group: deploy
-  #before_script:
-    #- cp /*.tf .
-    #- cp /deploy.sh .
-    #- cp /conf.nginx .
-  #script:
-    #- ./deploy.sh
-  #artifacts:
-    #reports:
-      #dotenv: deploy.env
+deploy:
+  stage: deploy
+  script:
+    - cd /var/lib/smartakartan/smartakartan4
+    - sudo git pull
+    - sudo docker-compose down
+    - sudo docker-compose up --build -d
   #environment:
     #name: $CI_COMMIT_REF_SLUG
     #url: $DYNAMIC_ENVIRONMENT_URL
     #on_stop: terraform_destroy
-
-#terraform_destroy:
-  #variables:
-    #GIT_STRATEGY: none
-  #stage: destroy
-  #image: "$CI_TEMPLATE_REGISTRY_HOST/gitlab-org/5-minute-production-app/deploy-template/stable"
-  #before_script:
-    #- cp /*.tf .
-    #- cp /deploy.sh .
-  # script:
-    #- gitlab-terraform destroy -auto-approve
-  #environment:
-    #name: $CI_COMMIT_REF_SLUG
-    #action: stop
-  #rules:
-    #- if: '$AWS_ACCESS_KEY_ID && $AWS_SECRET_ACCESS_KEY && $AWS_DEFAULT_REGION && $CI_COMMIT_REF_PROTECTED == "false"'
-      #when: manual
-    #- when: never
