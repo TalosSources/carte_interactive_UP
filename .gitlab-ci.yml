@@ -35,6 +35,7 @@ variables:
 django_test:
   stage: test
   script:
+    - awk 'NR==FNR{if (/var.*lib/) del[NR-1]; next} !(FNR in del)' docker-compose.yml docker-compose.yml
     - sed -ie "s|.*var/lib.*||" docker-compose.yml
     - sudo docker-compose up #initialize db
     - sudo docker-compose run api /code/manage.py test
