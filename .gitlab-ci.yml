@@ -35,7 +35,7 @@ variables:
 django_test:
   stage: test
   script:
-    - patch docker-compose.yml < compose-test.yml
+    - patch docker-compose.yml < compose-test.patch
     - sudo docker-compose up -d #initialize db
     - sudo docker-compose run api /code/manage.py test
     - sudo docker-compose down
@@ -43,7 +43,7 @@ django_test:
 deploy:
   stage: deploy
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "main"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
   script:
     - cd /var/lib/smartakartan/smartakartan4
     - sudo git pull
