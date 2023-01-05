@@ -1,37 +1,32 @@
 version: "3.8"
 
 services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - web
+    ports:
+      - "80:80"
   db:
     image: postgis/postgis:14-3.3  # This version was recommended "for new users" 2022-11-03
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - /var/lib/smartakartan_db:/var/lib/postgresql/data
     environment:
       TZ: Europe/Stockholm
       POSTGRES_PASSWORD: nwKnN7kgftitCpc  # TODO: Security, see "Docker secrets" https://hub.docker.com/_/postgres
       POSTGRES_DB: smarta_kartan_db  # If not given, the db will be named after the admin user (probably "postgres")
   api:
     build: .
-    command: python /code/manage.py runserver 0.0.0.0:8000  # Please note that manage is prepended by /code
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:/code
+    environment:
+      - HOST=localhost
+      - SCHEME=http
     depends_on:
       - db
   web:
     build: ./react-frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./react-frontend:/react-frontend
     depends_on:
       - api
 
-volumes:
-  pg_data:
-
-# POSTGRES_HOST_AUTH_METHOD: trust
-
-# docker-compose up -d
-# docker-compose up -d --build
-# docker exec -it 4c659b04af92 psql

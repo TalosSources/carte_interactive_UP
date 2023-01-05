@@ -58,7 +58,7 @@ class Home extends React.Component {
     }
 
     refreshInitiativeList() {
-        const initiatives_api_url = "http://127.0.0.1:8000/api/initiatives/";
+        const initiatives_api_url = "/api/initiatives/";
         fetch(initiatives_api_url)
             .then(response => response.json())
             .then(response_array => {
@@ -78,7 +78,7 @@ class Home extends React.Component {
     render() {
         return (
             <div className="Home">
-                <h2>Smarta Kartan (React frontend)</h2>
+                <h2>Smartakartan (React frontend)</h2>
                 <h3>Map</h3>
                 <div id="map"></div>
                 <h3>Cards</h3>
