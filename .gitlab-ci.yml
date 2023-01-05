@@ -37,6 +37,7 @@ django_test:
   script:
     - patch docker-compose.yml < compose-test.patch
     - sudo docker-compose up -d #initialize db
+    - sleep 3
     - sudo docker-compose run api /code/manage.py test
     - sudo docker-compose down
 
