@@ -35,7 +35,7 @@ variables:
 django_test:
   stage: test
   script:
-    - patch docker-compose.yml < compose-test.yml
+    - patch docker-compose.yml < compose-test.patch
     - sudo docker-compose up -d #initialize db
     - sudo docker-compose run api /code/manage.py test
     - sudo docker-compose down
