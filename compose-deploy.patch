@@ -1,5 +1,5 @@
---- docker-compose.yml	2023-01-05 16:22:56.528187929 +0100
-+++ docker-compose.yml.deploy	2023-01-05 16:22:49.258167805 +0100
+--- docker-compose.yml.original	2023-01-05 16:43:30.944242568 +0100
++++ docker-compose.yml	2023-01-05 16:44:15.999087347 +0100
 @@ -5,6 +5,7 @@
      image: nginx:latest
      volumes:
@@ -8,3 +8,14 @@
      depends_on:
        - api
        - web
+@@ -21,8 +22,8 @@
+   api:
+     build: .
+     environment:
+-      - HOST=localhost
+-      - SCHEME=http
++      - HOST=smartakartan.entrop.mywire.org
++      - SCHEME=https
+     depends_on:
+       - db
+   web:
