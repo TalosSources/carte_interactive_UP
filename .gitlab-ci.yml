@@ -47,6 +47,11 @@ deploy:
   script:
     - cd /var/lib/smartakartan/smartakartan4
     - sudo git pull
+    - echo "<html><body>" > gitver
+    - git describe --long --all --dirty >> gitver
+    - echo "</html></body>" >> gitver
+    - patch docker-compose.yml < compose-deploy.patch
+    - patch nginx.conf < nginx-deploy.patch
     - sudo docker-compose down
     - sudo docker-compose up --build -d
   #environment:

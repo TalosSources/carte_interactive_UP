@@ -1,0 +1,10 @@
+--- docker-compose.yml	2023-01-05 16:22:56.528187929 +0100
++++ docker-compose.yml.deploy	2023-01-05 16:22:49.258167805 +0100
+@@ -5,6 +5,7 @@
+     image: nginx:latest
+     volumes:
+       - ./nginx.conf:/etc/nginx/nginx.conf:ro
++      - ./gitver:/var/www/gitver
+     depends_on:
+       - api
+       - web
