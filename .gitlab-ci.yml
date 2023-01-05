@@ -46,7 +46,7 @@ django_test:
 deploy:
   stage: deploy
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "main"
+    - if: '$CI_PIPELINE_SOURCE == "main"'
   script:
     - cd /var/lib/smartakartan/smartakartan4
     - sudo git pull
