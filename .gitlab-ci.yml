@@ -46,7 +46,7 @@ deploy:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
-    - cd /var/lib/smartakartan/smartakartan4
+    - cd /var/lib/smartakartan/smartakartan-cd
     - sudo git reset --hard
     - sudo git pull
     - sudo bash -c 'git describe --long --all --dirty > gitver'
