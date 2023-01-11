@@ -79,6 +79,14 @@ class Home extends React.Component {
         return (
             <div className="Home">
                 <h2>Smartakartan (React frontend)</h2>
+                <h3>Region</h3>
+                <h4>Select</h4>
+                <ul>
+                    <li>Test1</li>
+                    <li>Test2</li>
+                </ul>
+                <h4>Welcome message</h4>
+
                 <h3>Map</h3>
                 <div id="map"></div>
                 <h3>Cards</h3>

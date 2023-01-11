@@ -28,9 +28,8 @@ https://reqbin.com/yoftqza4
 https://sk-wp.azurewebsites.net/wp-admin/admin.php?page=pods
 (Only available with WP login)
 
-curl --header "Authorization: Bearer LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7" "https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/oversattning/"
+curl --header "Authorization: Bearer LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7" "https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/global_business/"
 (It's safest to always put the url within citation marks)
-
 
 https://docs.djangoproject.com/en/4.1/howto/custom-management-commands/
 
@@ -52,12 +51,15 @@ RJK_STATUS = "status"
 RJK_ADDRESS_AND_COORDINATE = "address_and_coordinate"
 RJSK_ADDRESS_AND_COORDINATE_ID = "id"  # -another field called "ID" is also available, which has the same value AFAIK
 
+RJK_LANGUAGE_CODE = "language_code"
+RJK_WELCOME_MESSAGE = "welcome_message"
+
 STATUS_PUBLISH = "publish"
 
 PER_PAGE = 100  # -max is 100: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
 # FIELDS = []
 FIELDS = [RJK_ID, RJK_STATUS, RJK_DATE, RJK_SLUG, RJK_TITLE, RJK_ACF, RJK_LATITUDE, RJK_LONGITUDE,
-    RJK_ADDRESS_AND_COORDINATE]
+    RJK_ADDRESS_AND_COORDINATE, RJK_LANGUAGE_CODE, RJK_WELCOME_MESSAGE]
 # data_type = "global_business"
 # See https://sk-wp.azurewebsites.net/wp-admin/admin.php?page=pods
 ADDRESS_DT = "address"
@@ -66,10 +68,11 @@ BUSINESS_DT = "business"
 GOTEBORG_R = "goteborg"
 OVERSATTNING_DT = "oversattning"
 GLOBAL_R = "global"
+REGION_DT = "region"
 
 
 def import_sk3_data(i_args: [str]):
-    data_type_list = ["faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, "region", OVERSATTNING_DT, "page_type", "tagg_grupp",
+    data_type_list = ["faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, REGION_DT, OVERSATTNING_DT, "page_type", "tagg_grupp",
         "tagg"]
     region_list = ["gavle", GLOBAL_R, GOTEBORG_R, "karlstad", "malmo", "sjuharad", "stockholm", "umea"]
     # göteborg, karlstad, etc
@@ -92,6 +95,10 @@ def import_sk3_data(i_args: [str]):
             data_type_full_name_list.append(data_type)
     data_type_full_name_list.append("non-existing")  # -for testing/verification purposes
 
+    assert REGION_DT in data_type_full_name_list
+    data_type_full_name_list.remove(REGION_DT)
+    data_type_full_name_list.insert(0, REGION_DT)
+
     bearer_token = "LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7"
     header_dict = {"Authorization": f"Bearer {bearer_token}"}
 
@@ -99,9 +106,12 @@ def import_sk3_data(i_args: [str]):
     nr_skipped = 0
 
     for data_type_full_name in data_type_full_name_list:
-        if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
+        # ################ FILTERING ################
+        if data_type_full_name not in ("goteborg_business", "address_gbg", REGION_DT):
             continue
         """
+        if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
+            continue
         DATA_TYPE_FILTER: list = []
         if DATA_TYPE_FILTER and data_type_full_name not in DATA_TYPE_FILTER:
             continue
@@ -165,13 +175,37 @@ def import_sk3_data(i_args: [str]):
                 wp_post_id = resp_row[RJK_ID]
                 title = resp_row[RJK_TITLE][RJSK_RENDERED]
                 status = resp_row[RJK_STATUS]
+                # TODO: move all except wp_post_id down to the places where they are used
+
                 if status != STATUS_PUBLISH:
                     logging.info(f"INFO: {status=}")
                     continue
 
                 existing_obj = None
 
-                if ADDRESS_DT in data_type_full_name:
+                if REGION_DT in data_type_full_name:
+                    try:
+                        existing_obj = website.models.Region.objects.get(sk3_id=wp_post_id)
+                    except website.models.Region.DoesNotExist:
+                        pass
+
+                    lang_code = resp_row[RJK_LANGUAGE_CODE]
+                    if lang_code != "sv":  # this is not because we want Swedish, but because we want the minimal slug
+                        continue
+
+                    new_obj = website.models.Region(
+                        sk3_id=wp_post_id,
+                        slug=resp_row[RJK_SLUG],
+                        welcome_message_html=resp_row[RJK_WELCOME_MESSAGE]
+                    )
+
+                    if existing_obj is not None:
+                        nr_skipped += 1
+                    else:
+                        new_obj.save()
+                        nr_added += 1
+
+                elif ADDRESS_DT in data_type_full_name:
                     try:
                         existing_obj = website.models.Location.objects.get(sk3_id=wp_post_id)
                     except website.models.Location.DoesNotExist:
@@ -210,10 +244,16 @@ def import_sk3_data(i_args: [str]):
                         description = "-"
                     if len(description) > 12000:
                         logging.info(f"INFO: Description for {title} is very long: {len(description)} characters")
+
+                    region_name = data_type_full_name.split("_")[0]
+                    assert region_name in region_list
+                    region_obj = website.models.Region.objects.get(slug=region_name)
+
                     new_obj = website.models.Initiative(
                         sk3_id=wp_post_id,
                         title=title,
-                        description=description
+                        description=description,
+                        region=region_obj
                     )
 
                     if existing_obj is not None:

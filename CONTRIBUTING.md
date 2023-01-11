@@ -20,6 +20,7 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
 
 ### Import SK3 data
 
+1. If you have made changes to the import script: `docker-compose build`
 1. `docker-compose run api /code/manage.py import_sk3_data`
 1. `docker-compose down`
 
@@ -30,9 +31,8 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
 
 ### Clear the database
 
-One way to do this is to go into the admin interface, select all rows for each data type, and then delete them all
-
-Alternatively, dangerous: ./manage.py flush (the superuser will have to be recreated)
+* Option A: One way to do this is to go into the admin interface, select all rows for each data type, and then delete them all
+* (Dangerous) Option B: `docker-compose run api /code/manage.py flush`. (Afterwards the superuser will have to be recreated)
 
 ### Creating a new database
 
@@ -54,6 +54,11 @@ After a change in the model, we need to migrate the changes to the database:
 1. `docker-compose run api bash`
 1. `./manage.py makemigrations`
 1. `./manage.py migrate`
+
+NEW:
+1. `python3 manage.py makemigrations`
+1. `docker-compose build`
+1. `docker-compose run api /code/manage.py migrate`
 
 ## Interactions with other developers
 
