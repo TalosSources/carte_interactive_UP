@@ -27,9 +27,9 @@ class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
         # Also see this: https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/
 
 
-class RegionSerializer(serializers.ModelSerializer):
+class RegionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        fields = ('slug',)
+        fields = ('url', 'id', 'slug', 'welcome_message_html')
         model = models.Region
 
 

@@ -11,18 +11,22 @@ function SkCard(props) {
     );
 }
 
-
 class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             initiativeList: [],
+            regionList: [],
+            activeRegionId: 28,
+            activeRegion: {},
         };
     }
 
     // Overridden (see details in documentation)
     componentDidMount() {
         this.refreshInitiativeList();
+        this.refreshRegionList();
+        this.refreshActiveRegion();
 
         // The id "map" has to be available before we can load the map script. Therefore we load this script here
         const mapScript = document.createElement("script");
@@ -31,30 +35,59 @@ class Home extends React.Component {
         document.body.appendChild(mapScript);
     }
 
-    renderCard(cardElement) {
-        // console.log(`cardElement: ${cardElement}`);
-        console.log("cardElement:");
-        console.log(cardElement);
-        return (
-            <SkCard
-                title={cardElement.title}
-                url={cardElement.url}
-                id={cardElement.id}
-            />
+    renderCardCollection() {
+        return this.state.initiativeList.map(
+            (initiativeElement) => (
+                <div key={initiativeElement.id}>
+                    <SkCard
+                    title={initiativeElement.title}
+                    url={initiativeElement.url}
+                    id={initiativeElement.id}
+                    />
+                </div>
+            )
         );
     }
 
-    renderCardCollection() {
+    renderRegions() {
         // let retReactNode;
         // this.state.cardList.forEach(element => {
         //     retReactNode.append();
         // });
         // console.log(retReactNode);
-        return this.state.initiativeList.map(
-            (initiativeElement) => (
-                <div key={initiativeElement.id}>{this.renderCard(initiativeElement)}</div>
+        return this.state.regionList.map(
+            (regionElement) => (
+                <div key={regionElement.id}>
+                    <p>{regionElement.slug}</p>
+                </div>
             )
         );
+    }
+
+    refreshActiveRegion() {
+        const active_region_api_url = "/api/regions/" + this.state.activeRegionId;
+        fetch(active_region_api_url)
+            .then(response => response.json())
+            .then(response_obj => {
+                console.log(`response_obj: ${response_obj}`);
+                this.setState({
+                    activeRegion: response_obj,
+                });
+            })
+            .catch(err => console.error(err));
+    }
+
+    refreshRegionList() {
+        const region_api_url = "/api/regions/";
+        fetch(region_api_url)
+            .then(response => response.json())
+            .then(response_array => {
+                console.log(`response_array: ${response_array}`);
+                this.setState({
+                    regionList: response_array,
+                });
+            })
+            .catch(err => console.error(err));
     }
 
     refreshInitiativeList() {
@@ -78,24 +111,21 @@ class Home extends React.Component {
     render() {
         return (
             <div className="Home">
-                <h2>Smartakartan (React frontend)</h2>
-                <h3>Region</h3>
-                <h4>Select</h4>
+                <h1>Smartakartan (React frontend)</h1>
+                <h2>Region</h2>
+                <h3>Select</h3>
                 <ul>
-                    <li>Test1</li>
-                    <li>Test2</li>
+                    {this.renderRegions()}
                 </ul>
-                <h4>Welcome message</h4>
-
-                <h3>Map</h3>
+                <h3>Welcome message</h3>
+                <div>{this.state.activeRegion.welcome_message_html}</div>
+                <h2>Map</h2>
                 <div id="map"></div>
-                <h3>Cards</h3>
+                <h2>Cards</h2>
                 <ul>
                     {this.renderCardCollection()}
                 </ul>
-
             </div>
-
         );
     }
 }
