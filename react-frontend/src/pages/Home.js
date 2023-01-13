@@ -11,22 +11,51 @@ function SkCard(props) {
     );
 }
 
+function SelectRegion(props) {
+    return (
+        <select value={props.value} onChange={props.handleSelectChange}>
+            <option value="26">Test 0</option>
+            <option value="27">Test 1</option>
+            <option value="28">Test 2</option>
+        </select>
+    );
+}
+
 class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             initiativeList: [],
             regionList: [],
-            activeRegionId: 28,
-            activeRegion: {},
+            activeRegionId: 27,
         };
+
+        // We have to bind to avoid this error:
+        // "TypeError: Cannot read properties of undefined (reading 'setState')"
+        // More info here: https://stackoverflow.com/a/39176279/2525237
+        this.handleSelectChange = this.handleSelectChange.bind(this);
+    }
+
+    handleSelectChange(event) {
+        // event.preventDefault();
+        console.log(`handleSelectChange - event.target.value=${event.target.value}`);
+        this.setState({
+            activeRegionId: event.target.value
+        });
+        // this.state.activeRegion=event.target.value;
+
+        // this.refreshActiveRegion();
+
+        // this.state.activeRegion
+
     }
 
     // Overridden (see details in documentation)
     componentDidMount() {
+        console.log("componentDidMount");
         this.refreshInitiativeList();
         this.refreshRegionList();
-        this.refreshActiveRegion();
+        // this.refreshActiveRegion();
 
         // The id "map" has to be available before we can load the map script. Therefore we load this script here
         const mapScript = document.createElement("script");
@@ -36,13 +65,14 @@ class Home extends React.Component {
     }
 
     renderCardCollection() {
+        console.log("renderCardCollection");
         return this.state.initiativeList.map(
             (initiativeElement) => (
                 <div key={initiativeElement.id}>
                     <SkCard
-                    title={initiativeElement.title}
-                    url={initiativeElement.url}
-                    id={initiativeElement.id}
+                        title={initiativeElement.title}
+                        url={initiativeElement.url}
+                        id={initiativeElement.id}
                     />
                 </div>
             )
@@ -50,6 +80,7 @@ class Home extends React.Component {
     }
 
     renderRegions() {
+        console.log("renderRegions");
         // let retReactNode;
         // this.state.cardList.forEach(element => {
         //     retReactNode.append();
@@ -65,6 +96,7 @@ class Home extends React.Component {
     }
 
     refreshActiveRegion() {
+        console.log("refreshActiveRegion");
         const active_region_api_url = "/api/regions/" + this.state.activeRegionId;
         fetch(active_region_api_url)
             .then(response => response.json())
@@ -78,11 +110,12 @@ class Home extends React.Component {
     }
 
     refreshRegionList() {
+        console.log("refreshRegionList");
         const region_api_url = "/api/regions/";
         fetch(region_api_url)
             .then(response => response.json())
             .then(response_array => {
-                console.log(`response_array: ${response_array}`);
+                // console.log(`response_array: ${response_array}`);
                 this.setState({
                     regionList: response_array,
                 });
@@ -91,6 +124,7 @@ class Home extends React.Component {
     }
 
     refreshInitiativeList() {
+        console.log("refreshInitiativeList");
         const initiatives_api_url = "/api/initiatives/";
         fetch(initiatives_api_url)
             .then(response => response.json())
@@ -109,6 +143,7 @@ class Home extends React.Component {
     }
 
     render() {
+        console.log("render");
         return (
             <div className="Home">
                 <h1>Smartakartan (React frontend)</h1>
@@ -117,8 +152,11 @@ class Home extends React.Component {
                 <ul>
                     {this.renderRegions()}
                 </ul>
+                <SelectRegion
+                    handleSelectChange={this.handleSelectChange}
+                    value={this.state.activeRegionId}
+                />
                 <h3>Welcome message</h3>
-                <div>{this.state.activeRegion.welcome_message_html}</div>
                 <h2>Map</h2>
                 <div id="map"></div>
                 <h2>Cards</h2>
@@ -129,5 +167,7 @@ class Home extends React.Component {
         );
     }
 }
+
+// <div>{this.state.activeRegion.welcome_message_html}</div>
 
 export default Home;
