@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-bpxf1_ptsh&l9ee#veu9plmu4h+dlt%ddd&i)95ewv)aj7!(bv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+HOST = os.environ["HOST"] if os.environ["HOST"] else "localhost"
+PUBLIC_URL = (os.environ["SCHEME"] if os.environ["SCHEME"] else 'http') + "://" + HOST
+
+ALLOWED_HOSTS = [HOST]
 
 # Application definition
 
@@ -44,6 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # <-
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -124,13 +128,29 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'django_static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+CORS_ORIGIN_WHITELIST = [ PUBLIC_URL ]
+CSRF_TRUSTED_ORIGINS = [ PUBLIC_URL ]
+CSP_SCRIPT_SRC = [
+    "https://unpkg.com" ,
+    "https://cdnjs.cloudflare.com",
+    "'unsafe-inline'",
+    HOST
 ]
+CSP_DEFAULT_SRC = [
+    "https://unpkg.com",
+    "'unsafe-inline'",
+    "'self'",
+    "http://a.tile.openstreetmap.org",
+    "http://b.tile.openstreetmap.org",
+    "http://c.tile.openstreetmap.org",
+    "https://tile.openstreetmap.org",
+    "https://cdnjs.cloudflare.com",
+]
+
