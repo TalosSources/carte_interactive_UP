@@ -16,9 +16,15 @@ function SelectRegion(props) {
     // Inspiration: https://reactjs.org/docs/forms.html#the-select-tag
     return (
         <select value={props.value} onChange={props.handleSelectChange}>
-            <option value="26">Test 0</option>
-            <option value="27">Test 1</option>
-            <option value="28">Test 2</option>
+            {
+                props.regionList.map(
+                    (regionElement) => (
+                        <option key={regionElement.id} value={regionElement.id}>
+                            {regionElement.slug}
+                        </option>
+                    )
+                )
+            }
         </select>
     );
 }
@@ -136,23 +142,7 @@ class Home extends React.Component {
             )
         );
     }
-
-    renderRegions() {
-        console.log("renderRegions");
-        // let retReactNode;
-        // this.state.cardList.forEach(element => {
-        //     retReactNode.append();
-        // });
-        // console.log(retReactNode);
-        return this.state.regionList.map(
-            (regionElement) => (
-                <div key={regionElement.id}>
-                    <p>{regionElement.slug}</p>
-                </div>
-            )
-        );
-    }
-
+    
     render() {
         console.log("render");
         return (
@@ -160,12 +150,10 @@ class Home extends React.Component {
                 <h1>Smartakartan (React frontend) --- update</h1>
                 <h2>Region</h2>
                 <h3>Select</h3>
-                <ul>
-                    {this.renderRegions()}
-                </ul>
                 <SelectRegion
                     handleSelectChange={this.handleSelectChange}
                     value={this.state.activeRegionId}
+                    regionList={this.state.regionList}
                 />
                 <h3>Welcome message</h3>
                 <div>{this.state.activeRegion.welcome_message_html}</div>
