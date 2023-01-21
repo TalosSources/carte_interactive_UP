@@ -1,11 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 
-/*
-The implementation in this file uses useState and useEffect (instead of using classes)
-https://reactjs.org/docs/hooks-state.html
-https://reactjs.org/docs/hooks-effect.html
-*/
 const Details = () => {
     const {initiativeId} = useParams();
 
