@@ -27,12 +27,6 @@ class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
         # Also see this: https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/
 
 
-class RegionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        fields = ('url', 'id', 'slug', 'welcome_message_html')
-        model = models.Region
-
-
 class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
     """
     Object name (and below field name) "locations" must match `related_name` in model. DRF docs:
@@ -42,4 +36,4 @@ class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Initiative
-        fields = ['url', 'id', 'title', 'description', 'locations', 'region']
+        fields = ['url', 'id', 'title', 'description', 'locations']

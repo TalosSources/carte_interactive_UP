@@ -22,7 +22,6 @@ from website import views
 router = rest_framework.routers.DefaultRouter()
 router.register(r"locations", views.LocationViewSet, basename="location")
 router.register(r"initiatives", views.InitiativeViewSet, basename="initiative")
-router.register(r"regions", views.RegionViewSet, basename="region")
 
 urlpatterns = [
     path('', include('website.urls')),  # standard website interface

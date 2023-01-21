@@ -13,9 +13,3 @@ class LocationAdmin(gis_admin.OSMGeoAdmin):
 class InitiativeAdmin(gis_admin.ModelAdmin):
     list_display = ("id", "sk3_id", "title")
     readonly_fields = ("sk3_id",)
-
-
-@gis_admin.register(models.Region)
-class InitiativeAdmin(gis_admin.ModelAdmin):
-    list_display = ("id", "sk3_id", "slug")
-    readonly_fields = ("sk3_id",)

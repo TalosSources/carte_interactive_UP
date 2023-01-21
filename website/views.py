@@ -13,8 +13,3 @@ class LocationViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     queryset = models.Initiative.objects.all()
     serializer_class = serializers.InitiativeSerializer
-
-
-class RegionViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
-    queryset = models.Region.objects.all()
-    serializer_class = serializers.RegionSerializer
