@@ -1,6 +1,7 @@
 import React from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import '../App.css';
-import {useNavigate} from "react-router-dom";
+// import {useNavigate} from "react-router-dom";
 // useNavigate: Previously useHistory
 
 function SkCard(props) {
@@ -12,43 +13,30 @@ function SkCard(props) {
     );
 }
 
-function SelectRegion(props) {
-    // Inspiration: https://reactjs.org/docs/forms.html#the-select-tag
-    return (
-        <select value={props.value} onChange={props.handleSelectChange}>
-            {
-                props.regionList.map(
-                    (regionElement) => (
-                        //<option key={regionElement.id} value={regionElement.slug}>
-                        <option key={regionElement.id} value={regionElement.id}>
-                            {regionElement.slug}
-                        </option>
-                    )
-                )
-            }
-        </select>
-    );
-}
-
-class HomeCmp extends React.Component {
+class RHomeCmp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             initiativeList: [],
             regionList: [],
+            activeRegionId: this.props.rid,
+            activeRegion: {
+                welcome_message_html: ""
+            },
         };
+        console.log(this.props);
         console.log("Home.constructor");
 
         // We have to bind to avoid this error:
         // "TypeError: Cannot read properties of undefined (reading 'setState')"
         // More info here: https://stackoverflow.com/a/39176279/2525237
-        this.handleSelectChange = this.handleSelectChange.bind(this);
     }
 
     componentDidMount() {
         console.log("componentDidMount");
         this.refreshInitiativeList();
         this.refreshRegionList();
+        this.refreshActiveRegion();
 
         // The id "map" has to be available before we can load the map script. Therefore we load this script here
         const mapScript = document.createElement("script");
@@ -57,9 +45,28 @@ class HomeCmp extends React.Component {
         document.body.appendChild(mapScript);
     }
 
-    handleSelectChange(event) {
-        console.log(`handleSelectChange - event.target.value=${event.target.value}`);
-        this.props.navigate('/r/'+event.target.value);
+    componentDidUpdate(prevProps) {
+        console.log("componentDidUpdate");
+        if (Number(this.state.activeRegionId) !== Number(this.state.activeRegion.id)) {
+            console.log("componentDidUpdate: New ID, refreshing active region");
+            console.log(`this.state.activeRegionId=${this.state.activeRegionId} --- type: ${typeof this.state.activeRegionId}`);
+            console.log(`this.state.activeRegion.id=${this.state.activeRegion.id} --- type: ${typeof this.state.activeRegion.id}`);
+            this.refreshActiveRegion();
+        }
+    }
+
+    refreshActiveRegion() {
+        console.log("refreshActiveRegion");
+        const active_region_api_url = "/api/regions/" + this.state.activeRegionId;
+        fetch(active_region_api_url)
+            .then(response => response.json())
+            .then(response_obj => {
+                console.log(`response_obj: ${response_obj}`);
+                this.setState({
+                    activeRegion: response_obj,
+                });
+            })
+            .catch(err => console.error(err));
     }
 
     refreshRegionList() {
@@ -114,15 +121,9 @@ class HomeCmp extends React.Component {
         console.log("render");
         return (
             <div className="Home">
-                <h1>Smartakartan (React frontend) --- update</h1>
-                <h2>Region</h2>
-                <h3>Select</h3>
-                <SelectRegion
-                    handleSelectChange={this.handleSelectChange}
-                    value={this.state.activeRegionId}
-                    regionList={this.state.regionList}
-                />
+                <h1>Smartakartan (React frontend)</h1>
                 <h3>Welcome message</h3>
+                <div>{this.state.activeRegion.welcome_message_html}</div>
                 <h2>Map</h2>
                 <div id="map"></div>
                 <h2>Cards</h2>
@@ -134,8 +135,9 @@ class HomeCmp extends React.Component {
     }
 }
 
-export default function Home() {
+export default function RHome() {
     const navigation = useNavigate() // extract navigation prop here 
+    const {regionId} = useParams();
 
-    return <HomeCmp navigate={navigation} />
+    return <RHomeCmp rid={regionId} navigate={navigation} />
 };
