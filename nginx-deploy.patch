@@ -1,0 +1,12 @@
+--- nginx.conf	2023-01-05 16:22:59.651530969 +0100
++++ nginx.conf.deploy	2023-01-05 16:22:24.668125990 +0100
+@@ -23,6 +23,9 @@
+ 	    proxy_set_header    X-Forwarded-Proto   $scheme;
+ 	    proxy_set_header    Upgrade		  $http_upgrade;
+ 
++	    location /gitver {
++		    root /var/www;
++	    }
+ 	    location /api {
+ 	      proxy_pass http://api:8000;
+ 	    }
