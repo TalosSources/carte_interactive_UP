@@ -10,11 +10,13 @@
     "react-leaflet": "^4.2.0",
     "react-router-dom": "^6.4.4",
     "react-scripts": "5.0.1",
-    "reactstrap": "^8.9.0",
+    "reactstrap": "^9.1.5",
+    "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-dev": "nodemon -L index.js",
     "build": "react-scripts build",
     "eject": "react-scripts eject"
   },
@@ -23,5 +25,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
 }
