@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer  } from 'react-leaflet'
-import '../App.css';
 
 function SkCard(props) {
     // This is a React "function component"
@@ -40,7 +39,7 @@ function Home() {
 
 
             <h3>Cards</h3>
-            {data.map((d) => (
+            {data?.map((d) => (
                 <SkCard
                     title={d.name}
                     url={d.url}
