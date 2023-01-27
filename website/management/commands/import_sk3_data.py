@@ -4,12 +4,13 @@ import sys
 
 import django.contrib.gis.geos
 import django.core.management.base
+import django.db
 # import django.core.management
 import requests
 
 import website.models
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 """
 
@@ -38,6 +39,7 @@ https://docs.djangoproject.com/en/4.1/howto/custom-management-commands/
 # RJK: Response JSON (Sub) Key
 
 RJK_ID = "id"  # -the WP post id
+RJK_TYPE = "type"
 RJK_DATE = "date"
 RJK_SLUG = "slug"
 RJK_TITLE = "title"
@@ -48,6 +50,8 @@ RJSK_ACF_DESCRIPTION_ID = "description"
 RJK_LATITUDE = "latitude"
 RJK_LONGITUDE = "longitude"
 RJK_STATUS = "status"
+RJK_TRANSLATIONS = "translations"
+RJK_LANG = "lang"
 RJK_ADDRESS_AND_COORDINATE = "address_and_coordinate"
 RJSK_ADDRESS_AND_COORDINATE_ID = "id"  # -another field called "ID" is also available, which has the same value AFAIK
 
@@ -57,9 +61,11 @@ RJK_WELCOME_MESSAGE = "welcome_message"
 STATUS_PUBLISH = "publish"
 
 PER_PAGE = 100  # -max is 100: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
-# FIELDS = []
+FIELDS = []
+"""
 FIELDS = [RJK_ID, RJK_STATUS, RJK_DATE, RJK_SLUG, RJK_TITLE, RJK_ACF, RJK_LATITUDE, RJK_LONGITUDE,
-    RJK_ADDRESS_AND_COORDINATE, RJK_LANGUAGE_CODE, RJK_WELCOME_MESSAGE]
+    RJK_ADDRESS_AND_COORDINATE, RJK_LANGUAGE_CODE, RJK_WELCOME_MESSAGE, RJK_TRANSLATIONS, RJK_LANG]
+"""
 # data_type = "global_business"
 # See https://sk-wp.azurewebsites.net/wp-admin/admin.php?page=pods
 ADDRESS_DT = "address"
@@ -70,28 +76,34 @@ OVERSATTNING_DT = "oversattning"
 GLOBAL_R = "global"
 REGION_DT = "region"
 
+DATA_TYPE_LIST = [
+    "faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, REGION_DT, OVERSATTNING_DT, "page_type", "tagg_grupp", "tagg"]
+REGION_LIST = ["gavle", GLOBAL_R, GOTEBORG_R, "karlstad", "malmo", "sjuharad", "stockholm", "umea"]
+
+# Contains sub-lists on this format: [sk3_id_en, sk3_id_sv], where the order of langs is undetermined
+# business_lang_combos_list = []
+
+business_resp_row_list = []
+
 
 def import_sk3_data(i_args: [str]):
-    data_type_list = ["faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, REGION_DT, OVERSATTNING_DT, "page_type", "tagg_grupp",
-        "tagg"]
-    region_list = ["gavle", GLOBAL_R, GOTEBORG_R, "karlstad", "malmo", "sjuharad", "stockholm", "umea"]
     # göteborg, karlstad, etc
     # Please note: address for Göteborg uses gbg instead
     data_type_full_name_list = []
-    for data_type in data_type_list:
+    for data_type in DATA_TYPE_LIST:
         if data_type == ADDRESS_DT:
-            for region in region_list:
+            for region in REGION_LIST:
                 if region == GOTEBORG_R:
                     region = "gbg"
                 data_type_full_name = f"{data_type}_{region}"
                 data_type_full_name_list.append(data_type_full_name)
         elif data_type in (PAGE_DT, BUSINESS_DT):
-            for region in region_list:
+            for region in REGION_LIST:
                 data_type_full_name = f"{region}_{data_type}"
                 data_type_full_name_list.append(data_type_full_name)
         else:
             if data_type == OVERSATTNING_DT:
-                data_type = "translations"  # -specified in the WP Pods field "REST Base (if any)"
+                data_type = "translations_comparison"  # -specified in the WP Pods field "REST Base (if any)"
             data_type_full_name_list.append(data_type)
     data_type_full_name_list.append("non-existing")  # -for testing/verification purposes
 
@@ -107,7 +119,8 @@ def import_sk3_data(i_args: [str]):
 
     for data_type_full_name in data_type_full_name_list:
         # ################ FILTERING ################
-        if data_type_full_name not in ("goteborg_business", "address_gbg", REGION_DT):
+        if data_type_full_name not in ("goteborg_business", "address_gbg"):
+            # "address_gbg", REGION_DT
             continue
         """
         if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
@@ -177,28 +190,28 @@ def import_sk3_data(i_args: [str]):
                 status = resp_row[RJK_STATUS]
                 # TODO: move all except wp_post_id down to the places where they are used
 
+                try:
+                    existing_obj = website.models.Region.objects.get(sk3_id=wp_post_id)
+                    nr_skipped += 1
+                    continue
+                except website.models.Region.DoesNotExist:
+                    existing_obj = None
+
                 if status != STATUS_PUBLISH:
                     logging.info(f"INFO: {status=}")
                     continue
 
-                existing_obj = None
-
                 if REGION_DT in data_type_full_name:
-                    try:
-                        existing_obj = website.models.Region.objects.get(sk3_id=wp_post_id)
-                    except website.models.Region.DoesNotExist:
-                        pass
-
                     lang_code = resp_row[RJK_LANGUAGE_CODE]
-                    if lang_code != "sv":  # this is not because we want Swedish, but because we want the minimal slug
+                    if lang_code != "sv":
+                        # -this is not because we want Swedish, but because we want the minimal slug
+                        # -TODO: In the future we want this translated (so not skipping)
                         continue
-
                     new_obj = website.models.Region(
                         sk3_id=wp_post_id,
                         slug=resp_row[RJK_SLUG],
                         welcome_message_html=resp_row[RJK_WELCOME_MESSAGE]
                     )
-
                     if existing_obj is not None:
                         nr_skipped += 1
                     else:
@@ -206,98 +219,171 @@ def import_sk3_data(i_args: [str]):
                         nr_added += 1
 
                 elif ADDRESS_DT in data_type_full_name:
-                    try:
-                        existing_obj = website.models.Location.objects.get(sk3_id=wp_post_id)
-                    except website.models.Location.DoesNotExist:
-                        pass
-
                     latitude: str = resp_row[RJK_LATITUDE]
                     latitude = latitude.replace(',', '.')
                     longitude: str = resp_row[RJK_LONGITUDE]
                     longitude = longitude.replace(',', '.')
                     geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
                     # -please note order of lat and lng
-
                     new_obj = website.models.Location(
                         sk3_id=wp_post_id,
                         title=title,
                         coordinates=geo_point
                     )
-
-                    if existing_obj is not None:
-                        nr_skipped += 1
-                    else:
-                        new_obj.save()
-                        nr_added += 1
-
-                    logging.debug(f"{title=}")
+                    new_obj.save()
+                    nr_added += 1
+                    # logging.debug(f"{title=}")
                 elif BUSINESS_DT in data_type_full_name:
-                    try:
-                        existing_obj = website.models.Initiative.objects.get(sk3_id=wp_post_id)
-                    except website.models.Initiative.DoesNotExist:
-                        pass
+                    business_resp_row_list.append(resp_row)
 
-                    description = resp_row[RJK_ACF][RJSK_ACF_DESCRIPTION_ID]
-                    logging.debug(f"{description=}")
-                    if not description:
-                        logging.warning(f"WARNING: Description for {title} is empty")
-                        description = "-"
-                    if len(description) > 12000:
-                        logging.info(f"INFO: Description for {title} is very long: {len(description)} characters")
-
-                    region_name = data_type_full_name.split("_")[0]
-                    assert region_name in region_list
-                    region_obj = website.models.Region.objects.get(slug=region_name)
-
-                    new_obj = website.models.Initiative(
-                        sk3_id=wp_post_id,
-                        title=title,
-                        description=description,
-                        region=region_obj
-                    )
-
-                    if existing_obj is not None:
-                        nr_skipped += 1
-                    else:
-                        new_obj.save()
-                        nr_added += 1
-
-                        # logging.debug(f"Added initiative with {initiative.id=}")
-                        logging.debug(f"{type(resp_row)=}")
-                        if RJK_ADDRESS_AND_COORDINATE in resp_row:
-                            address_and_coordinate_list_or_bool = resp_row[RJK_ADDRESS_AND_COORDINATE]
-                            # print(f"{type(address_and_coordinate_list)=}")
-                            if type(address_and_coordinate_list_or_bool) is bool and not address_and_coordinate_list_or_bool:
-                                # This means that the initiative has no locations
-                                continue
-                            for aac_dict in address_and_coordinate_list_or_bool:
-                                # Address comes first, so we can connect here (and don't have to save until later)
-                                location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
-                                location = website.models.Location.objects.get(sk3_id=location_id)
-                                # -only works when added to db, so will not work during testing
-                                location.initiative = new_obj
-                                location.save()
-                        else:
-                            if GLOBAL_R not in data_type_full_name:
-                                logging.warning(f"WARNING: No location available for initiative: {new_obj.title}")
                 else:
                     logging.info(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
                     continue
-
             page_nr += 1
-
-    logging.info(f"{nr_added=}")
-    logging.info(f"{nr_skipped=}")
+    process_business_rows()
+    # logging.info(f"{nr_added=}")
+    # logging.info(f"{nr_skipped=}")
     logging.debug(f"Total number of datatypes: {len(data_type_full_name_list)}")
 
 
+LANG_CODE_EN = "en"
+LANG_CODE_SV = "sv"
+
+
+def process_business_rows():
+    """
+    "translations": {
+      "en": 11636,
+      "sv": 11629
+    },
+
+    This function relies on the fact that:
+    the resp_row for en always has a higher sk3id than for sv
+    """
+    logging.debug("============= entered function process_business_rows")
+    nr_added = 0
+    # business_resp_row_list_copy = business_resp_row_list.copy()
+    translations_for_added_posts_dict_list = []
+
+    business_resp_row_list_reversed = list(reversed(business_resp_row_list))  # -so se comes first
+    logging.debug(f"{len(business_resp_row_list_reversed)=}")
+    """
+    for resp_row in business_resp_row_list_reversed:
+        translations_dict = resp_row[RJK_TRANSLATIONS]
+        translations_dict_list.append(translations_dict)  # -will contain duplicates
+    """
+    for resp_row in business_resp_row_list_reversed:
+        wp_post_id = resp_row[RJK_ID]
+        lang_code = resp_row[RJK_LANG]
+        logging.debug(f"{wp_post_id=}, {lang_code=}")
+        title = resp_row[RJK_TITLE][RJSK_RENDERED]
+        status = resp_row[RJK_STATUS]
+        data_type_full_name = resp_row[RJK_TYPE]
+
+        description = resp_row[RJK_ACF][RJSK_ACF_DESCRIPTION_ID]
+
+        translations_dict = resp_row[RJK_TRANSLATIONS]
+
+        # if sk3id in translations_dict[others]
+        # wp_post_id
+
+        if LANG_CODE_SV not in translations_dict:
+            logging.warning(f"Missing Swedish translation for {wp_post_id=}")
+        if LANG_CODE_EN not in translations_dict:
+            logging.warning(f"Missing English translation for {wp_post_id=}")
+
+        first_translation_has_been_added = False
+        first_translation_wp_post_id = -1
+        for translation_for_added_post_dict in translations_for_added_posts_dict_list:
+            translation_for_added_post_dict: dict
+            for lng_code_, sk3_id_ in translation_for_added_post_dict.items():
+                if sk3_id_ == wp_post_id:
+                    logging.debug(f"{translation_for_added_post_dict=}")
+                    first_translation_has_been_added = True
+                else:
+                    first_translation_wp_post_id = sk3_id_
+            if first_translation_has_been_added:
+                break
+        if first_translation_has_been_added:
+            assert first_translation_wp_post_id != -1
+            old_obj = website.models.Initiative.objects.get(sk3_id=first_translation_wp_post_id)
+            new_title_obj = website.models.InitiativeTitleText(
+                sk3_initiative_id=wp_post_id,
+                language_code=lang_code,
+                text=title,
+                initiative=old_obj
+            )
+            new_title_obj.save()
+            continue
+
+        if not description:
+            logging.warning(f"WARNING: Description for {title} is empty")
+            description = "-"
+        if len(description) > 12000:
+            logging.info(f"INFO: Description for {title} is very long: {len(description)} characters")
+        region_name = data_type_full_name.split("_")[0]
+        assert region_name in REGION_LIST
+
+        region_obj = website.models.Region.objects.get(slug=region_name)
+        new_obj = website.models.Initiative(
+            sk3_id=wp_post_id,
+            description=description,
+            region=region_obj
+        )
+        logging.debug(f"Saving Initiative object for {wp_post_id=}")
+        new_obj.save()
+        translations_for_added_posts_dict_list.append(translations_dict)
+        nr_added += 1
+        # logging.debug(f"Added initiative with {initiative.id=}")
+
+        new_title_obj = website.models.InitiativeTitleText(
+            sk3_initiative_id=wp_post_id,
+            language_code=lang_code,
+            text=title,
+            initiative=new_obj
+        )
+        new_title_obj.save()
+
+        if RJK_ADDRESS_AND_COORDINATE in resp_row:
+            address_and_coordinate_list_or_bool = resp_row[RJK_ADDRESS_AND_COORDINATE]
+            # print(f"{type(address_and_coordinate_list)=}")
+            if type(address_and_coordinate_list_or_bool) is bool and not address_and_coordinate_list_or_bool:
+                # This means that the initiative has no locations
+                continue
+            for aac_dict in address_and_coordinate_list_or_bool:
+                # Address comes first, so we can connect here (and don't have to save until later)
+                location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
+                try:
+                    location = website.models.Location.objects.get(sk3_id=location_id)
+                    # -only works when added to db, so will not work during testing
+                except website.models.Location.DoesNotExist:
+                    logging.error(f"Location doesn't exist for sk3_id '{location_id}'")
+                    sys.exit()
+                location.initiative = new_obj
+                location.save()
+        else:
+            if GLOBAL_R not in data_type_full_name:
+                logging.warning(f"WARNING: No location available for initiative: {new_obj.title}")
+    # return nr_added
+    logging.info(f"{nr_added=}")
+
+
 class Command(django.core.management.base.BaseCommand):
-    help = "Migrate data from sk3. Arguments: ________"
+    help = "Migrate data from sk3"
 
     def add_arguments(self, parser):
-        parser.add_argument("sk3_data_types", nargs="*", type=str)
+        parser.add_argument("--clear", action="store_true")  # -available under "options" in help
+        # parser.add_argument("--sk3_data_types", nargs="*", type=str)  # -available under "positional arguments" in help
 
     def handle(self, *args, **options):
         logging.debug(f"{args=}")
         logging.debug(f"{options=}")
-        import_sk3_data(args)
+        if options["clear"]:
+            result_text = input("Are you sure you want to delete the whole database? (y/n)")
+            if result_text == "y":
+                website.models.Region.objects.all().delete()
+                website.models.InitiativeTitleText.objects.all().delete()
+                website.models.Location.objects.all().delete()
+                website.models.Initiative.objects.all().delete()
+        else:
+            import_sk3_data(args)

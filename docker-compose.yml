@@ -25,11 +25,11 @@ services:
       - SCHEME=http
     depends_on:
       - db
-  #    volumes:
-  #      - ./:/code
+    volumes:
+      - ./:/code
   web:
     build: ./react-frontend
     depends_on:
       - api
-#    volumes:
-#      - ./react-frontend/src:/react-frontend/src
+    volumes:
+      - ./react-frontend/src:/react-frontend/src

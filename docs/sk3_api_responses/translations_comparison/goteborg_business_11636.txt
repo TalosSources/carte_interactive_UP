@@ -1,0 +1,136 @@
+
+  {
+    "id": 11636,
+    "date": "2022-09-20T15:09:25",
+    "date_gmt": "2022-09-20T15:09:25",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_business&#038;p=11636"
+    },
+    "modified": "2022-09-20T15:09:25",
+    "modified_gmt": "2022-09-20T15:09:25",
+    "slug": "the-free-shop-aterbruket-lansmansgarden",
+    "status": "publish",
+    "type": "goteborg_business",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/en\/goteborg-business\/the-free-shop-aterbruket-lansmansgarden\/",
+    "title": {
+      "rendered": "The Free Shop \u00c5terbruket L\u00e4nsmansg\u00e5rden"
+    },
+    "template": "",
+    "address_and_coordinate": [
+      {
+        "latitude": "57.73348851727369",
+        "longitude": "11.898837895906174",
+        "ID": 11634,
+        "post_title": "S\u00f6dra Fj\u00e4dermolnsgatan 12",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "12",
+        "post_date": "2022-09-20 15:00:19",
+        "post_date_gmt": "2022-09-20 15:00:19",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "sodra-fjadermolnsgatan-12",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2022-09-20 15:00:19",
+        "post_modified_gmt": "2022-09-20 15:00:19",
+        "post_content_filtered": "",
+        "post_parent": 0,
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=11634",
+        "menu_order": 0,
+        "post_type": "address_gbg",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 11634
+      }
+    ],
+    "icon": "",
+    "huvudtaggar": [
+      "Things"
+    ],
+    "subtaggar": [
+      "Board games",
+      "Books &amp; media",
+      "Clothes",
+      "Gadgets",
+      "Sports and leisure equipment",
+      "Toys"
+    ],
+    "transaktionsform": [
+      "Give &amp; get"
+    ],
+    "taggar": [
+      "L\u00e4nsmansg\u00e5rden",
+      "Free shop",
+      "Free",
+      "Give away"
+    ],
+    "acf": {
+      "email": "",
+      "phone": "",
+      "phone_number": "0704-990899",
+      "instagram_username": "",
+      "facebook_url": "",
+      "website_url": "",
+      "online_only": false,
+      "city": [
+        19
+      ],
+      "area": "L\u00e4nsmansg\u00e5rden",
+      "main_image": false,
+      "short_description": "Gratisbutik i L\u00e4nsmansg\u00e5rden",
+      "description": "<p>For more than ten year pensioneer Roine has run \u00c5terbruket, a free shop in L\u00e4nsmansg\u00e5rden. Come and collect a sweater, a book or why not a VHS tape?<\/p>\n<p>A free shop is like a second hand shop, with the difference that everything is for free. So swing by and drop off something you have that works, but you don&#8217;t need.<\/p>\n<p>You&#8217;re more than welcome to drop off things in the free shop during it&#8217;s opening hours. It&#8217;s only during these hours that Roine will pick up the phone.<\/p>\n",
+      "hide_opening_hours": false,
+      "always_open": false,
+      "text_for_opening_hours": "",
+      "closed_on_monday": false,
+      "opening_hour_monday": "11:00",
+      "closing_hour_monday": "15:00",
+      "closed_on_tuesday": true,
+      "closed_on_wednesday": false,
+      "opening_hour_wednesday": "16:00",
+      "closing_hour_wednesday": "19:00",
+      "closed_on_thursday": true,
+      "closed_on_friday": true,
+      "closed_on_saturday": true,
+      "closed_on_sunday": true
+    },
+    "lang": "en",
+    "translations": {
+      "en": 11636,
+      "sv": 11629
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_business\/11636"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_business"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_business"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=11636"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },

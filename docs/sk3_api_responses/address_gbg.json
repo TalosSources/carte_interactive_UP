@@ -1,0 +1,502 @@
+[
+  {
+    "id": 12247,
+    "date": "2023-01-23T20:14:11",
+    "date_gmt": "2023-01-23T20:14:11",
+    "guid": {
+      "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12247"
+    },
+    "modified": "2023-01-23T20:14:11",
+    "modified_gmt": "2023-01-23T20:14:11",
+    "slug": "saggatan-19",
+    "status": "publish",
+    "type": "address_gbg",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/saggatan-19\/",
+    "title": {
+      "rendered": "S\u00e5ggatan 19"
+    },
+    "template": "",
+    "latitude": "57.69513792779139",
+    "longitude": "11.925602211999262",
+    "acf": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12247"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12247"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12219,
+    "date": "2023-01-20T19:48:15",
+    "date_gmt": "2023-01-20T19:48:15",
+    "guid": {
+      "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12219"
+    },
+    "modified": "2023-01-20T19:48:15",
+    "modified_gmt": "2023-01-20T19:48:15",
+    "slug": "frolunda-torg-4",
+    "status": "publish",
+    "type": "address_gbg",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/frolunda-torg-4\/",
+    "title": {
+      "rendered": "Fr\u00f6lunda torg"
+    },
+    "template": "",
+    "latitude": "57.652048384107836",
+    "longitude": "11.912941205900186",
+    "acf": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12219"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12219"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12183,
+    "date": "2023-01-20T19:08:51",
+    "date_gmt": "2023-01-20T19:08:51",
+    "guid": {
+      "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12183"
+    },
+    "modified": "2023-01-20T19:08:51",
+    "modified_gmt": "2023-01-20T19:08:51",
+    "slug": "sodra-larmgatan-16",
+    "status": "publish",
+    "type": "address_gbg",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/sodra-larmgatan-16\/",
+    "title": {
+      "rendered": "S\u00f6dra Larmgatan 16"
+    },
+    "template": "",
+    "latitude": "57.70332709997593",
+    "longitude": "11.965825698176891",
+    "acf": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12183"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12183"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12167,
+    "date": "2023-01-20T18:34:07",
+    "date_gmt": "2023-01-20T18:34:07",
+    "guid": {
+      "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12167"
+    },
+    "modified": "2023-01-20T18:34:07",
+    "modified_gmt": "2023-01-20T18:34:07",
+    "slug": "haga-nygata-36",
+    "status": "publish",
+    "type": "address_gbg",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/haga-nygata-36\/",
+    "title": {
+      "rendered": "Haga Nygata 36"
+    },
+    "template": "",
+    "latitude": "57.69833296279071",
+    "longitude": "11.96032359783097",
+    "acf": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12167"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12167"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12136,
+    "date": "2022-12-13T09:57:51",
+    "date_gmt": "2022-12-13T09:57:51",
+    "guid": {
+      "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12136"
+    },
+    "modified": "2022-12-13T09:57:51",
+    "modified_gmt": "2022-12-13T09:57:51",
+    "slug": "mariagatan-6",
+    "status": "publish",
+    "type": "address_gbg",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/mariagatan-6\/",
+    "title": {
+      "rendered": "Mariagatan 6"
+    },
+    "template": "",
+    "latitude": "57.68640943519924",
+    "longitude": "11.92046280674689",
+    "acf": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12136"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12136"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12107,
+    "date": "2022-12-08T15:05:47",
+    "date_gmt": "2022-12-08T15:05:47",
+    "guid": {
+      "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12107"
+    },
+    "modified": "2022-12-08T15:05:47",
+    "modified_gmt": "2022-12-08T15:05:47",
+    "slug": "erik-dahlbergsgatan-9",
+    "status": "publish",
+    "type": "address_gbg",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/erik-dahlbergsgatan-9\/",
+    "title": {
+      "rendered": "Erik Dahlbergsgatan 9"
+    },
+    "template": "",
+    "latitude": "57.699215175848494",
+    "longitude": "11.967813385158324",
+    "acf": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12107"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12107"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12105,
+    "date": "2022-12-08T15:02:58",
+    "date_gmt": "2022-12-08T15:02:58",
+    "guid": {
+      "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12105"
+    },
+    "modified": "2022-12-08T15:02:58",
+    "modified_gmt": "2022-12-08T15:02:58",
+    "slug": "ringogatan-3-2",
+    "status": "publish",
+    "type": "address_gbg",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/ringogatan-3-2\/",
+    "title": {
+      "rendered": "Ring\u00f6gatan 3"
+    },
+    "template": "",
+    "latitude": "57.72040607627527",
+    "longitude": "11.965729869812726",
+    "acf": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12105"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12105"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12104,
+    "date": "2022-12-08T15:00:13",
+    "date_gmt": "2022-12-08T15:00:13",
+    "guid": {
+      "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12104"
+    },
+    "modified": "2022-12-08T15:00:13",
+    "modified_gmt": "2022-12-08T15:00:13",
+    "slug": "haga-kyrkogata-26",
+    "status": "publish",
+    "type": "address_gbg",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/haga-kyrkogata-26\/",
+    "title": {
+      "rendered": "Haga kyrkogata 26"
+    },
+    "template": "",
+    "latitude": "57.696226869889685",
+    "longitude": "11.962839126497743",
+    "acf": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12104"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12104"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12102,
+    "date": "2022-12-08T14:54:11",
+    "date_gmt": "2022-12-08T14:54:11",
+    "guid": {
+      "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12102"
+    },
+    "modified": "2022-12-08T14:54:11",
+    "modified_gmt": "2022-12-08T14:54:11",
+    "slug": "ringogatan-3",
+    "status": "publish",
+    "type": "address_gbg",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/ringogatan-3\/",
+    "title": {
+      "rendered": "Ring\u00f6gatan 3"
+    },
+    "template": "",
+    "latitude": "57.720383157274235",
+    "longitude": "11.965740598649342",
+    "acf": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12102"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12102"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12096,
+    "date": "2022-12-08T14:41:44",
+    "date_gmt": "2022-12-08T14:41:44",
+    "guid": {
+      "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12096"
+    },
+    "modified": "2022-12-08T14:41:44",
+    "modified_gmt": "2022-12-08T14:41:44",
+    "slug": "brunnsgatan-5-2",
+    "status": "publish",
+    "type": "address_gbg",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/brunnsgatan-5-2\/",
+    "title": {
+      "rendered": "Brunnsgatan 5"
+    },
+    "template": "",
+    "latitude": "57.69533387210506",
+    "longitude": "11.960133291381739",
+    "acf": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12096"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12096"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  }
+]

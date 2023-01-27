@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.contrib.gis import admin as gis_admin
 
 from . import models
@@ -7,15 +8,46 @@ from . import models
 class LocationAdmin(gis_admin.OSMGeoAdmin):
     list_display = ("id", "sk3_id", "title", "coordinates", "initiative")
     readonly_fields = ("sk3_id",)
+    list_max_show_all = 1000
 
 
-@gis_admin.register(models.Initiative)
-class InitiativeAdmin(gis_admin.ModelAdmin):
-    list_display = ("id", "sk3_id", "title")
+class InitiativeTitleTextInline(admin.TabularInline):
+    # show_change_link = True
+    model = models.InitiativeTitleText
+    readonly_fields = ("sk3_initiative_id",)
+    extra = 1
+    min_num = 1
+
+
+@admin.register(models.Initiative)
+class InitiativeAdmin(admin.ModelAdmin):
+    list_display = ("id", "sk3_id")
     readonly_fields = ("sk3_id",)
+    list_max_show_all = 1000
+    inlines = [InitiativeTitleTextInline]
 
 
-@gis_admin.register(models.Region)
-class InitiativeAdmin(gis_admin.ModelAdmin):
+"""
+# , "title"
+
+ERRORS:
+<class 'website.admin.InitiativeAdmin'>: (admin.E108) The value of 'list_display[2]' refers to 'title', which is not a
+callable, an attribute of 'InitiativeAdmin', or an attribute or method on 'website.Initiative'.
+root@27a6ea382e00:/code# 
+
+"""
+
+
+@admin.register(models.Region)
+class RegionAdmin(admin.ModelAdmin):
     list_display = ("id", "sk3_id", "slug")
     readonly_fields = ("sk3_id",)
+
+
+"""
+@admin.register(models.InitiativeTitleText)
+class InitiativeTitleTextAdmin(admin.ModelAdmin):
+    list_display = ("initiative", "language_code", "text")
+    readonly_fields = ("id",)
+    list_max_show_all = 1000
+"""
