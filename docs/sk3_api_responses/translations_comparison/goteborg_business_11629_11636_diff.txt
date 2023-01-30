@@ -1,0 +1,133 @@
+0a1
+> 
+2,4c3,5
+<     "id": 11629,
+<     "date": "2022-09-20T15:02:11",
+<     "date_gmt": "2022-09-20T15:02:11",
+---
+>     "id": 11636,
+>     "date": "2022-09-20T15:09:25",
+>     "date_gmt": "2022-09-20T15:09:25",
+6c7
+<       "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_business&#038;p=11629"
+---
+>       "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_business&#038;p=11636"
+8,10c9,11
+<     "modified": "2022-09-20T15:06:17",
+<     "modified_gmt": "2022-09-20T15:06:17",
+<     "slug": "aterbruket-lansmansgarden",
+---
+>     "modified": "2022-09-20T15:09:25",
+>     "modified_gmt": "2022-09-20T15:09:25",
+>     "slug": "the-free-shop-aterbruket-lansmansgarden",
+13c14
+<     "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/goteborg-business\/aterbruket-lansmansgarden\/",
+---
+>     "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/en\/goteborg-business\/the-free-shop-aterbruket-lansmansgarden\/",
+15c16
+<       "rendered": "\u00c5terbruket L\u00e4nsmansg\u00e5rden"
+---
+>       "rendered": "The Free Shop \u00c5terbruket L\u00e4nsmansg\u00e5rden"
+51c52
+<       "Saker"
+---
+>       "Things"
+54,57c55,60
+<       "B\u00f6cker &amp; media",
+<       "Diverse prylar",
+<       "Kl\u00e4der",
+<       "Sport- &amp; friluftsutrustning"
+---
+>       "Board games",
+>       "Books &amp; media",
+>       "Clothes",
+>       "Gadgets",
+>       "Sports and leisure equipment",
+>       "Toys"
+60c63
+<       "Ge &amp; f\u00e5"
+---
+>       "Give &amp; get"
+63,66c66,69
+<       "Gratisbutik",
+<       "Bortsk\u00e4nkes",
+<       "Gratis",
+<       "L\u00e4nsmansg\u00e5rden"
+---
+>       "L\u00e4nsmansg\u00e5rden",
+>       "Free shop",
+>       "Free",
+>       "Give away"
+77c80
+<         20
+---
+>         19
+80,124c83
+<       "main_image": {
+<         "ID": 11633,
+<         "id": 11633,
+<         "title": "\u00c5terbruket L\u00e4nsmansg\u00e5rden",
+<         "filename": "aterbruket-lansmansgarden.jpg",
+<         "filesize": 178249,
+<         "url": "https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/aterbruket-lansmansgarden.jpg",
+<         "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/goteborg-business\/aterbruket-lansmansgarden\/aterbruket-lansmansgarden\/",
+<         "alt": "\u00c5terbruket L\u00e4nsmansg\u00e5rden",
+<         "author": "12",
+<         "description": "\u00c5terbruket L\u00e4nsmansg\u00e5rden",
+<         "caption": "\u00c5terbruket L\u00e4nsmansg\u00e5rden",
+<         "name": "aterbruket-lansmansgarden",
+<         "status": "inherit",
+<         "uploaded_to": 11629,
+<         "date": "2022-09-20 14:56:38",
+<         "modified": "2022-09-20 14:56:56",
+<         "menu_order": 0,
+<         "mime_type": "image\/jpeg",
+<         "type": "image",
+<         "subtype": "jpeg",
+<         "icon": "https:\/\/sk-wp.azurewebsites.net\/wp-includes\/images\/media\/default.png",
+<         "width": 800,
+<         "height": 600,
+<         "sizes": {
+<           "thumbnail": "https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/aterbruket-lansmansgarden-350x140.jpg",
+<           "thumbnail-width": 350,
+<           "thumbnail-height": 140,
+<           "medium": "https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/aterbruket-lansmansgarden-300x225.jpg",
+<           "medium-width": 300,
+<           "medium-height": 225,
+<           "medium_large": "https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/aterbruket-lansmansgarden-768x576.jpg",
+<           "medium_large-width": 768,
+<           "medium_large-height": 576,
+<           "large": "https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/aterbruket-lansmansgarden-400x300.jpg",
+<           "large-width": 400,
+<           "large-height": 300,
+<           "1536x1536": "https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/aterbruket-lansmansgarden.jpg",
+<           "1536x1536-width": 800,
+<           "1536x1536-height": 600,
+<           "2048x2048": "https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/aterbruket-lansmansgarden.jpg",
+<           "2048x2048-width": 800,
+<           "2048x2048-height": 600
+<         }
+<       },
+---
+>       "main_image": false,
+126c85
+<       "description": "<p>I \u00f6ver tio \u00e5r har pension\u00e4ren Roine drivit \u00c5terbruket, en gratisbutik i L\u00e4nsmansg\u00e5rden. Kom och h\u00e4mta en tr\u00f6ja, en bok eller varf\u00f6r inte en VHS-film?<\/p>\n<p>En gratisbutik fungerar som en loppis, med skillnaden att allt \u00e4r gratis. S\u00e5 swinga f\u00f6rbi och ge bort n\u00e5t som fungerar som du inte har anv\u00e4ndning f\u00f6r l\u00e4ngre.<\/p>\n<p>Du f\u00e5r g\u00e4rna l\u00e4mna grejer till gratisbutiken under dess \u00f6ppettider. Det \u00e4r \u00e4ven under dessa som Roine svarar i telefonen.<\/p>\n",
+---
+>       "description": "<p>For more than ten year pensioneer Roine has run \u00c5terbruket, a free shop in L\u00e4nsmansg\u00e5rden. Come and collect a sweater, a book or why not a VHS tape?<\/p>\n<p>A free shop is like a second hand shop, with the difference that everything is for free. So swing by and drop off something you have that works, but you don&#8217;t need.<\/p>\n<p>You&#8217;re more than welcome to drop off things in the free shop during it&#8217;s opening hours. It&#8217;s only during these hours that Roine will pick up the phone.<\/p>\n",
+142c101
+<     "lang": "sv",
+---
+>     "lang": "en",
+151c110
+<           "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_business\/11629"
+---
+>           "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_business\/11636"
+166c125
+<           "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=11629"
+---
+>           "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=11636"
+177c136
+<   },
+\ No newline at end of file
+---
+>   },
