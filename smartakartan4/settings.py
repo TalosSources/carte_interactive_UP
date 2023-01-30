@@ -25,8 +25,15 @@ SECRET_KEY = 'django-insecure-bpxf1_ptsh&l9ee#veu9plmu4h+dlt%ddd&i)95ewv)aj7!(bv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-HOST = os.environ["HOST"] if os.environ["HOST"] else "localhost"
-PUBLIC_URL = (os.environ["SCHEME"] if os.environ["SCHEME"] else 'http') + "://" + HOST
+# HOST = os.environ["HOST"] if os.environ["HOST"] else "localhost"
+HOST = "localhost"
+if "HOST" in os.environ:
+    HOST = os.environ["HOST"]
+# PUBLIC_URL = (os.environ["SCHEME"] if os.environ["SCHEME"] else 'http') + "://" + HOST
+PUBLIC_URL = 'http'
+if "SCHEME" in os.environ:
+    PUBLIC_URL = os.environ["SCHEME"]
+PUBLIC_URL += "://" + HOST
 
 ALLOWED_HOSTS = [HOST]
 
@@ -135,10 +142,10 @@ STATIC_URL = 'django_static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_WHITELIST = [ PUBLIC_URL ]
-CSRF_TRUSTED_ORIGINS = [ PUBLIC_URL ]
+CORS_ORIGIN_WHITELIST = [PUBLIC_URL]
+CSRF_TRUSTED_ORIGINS = [PUBLIC_URL]
 CSP_SCRIPT_SRC = [
-    "https://unpkg.com" ,
+    "https://unpkg.com",
     "https://cdnjs.cloudflare.com",
     "'unsafe-inline'",
     HOST
@@ -153,4 +160,3 @@ CSP_DEFAULT_SRC = [
     "https://tile.openstreetmap.org",
     "https://cdnjs.cloudflare.com",
 ]
-
