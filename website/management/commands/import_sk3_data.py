@@ -119,8 +119,8 @@ def import_sk3_data(i_args: [str]):
 
     for data_type_full_name in data_type_full_name_list:
         # ################ FILTERING ################
-        if data_type_full_name not in ("goteborg_business", "address_gbg"):
-            # "address_gbg", REGION_DT
+        if data_type_full_name not in ("goteborg_business", "address_gbg", REGION_DT):
+            # "goteborg_business", "address_gbg", REGION_DT
             continue
         """
         if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
@@ -308,12 +308,20 @@ def process_business_rows():
             assert first_translation_wp_post_id != -1
             old_obj = website.models.Initiative.objects.get(sk3_id=first_translation_wp_post_id)
             new_title_obj = website.models.InitiativeTitleText(
-                sk3_initiative_id=wp_post_id,
+                sk3_id=wp_post_id,
                 language_code=lang_code,
                 text=title,
                 initiative=old_obj
             )
             new_title_obj.save()
+            new_description_obj = website.models.InitiativeDescriptionText(
+                sk3_id=wp_post_id,
+                language_code=lang_code,
+                text=description,
+                initiative=old_obj
+            )
+            new_description_obj.save()
+
             continue
 
         if not description:
@@ -327,7 +335,6 @@ def process_business_rows():
         region_obj = website.models.Region.objects.get(slug=region_name)
         new_obj = website.models.Initiative(
             sk3_id=wp_post_id,
-            description=description,
             region=region_obj
         )
         logging.debug(f"Saving Initiative object for {wp_post_id=}")
@@ -337,12 +344,19 @@ def process_business_rows():
         # logging.debug(f"Added initiative with {initiative.id=}")
 
         new_title_obj = website.models.InitiativeTitleText(
-            sk3_initiative_id=wp_post_id,
+            sk3_id=wp_post_id,
             language_code=lang_code,
             text=title,
             initiative=new_obj
         )
         new_title_obj.save()
+        new_description_obj = website.models.InitiativeDescriptionText(
+            sk3_id=wp_post_id,
+            language_code=lang_code,
+            text=description,
+            initiative=new_obj
+        )
+        new_description_obj.save()
 
         if RJK_ADDRESS_AND_COORDINATE in resp_row:
             address_and_coordinate_list_or_bool = resp_row[RJK_ADDRESS_AND_COORDINATE]
@@ -383,6 +397,7 @@ class Command(django.core.management.base.BaseCommand):
             if result_text == "y":
                 website.models.Region.objects.all().delete()
                 website.models.InitiativeTitleText.objects.all().delete()
+                website.models.InitiativeDescriptionText.objects.all().delete()
                 website.models.Location.objects.all().delete()
                 website.models.Initiative.objects.all().delete()
         else:

@@ -14,17 +14,37 @@ class LocationAdmin(gis_admin.OSMGeoAdmin):
 class InitiativeTitleTextInline(admin.TabularInline):
     # show_change_link = True
     model = models.InitiativeTitleText
-    readonly_fields = ("sk3_initiative_id",)
+    readonly_fields = ("sk3_id",)
+    extra = 1
+    min_num = 1
+
+
+class InitiativeDescriptionTextInline(admin.StackedInline):
+    # show_change_link = True
+    model = models.InitiativeDescriptionText
+    readonly_fields = ("sk3_id",)
     extra = 1
     min_num = 1
 
 
 @admin.register(models.Initiative)
 class InitiativeAdmin(admin.ModelAdmin):
-    list_display = ("id", "sk3_id")
+    @admin.display(description="Title in all languages")
+    def title_func(self, initiative_obj):
+        # obj: models.Initiative
+        # initiative_id = self..id.id
+        initiative_title_list = models.InitiativeTitleText.objects.filter(initiative_id=initiative_obj.id)
+        representation = ""
+        for initiative_title in initiative_title_list:
+            representation += " --- " + initiative_title.text
+        representation += " --- "
+        return representation
+
+    list_display = ("id", "sk3_id", "title_func")
+    # TODO: Adding title_func for details view
     readonly_fields = ("sk3_id",)
     list_max_show_all = 1000
-    inlines = [InitiativeTitleTextInline]
+    inlines = [InitiativeTitleTextInline, InitiativeDescriptionTextInline]
 
 
 """
@@ -44,10 +64,13 @@ class RegionAdmin(admin.ModelAdmin):
     readonly_fields = ("sk3_id",)
 
 
-"""
+@admin.register(models.InitiativeDescriptionText)
+class InitiativeDescriptionTextAdmin(admin.ModelAdmin):
+    list_display = ("initiative", "language_code", "text")
+    readonly_fields = ("id",)
+
+
 @admin.register(models.InitiativeTitleText)
 class InitiativeTitleTextAdmin(admin.ModelAdmin):
     list_display = ("initiative", "language_code", "text")
     readonly_fields = ("id",)
-    list_max_show_all = 1000
-"""

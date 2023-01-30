@@ -27,6 +27,18 @@ class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
         # Also see this: https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/
 
 
+class InitiativeTitleTextSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.InitiativeTitleText
+        fields = ['language_code', 'text']
+
+
+class InitiativeDescriptionTextSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.InitiativeDescriptionText
+        fields = ['language_code', 'text']
+
+
 class RegionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         fields = ('url', 'id', 'slug', 'welcome_message_html')
@@ -39,7 +51,9 @@ class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
     https://www.django-rest-framework.org/api-guide/relations/#reverse-relations
     """
     locations = LocationSerializer(many=True, read_only=True)
+    initiative_title_texts = InitiativeTitleTextSerializer(many=True, read_only=True)
+    initiative_description_texts = InitiativeDescriptionTextSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Initiative
-        fields = ['url', 'id', 'title', 'description', 'locations', 'region']
+        fields = ['url', 'id', 'region', 'locations', 'initiative_title_texts', 'initiative_description_texts']

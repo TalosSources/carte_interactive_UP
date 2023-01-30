@@ -33,10 +33,17 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
 
 * Option A: One way to do this is to go into the admin interface, select all rows for each data type, and then delete them all
 * (Dangerous) Option B: `docker-compose run api /code/manage.py flush`. (Afterwards the superuser will have to be recreated)
+* In some rare cases (for me `ProgrammingError --- id does not exist`) we may have to drop the entire database (not just flush):
+  1. `docker-compose run db`
+  1. Find the container id using `docker ps`
+  1. Connect to the postgres: `docker exec -it [container id] psql -U postgres`
+  1. `postgres-# DROP DATABASE smarta_kartan_db;`
+  1. `postgres=# CREATE DATABASE smarta_kartan_db;`
 
 ### Creating a new database
 
 We need to create the database manually (but only the first time), otherwise we will get `database "smarta_kartan_db" does not exist`
+1. `docker-compose run db`
 1. Find the container id using `docker ps`
 1. Connect to the postgres: `docker exec -it [container id] psql -U postgres`
 1. Create the database: `postgres=# CREATE DATABASE smarta_kartan_db;`

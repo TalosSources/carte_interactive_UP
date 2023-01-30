@@ -18,50 +18,11 @@ class Region(models.Model):
         return self.slug  # change to title if/when available
 
 
-"""
-class Language(models.Model):
-    code = models.CharField(max_length=255)
-
-    # ex: sv, en
-    # https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-
-    def __str__(self):
-        return self.code
-
-
-class TextItem(models.Model):
-    pass
-
-    def __str__(self):
-        return "TextItem---"
-
-class LanguageText(models.Model):
-    language = Language()
-    text_item = models.ForeignKey(TextItem, related_name='text_items', on_delete=models.CASCADE)
-    text = models.CharField(max_length=32767)
-
-    def __str__(self):
-        return "LanguageText---"
-
-
-class Initiative(models.Model):
-    title = TextItem()
-    description = TextItem()
-
-
-# title = models.CharField(max_length=127)
-# description = models.CharField(max_length=32767)
-
-
-"""
-
-
 class Initiative(models.Model):
     # Multiple values can be NULL and not violate uniqueness. See: https://stackoverflow.com/a/1400046/2525237
     # This means that we can use NULL/None for all new rows/items that we add
     sk3_id = models.IntegerField(null=True, blank=True, unique=True)
-    region = models.ForeignKey(Region, related_name='regions', on_delete=models.CASCADE)
-    description = models.CharField(max_length=32767, default="TODO: Change to dynamic language")
+    region = models.ForeignKey(Region, related_name='initiatives', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"ID: {self.id}"
@@ -74,12 +35,29 @@ class Initiative(models.Model):
         return f"/details/{self.id}"
 
 
-# sub-classing?
-class InitiativeTitleText(models.Model):
-    sk3_initiative_id = models.IntegerField(unique=True)
+class Text(models.Model):
+    sk3_id = models.IntegerField(unique=True)
+    # -ID for *one* of the initiatives in sk3. Only used during import. To be removed later
     language_code = models.CharField(max_length=2)
-    initiative = models.ForeignKey(Initiative, related_name='initiatives', on_delete=models.CASCADE)
-    text = models.CharField(max_length=32767)
+
+    # text = models.CharField(max_length=127)
+
+    class Meta:
+        abstract = True
+
+
+class InitiativeTitleText(Text):
+    text = models.CharField(max_length=127)
+    initiative = models.ForeignKey(Initiative, related_name='initiative_title_texts', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.text
+
+
+class InitiativeDescriptionText(Text):
+    text = models.TextField(max_length=32767)
+    initiative = models.ForeignKey(Initiative, related_name='initiative_description_texts',
+        on_delete=models.CASCADE)
 
     def __str__(self):
         return self.text
