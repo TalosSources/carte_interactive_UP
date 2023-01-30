@@ -20,8 +20,8 @@ function SelectRegion(props) {
             {
                 props.regionList.map(
                     (regionElement) => (
-                        //<option key={regionElement.id} value={regionElement.slug}>
-                        <option key={regionElement.id} value={regionElement.id}>
+                        //<option key={regionElement.id} value={regionElement.id}>
+                        <option key={regionElement.id} value={regionElement.slug}>
                             {regionElement.title}
                         </option>
                     )
@@ -37,7 +37,7 @@ class RHomeCmp extends React.Component {
         this.state = {
             initiativeList: [],
             regionList: [],
-            activeRegionId: this.props.rid,
+            activeRegionSlug: this.props.rslug,
             activeRegion: {
                 welcome_message_html: ""
             },
@@ -67,28 +67,29 @@ class RHomeCmp extends React.Component {
     handleSelectChange(event) {
         console.log(`handleSelectChange - event.target.value=${event.target.value}`);
         this.props.navigate('/r/'+event.target.value);
-        this.state.activeRegionId = event.target.value;
+        this.setState({activeRegionSlug: event.target.value});
     }
 
     componentDidUpdate(prevProps) {
         console.log("componentDidUpdate");
-        if (Number(this.state.activeRegionId) !== Number(this.state.activeRegion.id)) {
+        if (this.state.activeRegionSlug !== this.state.activeRegion.slug) {
             console.log("componentDidUpdate: New ID, refreshing active region");
-            console.log(`this.state.activeRegionId=${this.state.activeRegionId} --- type: ${typeof this.state.activeRegionId}`);
-            console.log(`this.state.activeRegion.id=${this.state.activeRegion.id} --- type: ${typeof this.state.activeRegion.id}`);
+            console.log(`this.state.activeRegionId=${this.state.activeRegionSlug} --- type: ${typeof this.state.activeRegionSlug}`);
+            console.log(`this.state.activeRegion.id=${this.state.activeRegion.slug} --- type: ${typeof this.state.activeRegion.slug}`);
             this.refreshActiveRegion();
         }
     }
 
     refreshActiveRegion() {
         console.log("refreshActiveRegion");
-        const active_region_api_url = "/api/regions/" + this.state.activeRegionId;
+        const active_region_api_url = "/api/regions/";
         fetch(active_region_api_url)
             .then(response => response.json())
+            .then(r => r.filter(r => r['slug']===this.state.activeRegionSlug))
             .then(response_obj => {
                 console.log(`response_obj: ${response_obj}`);
                 this.setState({
-                    activeRegion: response_obj,
+                    activeRegion: response_obj[0],
                 });
             })
             .catch(err => console.error(err));
@@ -152,7 +153,7 @@ class RHomeCmp extends React.Component {
                 <h1>Smartakartan</h1>
 		<SelectRegion
                     handleSelectChange={this.handleSelectChange}
-                    value={this.state.activeRegionId}
+                    value={this.state.activeRegionSlug}
                     regionList={this.state.regionList}
                 />
                 <div dangerouslySetInnerHTML={{__html: this.state.activeRegion.welcome_message_html}}></div>
@@ -169,11 +170,11 @@ class RHomeCmp extends React.Component {
 
 export default function RHome() {
     const navigation = useNavigate() // extract navigation prop here 
-    let {regionId} = useParams();
-    if (typeof regionId == 'undefined') {
-        regionId = 6;
+    let {regionSlug} = useParams();
+    if (typeof regionSlug == 'undefined') {
+        regionSlug = 'global';
     }
-    console.log(regionId);
+    console.log(regionSlug);
 
-    return <RHomeCmp rid={regionId} navigate={navigation} />
+    return <RHomeCmp rslug={regionSlug} navigate={navigation} />
 };
