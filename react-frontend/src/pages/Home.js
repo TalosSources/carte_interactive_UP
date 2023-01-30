@@ -168,7 +168,7 @@ class RHomeCmp extends React.Component {
     }
 }
 
-export default function RHome() {
+export default function Home() {
     const navigation = useNavigate() // extract navigation prop here 
     let {regionSlug} = useParams();
     if (typeof regionSlug == 'undefined') {
