@@ -22,7 +22,7 @@ function SelectRegion(props) {
                     (regionElement) => (
                         //<option key={regionElement.id} value={regionElement.slug}>
                         <option key={regionElement.id} value={regionElement.id}>
-                            {regionElement.slug}
+                            {regionElement.title}
                         </option>
                     )
                 )

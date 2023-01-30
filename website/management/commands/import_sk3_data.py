@@ -79,6 +79,16 @@ REGION_DT = "region"
 DATA_TYPE_LIST = [
     "faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, REGION_DT, OVERSATTNING_DT, "page_type", "tagg_grupp", "tagg"]
 REGION_LIST = ["gavle", GLOBAL_R, GOTEBORG_R, "karlstad", "malmo", "sjuharad", "stockholm", "umea"]
+REGION_NAMES = {
+    "gavle" : "Gävle",
+    "goteborg" : "Göteborg",
+    "karlstad" : "Karlstad",
+    "malmo" : "Malmö",
+    "sjuharad" : "Sjuhärad",
+    "stockholm" : "Stockholm",
+    "umea" : "Umeå",
+    "global" : "Hela Sverige"
+}
 
 # Contains sub-lists on this format: [sk3_id_en, sk3_id_sv], where the order of langs is undetermined
 # business_lang_combos_list = []
@@ -210,7 +220,8 @@ def import_sk3_data(i_args: [str]):
                     new_obj = website.models.Region(
                         sk3_id=wp_post_id,
                         slug=resp_row[RJK_SLUG],
-                        welcome_message_html=resp_row[RJK_WELCOME_MESSAGE]
+                        welcome_message_html=resp_row[RJK_WELCOME_MESSAGE],
+                        title=REGION_NAMES[resp_row[RJK_SLUG]]
                     )
                     if existing_obj is not None:
                         nr_skipped += 1

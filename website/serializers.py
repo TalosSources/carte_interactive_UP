@@ -41,7 +41,7 @@ class InitiativeDescriptionTextSerializer(serializers.ModelSerializer):
 
 class RegionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        fields = ('url', 'id', 'slug', 'welcome_message_html')
+        fields = ('url', 'id', 'slug', 'welcome_message_html', 'title')
         model = models.Region
 
 
