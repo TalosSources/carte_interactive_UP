@@ -23,7 +23,7 @@ class InitiativeDescriptionTextInline(admin.StackedInline):
     # show_change_link = True
     model = models.InitiativeDescriptionText
     readonly_fields = ("sk3_id",)
-    extra = 1
+    extra = 0
     min_num = 1
 
 
@@ -64,6 +64,7 @@ class RegionAdmin(admin.ModelAdmin):
     readonly_fields = ("sk3_id",)
 
 
+"""
 @admin.register(models.InitiativeDescriptionText)
 class InitiativeDescriptionTextAdmin(admin.ModelAdmin):
     list_display = ("initiative", "language_code", "text")
@@ -74,3 +75,4 @@ class InitiativeDescriptionTextAdmin(admin.ModelAdmin):
 class InitiativeTitleTextAdmin(admin.ModelAdmin):
     list_display = ("initiative", "language_code", "text")
     readonly_fields = ("id",)
+"""
