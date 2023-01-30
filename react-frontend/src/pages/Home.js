@@ -98,16 +98,19 @@ class HomeCmp extends React.Component {
     renderCardCollection() {
         console.log("renderCardCollection");
         return this.state.initiativeList.map(
-            (initiativeElement) => (
+            (initiativeElement) => {
+                let title = initiativeElement
+                            .initiative_title_texts[0]['text'];
+                return (
                 <div key={initiativeElement.id}>
                     <SkCard
-                        title={initiativeElement.title}
+                        title={title}
                         url={initiativeElement.url}
                         id={initiativeElement.id}
                     />
                 </div>
             )
-        );
+        });
     }
     
     render() {
