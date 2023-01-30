@@ -13,7 +13,7 @@ export default function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout/>}>
-                    <Route index element={<Home/>}/>
+                    <Route index element={<RHome/>}/>
                     <Route path="/details/:initiativeId" element={<Details/>}/>
                     <Route path="/r/:regionId" element={<RHome/>}/>
                     <Route path="*" element={<PageNotFound/>}/>

@@ -1,7 +1,6 @@
 import React from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import '../App.css';
-// import {useNavigate} from "react-router-dom";
 // useNavigate: Previously useHistory
 
 function SkCard(props) {
@@ -10,6 +9,25 @@ function SkCard(props) {
         <div style={{backgroundColor: "lightgreen"}}>
             <a href={'details/' + props.id}>{props.title}</a>
         </div>
+    );
+}
+
+function SelectRegion(props) {
+    // Inspiration: https://reactjs.org/docs/forms.html#the-select-tag
+    console.log(props.value);
+    return (
+        <select value={props.value} onChange={props.handleSelectChange}>
+            {
+                props.regionList.map(
+                    (regionElement) => (
+                        //<option key={regionElement.id} value={regionElement.slug}>
+                        <option key={regionElement.id} value={regionElement.id}>
+                            {regionElement.slug}
+                        </option>
+                    )
+                )
+            }
+        </select>
     );
 }
 
@@ -30,6 +48,7 @@ class RHomeCmp extends React.Component {
         // We have to bind to avoid this error:
         // "TypeError: Cannot read properties of undefined (reading 'setState')"
         // More info here: https://stackoverflow.com/a/39176279/2525237
+        this.handleSelectChange = this.handleSelectChange.bind(this);
     }
 
     componentDidMount() {
@@ -43,6 +62,12 @@ class RHomeCmp extends React.Component {
         mapScript.src = "map.js";
         mapScript.async = true;
         document.body.appendChild(mapScript);
+    }
+
+    handleSelectChange(event) {
+        console.log(`handleSelectChange - event.target.value=${event.target.value}`);
+        this.props.navigate('/r/'+event.target.value);
+        this.state.activeRegionId = event.target.value;
     }
 
     componentDidUpdate(prevProps) {
@@ -105,25 +130,32 @@ class RHomeCmp extends React.Component {
     renderCardCollection() {
         console.log("renderCardCollection");
         return this.state.initiativeList.map(
-            (initiativeElement) => (
+            (initiativeElement) => {
+                let title = initiativeElement
+                            .initiative_title_texts[0]['text'];
+                return (
                 <div key={initiativeElement.id}>
                     <SkCard
-                        title={initiativeElement.title}
+                        title={title}
                         url={initiativeElement.url}
                         id={initiativeElement.id}
                     />
                 </div>
             )
-        );
+        });
     }
     
     render() {
         console.log("render");
         return (
             <div className="Home">
-                <h1>Smartakartan (React frontend)</h1>
-                <h3>Welcome message</h3>
-                <div>{this.state.activeRegion.welcome_message_html}</div>
+                <h1>Smartakartan</h1>
+		<SelectRegion
+                    handleSelectChange={this.handleSelectChange}
+                    value={this.state.activeRegionId}
+                    regionList={this.state.regionList}
+                />
+                <div dangerouslySetInnerHTML={{__html: this.state.activeRegion.welcome_message_html}}></div>
                 <h2>Map</h2>
                 <div id="map"></div>
                 <h2>Cards</h2>
@@ -137,7 +169,11 @@ class RHomeCmp extends React.Component {
 
 export default function RHome() {
     const navigation = useNavigate() // extract navigation prop here 
-    const {regionId} = useParams();
+    let {regionId} = useParams();
+    if (typeof regionId == 'undefined') {
+        regionId = 6;
+    }
+    console.log(regionId);
 
     return <RHomeCmp rid={regionId} navigate={navigation} />
 };
