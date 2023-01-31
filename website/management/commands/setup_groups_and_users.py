@@ -33,6 +33,7 @@ for permission in all_permissions_list:
 content_admin_group.permissions.set(all_permissions_list)
 
 website_codenames = ["change_region", "delete_region", "add_region"]
+# Using a blacklist approach for the ContentAdmin group (we may want to change this in the future)
 remove_permissions_from_content_admin_group("website", i_codenames=website_codenames)
 remove_permissions_from_content_admin_group("auth")
 """
