@@ -1,8 +1,9 @@
 import React from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import '../App.css';
+// useNavigate: Previously useHistory
 
 function SkCard(props) {
-    // This is a React "function component"
     // CSS in React: https://www.w3schools.com/react/react_css.asp
     return (
         <div style={{backgroundColor: "lightgreen"}}>
@@ -11,18 +12,50 @@ function SkCard(props) {
     );
 }
 
+function SelectRegion(props) {
+    // Inspiration: https://reactjs.org/docs/forms.html#the-select-tag
+    console.log(props.value);
+    return (
+        <select value={props.value} onChange={props.handleSelectChange}>
+            {
+                props.regionList.map(
+                    (regionElement) => (
+                        //<option key={regionElement.id} value={regionElement.id}>
+                        <option key={regionElement.id} value={regionElement.slug}>
+                            {regionElement.title}
+                        </option>
+                    )
+                )
+            }
+        </select>
+    );
+}
 
-class Home extends React.Component {
+class RHomeCmp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             initiativeList: [],
+            regionList: [],
+            activeRegionSlug: this.props.rslug,
+            activeRegion: {
+                welcome_message_html: ""
+            },
         };
+        console.log(this.props);
+        console.log("Home.constructor");
+
+        // We have to bind to avoid this error:
+        // "TypeError: Cannot read properties of undefined (reading 'setState')"
+        // More info here: https://stackoverflow.com/a/39176279/2525237
+        this.handleSelectChange = this.handleSelectChange.bind(this);
     }
 
-    // Overridden (see details in documentation)
     componentDidMount() {
+        console.log("componentDidMount");
         this.refreshInitiativeList();
+        this.refreshRegionList();
+        this.refreshActiveRegion();
 
         // The id "map" has to be available before we can load the map script. Therefore we load this script here
         const mapScript = document.createElement("script");
@@ -31,38 +64,58 @@ class Home extends React.Component {
         document.body.appendChild(mapScript);
     }
 
-    renderCard(cardElement) {
-        // console.log(`cardElement: ${cardElement}`);
-        console.log("cardElement:");
-        console.log(cardElement);
-        return (
-            <SkCard
-                title={cardElement.title}
-                url={cardElement.url}
-                id={cardElement.id}
-            />
-        );
+    handleSelectChange(event) {
+        console.log(`handleSelectChange - event.target.value=${event.target.value}`);
+        this.props.navigate('/r/'+event.target.value);
+        this.setState({activeRegionSlug: event.target.value});
     }
 
-    renderCardCollection() {
-        // let retReactNode;
-        // this.state.cardList.forEach(element => {
-        //     retReactNode.append();
-        // });
-        // console.log(retReactNode);
-        return this.state.initiativeList.map(
-            (initiativeElement) => (
-                <div key={initiativeElement.id}>{this.renderCard(initiativeElement)}</div>
-            )
-        );
+    componentDidUpdate(prevProps) {
+        console.log("componentDidUpdate");
+        if (this.state.activeRegionSlug !== this.state.activeRegion.slug) {
+            console.log("componentDidUpdate: New ID, refreshing active region");
+            console.log(`this.state.activeRegionId=${this.state.activeRegionSlug} --- type: ${typeof this.state.activeRegionSlug}`);
+            console.log(`this.state.activeRegion.id=${this.state.activeRegion.slug} --- type: ${typeof this.state.activeRegion.slug}`);
+            this.refreshActiveRegion();
+        }
+    }
+
+    refreshActiveRegion() {
+        console.log("refreshActiveRegion");
+        const active_region_api_url = "/api/regions/";
+        fetch(active_region_api_url)
+            .then(response => response.json())
+            .then(r => r.filter(r => r['slug']===this.state.activeRegionSlug))
+            .then(response_obj => {
+                console.log(`response_obj: ${response_obj}`);
+                this.setState({
+                    activeRegion: response_obj[0],
+                });
+            })
+            .catch(err => console.error(err));
+    }
+
+    refreshRegionList() {
+        console.log("refreshRegionList");
+        const region_api_url = "/api/regions/";
+        fetch(region_api_url)
+            .then(response => response.json())
+            .then(response_array => {
+                // console.log(`response_array: ${response_array}`);
+                this.setState({
+                    regionList: response_array,
+                });
+            })
+            .catch(err => console.error(err));
     }
 
     refreshInitiativeList() {
+        console.log("refreshInitiativeList");
         const initiatives_api_url = "/api/initiatives/";
         fetch(initiatives_api_url)
             .then(response => response.json())
             .then(response_array => {
-                console.log(`response_array: ${response_array}`);
+                // console.log(`response_array: ${response_array}`);
                 this.setState({
                     initiativeList: response_array,
                 });
@@ -75,21 +128,53 @@ class Home extends React.Component {
         // return response_array;
     }
 
+    renderCardCollection() {
+        console.log("renderCardCollection");
+        return this.state.initiativeList.map(
+            (initiativeElement) => {
+                let title = initiativeElement
+                            .initiative_title_texts[0]['text'];
+                return (
+                <div key={initiativeElement.id}>
+                    <SkCard
+                        title={title}
+                        url={initiativeElement.url}
+                        id={initiativeElement.id}
+                    />
+                </div>
+            )
+        });
+    }
+    
     render() {
+        console.log("render");
         return (
             <div className="Home">
-                <h2>Smartakartan (React frontend)</h2>
-                <h3>Map</h3>
+                <h1>Smartakartan</h1>
+		<SelectRegion
+                    handleSelectChange={this.handleSelectChange}
+                    value={this.state.activeRegionSlug}
+                    regionList={this.state.regionList}
+                />
+                <div dangerouslySetInnerHTML={{__html: this.state.activeRegion.welcome_message_html}}></div>
+                <h2>Map</h2>
                 <div id="map"></div>
-                <h3>Cards</h3>
+                <h2>Cards</h2>
                 <ul>
                     {this.renderCardCollection()}
                 </ul>
-
             </div>
-
         );
     }
 }
 
-export default Home;
+export default function Home() {
+    const navigation = useNavigate() // extract navigation prop here 
+    let {regionSlug} = useParams();
+    if (typeof regionSlug == 'undefined') {
+        regionSlug = 'global';
+    }
+    console.log(regionSlug);
+
+    return <RHomeCmp rslug={regionSlug} navigate={navigation} />
+};

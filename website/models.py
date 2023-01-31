@@ -5,7 +5,7 @@ from django.db import models
 class Region(models.Model):
     sk3_id = models.IntegerField(null=True, blank=True, unique=True)
 
-    # title = models.CharField(max_length=127, unique=True)  # including "alla områden"
+    title = models.CharField(max_length=127, unique=True)  # including "alla områden"
     slug = models.SlugField(max_length=127, unique=True)
     # https://docs.djangoproject.com/en/4.1/ref/models/fields/#slugfield
 
