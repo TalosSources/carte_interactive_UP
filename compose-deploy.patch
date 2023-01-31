@@ -1,5 +1,5 @@
---- docker-compose.yml.original	2023-01-05 16:43:30.944242568 +0100
-+++ docker-compose.yml	2023-01-05 16:44:15.999087347 +0100
+--- docker-compose.yml	2023-01-31 21:19:26.643985369 +0100
++++ docker-compose.yml.deploy	2023-01-31 21:22:36.420116141 +0100
 @@ -5,6 +5,7 @@
      image: nginx:latest
      volumes:
@@ -8,7 +8,16 @@
      depends_on:
        - api
        - web
-@@ -21,8 +22,8 @@
+@@ -12,8 +13,6 @@
+       - "80:80"
+   db:
+     image: postgis/postgis:14-3.3  # This version was recommended "for new users" 2022-11-03
+-    volumes:
+-      - /var/lib/smartakartan_db:/var/lib/postgresql/data
+     environment:
+       TZ: Europe/Stockholm
+       POSTGRES_PASSWORD: nwKnN7kgftitCpc  # TODO: Security, see "Docker secrets" https://hub.docker.com/_/postgres
+@@ -21,15 +20,12 @@
    api:
      build: .
      environment:
@@ -18,4 +27,12 @@
 +      - SCHEME=https
      depends_on:
        - db
+-    volumes:
+-      - ./:/code
    web:
+     build: ./react-frontend
+     depends_on:
+       - api
+-    volumes:
+-      - ./react-frontend/src:/react-frontend/src
++
