@@ -60,6 +60,7 @@ deploy:
     - sudo docker image prune -f
     - sudo docker container prune -f
     # needs to have some temporal difference to the start, so the db is prepared
+    - sleep 10
     - sudo docker-compose run api /code/manage.py import_sk3_data
   #environment:
     #name: $CI_COMMIT_REF_SLUG
