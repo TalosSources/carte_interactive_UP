@@ -53,10 +53,11 @@ class RHomeCmp extends React.Component {
 
     componentDidMount() {
         console.log("componentDidMount");
-        this.refreshInitiativeList();
-        this.refreshRegionList();
-        this.refreshActiveRegion();
+        const regionPromise = this.refreshRegionList();
 
+        regionPromise.then(regions => {
+            this.setRegion(this.state.activeRegionSlug);
+        });
         // The id "map" has to be available before we can load the map script. Therefore we load this script here
         const mapScript = document.createElement("script");
         mapScript.src = "map.js";
@@ -66,8 +67,10 @@ class RHomeCmp extends React.Component {
 
     handleSelectChange(event) {
         console.log(`handleSelectChange - event.target.value=${event.target.value}`);
-        this.props.navigate('/r/'+event.target.value);
-        this.setState({activeRegionSlug: event.target.value});
+        const new_region_slug = event.target.value;
+        this.props.navigate('/r/'+new_region_slug);
+        this.setState({activeRegionSlug: new_region_slug});
+        this.setRegion(new_region_slug);
     }
 
     componentDidUpdate(prevProps) {
@@ -80,33 +83,28 @@ class RHomeCmp extends React.Component {
         }
     }
 
-    refreshActiveRegion() {
+    setRegion(region_slug) {
         console.log("refreshActiveRegion");
-        const active_region_api_url = "/api/regions/";
-        fetch(active_region_api_url)
-            .then(response => response.json())
-            .then(r => r.filter(r => r['slug']===this.state.activeRegionSlug))
-            .then(response_obj => {
-                console.log(`response_obj: ${response_obj}`);
-                this.setState({
-                    activeRegion: response_obj[0],
-                });
-            })
-            .catch(err => console.error(err));
+        const region = this.state.regionList.filter(r => r['slug']===region_slug);
+        this.setState({
+            activeRegion: region[0],
+        });
     }
 
-    refreshRegionList() {
+    async refreshRegionList() {
         console.log("refreshRegionList");
         const region_api_url = "/api/regions/";
-        fetch(region_api_url)
-            .then(response => response.json())
-            .then(response_array => {
-                // console.log(`response_array: ${response_array}`);
-                this.setState({
-                    regionList: response_array,
-                });
-            })
-            .catch(err => console.error(err));
+        try {
+            const response = await fetch(region_api_url);
+            const response_array = await response.json();
+            // console.log(`response_array: ${response_array}`);
+            this.setState({
+                regionList: response_array,
+            });
+            return response_array;
+        } catch (err) {
+            return console.error(err);
+        }
     }
 
     refreshInitiativeList() {
