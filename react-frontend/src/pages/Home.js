@@ -41,6 +41,7 @@ class RHomeCmp extends React.Component {
             activeRegion: {
                 welcome_message_html: ""
             },
+            search_string: "",
         };
         console.log(this.props);
         console.log("Home.constructor");
@@ -54,15 +55,8 @@ class RHomeCmp extends React.Component {
 
     componentDidMount() {
         console.log("componentDidMount");
-        const initiativePromise = this.refreshInitiativeList();
-        const regionPromise = this.refreshRegionList();
-
-        regionPromise.then(regions => {
-            this.setRegion(this.state.activeRegionSlug);
-        });
-        initiativePromise.then(initiatives => {
-            this.setState({renderedCards : this.renderCardCollection(initiatives)});
-        })
+        this.loadInitiativeList();
+        this.loadRegions();
 
         // The id "map" has to be available before we can load the map script. Therefore we load this script here
         const mapScript = document.createElement("script");
@@ -76,14 +70,22 @@ class RHomeCmp extends React.Component {
         const new_region_slug = event.target.value;
         this.props.navigate('/r/'+new_region_slug);
         this.setState({activeRegionSlug: new_region_slug});
-        this.setRegion(new_region_slug);
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.activeRegionSlug != this.state.activeRegionSlug) {
+            this.refreshRegion();
+        }
+        if (prevState.regionList != this.state.regionList) {
+            this.refreshRegion();
+        }
+        if (prevState.search_string != this.state.search_string || prevState.initiativeList != this.state.initiativeList) {
+            this.refreshCards();
+        }
     }
 
-    handleSearchChange(event) {
-        const search_string = event.target.value;
+    refreshCards() {
+        const search_string = this.state.search_string;
         const keywords=search_string.split(' ');
         function filter_initiative(initiative) {
             return keywords
@@ -101,43 +103,50 @@ class RHomeCmp extends React.Component {
         this.setState({renderedCards : this.renderCardCollection(selected_initiatives)});
     }
 
-    setRegion(region_slug) {
+    handleSearchChange(event) {
+        this.setState({search_string: event.target.value});
+    }
+
+    refreshRegion() {
         console.log("refreshActiveRegion");
+        const region_slug = this.state.activeRegionSlug;
         const region = this.state.regionList.filter(r => r['slug']===region_slug);
+        if (region.length == 0) {
+            return;
+        }
         this.setState({
             activeRegion: region[0],
         });
     }
 
-    async refreshRegionList() {
+    loadRegions() {
         console.log("refreshRegionList");
         const region_api_url = "/api/regions/";
-        try {
-            const response = await fetch(region_api_url);
-            const response_array = await response.json();
-            // console.log(`response_array: ${response_array}`);
+        fetch(region_api_url)
+        .then(r => r.json())
+        .then(regions => {
             this.setState({
-                regionList: response_array,
+                regionList: regions,
             });
-            return response_array;
-        } catch (err) {
-            return console.error(err);
-        }
+        })
+        .catch(err => {
+            console.error(err);
+        });
     }
 
-    async refreshInitiativeList() {
+    loadInitiativeList() {
         console.log("refreshInitiativeList");
         const initiatives_api_url = "/api/initiatives/";
-        try {
-            const response = await fetch(initiatives_api_url);
-            const response_array = await response.json();
+        fetch(initiatives_api_url)
+        .then(r => r.json())
+        .then(initiatives => {
             this.setState({
-                initiativeList: response_array,
+                initiativeList: initiatives,
             });
-            return response_array;
-        } catch (err) {
-            return console.error(err);
-        }
+        })
+        .catch(err => {
+            console.error(err);
+        });
     }
 
     renderCardCollection(initiatives) {
