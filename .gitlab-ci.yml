@@ -54,6 +54,10 @@ deploy:
     - sudo patch docker-compose.yml < compose-deploy.patch
     - sudo patch nginx.conf < nginx-deploy.patch
     - sudo docker-compose down
+    - sudo docker-compose rm
+    - sudo docker volume prune
+    - sudo docker image prune
+    - sudo docker container prune
     - sudo docker-compose up --build -d
     - sudo docker-compose run api /code/manage.py import_sk3_data
   #environment:
