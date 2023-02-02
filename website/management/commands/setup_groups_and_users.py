@@ -81,7 +81,7 @@ a_super_user.save()
 
 
 class Command(django.core.management.base.BaseCommand):
-    help = "Create a ContentAdmin group and test user"
+    help = "Create a ContentAdmin group, a test user (belonging to this group), and a superuser"
 
     def add_arguments(self, parser):
         pass

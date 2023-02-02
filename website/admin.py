@@ -15,7 +15,7 @@ class InitiativeTitleTextInline(admin.TabularInline):
     # show_change_link = True
     model = models.InitiativeTitleText
     readonly_fields = ("sk3_id",)
-    extra = 1
+    extra = 1  # -adds an extra row that is always visible
     min_num = 1
 
 
@@ -62,17 +62,3 @@ root@27a6ea382e00:/code#
 class RegionAdmin(admin.ModelAdmin):
     list_display = ("id", "sk3_id", "slug")
     readonly_fields = ("sk3_id",)
-
-
-"""
-@admin.register(models.InitiativeDescriptionText)
-class InitiativeDescriptionTextAdmin(admin.ModelAdmin):
-    list_display = ("initiative", "language_code", "text")
-    readonly_fields = ("id",)
-
-
-@admin.register(models.InitiativeTitleText)
-class InitiativeTitleTextAdmin(admin.ModelAdmin):
-    list_display = ("initiative", "language_code", "text")
-    readonly_fields = ("id",)
-"""
