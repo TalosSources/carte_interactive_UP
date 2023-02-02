@@ -41,6 +41,7 @@ class RHomeCmp extends React.Component {
             activeRegion: {
                 welcome_message_html: ""
             },
+            search_string: "",
         };
         console.log(this.props);
         console.log("Home.constructor");
@@ -49,13 +50,13 @@ class RHomeCmp extends React.Component {
         // "TypeError: Cannot read properties of undefined (reading 'setState')"
         // More info here: https://stackoverflow.com/a/39176279/2525237
         this.handleSelectChange = this.handleSelectChange.bind(this);
+        this.handleSearchChange = this.handleSearchChange.bind(this);
     }
 
     componentDidMount() {
         console.log("componentDidMount");
-        this.refreshInitiativeList();
-        this.refreshRegionList();
-        this.refreshActiveRegion();
+        this.loadInitiativeList();
+        this.loadRegions();
 
         // The id "map" has to be available before we can load the map script. Therefore we load this script here
         const mapScript = document.createElement("script");
@@ -66,71 +67,87 @@ class RHomeCmp extends React.Component {
 
     handleSelectChange(event) {
         console.log(`handleSelectChange - event.target.value=${event.target.value}`);
-        this.props.navigate('/r/'+event.target.value);
-        this.setState({activeRegionSlug: event.target.value});
+        const new_region_slug = event.target.value;
+        this.props.navigate('/r/'+new_region_slug);
+        this.setState({activeRegionSlug: new_region_slug});
     }
 
-    componentDidUpdate(prevProps) {
-        console.log("componentDidUpdate");
-        if (this.state.activeRegionSlug !== this.state.activeRegion.slug) {
-            console.log("componentDidUpdate: New ID, refreshing active region");
-            console.log(`this.state.activeRegionId=${this.state.activeRegionSlug} --- type: ${typeof this.state.activeRegionSlug}`);
-            console.log(`this.state.activeRegion.id=${this.state.activeRegion.slug} --- type: ${typeof this.state.activeRegion.slug}`);
-            this.refreshActiveRegion();
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.activeRegionSlug != this.state.activeRegionSlug) {
+            this.refreshRegion();
+        }
+        if (prevState.regionList != this.state.regionList) {
+            this.refreshRegion();
+        }
+        if (prevState.search_string != this.state.search_string || prevState.initiativeList != this.state.initiativeList) {
+            this.refreshCards();
         }
     }
 
-    refreshActiveRegion() {
-        console.log("refreshActiveRegion");
-        const active_region_api_url = "/api/regions/";
-        fetch(active_region_api_url)
-            .then(response => response.json())
-            .then(r => r.filter(r => r['slug']===this.state.activeRegionSlug))
-            .then(response_obj => {
-                console.log(`response_obj: ${response_obj}`);
-                this.setState({
-                    activeRegion: response_obj[0],
-                });
-            })
-            .catch(err => console.error(err));
+    refreshCards() {
+        const search_string = this.state.search_string;
+        const keywords=search_string.split(' ');
+        function filter_initiative(initiative) {
+            return keywords
+            .map(keyword => keyword.toLowerCase())
+            .every(keyword =>
+                initiative.initiative_title_texts.some(itt => 
+                        itt['text'].toLowerCase().includes(keyword)
+                ) ||
+                initiative.initiative_description_texts.some(idt => 
+                        idt['text'].toLowerCase().includes(keyword)
+                )
+            )
+        };
+        let selected_initiatives = this.state.initiativeList.filter(filter_initiative);
+        this.setState({renderedCards : this.renderCardCollection(selected_initiatives)});
     }
 
-    refreshRegionList() {
+    handleSearchChange(event) {
+        this.setState({search_string: event.target.value});
+    }
+
+    refreshRegion() {
+        console.log("refreshActiveRegion");
+        const region_slug = this.state.activeRegionSlug;
+        const region = this.state.regionList.filter(r => r['slug']===region_slug);
+        if (region.length == 0) {
+            return;
+        }
+        this.setState({
+            activeRegion: region[0],
+        });
+    }
+
+    loadRegions() {
         console.log("refreshRegionList");
         const region_api_url = "/api/regions/";
         fetch(region_api_url)
-            .then(response => response.json())
-            .then(response_array => {
-                // console.log(`response_array: ${response_array}`);
+            .then(r => r.json())
+            .then(regions => 
                 this.setState({
-                    regionList: response_array,
-                });
-            })
+                    regionList: regions,
+                })
+            )
             .catch(err => console.error(err));
     }
 
-    refreshInitiativeList() {
+    loadInitiativeList() {
         console.log("refreshInitiativeList");
         const initiatives_api_url = "/api/initiatives/";
         fetch(initiatives_api_url)
-            .then(response => response.json())
-            .then(response_array => {
-                // console.log(`response_array: ${response_array}`);
+            .then(r => r.json())
+            .then(initiatives => 
                 this.setState({
-                    initiativeList: response_array,
-                });
-            })
+                    initiativeList: initiatives,
+                })
+            )
             .catch(err => console.error(err));
-
-        // console.log(response);
-        // const response_array = response.json();
-        // console.log(response_array);
-        // return response_array;
     }
 
-    renderCardCollection() {
+    renderCardCollection(initiatives) {
         console.log("renderCardCollection");
-        return this.state.initiativeList.map(
+        return initiatives.map(
             (initiativeElement) => {
                 let title = initiativeElement
                             .initiative_title_texts[0]['text'];
@@ -157,11 +174,10 @@ class RHomeCmp extends React.Component {
                     regionList={this.state.regionList}
                 />
                 <div dangerouslySetInnerHTML={{__html: this.state.activeRegion.welcome_message_html}}></div>
-                <h2>Map</h2>
                 <div id="map"></div>
-                <h2>Cards</h2>
+                Filter: <input name="search" onChange={this.handleSearchChange}/>
                 <ul>
-                    {this.renderCardCollection()}
+                    {this.state.renderedCards}
                 </ul>
             </div>
         );
