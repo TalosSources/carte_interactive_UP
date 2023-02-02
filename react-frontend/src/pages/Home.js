@@ -123,30 +123,26 @@ class RHomeCmp extends React.Component {
         console.log("refreshRegionList");
         const region_api_url = "/api/regions/";
         fetch(region_api_url)
-        .then(r => r.json())
-        .then(regions => {
-            this.setState({
-                regionList: regions,
-            });
-        })
-        .catch(err => {
-            console.error(err);
-        });
+            .then(r => r.json())
+            .then(regions => 
+                this.setState({
+                    regionList: regions,
+                })
+            )
+            .catch(err => console.error(err));
     }
 
     loadInitiativeList() {
         console.log("refreshInitiativeList");
         const initiatives_api_url = "/api/initiatives/";
         fetch(initiatives_api_url)
-        .then(r => r.json())
-        .then(initiatives => {
-            this.setState({
-                initiativeList: initiatives,
-            });
-        })
-        .catch(err => {
-            console.error(err);
-        });
+            .then(r => r.json())
+            .then(initiatives => 
+                this.setState({
+                    initiativeList: initiatives,
+                })
+            )
+            .catch(err => console.error(err));
     }
 
     renderCardCollection(initiatives) {
