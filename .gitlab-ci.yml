@@ -55,10 +55,11 @@ deploy:
     - sudo patch nginx.conf < nginx-deploy.patch
     - sudo docker-compose down
     - sudo docker-compose rm
+    - sudo docker-compose up --build -d
     - sudo docker volume prune -f
     - sudo docker image prune -f
     - sudo docker container prune -f
-    - sudo docker-compose up --build -d
+    # needs to have some temporal difference to the start, so the db is prepared
     - sudo docker-compose run api /code/manage.py import_sk3_data
   #environment:
     #name: $CI_COMMIT_REF_SLUG
