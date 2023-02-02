@@ -7,6 +7,7 @@
 1. Click save
 1. Now the user config screen will be shown, *see more below*
 
+## User Types
 ### Content Admin user
 
 A type of user that can add/change initiatives (sv: "verksamheter"). This is typically the user assigned to people from the different regions who want to contribute initiatives to the smart map.
