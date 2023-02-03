@@ -1,3 +1,5 @@
+import logging
+
 import django.contrib.gis.geos
 import django.db.utils
 import django.urls
@@ -12,6 +14,8 @@ A test database is automatically used, instead of the real database
 https://docs.djangoproject.com/en/4.1/intro/tutorial05/
 
 """
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class IdCounter:
@@ -68,6 +72,7 @@ class ApiTest(rest_framework.test.APITestCase):
         # "location" is from the `basename` parameter given when creating the router. Important: A suffix has to be
         # added to get an url: "-list" or "-detail". See this SO answer: https://stackoverflow.com/a/60013997/2525237
         url = django.urls.reverse("location-list")
+        logging.debug(f"{url=}")
         http_response = self.client.get(url)
         self.assertEqual(http_response.status_code, 200)
 
@@ -79,11 +84,13 @@ class ApiTest(rest_framework.test.APITestCase):
     def test_location_detail_not_existing(self):
         # When using the -detail suffix we also need to provide the key (pk) that identifies the specific item/row
         url = django.urls.reverse("location-detail", kwargs={'pk': 1})
+        logging.debug(f"{url=}")
         http_response = self.client.get(url)
         self.assertEqual(http_response.status_code, 404)
 
     def test_location_detail_existing(self):
         new_location = create_location()
         url = django.urls.reverse("location-detail", kwargs={'pk': new_location.id})
+        logging.debug(f"{url=}")
         http_response = self.client.get(url)
         self.assertEqual(http_response.status_code, 200)
