@@ -36,7 +36,7 @@ class Initiative(models.Model):
 
 
 class Text(models.Model):
-    sk3_id = models.IntegerField(unique=True)
+    sk3_id = models.IntegerField(null=True, blank=True, unique=True)
     # -ID for *one* of the initiatives in sk3. Only used during import. To be removed later
     language_code = models.CharField(max_length=2)
 

@@ -8,6 +8,9 @@ from . import models
 
 """
 A test database is automatically used, instead of the real database
+
+https://docs.djangoproject.com/en/4.1/intro/tutorial05/
+
 """
 
 
@@ -20,31 +23,40 @@ class IdCounter:
         return cls.id_
 
 
+def create_region():
+    new_region = models.Region.objects.create(slug="region_slug_name", welcome_message_html="Welcome!")
+    return new_region
+
+
+def create_initiative(i_title: str = "some title"):
+    region_ = create_region()
+    new_initiative = models.Initiative.objects.create(id=IdCounter.get_id(), region=region_)
+    models.InitiativeTitleText.objects.create(language_code="en", initiative=new_initiative, text=i_title)
+    return new_initiative
+
+
+def create_location():
+    new_initiative = create_initiative()
+    coord_point = django.contrib.gis.geos.Point(15, 15)
+    new_location = models.Location.objects.create(
+        id=IdCounter.get_id(), title="an address", coordinates=coord_point, initiative=new_initiative)
+    return new_location
+
+
 class ModelTest(TestCase):
     def test_create_initiative(self):
         # `.objects.create` is not used in the Django tutorial https://docs.djangoproject.com/en/4.1/intro/tutorial05/
-        new_initiative = models.Initiative.objects.create(
-            id=IdCounter.get_id(), title="a name", description="a description")
+        new_initiative = create_initiative()
 
     def test_create_initiative_with_long_name(self):
-        long_text = "abc" * 100
+        long_text = "abc" * 1000
         try:
-            new_initiative = models.Initiative.objects.create(
-                id=IdCounter.get_id(), title=long_text, description="a description")
+            new_initiative = create_initiative(i_title=long_text)
         except django.db.utils.DataError:
             pass
         else:
             self.fail()
         # Alternatively we can use: self.assertRaises(django.db.utils.DataError, ....)
-
-
-def create_location():
-    new_initiative = models.Initiative.objects.create(
-        id=IdCounter.get_id(), title="a name", description="a description")
-    coord_point = django.contrib.gis.geos.Point(15, 15)
-    new_location = models.Location.objects.create(
-        id=IdCounter.get_id(), title="an address", coordinates=coord_point, initiative=new_initiative)
-    return new_location
 
 
 class ApiTest(rest_framework.test.APITestCase):
