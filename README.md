@@ -14,6 +14,7 @@ $ cd smartakartan4
 # Update docker-compose.yml to your liking. Especially the db-volume and URL.
 # Define an administrator (to access /admin)
 docker-compose run api /code/manage.py createsuperuser
+docker-compose run api /code/manage.py setup_groups_or_users --ca_group
 ```
 
 ## Start
