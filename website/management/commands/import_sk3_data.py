@@ -55,6 +55,11 @@ RJK_LANG = "lang"
 RJK_ADDRESS_AND_COORDINATE = "address_and_coordinate"
 RJSK_ADDRESS_AND_COORDINATE_ID = "id"  # -another field called "ID" is also available, which has the same value AFAIK
 
+RJK_HUVUDTAGGAR = "huvudtaggar"
+RJK_SUBTAGGAR = "subtaggar"
+RJK_TRANSAKTIONSFORM = "transaktionsform"
+RJK_TAGGAR = "taggar"
+
 RJK_LANGUAGE_CODE = "language_code"
 RJK_WELCOME_MESSAGE = "welcome_message"
 
@@ -75,25 +80,27 @@ GOTEBORG_R = "goteborg"
 OVERSATTNING_DT = "oversattning"
 GLOBAL_R = "global"
 REGION_DT = "region"
+TAGG_DT = "tagg"
 
 DATA_TYPE_LIST = [
-    "faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, REGION_DT, OVERSATTNING_DT, "page_type", "tagg_grupp", "tagg"]
+    "faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, REGION_DT, OVERSATTNING_DT, "page_type", "tagg_grupp", TAGG_DT]
 REGION_LIST = ["gavle", GLOBAL_R, GOTEBORG_R, "karlstad", "malmo", "sjuharad", "stockholm", "umea"]
 REGION_NAMES = {
-    "gavle" : "Gävle",
-    "goteborg" : "Göteborg",
-    "karlstad" : "Karlstad",
-    "malmo" : "Malmö",
-    "sjuharad" : "Sjuhärad",
-    "stockholm" : "Stockholm",
-    "umea" : "Umeå",
-    "global" : "Hela Sverige"
+    "gavle": "Gävle",
+    "goteborg": "Göteborg",
+    "karlstad": "Karlstad",
+    "malmo": "Malmö",
+    "sjuharad": "Sjuhärad",
+    "stockholm": "Stockholm",
+    "umea": "Umeå",
+    "global": "Hela Sverige"
 }
 
 # Contains sub-lists on this format: [sk3_id_en, sk3_id_sv], where the order of langs is undetermined
 # business_lang_combos_list = []
 
 business_resp_row_list = []
+tagg_resp_row_list = []
 
 
 def import_sk3_data(i_args: [str]):
@@ -129,8 +136,8 @@ def import_sk3_data(i_args: [str]):
 
     for data_type_full_name in data_type_full_name_list:
         # ################ FILTERING ################
-        if data_type_full_name not in ("goteborg_business", "address_gbg", REGION_DT):
-            # "goteborg_business", "address_gbg", REGION_DT
+        if data_type_full_name not in ("goteborg_business", "address_gbg", REGION_DT, TAGG_DT,):
+            # "goteborg_business", "address_gbg", REGION_DT, TAGG_DT,
             continue
         """
         if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
@@ -246,11 +253,13 @@ def import_sk3_data(i_args: [str]):
                     # logging.debug(f"{title=}")
                 elif BUSINESS_DT in data_type_full_name:
                     business_resp_row_list.append(resp_row)
-
+                elif TAGG_DT == data_type_full_name:
+                    tagg_resp_row_list.append(resp_row)
                 else:
                     logging.info(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
                     continue
             page_nr += 1
+    process_tagg_rows()
     process_business_rows()
     # logging.info(f"{nr_added=}")
     # logging.info(f"{nr_skipped=}")
@@ -276,7 +285,7 @@ def process_business_rows():
     # business_resp_row_list_copy = business_resp_row_list.copy()
     translations_for_added_posts_dict_list = []
 
-    business_resp_row_list_reversed = list(reversed(business_resp_row_list))  # -so se comes first
+    business_resp_row_list_reversed = list(reversed(business_resp_row_list))  # -so sv comes first
     logging.debug(f"{len(business_resp_row_list_reversed)=}")
     """
     for resp_row in business_resp_row_list_reversed:
@@ -344,12 +353,12 @@ def process_business_rows():
         assert region_name in REGION_LIST
 
         region_obj = website.models.Region.objects.get(slug=region_name)
-        new_obj = website.models.Initiative(
+        new_initiative_obj = website.models.Initiative(
             sk3_id=wp_post_id,
             region=region_obj
         )
         logging.debug(f"Saving Initiative object for {wp_post_id=}")
-        new_obj.save()
+        new_initiative_obj.save()
         translations_for_added_posts_dict_list.append(translations_dict)
         nr_added += 1
         # logging.debug(f"Added initiative with {initiative.id=}")
@@ -358,14 +367,14 @@ def process_business_rows():
             sk3_id=wp_post_id,
             language_code=lang_code,
             text=title,
-            initiative=new_obj
+            initiative=new_initiative_obj
         )
         new_title_obj.save()
         new_description_obj = website.models.InitiativeDescriptionText(
             sk3_id=wp_post_id,
             language_code=lang_code,
             text=description,
-            initiative=new_obj
+            initiative=new_initiative_obj
         )
         new_description_obj.save()
 
@@ -384,11 +393,23 @@ def process_business_rows():
                 except website.models.Location.DoesNotExist:
                     logging.error(f"Location doesn't exist for sk3_id '{location_id}'")
                     sys.exit()
-                location.initiative = new_obj
+                location.initiative = new_initiative_obj
                 location.save()
         else:
             if GLOBAL_R not in data_type_full_name:
-                logging.warning(f"WARNING: No location available for initiative: {new_obj.title}")
+                logging.warning(f"WARNING: No location available for initiative: {new_initiative_obj}")
+
+        all_tags_list = []
+        for rjk in [RJK_HUVUDTAGGAR, RJK_TAGGAR, RJK_SUBTAGGAR, RJK_TRANSAKTIONSFORM]:
+            tags_list_or_bool = resp_row[rjk]
+            if tags_list_or_bool:  # ensures that this is not False or []
+                all_tags_list.extend(tags_list_or_bool)
+        logging.debug(f"{len(all_tags_list)=}")
+        for tag_title in all_tags_list:
+            tag_title: str
+            tag = website.models.Tag.objects.get(title=tag_title)
+            new_initiative_obj.tags.add(tag)
+
     # return nr_added
     logging.info(f"{nr_added=}")
 
@@ -413,3 +434,48 @@ class Command(django.core.management.base.BaseCommand):
                 website.models.Initiative.objects.all().delete()
         else:
             import_sk3_data(args)
+
+
+tagg_dict = {}
+"""
+tagg_dict uses this format:
+{
+title: slug
+}
+"""
+
+
+def process_tagg_rows():
+    logging.debug("============= entered function process_tagg_rows")
+    nr_of_duplicates = 0
+    logging.debug(f"{len(tagg_resp_row_list)=}")
+    for resp_row in tagg_resp_row_list:
+        title = resp_row[RJK_TITLE][RJSK_RENDERED]
+        slug = resp_row[RJK_SLUG]
+        wp_post_id = resp_row[RJK_ID]
+
+        if title in tagg_dict.keys():
+            nr_of_duplicates += 1
+            if len(slug) < len(tagg_dict[title]):
+                tagg_dict[title] = slug
+            continue
+        else:
+            tagg_dict[title] = slug
+
+    logging.debug(f"{nr_of_duplicates=}")
+    logging.debug(f"{len(tagg_dict)=}")
+
+    for tag_title in tagg_dict.keys():
+        new_obj = website.models.Tag(
+            slug=tagg_dict[tag_title],
+            title=tag_title
+        )
+        new_obj.save()
+
+
+"""
+        title_query_set = website.models.Tag.objects.filter(title=title)
+        logging.debug(f"{title_query_set=}")
+        if title_query_set:
+
+"""
