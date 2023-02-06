@@ -5,3 +5,36 @@
 body {
     background-color: magenta;
 }
+
+@media screen and (min-width: 56rem) { /* = 2*28. 2 cards take 2*10inner+4padding+4margin */
+  #map {
+    width: calc(50% - 2em);
+    float: right;
+    margin: 1em;
+  }
+  #cards-panel {
+    width: 50%;
+  }
+  #cards-canvas {
+    height: 100vh;
+    overflow: scroll;
+  }
+  .card-image {
+    width: 100%;
+    border-radius: 1em 1em 0 0;
+  }
+  .card {
+    float: left;
+    width: 10em;
+    height: 15em;
+    background-color: beige;
+    margin: 1em;
+    border-radius: 1em;
+    border: black;
+    /*padding: 1em;*/
+  }
+  ul {
+    margin: 0pt;
+    padding: 0pt;
+  }
+}
