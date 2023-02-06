@@ -46,19 +46,15 @@ function RegionSelector(props) {
 
 function Home() {
     let {regionSlug} = useParams();
+    const navigate = useNavigate();
     if (typeof regionSlug == 'undefined') {
         regionSlug = 'global';
     }
     console.log(regionSlug);
     const [initiatives, setInitiatives] = useState([]);
     const [searchString, setSearchString] = useState("");
-    const [activeRegion, setActiveRegion] = useState({
-                welcome_message_html: ""
-            });
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
     const [regionList, setRegionList] = useState([]);
-    const [renderedCards, setRenderedCards] = useState("");
-    const [mapMarkers, setMapMarkers] = useState([]);
 
     // first run
     useEffect(() => {
@@ -79,53 +75,36 @@ function Home() {
     }, [])
 
     // refresh region
-    useEffect(() => {
-        console.log("refreshActiveRegion");
-        const region_slug = activeRegionSlug;
-        const region = regionList.filter(r => r['slug']===region_slug);
-        if (region.length == 0) {
-            return;
-        }
-        setActiveRegion(region[0]);
-    }, [activeRegionSlug, regionList])
+    const region_slug = activeRegionSlug;
+    const region = regionList.filter(r => r['slug']===region_slug);
+    let activeRegion;
+    if (region.length == 0) {
+        activeRegion = {
+            welcome_message_html: ""
+        };
+    } else {
+        activeRegion = region[0];
+    }
 
     // refresh cards
-    useEffect(() => {
-        const keywords=searchString.split(' ');
-        function filter_initiative(initiative) {
-            return keywords
-            .map(keyword => keyword.toLowerCase())
-            .every(keyword =>
-                initiative.initiative_title_texts.some(itt => 
-                        itt['text'].toLowerCase().includes(keyword)
-                ) ||
-                initiative.initiative_description_texts.some(idt => 
-                        idt['text'].toLowerCase().includes(keyword)
-                )
+    const keywords=searchString.split(' ');
+    function filter_initiative(initiative) {
+        return keywords
+        .map(keyword => keyword.toLowerCase())
+        .every(keyword =>
+            initiative.initiative_title_texts.some(itt => 
+                    itt['text'].toLowerCase().includes(keyword)
+            ) ||
+            initiative.initiative_description_texts.some(idt => 
+                    idt['text'].toLowerCase().includes(keyword)
             )
-        };
-        let selected_initiatives = initiatives.filter(filter_initiative);
-        setRenderedCards(renderCardCollection(selected_initiatives));
-    }, [searchString, initiatives])
+        )
+    };
+    const selected_initiatives = initiatives.filter(filter_initiative);
+    const renderedCards = renderCardCollection(selected_initiatives);
 
-    //refresh markers
-    useEffect(() => {
-        const keywords=searchString.split(' ');
-        function filter_initiative(initiative) {
-            return keywords
-            .map(keyword => keyword.toLowerCase())
-            .every(keyword =>
-                initiative.initiative_title_texts.some(itt => 
-                        itt['text'].toLowerCase().includes(keyword)
-                ) ||
-                initiative.initiative_description_texts.some(idt => 
-                        idt['text'].toLowerCase().includes(keyword)
-                )
-            )
-        };
-        let selected_initiatives = initiatives.filter(filter_initiative);
-        setMapMarkers(renderMapMarkers(selected_initiatives));
-    }, [searchString, initiatives])
+    //markers
+    const mapMarkers = renderMapMarkers(selected_initiatives);
 
     return (
         <div>
@@ -134,7 +113,6 @@ function Home() {
                 handleSelectChange={event => {
                         console.log(`handleSelectChange - event.target.value=${event.target.value}`);
                         const new_region_slug = event.target.value;
-                        const navigate = useNavigate();
                         navigate('/r/'+new_region_slug);
                         setActiveRegionSlug(new_region_slug);
                     }
