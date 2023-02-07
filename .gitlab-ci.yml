@@ -52,6 +52,7 @@ deploy:
     - sudo bash -c 'git describe --long --all --dirty > gitver'
     - sudo patch docker-compose.yml < compose-deploy.patch
     - sudo patch nginx.conf < nginx-deploy.patch
+    - sudo bash -c "echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development"
     - sudo docker-compose down
     - sudo docker-compose rm
     - sudo docker-compose up --build -d

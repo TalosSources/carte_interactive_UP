@@ -11,6 +11,7 @@ body {
     width: calc(50% - 2em);
     float: right;
     margin: 1em;
+    height: 100vh;
   }
   #cards-panel {
     width: 50%;
@@ -19,6 +20,7 @@ body {
     height: 100vh;
     overflow: scroll;
   }
+}
   .card-title {
     font-weight: bold;
     color: black;
@@ -66,4 +68,3 @@ body {
     margin: 0pt;
     padding: 0pt;
   }
-}

@@ -4,7 +4,7 @@ import {useParams} from "react-router-dom";
 const Details = () => {
     const {initiativeId} = useParams();
 
-    const initiative_api_url = "/api/initiatives/" + initiativeId;
+    const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/` + initiativeId;
     const [initiative, setInitiative] = useState({});
 
     useEffect(() => {
