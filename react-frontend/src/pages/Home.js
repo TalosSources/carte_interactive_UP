@@ -2,15 +2,6 @@ import React, {useState, useEffect} from "react";
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import {useNavigate, useParams} from "react-router-dom";
 
-const mockData = {
-
-    name: "Test",
-    position: [51.506, -0.10],
-    description: "This is a test thing",
-    image: "https://picsum.photos/id/237/200/300"
-
-};
-
 // Components
 function SkCard(props) {
     // CSS in React: https://www.w3schools.com/react/react_css.asp
