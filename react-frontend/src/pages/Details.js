@@ -17,7 +17,25 @@ function renderTags(initiative) {
 }
 
 
-const Details = () => {
+function getTitle(initiative) {
+    console.log("getTitle")
+    if (typeof initiative.initiative_title_texts != 'undefined') {
+        console.log(initiative.initiative_title_texts)
+        return initiative.initiative_title_texts[0].text
+    }
+}
+
+
+function getDescription(initiative) {
+    console.log("getDescription")
+    if (typeof initiative.initiative_description_texts != 'undefined') {
+        console.log(initiative.initiative_description_texts)
+        return initiative.initiative_description_texts[0].text
+    }
+}
+
+
+function Details() {
     const {initiativeId} = useParams();
 
     const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/` + initiativeId;
@@ -30,16 +48,18 @@ const Details = () => {
                 console.log("response_json:");
                 console.log(response_json);
                 setInitiative(response_json);
-            });
+            })
+            .catch(err => console.error(err));
     }, []);
 
-    const renderedTags=renderTags(initiative);
+    console.log("initiative:")
+    console.log(initiative)
     return (
         <div>
             <h2>Details page for Initiative</h2>
             <h3>ID: {initiativeId}</h3>
-            <h3>Name: {initiative.name}</h3>
-            <p>Description: {initiative.description}</p>
+            <h3>Title: {getTitle(initiative)}</h3>
+            <p dangerouslySetInnerHTML={{__html: "Description: " + getDescription(initiative)}}></p>
             <h3>Tags:</h3>
             <ul>
                 {renderTags(initiative)}
