@@ -33,3 +33,4 @@ services:
       - api
     volumes:
       - ./react-frontend/src:/react-frontend/src
+      - ./react-frontend/public:/react-frontend/public
