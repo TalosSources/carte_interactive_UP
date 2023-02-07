@@ -52,6 +52,7 @@ deploy:
     - sudo bash -c 'git describe --long --all --dirty > gitver'
     - sudo patch docker-compose.yml < compose-deploy.patch
     - sudo patch nginx.conf < nginx-deploy.patch
+    - sudo bash -c "echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development"
     - sudo docker-compose down
     - sudo docker-compose rm
     - sudo docker-compose up --build -d
@@ -61,7 +62,6 @@ deploy:
     # needs to have some temporal difference to the start, so the db is prepared
     - sleep 10
     - sudo docker-compose run api /code/manage.py import_sk3_data
-  #environment:
-    #name: $CI_COMMIT_REF_SLUG
-    #url: $DYNAMIC_ENVIRONMENT_URL
-    #on_stop: terraform_destroy
+  environment:
+    name: production
+    url: https://smartakartan.entrop.mywire.org

@@ -1,4 +1,4 @@
---- docker-compose.yml	2023-01-31 21:19:26.643985369 +0100
+--- docker-compose.yml	2023-02-07 09:46:54.895930796 +0100
 +++ docker-compose.yml.deploy	2023-01-31 21:22:36.420116141 +0100
 @@ -5,6 +5,7 @@
      image: nginx:latest
@@ -17,7 +17,7 @@
      environment:
        TZ: Europe/Stockholm
        POSTGRES_PASSWORD: nwKnN7kgftitCpc  # TODO: Security, see "Docker secrets" https://hub.docker.com/_/postgres
-@@ -21,15 +20,12 @@
+@@ -21,16 +20,12 @@
    api:
      build: .
      environment:
@@ -35,4 +35,5 @@
        - api
 -    volumes:
 -      - ./react-frontend/src:/react-frontend/src
+-      - ./react-frontend/public:/react-frontend/public
 +
