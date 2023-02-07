@@ -61,7 +61,6 @@ deploy:
     # needs to have some temporal difference to the start, so the db is prepared
     - sleep 10
     - sudo docker-compose run api /code/manage.py import_sk3_data
-  #environment:
-    #name: $CI_COMMIT_REF_SLUG
-    #url: $DYNAMIC_ENVIRONMENT_URL
-    #on_stop: terraform_destroy
+  environment:
+    name: production
+    url: https://smartakartan.entrop.mywire.org
