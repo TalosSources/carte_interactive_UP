@@ -261,6 +261,7 @@ def import_sk3_data(i_args: [str]):
             page_nr += 1
     process_tagg_rows()
     process_business_rows()
+    clear_unused_tags_from_db()
     # logging.info(f"{nr_added=}")
     # logging.info(f"{nr_skipped=}")
     logging.debug(f"Total number of datatypes: {len(data_type_full_name_list)}")
@@ -268,6 +269,19 @@ def import_sk3_data(i_args: [str]):
 
 LANG_CODE_EN = "en"
 LANG_CODE_SV = "sv"
+
+
+def clear_unused_tags_from_db():
+    for tag_obj in website.models.Tag.objects.all():
+        count = 0
+        tag_obj: website.models.Tag
+        logging.info(f"{tag_obj.title=}")
+        for initiative_obj in website.models.Initiative.objects.all():
+            if tag_obj in initiative_obj.tags.all():
+                count += 1
+        logging.info(f"{count=}")
+        if count == 0:
+            tag_obj.delete()
 
 
 def process_business_rows():
@@ -414,28 +428,6 @@ def process_business_rows():
     logging.info(f"{nr_added=}")
 
 
-class Command(django.core.management.base.BaseCommand):
-    help = "Migrate data from sk3"
-
-    def add_arguments(self, parser):
-        parser.add_argument("--clear", action="store_true")  # -available under "options" in help
-        # parser.add_argument("--sk3_data_types", nargs="*", type=str)  # -available under "positional arguments" in help
-
-    def handle(self, *args, **options):
-        logging.debug(f"{args=}")
-        logging.debug(f"{options=}")
-        if options["clear"]:
-            result_text = input("Are you sure you want to delete the whole database? (y/n)")
-            if result_text == "y":
-                website.models.Region.objects.all().delete()
-                website.models.InitiativeTitleText.objects.all().delete()
-                website.models.InitiativeDescriptionText.objects.all().delete()
-                website.models.Location.objects.all().delete()
-                website.models.Initiative.objects.all().delete()
-        else:
-            import_sk3_data(args)
-
-
 tagg_dict = {}
 """
 tagg_dict uses this format:
@@ -473,9 +465,26 @@ def process_tagg_rows():
         new_obj.save()
 
 
-"""
-        title_query_set = website.models.Tag.objects.filter(title=title)
-        logging.debug(f"{title_query_set=}")
-        if title_query_set:
+class Command(django.core.management.base.BaseCommand):
+    help = "Migrate data from sk3"
 
-"""
+    def add_arguments(self, parser):
+        parser.add_argument("--clear", action="store_true")  # -available under "options" in help
+        parser.add_argument("--clear_unused_tags", action="store_true")  # -available under "options" in help
+        # parser.add_argument("--sk3_data_types", nargs="*", type=str)  # -available under "positional arguments" in help
+
+    def handle(self, *args, **options):
+        logging.debug(f"{args=}")
+        logging.debug(f"{options=}")
+        if options["clear"]:
+            result_text = input("Are you sure you want to delete the whole database? (y/n)")
+            if result_text == "y":
+                website.models.Region.objects.all().delete()
+                website.models.InitiativeTitleText.objects.all().delete()
+                website.models.InitiativeDescriptionText.objects.all().delete()
+                website.models.Location.objects.all().delete()
+                website.models.Initiative.objects.all().delete()
+        elif options["clear_unused_tags"]:
+            clear_unused_tags_from_db()
+        else:
+            import_sk3_data(args)
