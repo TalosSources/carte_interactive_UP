@@ -1,22 +1,35 @@
 from django.contrib import admin
 from django.contrib.gis import admin as gis_admin
+from django.utils.html import format_html
 
 from . import models
 
 
 @gis_admin.register(models.Location)
-class LocationAdmin(gis_admin.OSMGeoAdmin):
+class LocationAdmin(gis_admin.GISModelAdmin):
+    # Docs: https://docs.djangoproject.com/en/4.1/ref/contrib/gis/admin/#gismodeladmin
     list_display = ("id", "sk3_id", "title", "coordinates", "initiative")
     readonly_fields = ("sk3_id",)
     list_max_show_all = 1000
+
+
+"""
+class InitiativeLocationInline(admin.TabularInline):
+    model = models.Location
+    show_change_link = True
+    readonly_fields = ("coordinates", "sk3_id")
+    # exclude = "sk3_id"
+    empty_value_display = f"<b>{model.title}---no value set. please edit the location</b>"
+    extra = 0
+"""
 
 
 class InitiativeTitleTextInline(admin.TabularInline):
     # show_change_link = True
     model = models.InitiativeTitleText
     readonly_fields = ("sk3_id",)
-    extra = 1  # -adds an extra row that is always visible
-    min_num = 1
+    extra = 0  # -adds an extra row that is always visible
+    min_num = 2
 
 
 class InitiativeDescriptionTextInline(admin.StackedInline):
@@ -24,7 +37,7 @@ class InitiativeDescriptionTextInline(admin.StackedInline):
     model = models.InitiativeDescriptionText
     readonly_fields = ("sk3_id",)
     extra = 0
-    min_num = 1
+    min_num = 2
 
 
 @admin.register(models.Initiative)
@@ -40,11 +53,23 @@ class InitiativeAdmin(admin.ModelAdmin):
         representation += " --- "
         return representation
 
+    @admin.display
+    def location_list(self, obj: models.Initiative):
+        initiative_list = obj.locations.all()
+        initiative_list_html = "<ul>"
+        for initiative in initiative_list:
+            initiative_list_html += f'<li><a href="/admin/website/location/{initiative.id}">{initiative.title}</a></li>'
+        initiative_list_html += "</ul>"
+        initiative_list_html += f'<a href="/admin/website/location/add">Add new (use id {initiative.id} for initiative)</a>'
+        return format_html(initiative_list_html)
+
     list_display = ("id", "sk3_id", "title_func")
     # TODO: Adding title_func for details view
-    readonly_fields = ("sk3_id",)
+    readonly_fields = ("sk3_id", "location_list")
     list_max_show_all = 1000
+
     inlines = [InitiativeTitleTextInline, InitiativeDescriptionTextInline]
+    #
 
 
 """
