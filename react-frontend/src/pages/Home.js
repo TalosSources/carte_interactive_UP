@@ -47,8 +47,32 @@ function Home() {
     const [searchString, setSearchString] = useState("");
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
     const [regionList, setRegionList] = useState([]);
+    const [tags, setTags] = useState([]);
 
     // first run
+    useEffect(() => {
+        const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
+        fetch(tag_api_url)
+            .then(response => response.json())
+            .then(response_json => {
+                console.log("response_json:");
+                console.log(response_json);
+                setTags(response_json);
+            });
+    }, []);
+    function compare(tag_a, tag_b){
+        if (tag_a.initiatives.length < tag_b.initiatives.length){
+            return -1;
+        }else if(tag_a.initiatives.length > tag_b.initiatives.length){
+            return 1;
+        }
+        return 0;
+    }
+    tags.sort(compare)
+    console.log("=============");
+    tags.reverse()
+    let top_tags = tags.slice(0, 5)
+    console.log(top_tags);
     useEffect(() => {
         const initiatives_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/`;
         fetch(initiatives_api_url)
@@ -98,7 +122,10 @@ function Home() {
 
     //markers
     const mapMarkers = renderMapMarkers(selected_initiatives);
-
+    const listStyle={
+        display: "inline-block",
+        margin: "4px 8px"
+    }
     return (
         <div>
             <h2>Smartakartan</h2>
@@ -114,6 +141,16 @@ function Home() {
                 regionList={regionList}
             />
             <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
+            <span>Top Tags:</span>
+            <ul style={listStyle}>
+                {
+                    top_tags.map((tagElement) => (
+                        <li style={listStyle} key={tagElement.id}>
+                            <a href={`/tag/${tagElement.id}`}>{tagElement.title}</a>
+                        </li>
+                    ))
+                }
+            </ul>
             <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

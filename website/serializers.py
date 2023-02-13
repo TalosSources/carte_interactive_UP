@@ -50,7 +50,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
     # 'initiatives'
     class Meta:
         model = models.Tag
-        fields = ['url', 'id', 'title', 'slug']
+        fields = ['url', 'id', 'title', 'slug', 'initiatives']
 
 
 class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
