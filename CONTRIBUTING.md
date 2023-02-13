@@ -2,10 +2,12 @@
 # Getting started for developers
 
 ## Setup (with docker)
-(Ubuntu 22.04 LTS used but this shouldn't be very important)
+
+Ubuntu 22.04 LTS was used to create this section. On Windows you may want to use [Windows Subsystem](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux)
 
 1. Installing docker and docker compose, see: https://docs.docker.com/get-docker/
 1. Building image and starting the containers: `docker-compose up --build`
+   * The first time is different, but usually you will not need to use the `--build` flag, so the process will be much faster
 1. Use the website
    * [Admin interface](http://localhost/admin/) - Credentials from createsuperuser step
    * [API](http://localhost/api/) - it's possible to view the API in html by opening this link in a browser)
@@ -14,7 +16,7 @@
      1. `docker-compose run api /code/manage.py test`
      1. `docker-compose down`
 
-You can add `-d` (`docker-compose up --build -d`) to start docker compose in "detached mode", but then please remember to run `docker-compose down` when you are done, so that resources/ports are not taken/blocked from your system
+You can add `-d` (`docker-compose up -d`) to start docker compose in "detached mode", but then please remember to run `docker-compose down` when you are done, so that resources/ports are not taken/blocked from your system
 
 ## How to
 
@@ -33,7 +35,7 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
 
 * Option A: One way to do this is to go into the admin interface, select all rows for each data type, and then delete them all
 * (Dangerous) Option B: `docker-compose run api /code/manage.py flush`. (Afterwards the superuser will have to be recreated)
-* In some rare cases (for me `ProgrammingError --- id does not exist`) we may have to drop the entire database (not just flush):
+* Option C: In some rare cases (for me `ProgrammingError --- id does not exist`) we may have to drop the entire database (not just flush):
   1. `docker-compose run db`
   1. Find the container id using `docker ps`
   1. Connect to the postgres: `docker exec -it [container id] psql -U postgres`
@@ -57,15 +59,24 @@ We need to create the database manually (but only the first time), otherwise we 
 ### Migrating the database
 
 After a change in the model, we need to migrate the changes to the database:
-1. `docker-compose up` (use `-d` if running in a single terminal)
+1. `docker-compose up -d`
 1. `docker-compose run api bash`
-1. `./manage.py makemigrations`
-1. `./manage.py migrate`
+1. `./manage.py makemigrations` (this will create a migration file here: `website/migrations`, which is version controlled. If another person has made the changes in the database we can skip this step)
+1. `./manage.py migrate` (this uses the migration file created in the previous step)
 
 NEW:
 1. `python3 manage.py makemigrations`
 1. `docker-compose build`
 1. `docker-compose run api /code/manage.py migrate`
+
+### Adding new pages
+
+- Register page in [react router](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/react-frontend/src/App.js).
+- Create page in [pages folder](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/tree/main/react-frontend/src/pages).
+- data transferred to react via REST API defined in [urls.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/smartakartan4/urls.py) and [views.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/website/views.py)
+
+
+#SOcial 
 
 ## Interactions with other developers
 
@@ -77,7 +88,7 @@ TODO
 
 ## Decision process
 
-TODO
+Jonathan is the product owner. He has the experience with the product and the overview
 
 ## Technical overview
 
@@ -118,14 +129,46 @@ Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/do
 TODO
 
 ## What can I do right now?
-Check ready issues https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/boards/5077652
 
-## Tips for implementing new pages
-- Register page in [react router](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/react-frontend/src/App.js).
-- Create page in [pages folder](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/tree/main/react-frontend/src/pages).
-- data transferred to react via REST API defined in [urls.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/smartakartan4/urls.py) and [views.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/website/views.py)
+* Check ready issues https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/boards/5077652
+* Adding more auto-tests and increasing coverage
 
-<!--
-Reference:
-https://gitlab.com/mindfulness-at-the-computer/mindfulness-at-the-computer/-/blob/master/CONTRIBUTING.md
--->
+
+## Meeting notes
+
+Can be found [here](https://drive.google.com/drive/folders/1gr585Yq0tNy16csVm5dar_Ub2rE7hnvL)
+
+## Way of working
+
+We use agile/SCRUM and work in two-week sprints
+
+**[Planning board](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/boards/5077759)**
+
+### Issues and branches
+
+TODO
+
+## Architecture
+
+
+
+### Decisions, why a certain technology was chosen
+
+TODO
+
+
+***
+
+[GDRIVE Smarta Kartan 4.0](https://drive.google.com/drive/folders/15xD7PqmqnNJkf_RsjQqBVDT2auBkkfuN)
+
+[People, roles and contact info](https://docs.google.com/spreadsheets/d/1JJy8dElqG6_5EAk4F8F5O_uArkIzjXly7_qbCxSe8UI) ("Restricted - Only people with access can open with the link")
+
+***
+
+## Appendix A: For 3.0 (the previous version)
+
+[Kravspec 3.0](https://docs.google.com/document/d/1MerETncgN8kq5oeXADo5M_3h4R3SN-02BW9_AoC-X7c/edit)
+
+[Trello board]()
+
+
