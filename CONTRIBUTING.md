@@ -59,15 +59,15 @@ We need to create the database manually (but only the first time), otherwise we 
 ### Migrating the database
 
 After a change in the model, we need to migrate the changes to the database:
-1. `docker-compose up -d`
-1. `docker-compose run api bash`
-1. `./manage.py makemigrations` (this will create a migration file here: `website/migrations`, which is version controlled. If another person has made the changes in the database we can skip this step)
-1. `./manage.py migrate` (this uses the migration file created in the previous step)
 
-NEW:
-1. `python3 manage.py makemigrations`
-1. `docker-compose build`
-1. `docker-compose run api /code/manage.py migrate`
+1. `python3 manage.py makemigrations` (this will create a migration file here: `website/migrations`, which is version controlled. If another person has made the changes in the database we can skip this step)
+1. `docker-compose run api /code/manage.py migrate` (this uses the migration file created in the previous step)
+
+Alternatively we can do the same thing with these commands:
+
+1. `docker-compose run api bash`
+1. `./manage.py makemigrations`
+1. `./manage.py migrate`
 
 ### Adding new pages
 
