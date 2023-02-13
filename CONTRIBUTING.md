@@ -75,22 +75,23 @@ NEW:
 - Create page in [pages folder](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/tree/main/react-frontend/src/pages).
 - data transferred to react via REST API defined in [urls.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/smartakartan4/urls.py) and [views.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/website/views.py)
 
-
-#SOcial 
-
 ## Interactions with other developers
 
 Done mainly via our slack, and also via GitLab issues
 
-## Work process
+## People, roles and contact info
 
-TODO
+[Link to Google Drive](https://docs.google.com/spreadsheets/d/1JJy8dElqG6_5EAk4F8F5O_uArkIzjXly7_qbCxSe8UI) ("Restricted - Only people with access can open with the link")
+
+## Merge Requests and Workflow Overview
+
+We do issue work in branches and then merge into the main branch
 
 ## Decision process
 
-Jonathan is the product owner. He has the experience with the product and the overview
+Jonathan is the product owner (he has the experience with the product and the overview)
 
-## Technical overview
+## Technical overview and architecture
 
 Tech overview diagram: https://docs.google.com/drawings/d/15sx4YFCvtGF8nAua7IqMI7zYry7YVGBZa7iAJvCffBQ/edit?usp=sharing
 
@@ -109,30 +110,15 @@ Tech overview diagram: https://docs.google.com/drawings/d/15sx4YFCvtGF8nAua7IqMI
 * GDAL
 * ...
 
-Wiki pages:
-* https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/wikis/External-Documentation-for-Dependencies
-* https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/wikis/Help-using-dependencies
-* https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/wikis/Problems-and-solutions
+### Decisions, why a certain technology was chosen
+
+TODO
 
 ## General Product Overview
 
 Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/docs/-/blob/main/smarta-kartan-req-spec.md)
 
-## Abbreviations
-
-* SK: Smarta Kartan (aka The Smart Map)
-* SK3: Version 3
-* SK4: Version 4
-
-## Merge Requests and Workflow Overview
-
-TODO
-
-## What can I do right now?
-
-* Check ready issues https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/boards/5077652
-* Adding more auto-tests and increasing coverage
-
+The aim is that version 4.0 will be similar to 3.0 ("feature parity") but with some minor differences
 
 ## Meeting notes
 
@@ -144,24 +130,11 @@ We use agile/SCRUM and work in two-week sprints
 
 **[Planning board](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/boards/5077759)**
 
-### Issues and branches
+## What can I do right now?
 
-TODO
+* Check ready issues: https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/boards/5077652
+* Adding more auto-tests and increasing coverage
 
-## Architecture
-
-
-
-### Decisions, why a certain technology was chosen
-
-TODO
-
-
-***
-
-[GDRIVE Smarta Kartan 4.0](https://drive.google.com/drive/folders/15xD7PqmqnNJkf_RsjQqBVDT2auBkkfuN)
-
-[People, roles and contact info](https://docs.google.com/spreadsheets/d/1JJy8dElqG6_5EAk4F8F5O_uArkIzjXly7_qbCxSe8UI) ("Restricted - Only people with access can open with the link")
 
 ***
 
@@ -169,6 +142,17 @@ TODO
 
 [Kravspec 3.0](https://docs.google.com/document/d/1MerETncgN8kq5oeXADo5M_3h4R3SN-02BW9_AoC-X7c/edit)
 
-[Trello board]()
+[Trello board](https://trello.com/b/5rDw6kzZ/sk-30-development)
 
+## Appendix B: Abbreviations
 
+* SK: Smarta Kartan (aka The Smart Map)
+* SK3: Version 3
+* SK4: Version 4
+
+## Appendix C: Overview of files
+
+* The `docs/` directory (where this document is located)
+* [docs-repo](https://gitlab.com/kollaborativ-ekonomi/docs/)
+* [GDRIVE Smarta Kartan 4.0](https://drive.google.com/drive/folders/15xD7PqmqnNJkf_RsjQqBVDT2auBkkfuN)
+* [Tord/SunyataZero's Google Drive](https://drive.google.com/drive/u/0/folders/1c3vxplDZns8zA4BI6KdN6nwKnsjJA2cJ) (hopefully this will be merged with the Google drive above)
