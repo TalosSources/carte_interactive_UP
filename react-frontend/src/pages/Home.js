@@ -2,6 +2,11 @@ import React, {useState, useEffect} from "react";
 import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import {useNavigate, useParams} from "react-router-dom";
 
+import "leaflet/dist/leaflet.css";
+
+import "leaflet-gesture-handling";
+import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
+
 // Components
 function SkCard(props) {
     // CSS in React: https://www.w3schools.com/react/react_css.asp
@@ -114,7 +119,7 @@ function Home() {
                 regionList={regionList}
             />
             <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
-            <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false}>
+            <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false} gestureHandling={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
