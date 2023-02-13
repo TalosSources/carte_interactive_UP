@@ -75,6 +75,23 @@ Alternatively we can do the same thing with these commands:
 - Create page in [pages folder](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/tree/main/react-frontend/src/pages).
 - data transferred to react via REST API defined in [urls.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/smartakartan4/urls.py) and [views.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/website/views.py)
 
+
+## General Product Overview
+
+Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/docs/-/blob/main/smarta-kartan-req-spec.md)
+
+The aim is that version 4.0 will be similar to 3.0 ("feature parity") but with some minor differences
+
+## Meeting notes
+
+Can be found [here](https://drive.google.com/drive/folders/1gr585Yq0tNy16csVm5dar_Ub2rE7hnvL)
+
+## Way of working
+
+We use agile/SCRUM and work in two-week sprints
+
+**[Planning board](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/boards/5077759)**
+
 ## Interactions with other developers
 
 Done mainly via our slack, and also via GitLab issues
@@ -83,13 +100,13 @@ Done mainly via our slack, and also via GitLab issues
 
 [Link to Google Drive](https://docs.google.com/spreadsheets/d/1JJy8dElqG6_5EAk4F8F5O_uArkIzjXly7_qbCxSe8UI) ("Restricted - Only people with access can open with the link")
 
-## Merge Requests and Workflow Overview
-
-We do issue work in branches and then merge into the main branch
-
 ## Decision process
 
 Jonathan is the product owner (he has the experience with the product and the overview)
+
+## GitLab Workflow
+
+We do issue work in branches and then merge into the main branch
 
 ## Technical overview and architecture
 
@@ -113,22 +130,6 @@ Tech overview diagram: https://docs.google.com/drawings/d/15sx4YFCvtGF8nAua7IqMI
 ### Decisions, why a certain technology was chosen
 
 TODO
-
-## General Product Overview
-
-Requirements spec can be found [here](https://gitlab.com/kollaborativ-ekonomi/docs/-/blob/main/smarta-kartan-req-spec.md)
-
-The aim is that version 4.0 will be similar to 3.0 ("feature parity") but with some minor differences
-
-## Meeting notes
-
-Can be found [here](https://drive.google.com/drive/folders/1gr585Yq0tNy16csVm5dar_Ub2rE7hnvL)
-
-## Way of working
-
-We use agile/SCRUM and work in two-week sprints
-
-**[Planning board](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/boards/5077759)**
 
 ## What can I do right now?
 
