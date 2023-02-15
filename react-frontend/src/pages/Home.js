@@ -73,7 +73,7 @@ function Home() {
         return tag_b.initiatives.length - tag_a.initiatives.length
     }
     function tagEntropy(tag) {
-        return tag.initiatives.length * (initiatives.length-tag.initiatives.length)
+        return tag.initiatives.length * (initiativesToShow.length-tag.initiatives.length)
     }
     function sortTagsByEntropy(tag_a, tag_b) {
         return tagEntropy(tag_b) - tagEntropy(tag_a)
@@ -197,12 +197,11 @@ function Home() {
     const renderedCards = renderCardCollection(initiatives);
 
     //markers
-    const mapMarkers = renderMapMarkers(selected_initiatives);
+    const mapMarkers = renderMapMarkers(initiatives);
     const listStyle={
         display: "inline-block",
         margin: "4px 8px"
     }
-    const mapMarkers = renderMapMarkers(initiatives);
 
     function leafletToGeoCoordinate(leafletCoordinate) {
         return GeoCoordinate({'longitude' : leafletCoordinate['lng'], 'latitude': leafletCoordinate['lat']});
