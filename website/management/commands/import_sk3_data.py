@@ -262,8 +262,6 @@ def import_sk3_data(i_args: [str]):
     process_tagg_rows()
     process_business_rows()
     clear_unused_tags_from_db()
-    # logging.info(f"{nr_added=}")
-    # logging.info(f"{nr_skipped=}")
     logging.debug(f"Total number of datatypes: {len(data_type_full_name_list)}")
 
 
@@ -275,11 +273,9 @@ def clear_unused_tags_from_db():
     for tag_obj in website.models.Tag.objects.all():
         count = 0
         tag_obj: website.models.Tag
-        logging.info(f"{tag_obj.title=}")
         for initiative_obj in website.models.Initiative.objects.all():
             if tag_obj in initiative_obj.tags.all():
                 count += 1
-        logging.info(f"{count=}")
         if count == 0:
             tag_obj.delete()
 
