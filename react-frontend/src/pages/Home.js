@@ -1,6 +1,23 @@
 import React, {useState, useEffect} from "react";
-import {MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
+import {MapContainer, TileLayer, Marker, Popup, useMapEvent} from 'react-leaflet';
 import {useNavigate, useParams} from "react-router-dom";
+import { GeoCoordinate, BoundingBox } from "geocoordinate";
+
+import "leaflet/dist/leaflet.css";
+
+import "leaflet-gesture-handling";
+import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
+
+const Sorting = {
+  Alphabetical: "1",
+  Distance: "2",
+};
+
+const WhatToShow = {
+    Everything: "1",
+    OnlyOnMap: "2",
+    WithoutGlobal: "3",
+}
 import {renderCardCollection} from "../Cards";
 
 // Components
@@ -30,10 +47,15 @@ function Home() {
         regionSlug = 'global';
     }
     console.log(regionSlug);
-    const [initiatives, setInitiatives] = useState([]);
+    const [localizedInitiatives, setLocalizedInitiatives] = useState([]);
+    const [globalInitiatives, setGlobalInitiatives] = useState([]);
     const [searchString, setSearchString] = useState("");
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
     const [regionList, setRegionList] = useState([]);
+    const [mapCenter, setMapCenter] = useState(GeoCoordinate({'latitude': 50, 'longitude': 12}));
+    const [mapBounds, setMapBounds] = useState(new BoundingBox());
+    const [sorting, setSorting] = useState(Sorting.Distance);
+    const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything);
     const [tags, setTags] = useState([]);
 
     // first run
@@ -51,7 +73,7 @@ function Home() {
         return tag_b.initiatives.length - tag_a.initiatives.length
     }
     function tagEntropy(tag) {
-        return tag.initiatives.length * (initiatives.length-tag.initiatives.length)
+        return tag.initiatives.length * (localizedInitiatives.length + globalInitiatives.length -tag.initiatives.length)
     }
     function sortTagsByEntropy(tag_a, tag_b) {
         return tagEntropy(tag_b) - tagEntropy(tag_a)
@@ -63,7 +85,15 @@ function Home() {
         fetch(initiatives_api_url)
             .then(response => response.json())
             .then(initiatives => {
-                setInitiatives(initiatives);
+                const [global, local] = initiatives
+                    .reduce((result, initiative) => {
+                        result[initiative.locations.features.length > 0 ? 1 : 0].push(initiative);
+                        return result;
+                    },
+                    [[], []]);
+
+                setLocalizedInitiatives(local);
+                setGlobalInitiatives(global);
             })
             .catch(err => console.error(err));
         const region_api_url = `${process.env.REACT_APP_BACKEND_URL}/regions/`;
@@ -90,7 +120,7 @@ function Home() {
     // refresh cards
     const keywords = searchString.split(' ');
 
-    function filter_initiative(initiative) {
+    function initiativeMatchesSearch(initiative) {
         return keywords
             .map(keyword => keyword.toLowerCase())
             .every(keyword =>
@@ -102,15 +132,94 @@ function Home() {
                 )
             );
     };
-    const selected_initiatives = initiatives.filter(filter_initiative);
-    const renderedCards = renderCardCollection(selected_initiatives);
+    function initiativeInsideMap(initiative) {
+        return initiative.locations.features.some(
+            feature => mapBounds.contains(initiativeLocationFeatureToGeoCoordinate(feature))
+        );
+    }
+
+    function initiativeLocationFeatureToGeoCoordinate(feature) {
+        return GeoCoordinate({'longitude': feature['geometry']['coordinates'][0], 'latitude': feature['geometry']['coordinates'][1]})
+    }
+
+    function sortInitiativesByName(initiatives) {
+        let names = [];
+        for (var i = 0; i < initiatives.length; i++) {
+            names.push([i, initiatives[i].initiative_title_texts[0]['text']]);
+        }
+        names.sort(function(left, right) {
+            return left[1] < right[1] ? -1 : 1;
+        });
+        let sortedInitiatives = [];
+        for (var i = 0; i < initiatives.length; i++) {
+            sortedInitiatives.push(initiatives[names[i][0]]);
+        }
+        return sortedInitiatives;
+    }
+
+    function sortInitiativesByDistanceToCenter(initiatives) {
+        function initiativeDistanceFromMapCenter(initiative) {
+            console.log("current map center");
+            console.log(mapCenter);
+            return Math.min(...initiative.locations.features.map(
+                feature => mapCenter.quickDistanceTo(initiativeLocationFeatureToGeoCoordinate(feature))
+            ))
+        }
+
+        let distances = [];
+        for (var i = 0; i < initiatives.length; i++) {
+            distances.push([i, initiativeDistanceFromMapCenter(initiatives[i])]);
+        }
+        distances.sort(function(left, right) {
+            return left[1] < right[1] ? -1 : 1;
+        });
+        let sortedInitiatives = [];
+        for (var i = 0; i < initiatives.length; i++) {
+            sortedInitiatives.push(initiatives[distances[i][0]]);
+        }
+        return sortedInitiatives;
+    }
+
+    let initiatives = localizedInitiatives;
+    if (initiativesToShow === WhatToShow.OnlyOnMap) {
+        initiatives = initiatives.filter(initiativeInsideMap);
+    }
+    if (sorting === Sorting.Distance) {
+        initiatives = sortInitiativesByDistanceToCenter(initiatives);
+    }
+    if (initiativesToShow === WhatToShow.Everything) {
+        initiatives = globalInitiatives.concat(initiatives);
+    }
+    if (sorting === Sorting.Alphabetical) {
+        initiatives = sortInitiativesByName(initiatives);
+    }
+    initiatives = initiatives.filter(initiativeMatchesSearch);
+    const renderedCards = renderCardCollection(initiatives);
 
     //markers
-    const mapMarkers = renderMapMarkers(selected_initiatives);
+    const mapMarkers = renderMapMarkers(initiatives);
     const listStyle={
         display: "inline-block",
         margin: "4px 8px"
     }
+
+    function leafletToGeoCoordinate(leafletCoordinate) {
+        return GeoCoordinate({'longitude' : leafletCoordinate['lng'], 'latitude': leafletCoordinate['lat']});
+    }
+
+    function RegisterMapCenter() {
+        const map = useMapEvent('moveend', (event) => {
+            setMapCenter(leafletToGeoCoordinate(event.target.getCenter()));
+
+            const newBounds = event.target.getBounds();
+            setMapBounds(BoundingBox.fromCoordinates(
+                leafletToGeoCoordinate(newBounds['_northEast']),
+                leafletToGeoCoordinate(newBounds['_southWest'])
+            ));
+        })
+        return null;
+    }
+
     return (
         <div>
             <h2>Smartakartan</h2>
@@ -138,15 +247,35 @@ function Home() {
                     ))
                 }
             </ul>
-            <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false}>
+            <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false} gestureHandling={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 {mapMarkers}
+                <RegisterMapCenter/>
             </MapContainer>
             <div id="cards-panel">
                 Filter: <input name="search" onChange={event => setSearchString(event.target.value)}/>
+                <select defaultValue={WhatToShow.Everything} onChange={event => setInitiativesToShow(event.target.value)}>
+                    <option value={WhatToShow.Everything}>
+                        Show all
+                    </option>
+                    <option value={WhatToShow.WithoutGlobal}>
+                        Hide global initiatives
+                    </option>
+                    <option value={WhatToShow.OnlyOnMap}>
+                        only show initiatives on the map
+                    </option>
+                </select>
+                <select defaultValue={Sorting.Distance} onChange={event => setSorting(event.target.value)}>
+                    <option value={Sorting.Distance}>
+                        Sort by distance
+                    </option>
+                    <option value={Sorting.Alphabetical}>
+                        Sort alphabetically
+                    </option>
+                </select>
                 <div id="cards-canvas">
                     {renderedCards}
                 </div>
