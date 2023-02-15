@@ -80,6 +80,7 @@ function Details() {
         <div>
             <h2>Details page for Initiative</h2>
             <h3>{getTitle(initiative)}</h3>
+            <img src={initiative.main_image_url}/>
             <p dangerouslySetInnerHTML={{__html: "Description: " + getDescription(initiative)}}></p>
             <h3>Tags:</h3>
             <ul>
