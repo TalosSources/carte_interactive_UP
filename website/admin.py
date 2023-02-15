@@ -48,6 +48,10 @@ class InitiativeAdmin(admin.ModelAdmin):
 
     @admin.display
     def location_list(self, obj: models.Initiative):
+        """
+        This is used to display a list of locations. Normally it would be better to use an Inline but unfortunately
+        in this case the map that should be displayed is not rendered (unknown why).
+        """
         location_list = obj.locations.all()
         locations_html = "<ul>"
         for location in location_list:
