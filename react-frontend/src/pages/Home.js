@@ -73,7 +73,7 @@ function Home() {
         return tag_b.initiatives.length - tag_a.initiatives.length
     }
     function tagEntropy(tag) {
-        return tag.initiatives.length * (initiativesToShow.length-tag.initiatives.length)
+        return tag.initiatives.length * (localizedInitiatives.length + globalInitiatives.length -tag.initiatives.length)
     }
     function sortTagsByEntropy(tag_a, tag_b) {
         return tagEntropy(tag_b) - tagEntropy(tag_a)
