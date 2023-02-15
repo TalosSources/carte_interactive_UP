@@ -57,7 +57,7 @@ class InitiativeAdmin(admin.ModelAdmin):
         for location in location_list:
             locations_html += f'<li><a href="/admin/website/location/{location.id}">{location.title}</a></li>'
         locations_html += "</ul>"
-        locations_html += f'<a href="/admin/website/location/add">Add new (use id {location.id} for location)</a>'
+        locations_html += f'<a href="/admin/website/location/add">Add new (use id {obj.id} for location)</a>'
         return format_html(locations_html)
 
     filter_horizontal = ("tags",)
