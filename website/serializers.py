@@ -45,15 +45,41 @@ class RegionSerializer(serializers.HyperlinkedModelSerializer):
         model = models.Region
 
 
+class TagSerializer(serializers.HyperlinkedModelSerializer):
+    # initiatives = InitiativeSerializer(many=True, read_only=True)
+    # 'initiatives'
+    class Meta:
+        model = models.Tag
+        fields = ['url', 'id', 'title', 'slug', 'initiatives']
+
+
 class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
     """
     Object name (and below field name) "locations" must match `related_name` in model. DRF docs:
     https://www.django-rest-framework.org/api-guide/relations/#reverse-relations
     """
     locations = LocationSerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
     initiative_title_texts = InitiativeTitleTextSerializer(many=True, read_only=True)
     initiative_description_texts = InitiativeDescriptionTextSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Initiative
-        fields = ['url', 'id', 'region', 'locations', 'initiative_title_texts', 'initiative_description_texts']
+        fields = ['url', 'id', 'region', 'locations', 'initiative_title_texts', 'initiative_description_texts', 'tags']
+
+
+class TagDetailInitiativeSerializer(serializers.ModelSerializer):
+    initiative_title_texts = InitiativeTitleTextSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Initiative
+        fields = ['id', 'initiative_title_texts']
+
+
+class TagDetailSerializer(serializers.ModelSerializer):
+    initiatives = TagDetailInitiativeSerializer(many=True, read_only=True)
+
+    # 'initiatives'
+    class Meta:
+        model = models.Tag
+        fields = ['id', 'title', 'slug', 'initiatives']

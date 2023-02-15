@@ -23,6 +23,7 @@ router = rest_framework.routers.DefaultRouter()
 router.register(r"locations", views.LocationViewSet, basename="location")
 router.register(r"initiatives", views.InitiativeViewSet, basename="initiative")
 router.register(r"regions", views.RegionViewSet, basename="region")
+router.register(r"tags", views.TagViewSet, basename="tag")
 
 urlpatterns = [
     path('', include('website.urls')),  # standard website interface

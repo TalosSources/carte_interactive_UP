@@ -13,6 +13,8 @@ import os
 import sys
 from pathlib import Path
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000  # -so we can handle tags in the admin interface
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
