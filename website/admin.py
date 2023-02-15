@@ -55,13 +55,13 @@ class InitiativeAdmin(admin.ModelAdmin):
 
     @admin.display
     def location_list(self, obj: models.Initiative):
-        initiative_list = obj.locations.all()
-        initiative_list_html = "<ul>"
-        for initiative in initiative_list:
-            initiative_list_html += f'<li><a href="/admin/website/location/{initiative.id}">{initiative.title}</a></li>'
-        initiative_list_html += "</ul>"
-        initiative_list_html += f'<a href="/admin/website/location/add">Add new (use id {initiative.id} for initiative)</a>'
-        return format_html(initiative_list_html)
+        location_list = obj.locations.all()
+        locations_html = "<ul>"
+        for location in location_list:
+            locations_html += f'<li><a href="/admin/website/location/{location.id}">{location.title}</a></li>'
+        locations_html += "</ul>"
+        locations_html += f'<a href="/admin/website/location/add">Add new (use id {location.id} for location)</a>'
+        return format_html(locations_html)
 
     list_display = ("id", "sk3_id", "title_func")
     # TODO: Adding title_func for details view
