@@ -18,11 +18,20 @@ class Region(models.Model):
         return self.slug  # change to title if/when available
 
 
+class Tag(models.Model):
+    slug = models.SlugField(max_length=127, unique=True)
+    title = gis_models.CharField(max_length=127, unique=True)
+
+    def __str__(self):
+        return self.title
+
+
 class Initiative(models.Model):
     # Multiple values can be NULL and not violate uniqueness. See: https://stackoverflow.com/a/1400046/2525237
     # This means that we can use NULL/None for all new rows/items that we add
     sk3_id = models.IntegerField(null=True, blank=True, unique=True)
-    region = models.ForeignKey(Region, related_name='initiatives', on_delete=models.CASCADE)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE)
+    tags = models.ManyToManyField(Tag, related_name='initiatives')
 
     def __str__(self):
         return f"ID: {self.id}"

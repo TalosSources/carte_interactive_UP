@@ -10,8 +10,7 @@ const Layout = () => {
                         <Link to="/">Home</Link>
                     </li>
                     <li>
-                        <Link to="/details/12">Details</Link> {/* Navigate to a basic details page to test navigation */}
-
+                        <Link to="/sitemap">Sitemap</Link>
                     </li>
                 </ul>
             </nav>

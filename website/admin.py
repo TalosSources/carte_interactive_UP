@@ -13,17 +13,6 @@ class LocationAdmin(gis_admin.GISModelAdmin):
     list_max_show_all = 1000
 
 
-"""
-class InitiativeLocationInline(admin.TabularInline):
-    model = models.Location
-    show_change_link = True
-    readonly_fields = ("coordinates", "sk3_id")
-    # exclude = "sk3_id"
-    empty_value_display = f"<b>{model.title}---no value set. please edit the location</b>"
-    extra = 0
-"""
-
-
 class InitiativeTitleTextInline(admin.TabularInline):
     # show_change_link = True
     model = models.InitiativeTitleText
@@ -38,6 +27,10 @@ class InitiativeDescriptionTextInline(admin.StackedInline):
     readonly_fields = ("sk3_id",)
     extra = 0
     min_num = 2
+
+
+class TagInitiativeInline(admin.TabularInline):
+    model = models.Initiative.tags.through
 
 
 @admin.register(models.Initiative)
@@ -63,13 +56,12 @@ class InitiativeAdmin(admin.ModelAdmin):
         locations_html += f'<a href="/admin/website/location/add">Add new (use id {location.id} for location)</a>'
         return format_html(locations_html)
 
+    filter_horizontal = ("tags",)
     list_display = ("id", "sk3_id", "title_func")
     # TODO: Adding title_func for details view
     readonly_fields = ("sk3_id", "location_list")
     list_max_show_all = 1000
-
     inlines = [InitiativeTitleTextInline, InitiativeDescriptionTextInline]
-    #
 
 
 """
@@ -87,3 +79,10 @@ root@27a6ea382e00:/code#
 class RegionAdmin(admin.ModelAdmin):
     list_display = ("id", "sk3_id", "slug")
     readonly_fields = ("sk3_id",)
+
+
+@admin.register(models.Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ("title", "id", "slug")
+    list_filter = ("title",)
+    inlines = [TagInitiativeInline, ]
