@@ -65,7 +65,10 @@ class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Initiative
-        fields = ['url', 'id', 'region', 'locations', 'initiative_title_texts', 'initiative_description_texts', 'tags']
+        fields = [
+            'url', 'id', 'region', 'main_image_url',
+            'locations', 'initiative_title_texts', 'initiative_description_texts', 'tags'
+        ]
 
 
 class TagDetailInitiativeSerializer(serializers.ModelSerializer):
