@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
+import {renderCardCollection} from "../Cards";
 
 function renderTags(initiative) {
     console.log("renderTags")
@@ -40,6 +41,7 @@ function Details() {
 
     const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/` + initiativeId;
     const [initiative, setInitiative] = useState({});
+    const [initiatives, setInitiatives] = useState([]);
 
     useEffect(() => {
         fetch(initiative_api_url)
@@ -51,19 +53,43 @@ function Details() {
             })
             .catch(err => console.error(err));
     }, []);
+    useEffect(() => {
+        const initiatives_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/`;
+        fetch(initiatives_api_url)
+            .then(response => response.json())
+            .then(initiatives => {
+                setInitiatives(initiatives);
+            })
+            .catch(err => console.error(err));
+    }, []);
 
-    console.log("initiative:")
-    console.log(initiative)
+    const similarInitiatives = initiatives
+    .map(initiativeB => 
+        [
+            initiative.tags.filter(tagA => initiativeB.tags.some(tagB => tagA.id === tagB.id)).length,
+            initiativeB
+        ]
+    )
+    .filter(([c,i]) => c>0)
+    .sort(([ca,ia], [cb, ib]) => cb - ca)
+    .slice(1,6)
+    .map(([c,i]) => i);
+    const renderedCards = renderCardCollection(similarInitiatives);
+
     return (
         <div>
             <h2>Details page for Initiative</h2>
-            <h3>ID: {initiativeId}</h3>
-            <h3>Title: {getTitle(initiative)}</h3>
+            <h3>{getTitle(initiative)}</h3>
             <p dangerouslySetInnerHTML={{__html: "Description: " + getDescription(initiative)}}></p>
             <h3>Tags:</h3>
             <ul>
                 {renderTags(initiative)}
             </ul>
+            <h3>You may also like</h3>
+            <div id="similarInitiativesCanvas">
+                {renderedCards}
+            </div>
+
         </div>
     );
 };
