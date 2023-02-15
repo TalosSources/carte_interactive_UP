@@ -39,6 +39,10 @@ You can add `-d` (`docker-compose up --build -d`) to start docker compose in "de
   1. Connect to the postgres: `docker exec -it [container id] psql -U postgres`
   1. `postgres-# DROP DATABASE smarta_kartan_db;`
   1. `postgres=# CREATE DATABASE smarta_kartan_db;`
+  1. `exit`
+  1. `docker-compose run api /code/manage.py migrate`
+  1. `docker-compose run api /code/manage.py createsuperuser`
+  1. Run again??? `docker-compose run api /code/manage.py migrate`
 
 ### Creating a new database
 
