@@ -131,7 +131,9 @@ function Home() {
                 {
                     top_tags.map((tagElement) => (
                         <li style={listStyle} key={tagElement.id}>
-                            <a href={`/tag/${tagElement.id}`}>{tagElement.title}</a>
+                            <a href={`/tag/${tagElement.id}`}>
+                                <p dangerouslySetInnerHTML={{__html: tagElement.title}}></p>
+                            </a>
                         </li>
                     ))
                 }
