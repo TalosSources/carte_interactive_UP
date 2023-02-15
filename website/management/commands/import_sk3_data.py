@@ -480,6 +480,7 @@ class Command(django.core.management.base.BaseCommand):
             result_text = input("Are you sure you want to delete the whole database? (y/n)")
             if result_text == "y":
                 website.models.Region.objects.all().delete()
+                website.models.Tag.objects.all().delete()
                 website.models.InitiativeTitleText.objects.all().delete()
                 website.models.InitiativeDescriptionText.objects.all().delete()
                 website.models.Location.objects.all().delete()
