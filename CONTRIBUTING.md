@@ -1,4 +1,3 @@
-
 # Getting started for developers
 
 ## Setup (with docker)
@@ -6,8 +5,9 @@
 Ubuntu 22.04 LTS was used to create this section. On Windows you may want to use [Windows Subsystem](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux)
 
 1. Installing docker and docker compose, see: https://docs.docker.com/get-docker/
-1. Building image and starting the containers: `docker-compose up --build`
-   * The first time is different, but usually you will not need to use the `--build` flag, so the process will be much faster
+1. Building image and starting the containers: `docker-compose up`
+   * This will build (if not done before) and start the container
+   * Sometimes, it is required to rebuild the container, then `--build` needs to be added as a flag. In particular, this is neccessary when the Dockerfile or dependencies are changed.
 1. Use the website
    * [Admin interface](http://localhost/admin/) - Credentials from createsuperuser step
    * [API](http://localhost/api/) - it's possible to view the API in html by opening this link in a browser)
@@ -41,6 +41,7 @@ You can add `-d` (`docker-compose up -d`) to start docker compose in "detached m
   1. Connect to the postgres: `docker exec -it [container id] psql -U postgres`
   1. `postgres-# DROP DATABASE smarta_kartan_db;`
   1. `postgres=# CREATE DATABASE smarta_kartan_db;`
+* Option D: just remove the database-folder phsically. If you use the provided `docker-compose.yml`, this will be mounted to your host and you can delete it from there.
 
 ### Creating a new database
 
