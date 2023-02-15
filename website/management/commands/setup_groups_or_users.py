@@ -30,7 +30,10 @@ def create_content_admin_group() -> auth_models.Group:
         logging.debug(permission.codename)
     content_admin_group.permissions.set(all_permissions_list)
 
-    website_codenames = ["change_region", "delete_region", "add_region"]
+    website_codenames = [
+        "change_region", "delete_region", "add_region",
+        "change_tag", "delete_tag", "add_tag"
+    ]
     # Using a blacklist approach for the ContentAdmin group (we may want to change this in the future)
     remove_permissions("website", i_codenames=website_codenames)
     remove_permissions("auth")

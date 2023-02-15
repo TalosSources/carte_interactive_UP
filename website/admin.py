@@ -27,6 +27,10 @@ class InitiativeDescriptionTextInline(admin.StackedInline):
     min_num = 1
 
 
+class TagInitiativeInline(admin.TabularInline):
+    model = models.Initiative.tags.through
+
+
 @admin.register(models.Initiative)
 class InitiativeAdmin(admin.ModelAdmin):
     @admin.display(description="Title in all languages")
@@ -40,6 +44,7 @@ class InitiativeAdmin(admin.ModelAdmin):
         representation += " --- "
         return representation
 
+    filter_horizontal = ("tags",)
     list_display = ("id", "sk3_id", "title_func")
     # TODO: Adding title_func for details view
     readonly_fields = ("sk3_id",)
@@ -62,3 +67,10 @@ root@27a6ea382e00:/code#
 class RegionAdmin(admin.ModelAdmin):
     list_display = ("id", "sk3_id", "slug")
     readonly_fields = ("sk3_id",)
+
+
+@admin.register(models.Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ("title", "id", "slug")
+    list_filter = ("title",)
+    inlines = [TagInitiativeInline, ]
