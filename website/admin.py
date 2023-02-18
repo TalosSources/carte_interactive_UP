@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.contrib.gis import admin as gis_admin
+from django.utils.html import format_html
 
 from . import models
 
 
 @gis_admin.register(models.Location)
-class LocationAdmin(gis_admin.OSMGeoAdmin):
+class LocationAdmin(gis_admin.GISModelAdmin):
+    # Docs: https://docs.djangoproject.com/en/4.1/ref/contrib/gis/admin/#gismodeladmin
     list_display = ("id", "sk3_id", "title", "coordinates", "initiative")
     readonly_fields = ("sk3_id",)
     list_max_show_all = 1000
@@ -15,8 +17,8 @@ class InitiativeTitleTextInline(admin.TabularInline):
     # show_change_link = True
     model = models.InitiativeTitleText
     readonly_fields = ("sk3_id",)
-    extra = 1  # -adds an extra row that is always visible
-    min_num = 1
+    extra = 0  # -adds an extra row that is always visible
+    min_num = 2
 
 
 class InitiativeDescriptionTextInline(admin.StackedInline):
@@ -24,7 +26,7 @@ class InitiativeDescriptionTextInline(admin.StackedInline):
     model = models.InitiativeDescriptionText
     readonly_fields = ("sk3_id",)
     extra = 0
-    min_num = 1
+    min_num = 2
 
 
 class TagInitiativeInline(admin.TabularInline):
@@ -44,10 +46,24 @@ class InitiativeAdmin(admin.ModelAdmin):
         representation += " --- "
         return representation
 
+    @admin.display
+    def location_list(self, obj: models.Initiative):
+        """
+        This is used to display a list of locations. Normally it would be better to use an Inline but unfortunately
+        in this case the map that should be displayed is not rendered (unknown why).
+        """
+        location_list = obj.locations.all()
+        locations_html = "<ul>"
+        for location in location_list:
+            locations_html += f'<li><a href="/admin/website/location/{location.id}">{location.title}</a></li>'
+        locations_html += "</ul>"
+        locations_html += f'<a href="/admin/website/location/add">Add new (use id {obj.id} for location)</a>'
+        return format_html(locations_html)
+
     filter_horizontal = ("tags",)
     list_display = ("id", "sk3_id", "title_func")
     # TODO: Adding title_func for details view
-    readonly_fields = ("sk3_id",)
+    readonly_fields = ("sk3_id", "location_list")
     list_max_show_all = 1000
     inlines = [InitiativeTitleTextInline, InitiativeDescriptionTextInline]
 
