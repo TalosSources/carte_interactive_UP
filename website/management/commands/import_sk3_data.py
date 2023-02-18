@@ -47,6 +47,8 @@ RJSK_RENDERED = "rendered"
 RJK_ACF = "acf"  # -advanced custom fields (WP)
 RJSK_ACF_SHORT_DESCRIPTION = "short_description"  # unused
 RJSK_ACF_DESCRIPTION_ID = "description"
+RJSK_ACF_MAIN_IMAGE = "main_image"
+RJSK_ACF_MAIN_IMAGE_URL = "url"
 RJK_LATITUDE = "latitude"
 RJK_LONGITUDE = "longitude"
 RJK_STATUS = "status"
@@ -310,7 +312,13 @@ def process_business_rows():
         status = resp_row[RJK_STATUS]
         data_type_full_name = resp_row[RJK_TYPE]
 
-        description = resp_row[RJK_ACF][RJSK_ACF_DESCRIPTION_ID]
+        resp_row_afc = resp_row[RJK_ACF]
+        description = resp_row_afc[RJSK_ACF_DESCRIPTION_ID]
+        main_image_url = ""
+        if resp_row_afc and RJSK_ACF_MAIN_IMAGE in resp_row_afc:
+            resp_row_afc_main_image = resp_row_afc[RJSK_ACF_MAIN_IMAGE]
+            if resp_row_afc_main_image and RJSK_ACF_MAIN_IMAGE_URL in resp_row_afc_main_image:
+                main_image_url = resp_row_afc_main_image[RJSK_ACF_MAIN_IMAGE_URL]
 
         translations_dict = resp_row[RJK_TRANSLATIONS]
 
@@ -363,9 +371,11 @@ def process_business_rows():
         assert region_name in REGION_LIST
 
         region_obj = website.models.Region.objects.get(slug=region_name)
+        logging.debug(f"{main_image_url=}")
         new_initiative_obj = website.models.Initiative(
             sk3_id=wp_post_id,
-            region=region_obj
+            region=region_obj,
+            main_image_url=main_image_url
         )
         logging.debug(f"Saving Initiative object for {wp_post_id=}")
         new_initiative_obj.save()

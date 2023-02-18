@@ -41,6 +41,10 @@ You can add `-d` (`docker-compose up -d`) to start docker compose in "detached m
   1. Connect to the postgres: `docker exec -it [container id] psql -U postgres`
   1. `postgres-# DROP DATABASE smarta_kartan_db;`
   1. `postgres=# CREATE DATABASE smarta_kartan_db;`
+  1. `exit`
+  1. `docker-compose run api /code/manage.py migrate`
+  1. `docker-compose run api /code/manage.py createsuperuser`
+  1. Run again??? `docker-compose run api /code/manage.py migrate`
 * Option D: just remove the database-folder phsically. If you use the provided `docker-compose.yml`, this will be mounted to your host and you can delete it from there.
 
 ### Creating a new database
