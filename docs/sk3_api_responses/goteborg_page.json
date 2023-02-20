@@ -1,0 +1,959 @@
+[
+  {
+    "id": 10877,
+    "date": "2022-05-06T14:35:28",
+    "date_gmt": "2022-05-06T14:35:28",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=10877"
+    },
+    "modified": "2022-05-06T14:35:31",
+    "modified_gmt": "2022-05-06T14:35:31",
+    "slug": "copyright",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/goteborg-page\/copyright\/",
+    "title": {
+      "rendered": "Copyright."
+    },
+    "content": {
+      "rendered": "\n<p>copyright test<\/p>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": [
+      {
+        "template_name": "FullPage",
+        "typename": "LeftFooter",
+        "ID": 98,
+        "post_title": "Left footer",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "1",
+        "post_date": "2020-01-10 08:57:47",
+        "post_date_gmt": "2020-01-10 08:57:47",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "left-footer",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2020-02-18 11:23:54",
+        "post_modified_gmt": "2020-02-18 11:23:54",
+        "post_content_filtered": "",
+        "post_parent": [],
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=page_type&#038;p=98",
+        "menu_order": 0,
+        "post_type": "page_type",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 98
+      }
+    ],
+    "acf": [],
+    "lang": "sv",
+    "translations": {
+      "sv": 10877
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/10877"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=10877"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 9110,
+    "date": "2021-02-02T10:46:55",
+    "date_gmt": "2021-02-02T10:46:55",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=9110"
+    },
+    "modified": "2021-02-02T10:51:11",
+    "modified_gmt": "2021-02-02T10:51:11",
+    "slug": "hallbar-konsumtion",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/goteborg-page\/hallbar-konsumtion\/",
+    "title": {
+      "rendered": "H\u00e5llbar konsumtion"
+    },
+    "content": {
+      "rendered": "\n<p>H\u00e4r listar vi verksamheter som inte platsar p\u00e5 kartan pga v\u00e5ra kriterier, men som vi verkligen gillar \u00e4nd\u00e5! <\/p>\n\n\n\n<p><strong>V\u00e4rt.<\/strong><br>Jobbar med att minska matsvinnet.<br><a href=\"https:\/\/sv.vartsweden.com\/\">vartsweden.com<\/a><\/p>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": [
+      {
+        "template_name": "FullPage",
+        "typename": "FullPage",
+        "ID": 78,
+        "post_title": "Full page",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "1",
+        "post_date": "2020-01-09 14:35:59",
+        "post_date_gmt": "2020-01-09 14:35:59",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "full-page",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2020-01-12 10:43:24",
+        "post_modified_gmt": "2020-01-12 10:43:24",
+        "post_content_filtered": "",
+        "post_parent": [],
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=page_type&#038;p=78",
+        "menu_order": 0,
+        "post_type": "page_type",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 78
+      }
+    ],
+    "acf": [],
+    "lang": "sv",
+    "translations": {
+      "sv": 9110
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/9110"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=9110"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 7488,
+    "date": "2020-06-26T08:11:00",
+    "date_gmt": "2020-06-26T08:11:00",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=7488"
+    },
+    "modified": "2020-06-29T13:49:15",
+    "modified_gmt": "2020-06-29T13:49:15",
+    "slug": "stories-gothenburg",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/en\/goteborg-page\/stories-gothenburg\/",
+    "title": {
+      "rendered": "Stories"
+    },
+    "content": {
+      "rendered": "\n<h2>Meet Solveig Brontes at Gratisbutiken i Majorna (The Free Shop in Majorna)<\/h2>\n\n\n\n<p class=\"has-drop-cap\">It&#8217;s Halloween, but more importantly, it&#8217;s Wednesday. Gratisbutiken (The Free Shop) in Majorna is, as every Wednesday, open between six and eight. I walk around the corner of Fixoteket at Slottsskogsgatan and enter through the back at Carnegiegatan. I get a warm welcome from Solveig Brontes that is knitting and talking to her sister in Fixoteket&#8217;s bike workshop. She&#8217;s sitting there and showing people down to the basement below Fixoteket, where the free shop is located.<\/p>\n\n\n\n<figure class=\"wp-block-image size-large\"><img loading=\"lazy\" width=\"400\" height=\"300\" src=\"\/wp-content\/uploads\/brontes-bred-IIII-1-400x300.jpg\" alt=\"\" class=\"wp-image-7132\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/brontes-bred-IIII-1-400x300.jpg 400w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/brontes-bred-IIII-1-300x225.jpg 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/brontes-bred-IIII-1-768x576.jpg 768w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/brontes-bred-IIII-1.jpg 1080w\" sizes=\"(max-width: 400px) 100vw, 400px\" \/><\/figure>\n\n\n\n<p><strong>What is Gratisbutiken?<\/strong><br>I sit down next to Solveig and her sister Johanna and they tell me that Gratisbutiken is a store where everything is for free and anybody can leave or take things, there are no rules that you have to give something in order to take. You can collect and leave functional and clean clothes, books, smaller utensils and toys. <\/p>\n\n\n\n<p><strong>How is Gratisbutiken run?<\/strong><br>Soon a man enters who is curious about what Gratisbutiken is and how it&#8217;s run. He learns that the space housing Gratisbutiken is owned by communal Familjebost\u00e4der and that it&#8217;s leant for free to the shop. The man calls himself a &#8220;second hand&#8221;-guy and could consider contributing with his own time and also donate what Gratisbutiken gets less of: male clothing. The whole Gratisbutiken is run entirely without money. Solveig, Sara and the other that work there do it out of their own benevolence. <\/p>\n\n\n\n<p>Visit Gratisbutiken Wednesdays 18-20!<br><a href=\"https:\/\/www.smartakartan.se\/en\/gothenburg\/the-free-shop-in-majorna\">smartakartan.se\/en\/gothenburg\/the-free-shop-in-majorna<\/a><\/p>\n\n\n\n<p><em>Text: Robin Olsson, chairman of Collaborative Economy Gothenburg, the NGO that runs The Smart Map.<\/em><\/p>\n\n\n\n<p> <\/p>\n\n\n\n<div class=\"wp-block-image\"><figure class=\"aligncenter size-large\"><img loading=\"lazy\" width=\"401\" height=\"300\" src=\"\/wp-content\/uploads\/Namnlo\u0308st-1-401x300.png\" alt=\"\" class=\"wp-image-7493\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1-401x300.png 401w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1-300x225.png 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1.png 454w\" sizes=\"(max-width: 401px) 100vw, 401px\" \/><\/figure><\/div>\n\n\n\n<p> <\/p>\n\n\n\n<h2>M\u00e5rten is a second generation car sharer.<\/h2>\n\n\n\n<p>Bagarbil is a car cooperative formed in 1995 and has two cars and 51 members where about half is women and four of them are in the board that consist of six people in total. The organisation is running smoothly and has managed to get through both a car on fire and the usual struggles of getting people involved in the organisational work. The two cars are leased by the organisation where all members are part of different work teams where each team has a different task like taking car of a specific car or recruiting members through handing out leaflets or running ads on Facebook.<\/p>\n\n\n\n<figure class=\"wp-block-image size-large\"><img loading=\"lazy\" width=\"400\" height=\"300\" src=\"\/wp-content\/uploads\/martenbyden-bagarbil-400x300.jpg\" alt=\"\" class=\"wp-image-7486\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/martenbyden-bagarbil-400x300.jpg 400w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/martenbyden-bagarbil-300x225.jpg 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/martenbyden-bagarbil.jpg 768w\" sizes=\"(max-width: 400px) 100vw, 400px\" \/><\/figure>\n\n\n\n<p>All members puts in about a half hour every three months by driving the cars to the car wash or other maintenance. The organisation has members in the age of 30 to a few happy pensioners. The membership fee is 750 SEK\/year unless you&#8217;re lucky enough to live with another member, then it&#8217;s 250 SEK\/year. The cars are booked online and are then opened by a little gadget that reads your driver&#8217;s licence. The same gadget logs how far and for how long you use the car and sends you a bill once a month. The membership is open to everyone who has a B driver&#8217;s licence and doesn&#8217;t have any debts to Kronofogden (the enforcement authority). You don&#8217;t have to live in Bagarg\u00e5rden, but that&#8217;s where the cars are parked. During 2019 they will test to have a third car, most likely a small electric car like a Nissan Leaf or a Renault Zoe.<\/p>\n\n\n\n<p>M\u00e5rten Byd\u00e9n is a 34 year old man living in Gamlestan that commutes by train to his job as a fireman in Alings\u00e5s. M\u00e5rten prefers history and cooking above cars and sports. He is also the guy responsible for members at Bagarbil and the man you should contact if you want to join the organisation or ask how you can start your own car cooperative where you live. Robin and Jonathan from Collaborative Economy interviewed him while having a semla!<\/p>\n\n\n\n<p><strong>The Name, how are you suppose to interpret that? Bagarbil? Is is a baker&#8217;s car? (Bagare = baker in Swedish)<\/strong><\/p>\n\n\n\n<p>The organisation&#8217;s full name is actually Bagareg\u00e5rdens bilkooperativ and Bagareg\u00e5rden is an area around Redbergsplatsen in the direction of Gamlestan.<\/p>\n\n\n\n<p><strong>How is Bagarbil organized?<\/strong><\/p>\n\n\n\n<p>It&#8217;s a non-profit organisation where the members lease cars. The organisation is controlled by a board which is voted in at the yearly meeting. I&#8217;m in the board as responsible for members, so I read the applications from new members or if someone wants to exchange work team.<\/p>\n\n\n\n<p><strong>How did you get in contact with Bagarbil?<\/strong><\/p>\n\n\n\n<p>I&#8217;ve been aware of car cooperatives for a long time since my parents were members of Alings\u00e5s car cooperative when I grew up. That cooperative started with one and now has five cars. My parents are still members.<\/p>\n\n\n\n<p>When I moved to Gothenburg I was already aware of how a car cooperative works so I searched online and found Bagarbil, which was the closest and the car cooperative that would work best for me who lives in Gamlestan. That was three and a half years ago now.<\/p>\n\n\n\n<p><strong>What&#8217;s the worst thing about Bagarbil?<\/strong><\/p>\n\n\n\n<p>Maybe that you have to plan. Evenings and weekends the cars are often occupied, but on a weekday afternoon when most people are at work and there is almost no one using our cars in their work so it is a lot easier booking a time then. If you plan ahead a week or so it is normally a car available. <\/p>\n\n\n\n<p><strong>How often do you borrow the car yourself?<\/strong><\/p>\n\n\n\n<p>I live a quite car-free life, but I use the car about once a month. Most trips are shorter, like going to the recycling center, going skating by H\u00e4rskogen or visiting my friends in the country outside Kung\u00e4lv. I pay about 200-500 SEK\/month to the organisation including the yearly member fee.<\/p>\n\n\n\n<p><\/p>\n\n\n\n<div class=\"wp-block-image\"><figure class=\"alignleft\"><img src=\"https:\/\/lh4.googleusercontent.com\/9GH9oS6aA16dhoxcQnXSCCEPCrS8jRrmQ8eI9hHp0bd2EZg8Td_zFVzz1dU1jNNWnqP7yjjBUJLVWkp3ulLIC-g32_9CaV5xohu_lKyXb-nwRzEr6a0MwsyUn8432DXj-V3TdaxT\" alt=\"Bokningssystemet Bagarbil\"\/><figcaption>Bokningssystemet Bagarbil<\/figcaption><\/figure><\/div>\n\n\n\n<p><\/p>\n\n\n\n<p><strong>How does it work when you rent the car?<\/strong><\/p>\n\n\n\n<p>You pay for both time and distance. The small car is 14 SEK\/hour and the bigger 18 SEK\/hour and the cars are equipped with a system that reads your driver&#8217;s license to open the car and sends a monthly bill for the time and distance you&#8217;ve driven the car. The larger car has a towbar and it&#8217;s ok to bring pets in that one. Congestions charges is paid collectively by the organisation.  <\/p>\n\n\n\n<p><strong>Is there a social benefit of Bagarbil compared to renting a car at a gas station?<\/strong><\/p>\n\n\n\n<p>The board meets continuously and we have a good time. We have went out for beers once during my three years in the organisation, but I don&#8217;t socialize privately with anyone in the organisation.<\/p>\n\n\n\n<p><strong>Who are members of the organisation? Are they generally interested in cars? Do they think about the environment?<\/strong><\/p>\n\n\n\n<p>Yeah, the environment is a common interest and most people aren&#8217;t that interested in cars, it&#8217;s not fun owning a car. Idealism around cooperative ownership is also something shared with our members.<\/p>\n\n\n\n<p><strong>You describe it as a sharing, not a renting?<\/strong><\/p>\n\n\n\n<p>You are collectively responsible, it takes some commitment, either to be in the board or drive the car to the car was once every three months. If I leave trash in the car somebody else will have to clean it up. It&#8217;s not like when you rent a car at the gas station where you leave your shit when you return your rental car. You have some kind of responsibility towards the other members. <\/p>\n\n\n\n<p><strong>What is is you like about Bagarbil?<\/strong><\/p>\n\n\n\n<p>It&#8217;s cheaper, a lot less hassle and I contribute to less cars in the society which is good for the environment.<\/p>\n\n\n\n<p><strong>Do you like that you&#8217;re doing this together?<\/strong><\/p>\n\n\n\n<p>It&#8217;s a beautiful thought, after all. Maybe it wouldn&#8217;t have worked if it was more expensive or more hassle.<\/p>\n\n\n\n<p><strong>What company are you leasing from? Do they have any problems with leasing to an organisation?<\/strong><\/p>\n\n\n\n<p>Toyota Gothenburg in Sisj\u00f6n. We might get another brand on the next car. We haven&#8217;t had any problems with being an organisation leasing, so if some one gets inspired by this to start their own cooperative I have nothing to complain about Toyota.<\/p>\n\n\n\n<p><strong>Has there been any problems with people misbehaving the cars, crashes, etc?<\/strong><\/p>\n\n\n\n<p>No, not really. Except that one car burned up a couple of years ago. The car was in its parking and we never found out if it was an electrical problem or what it was that caused the fire. It didn&#8217;t seem to be arson, though.<\/p>\n\n\n\n<p><strong>How did the organisation sustain that crisis?<\/strong><\/p>\n\n\n\n<p>Well, we had one car less for a while, so sure it was a crisis, but we didn&#8217;t have to raise the membership fee or something like that to solve it. The supply of cars was of course worse until we got a replacement car, but we got it quite quickly.<\/p>\n\n\n\n<p><strong>Why do you commit to the organisation?<\/strong><\/p>\n\n\n\n<p>I got called up byt the chairman of the board, that&#8217;s how you get people to commit today. Majorna&#8217;s car cooperative was a quite large cooperative with about a hundred members, but they had to shut down because people didn&#8217;t commit to the organisation.<\/p>\n\n\n\n<p><strong>Should you be able to be a part of a cooperative without being commited?<\/strong><\/p>\n\n\n\n<p>You shouldn&#8217;t be able to be totally unengaged, you have to do your part by driving the car to the car wash or service once every three months or help distributing flyers by Redbergsplatsen or administrate Facebook ads. You need to, at least, put in an hour or two per quarter.<\/p>\n\n\n\n<p><strong>Who are in the organisation?<\/strong><\/p>\n\n\n\n<p>In the board we are two in their sixties, one in his fifties and I&#8217;m probably the youngest with my 34 years. I&#8217;m not sure about the members but I would say that families are under-represented, they often have another need regarding cars. Ten-twenty percent of the members are pensioners. There is no requirement that you have to live in Bagarg\u00e5rden, there are members living in Lunden, K\u00e5lltorp or like myself, Gamlestan. Even people living on Hisingen are welcome to join!<\/p>\n\n\n\n<p><strong>What is going on in the future of the organisation?<\/strong><\/p>\n\n\n\n<p>We will broaden the fleet with another car, most likely a little electric car. We will have the third car parallell to when the leasing of our small car runs out this summer, to try if it&#8217;s economically viable to have three cars in the co-op.<\/p>\n\n\n\n<p><strong>How do you want to end the interview?<\/strong><\/p>\n\n\n\n<p>I would like to invite the readers to join a car cooperative. Contact me if you want to join Bagarbil or if you have any questions regarding our way to organize the co-op!<\/p>\n\n\n\n<p><a href=\"https:\/\/www.smartakartan.se\/en\/gothenburg\/bagarbil-eng\">Bagarbil<\/a> is one of several car pools in Gothenburg. Feel free to read more about and compare with <a href=\"https:\/\/www.smartakartan.se\/en\/sambil\">Sambil<\/a>, <a href=\"https:\/\/www.smartakartan.se\/en\/gothenburg\/move-about-eng\">Move About<\/a> and the others to see which is best for your car needs.<\/p>\n\n\n\n<div class=\"wp-block-image\"><figure class=\"aligncenter size-large\"><img loading=\"lazy\" width=\"401\" height=\"300\" src=\"\/wp-content\/uploads\/Namnlo\u0308st-1-401x300.png\" alt=\"\" class=\"wp-image-7493\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1-401x300.png 401w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1-300x225.png 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1.png 454w\" sizes=\"(max-width: 401px) 100vw, 401px\" \/><\/figure><\/div>\n\n\n\n<p><\/p>\n\n\n\n<h2>Meet tomorrow&#8217;s drivers who use an electric car pool for their trips!<\/h2>\n\n\n\n<p>Lisa and Oskar met when they were building The Chalmers Cort\u00e8ge, today they&#8217;re trying to build a better world by avoiding meat, unnecessary flights and to not own a car. Jonathan and Robin from Collaborative Economy Gothenburg met them at Chalmers at the end of 2018 for an interview.<\/p>\n\n\n\n<figure class=\"wp-block-image size-large\"><img loading=\"lazy\" width=\"533\" height=\"300\" src=\"\/wp-content\/uploads\/WhatsApp-Image-2019-01-20-at-18.46.54-533x300.jpeg\" alt=\"\" class=\"wp-image-4548\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/WhatsApp-Image-2019-01-20-at-18.46.54-533x300.jpeg 533w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/WhatsApp-Image-2019-01-20-at-18.46.54-300x169.jpeg 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/WhatsApp-Image-2019-01-20-at-18.46.54-768x432.jpeg 768w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/WhatsApp-Image-2019-01-20-at-18.46.54.jpeg 1200w\" sizes=\"(max-width: 533px) 100vw, 533px\" \/><figcaption>Lisa and Oskar. Photo: private.<\/figcaption><\/figure>\n\n\n\n<p>Lisa&#8217;s new year&#8217;s resolution is to not buy any new clothes during 2019. <\/p>\n\n\n\n<p>The goal is under two tonnes of carbon dioxide per year, says Oskar and continues, today we are at 2,6 tonnes and then there&#8217;s our part of the society&#8217;s part with another 2 tonnes.<\/p>\n\n\n\n<p>The couple has recently move to Jonsered and when they want to go traveling they first take the train to Gothenburg Centralstation where Move About has one of their electric cars. It&#8217;s with these electric cars they drive when they&#8217;re going longer distances. <\/p>\n\n\n\n<p>Oskar: We&#8217;ve used Move About for about two years. It feels like a family business. They have always reply swiftly to our emails about wanting to rent a car for longer periods than what&#8217;s intended and then they&#8217;ve helped us get that sorted. We plan our routes using <a href=\"https:\/\/abetterrouteplanner.com\/\">Better Route Planner<\/a> och <a href=\"https:\/\/uppladdning.nu\/\">Uppladdning.nu<\/a>. It takes about four hours to Link\u00f6ping including charging when we use the time to eat.<\/p>\n\n\n\n<p><strong>Is it easier to rent a car than to own it? How much does it cost?<\/strong><\/p>\n\n\n\n<p>O: We have a wallet for all the charging station cards that we bring when we travel and with the above mentioned services it&#8217;s manageable, but it takes a little bit more planning than if we were to use a fossil-fueled car. It costs 124 SEK\/month (62 SEK\/month for students) to be a part of Move About and then it&#8217;s 79 SEK\/hour or a weekend for 695 including everything except excess electricity, but it&#8217;s not that expensive with electricity. <\/p>\n\n\n\n<p><strong>How far does the different cars go?<\/strong><\/p>\n\n\n\n<p>O: It depends a lot on how fast you drive and what the road surface is like, and stuff like that. We normally drive about 150 km before we charge so we have some marginal before we run out of power.<\/p>\n\n\n\n<p><strong>What are the benefits of Move About&#8217;s electric car pool?<\/strong><\/p>\n\n\n\n<p>O: Firstly that it&#8217;s fossil-free, but also that Move About feels like a friendly business, that they have a vision beyond the next quarterly report. One time we rented a car that smelled like smoke and we called and gave notice about it and they said that it&#8217;s ok and that it was good that we told them. They&#8217;re usually ok with some one making a mistake. I have friends who have used SunFleet (Volvo&#8217;s sharing solution that is now called M) and they&#8217;re a lot more strict. You really get penalized if you don&#8217;t report something. Another time we called and asked what the add-on cost of having another driver was and were happily surprised to hear that there isn&#8217;t a fee like that. We&#8217;ve also asked them to provide information on the size of the battery of the different cars and that information was soon up on the website.<\/p>\n\n\n\n<p><strong>Why do you choose Move About&#8217;s cars before SunFleet (now M) or rental cars at the gas station?<\/strong><\/p>\n\n\n\n<p>O: The electricity above all. We have a climate budget and it would completely explode if we used a fossil-fueled car. And then it&#8217;s the price, too. And you save half an hour every time you use it since you don&#8217;t have to fill up gas at the end of your booking, which you need to do at SunFleet (now M), for instance. <\/p>\n\n\n\n<p><strong>Is it totally normal for you to now use Move About? That it&#8217;s your go-to option when you&#8217;re going traveling somewhere?<\/strong><\/p>\n\n\n\n<p>Lisa: Yes, we normally use Move About if we&#8217;re going somewhere together. If I&#8217;m traveling on my own I would more likely use buses and trains. <\/p>\n\n\n\n<p><strong>What&#8217;s your views on the empty seats in the car? Do you know about Skjutsgruppen (The Ridesharing Movement), is it ok to rideshare with Move About?<\/strong><\/p>\n\n\n\n<p>O: It shouldn&#8217;t be a problem. Only thing would be that we would be responsible.<\/p>\n\n\n\n<p><strong>Is that something you could do, pick up people via Skjutsgruppen?<\/strong><\/p>\n\n\n\n<p>L: We haven&#8217;t really tested that many sharing economy things, actually, but I might be game if I had some more info about the person joining us. <\/p>\n\n\n\n<p>O: I think we all live a bit to much in our own stressed lives with tight dead lines and that everything falls into place. I feel that&#8217;s the only obstacle, that it should work in your own schedule, but besides from that it feels like a good thing!<\/p>\n\n\n\n<h1><a href=\"https:\/\/www.smartakartan.se\/en\/gothenburg\/move-about-eng\">Read more about Move About here.<\/a><\/h1>\n\n\n\n<h1><a href=\"https:\/\/www.smartakartan.se\/en\/skjutsgruppen\">Read more about Skjutsgruppen here<\/a><strong><a href=\"https:\/\/smartakartan.se\/skjutsgruppen\/\">.<\/a><\/strong><\/h1>\n\n\n\n<p><\/p>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": [
+      {
+        "template_name": "FullPage",
+        "typename": "MenuFullPage",
+        "ID": 108,
+        "post_title": "Menu Full Page",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "1",
+        "post_date": "2020-01-10 09:14:06",
+        "post_date_gmt": "2020-01-10 09:14:06",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "menu-full-page",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2022-11-28 14:42:34",
+        "post_modified_gmt": "2022-11-28 14:42:34",
+        "post_content_filtered": "",
+        "post_parent": [],
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=page_type&#038;p=108",
+        "menu_order": 0,
+        "post_type": "page_type",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 108
+      }
+    ],
+    "acf": [],
+    "lang": "en",
+    "translations": {
+      "en": 7488,
+      "sv": 7131
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/7488"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=7488"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 7487,
+    "date": "2020-06-26T07:45:44",
+    "date_gmt": "2020-06-26T07:45:44",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=7487"
+    },
+    "modified": "2020-06-26T07:45:48",
+    "modified_gmt": "2020-06-26T07:45:48",
+    "slug": "volunteer",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/en\/goteborg-page\/volunteer\/",
+    "title": {
+      "rendered": "Volunteer"
+    },
+    "content": {
+      "rendered": "\n<p><strong>Do you want to volunteer?<\/strong><\/p>\n\n\n\n<p>Contact information to the different organisations and businesses can be found on their respective pages here on the smart map. They&#8217;re gonna be super happy that you&#8217;re taking time! <\/p>\n\n\n\n<p>Do your want to help with the work at The Smart Map in Gothenburg you can email us at <a href=\"mailto:goteborg@smartakartan.se\"><strong><span style=\"text-decoration: underline;\">goteborg@smartakartan.se<\/span><\/strong><\/a> and we&#8217;ll get back to you.<\/p>\n\n\n\n<p>We check that email at least once a month.<\/p>\n\n\n\n<p>And remember, time is worth so much more than money!<\/p>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": [
+      {
+        "template_name": "FullPage",
+        "typename": "MenuFullPage",
+        "ID": 108,
+        "post_title": "Menu Full Page",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "1",
+        "post_date": "2020-01-10 09:14:06",
+        "post_date_gmt": "2020-01-10 09:14:06",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "menu-full-page",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2022-11-28 14:42:34",
+        "post_modified_gmt": "2022-11-28 14:42:34",
+        "post_content_filtered": "",
+        "post_parent": [],
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=page_type&#038;p=108",
+        "menu_order": 0,
+        "post_type": "page_type",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 108
+      }
+    ],
+    "acf": [],
+    "lang": "en",
+    "translations": {
+      "en": 7487,
+      "sv": 7130
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/7487"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=7487"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 7443,
+    "date": "2020-06-04T09:39:24",
+    "date_gmt": "2020-06-04T09:39:24",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=7443"
+    },
+    "modified": "2020-06-04T09:39:28",
+    "modified_gmt": "2020-06-04T09:39:28",
+    "slug": "bingo",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/en\/goteborg-page\/bingo\/",
+    "title": {
+      "rendered": "Bingo!"
+    },
+    "content": {
+      "rendered": "\n<div class=\"wp-block-image\"><figure class=\"aligncenter size-large\"><img loading=\"lazy\" width=\"301\" height=\"300\" src=\"\/wp-content\/uploads\/bingoinsta-eng-301x300.png\" alt=\"\" class=\"wp-image-7444\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/bingoinsta-eng-301x300.png 301w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/bingoinsta-eng-300x300.png 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/bingoinsta-eng-768x766.png 768w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/bingoinsta-eng.png 1137w\" sizes=\"(max-width: 301px) 100vw, 301px\" \/><\/figure><\/div>\n\n\n\n<p>Explore the initiatives on The Smart Map.com with our Bingo! <\/p>\n\n\n\n<p>We&#8217;ll do this simple three-in-a-row on instagram. When you&#8217;ve done three things in a row post in the comments! G\u00f6taverkstan will open after the pandemic is over and we shouldn&#8217;t ride share shoulder to shoulder before it&#8217;s safe to hug!<\/p>\n\n\n\n<p>Follow <a href=\"http:\/\/instagram.com\/smartakartan.se\">smartakartan.se<\/a> on instagram, we mostly post in Swedish, though!<\/p>\n\n\n\n<p>If you think this was too easy we&#8217;ve made a bigger on you can print out and play with five-in-a-row!<\/p>\n\n\n\n<p><a href=\"https:\/\/llamalloyd.se\/keg\/wp-content\/uploads\/2020\/06\/bingo-eng.pdf\">English PDF<\/a>.<br><a href=\"https:\/\/llamalloyd.se\/keg\/wp-content\/uploads\/2020\/06\/bingo-sve.pdf\">Swedish PDF<\/a>.<br><\/p>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": false,
+    "acf": [],
+    "lang": "en",
+    "translations": {
+      "en": 7443,
+      "sv": 7440
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/7443"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=7443"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 7440,
+    "date": "2020-06-04T09:16:38",
+    "date_gmt": "2020-06-04T09:16:38",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=7440"
+    },
+    "modified": "2020-06-11T12:22:30",
+    "modified_gmt": "2020-06-11T12:22:30",
+    "slug": "bingo",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/goteborg-page\/bingo\/",
+    "title": {
+      "rendered": "Bingo!"
+    },
+    "content": {
+      "rendered": "\n<div class=\"wp-block-image\"><figure class=\"aligncenter size-large\"><img loading=\"lazy\" width=\"301\" height=\"300\" src=\"\/wp-content\/uploads\/bingoinsta-301x300.png\" alt=\"\" class=\"wp-image-7441 img-fluid\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/bingoinsta-301x300.png 301w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/bingoinsta-300x300.png 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/bingoinsta-768x766.png 768w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/bingoinsta.png 1137w\" sizes=\"(max-width: 301px) 100vw, 301px\" \/><\/figure><\/div>\n\n\n\n<p>Uppt\u00e4ck verksamheterna p\u00e5 Smarta Kartan G\u00f6teborg med v\u00e5r Bingo-bricka!<\/p>\n\n\n\n<p>Vi k\u00f6r denna enkla p\u00e5 Instagram, f\u00e5 tre i rad och hojta i kommentarerna! <br>Vem blir f\u00f6rst att f\u00e5 full bricka n\u00e4r G\u00f6taverkstan \u00f6ppnat efter pandemin och det \u00e4r safe att dela skjuts axel mot axel igen?<\/p>\n\n\n\n<p>F\u00f6lj <a href=\"http:\/\/www.smartakartan.se\">smartakartan.se<\/a> p\u00e5 instagram!<\/p>\n\n\n\n<p>Tycker du den var f\u00f6r l\u00e4tt?! <br><br>H\u00e4r kan du ladda ner en sv\u00e5rare bingo i PDF-format du kan printa ut! <br><a href=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/bingo-sve.pdf\">Svensk<\/a><a href=\"https:\/\/llamalloyd.se\/keg\/wp-content\/uploads\/2020\/06\/bingo-sve.pdf\"> PDF<\/a> (10 Mb).<br><a href=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/bingo-eng.pdf\">Engelsk PDF<\/a> (10 Mb).<\/p>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": [
+      {
+        "template_name": "FullPage",
+        "typename": "FullPage",
+        "ID": 78,
+        "post_title": "Full page",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "1",
+        "post_date": "2020-01-09 14:35:59",
+        "post_date_gmt": "2020-01-09 14:35:59",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "full-page",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2020-01-12 10:43:24",
+        "post_modified_gmt": "2020-01-12 10:43:24",
+        "post_content_filtered": "",
+        "post_parent": [],
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=page_type&#038;p=78",
+        "menu_order": 0,
+        "post_type": "page_type",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 78
+      }
+    ],
+    "acf": [],
+    "lang": "sv",
+    "translations": {
+      "en": 7443,
+      "sv": 7440
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/7440"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=7440"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 7347,
+    "date": "2020-05-18T13:35:38",
+    "date_gmt": "2020-05-18T13:35:38",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=7347"
+    },
+    "modified": "2020-05-20T12:02:02",
+    "modified_gmt": "2020-05-20T12:02:02",
+    "slug": "about-us",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/en\/goteborg-page\/about-us\/",
+    "title": {
+      "rendered": "About The Smart Map GBG"
+    },
+    "content": {
+      "rendered": "\n<p>The Smart Map wants to make it easier for citizens and visitors to Gothenburg to live more sustainable, by encouraging community, new meetings and access over ownership. We do this by showing initiatives and networks in the city. On the map you can, among other things, find bike kitchens, swap groups, clothing swap days, free shops and digital platforms.&nbsp;<\/p>\n\n\n\n<p>This is not the Yellow Pages or a list over businesses, this is about people and communities that share. What we show on the map is decided by our <a href=\"https:\/\/beta.smartakartan.se\/en\/criterias\">criterias<\/a> that have been agreed between the civic association <a href=\"http:\/\/www.kollekogbg.se\/\">Collaborative Economy Gothenburg<\/a> and the City of Gothenburg, Consumer and Citizen Services Administration. The Smart Map has been created as part of an innovative civil-public partnership between these two parts. The selection of initiatives takes place in consultation between the project owners.<\/p>\n\n\n\n<p>Smart Map version 3.0 was launched in the spring of 2020 and has been funded by the City of Gothenburg and the national program Sharing Cities Sweden. SCS is part of the strategic innovation program Viable Cities, jointly funded by Vinnova, the Swedish Energy Agency (Energimyndigheten) and FORMAS.<\/p>\n\n\n\n<div class=\"wp-block-image\"><figure class=\"aligncenter size-large is-resized\"><img loading=\"lazy\" src=\"\/wp-content\/uploads\/kollekogbg-gbg-stad-1.png\" alt=\"\" class=\"wp-image-7376\" width=\"383\" height=\"84\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/kollekogbg-gbg-stad-1.png 666w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/kollekogbg-gbg-stad-1-300x67.png 300w\" sizes=\"(max-width: 383px) 100vw, 383px\" \/><\/figure><\/div>\n\n\n\n<div class=\"wp-block-image\"><figure class=\"aligncenter size-large is-resized\"><img loading=\"lazy\" src=\"\/wp-content\/uploads\/LOGO-SCS_horizontal-w-text-w-strap-2500-px-1-760x123.png\" alt=\"\" class=\"wp-image-7375\" width=\"470\" height=\"74\"\/><\/figure><\/div>\n\n\n\n<div class=\"wp-block-image\"><figure class=\"aligncenter size-large is-resized\"><img loading=\"lazy\" src=\"\/wp-content\/uploads\/Formas-logolimpa-2020-1.png\" alt=\"\" class=\"wp-image-7373\" width=\"561\" height=\"93\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Formas-logolimpa-2020-1.png 529w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Formas-logolimpa-2020-1-300x50.png 300w\" sizes=\"(max-width: 561px) 100vw, 561px\" \/><\/figure><\/div>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": [
+      {
+        "template_name": "FullPage",
+        "typename": "LeftFooter",
+        "ID": 98,
+        "post_title": "Left footer",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "1",
+        "post_date": "2020-01-10 08:57:47",
+        "post_date_gmt": "2020-01-10 08:57:47",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "left-footer",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2020-02-18 11:23:54",
+        "post_modified_gmt": "2020-02-18 11:23:54",
+        "post_content_filtered": "",
+        "post_parent": [],
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=page_type&#038;p=98",
+        "menu_order": 0,
+        "post_type": "page_type",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 98
+      }
+    ],
+    "acf": [],
+    "lang": "en",
+    "translations": {
+      "sv": 87,
+      "en": 7347
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/7347"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=7347"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 7131,
+    "date": "2020-05-11T21:42:47",
+    "date_gmt": "2020-05-11T21:42:47",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=7131"
+    },
+    "modified": "2020-06-29T13:27:57",
+    "modified_gmt": "2020-06-29T13:27:57",
+    "slug": "stories",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/goteborg-page\/stories\/",
+    "title": {
+      "rendered": "Stories"
+    },
+    "content": {
+      "rendered": "\n<h2>M\u00f6t Solveig Brontes p\u00e5 Gratisbutiken i Majorna<\/h2>\n\n\n\n<p class=\"has-drop-cap\">Det \u00e4r Halloween-natt, men viktigare \u00e4n s\u00e5, det \u00e4r onsdag. Gratisbutiken i Majorna h\u00e5ller, som varje onsdag, \u00f6ppet mellan sex och \u00e5tta. Jag g\u00e5r runt h\u00f6rnet p\u00e5 Fixoteket p\u00e5 Slottsskogsgatan och g\u00e5r in bakv\u00e4gen p\u00e5 Carnegiegatan. D\u00e4r blir jag varmt v\u00e4lkomnad av Solveig Brontes, som sitter och stickar och pratar med sin syster i Fixotekets cykelverkstad. Hon sitter d\u00e4r och lotsar folk ned i k\u00e4llaren under Fixoteket, d\u00e4r gratisbutiken huserar. <\/p>\n\n\n\n<figure class=\"wp-block-image size-large\"><img loading=\"lazy\" width=\"400\" height=\"300\" src=\"\/wp-content\/uploads\/brontes-bred-IIII-1-400x300.jpg\" alt=\"\" class=\"wp-image-7132\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/brontes-bred-IIII-1-400x300.jpg 400w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/brontes-bred-IIII-1-300x225.jpg 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/brontes-bred-IIII-1-768x576.jpg 768w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/brontes-bred-IIII-1.jpg 1080w\" sizes=\"(max-width: 400px) 100vw, 400px\" \/><\/figure>\n\n\n\n<p><strong>Vad \u00e4r gratisbutiken?<\/strong> Jag sl\u00e5r mig ned med Solveig och hennes syster Johanna som ber\u00e4ttar om vad Gratisbutiken \u00e4r, att det \u00e4r en butik d\u00e4r allt \u00e4r gratis och vem som helst f\u00e5r l\u00e4mna eller ta saker, det finns inga krav p\u00e5 att du m\u00e5ste ge n\u00e5t f\u00f6r att f\u00e5 ta eller liknande. Du kan h\u00e4mta och l\u00e4mna hela och rena kl\u00e4der, b\u00f6cker, mindre husger\u00e5d och leksaker. <\/p>\n\n\n\n<p><strong>Hur drivs Gratisbutiken?<\/strong> Snart trillar en man in som \u00e4r nyfiken p\u00e5 vad Gratisbutiken \u00e4r och hur den drivs. Han f\u00e5r reda p\u00e5 att Gratisbutikens lokal \u00e4gs av kommunala Familjebost\u00e4der och att den l\u00e5nas ut gratis genom dem. Det visar sig att mannen \u00e4r en, i sina egna ord, \u201csecond hand-kille\u201d, som g\u00e4rna kan t\u00e4nka sig att bidra till gratisbutiken med sin egen tid och kanske \u00e4ven kan donera det som Gratisbutiken f\u00e5r in minst av, n\u00e4mligen herrkl\u00e4der. Hela gratisbutiken drivs helt utan pengar. Solveig, Sara och de andra som jobbar d\u00e4r g\u00f6r det av ren v\u00e4lvilja.<\/p>\n\n\n\n<p>Bes\u00f6k Gratisbutiken onsdagar 18-20!<br><a href=\"https:\/\/www.smartakartan.se\/goteborg\/gratisbutiken-i-majorna\">smartakartan.se\/goteborg\/gratisbutiken-i-majorna<\/a><\/p>\n\n\n\n<p><em>Text: Robin Olsson, ordf\u00f6rande Kollaborativ Ekonomi G\u00f6teborg, den ideella f\u00f6reningen som driver Smarta Kartan.<\/em><\/p>\n\n\n\n<p> <\/p>\n\n\n\n<div class=\"wp-block-image\"><figure class=\"aligncenter size-large\"><img loading=\"lazy\" width=\"401\" height=\"300\" src=\"\/wp-content\/uploads\/Namnlo\u0308st-1-1-401x300.png\" alt=\"\" class=\"wp-image-7494\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1-1-401x300.png 401w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1-1-300x225.png 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1-1.png 454w\" sizes=\"(max-width: 401px) 100vw, 401px\" \/><\/figure><\/div>\n\n\n\n<p> <\/p>\n\n\n\n<h2>M\u00e5rten \u00e4r andra generationens bildelare.<\/h2>\n\n\n\n<p>Bagarbil \u00e4r ett bilkooperativ som bildades 1995 och har idag tv\u00e5 bilar och 51 medlemmar d\u00e4r ungef\u00e4r h\u00e4lften \u00e4r kvinnor och fyra av dessa sitter bland de sex i styrelsen. F\u00f6reningen rullar p\u00e5 bra och har klarat sig igenom en bilbrand och de st\u00e4ndiga sv\u00e5righeterna med att f\u00e5 folk att engagera sig i f\u00f6reningslivet. De tv\u00e5 bilarna leasas av f\u00f6reningen d\u00e4r alla medlemmar ing\u00e5r i olika arbetslag, varsitt lag f\u00f6r varje bil samt ett arbetslag f\u00f6r medlemsrekrytering som jobbar med flygplansutdelning etc.<\/p>\n\n\n\n<figure class=\"wp-block-image size-large\"><img loading=\"lazy\" width=\"400\" height=\"300\" src=\"\/wp-content\/uploads\/martenbyden-bagarbil-400x300.jpg\" alt=\"\" class=\"wp-image-7486\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/martenbyden-bagarbil-400x300.jpg 400w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/martenbyden-bagarbil-300x225.jpg 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/martenbyden-bagarbil.jpg 768w\" sizes=\"(max-width: 400px) 100vw, 400px\" \/><\/figure>\n\n\n\n<p>Samtliga medlemmarna l\u00e4gger ungef\u00e4r en timme i kvartalet p\u00e5 att hj\u00e4lpa till med att k\u00f6ra bilarna till biltv\u00e4tt och underh\u00e5ll. F\u00f6reningen har medlemmar fr\u00e5n 30-\u00e5rs\u00e5ldern till ett g\u00e4ng glada pension\u00e4rer. Det kostar 750 kr\/\u00e5r att g\u00e5 med i f\u00f6reningen om du inte har turen att bo med en medlem, d\u00e5 betalar du familjemedlemspriset som \u00e4r 250 kr\/\u00e5r. Bilarna bokas p\u00e5 n\u00e4tet och \u00f6ppnas sedan med en mackap\u00e4r som l\u00e4ser av ditt k\u00f6rkort. Samma mackap\u00e4r loggar det du k\u00f6r och skickar ut en faktura p\u00e5 det du k\u00f6rt en g\u00e5ng i m\u00e5naden. Medlemskapet \u00e4r \u00f6ppet f\u00f6r alla som har b-k\u00f6rkort och inte har n\u00e5gra anm\u00e4rkningar hos Kronofogden, du beh\u00f6ver inte bo i Bagareg\u00e5rden, men h\u00e4r st\u00e5r bilarna parkerade. Under 2019 kommer de att testa att ut\u00f6ka flottan med en till bil, med st\u00f6rsta sannolikhet en liten elbil, typ Nissan Leaf eller Renault Zoe.<\/p>\n\n\n\n<p>M\u00e5rten Byd\u00e9n \u00e4r en 34-\u00e5rig Gamlestadsbo som pendlar till jobbet som brandman i Alings\u00e5s med t\u00e5g. M\u00e5rten f\u00f6redrar historia och matlagning framf\u00f6r bilar och sport. Han \u00e4r ocks\u00e5 medlemsansvarig p\u00e5 Bagarbil och han du ska kontakta om du vill g\u00e5 med i f\u00f6reningen eller fr\u00e5ga om hur du sj\u00e4lv skulle kunna starta ett bilkooperativ d\u00e4r du bor. Robin och Jonathan fr\u00e5n Kollaborativ Ekonomi G\u00f6teborg intervjuade honom \u00f6ver en semla!<\/p>\n\n\n\n<p><strong>Namnet, hur ska en tolka det? Bagarbil? \u00c4r det en bagares bil?<\/strong><\/p>\n\n\n\n<p>Ja, f\u00f6reningens hela namn \u00e4r egentligen Bagareg\u00e5rdens bilkooperativ, och Bagareg\u00e5rden \u00e4r ett omr\u00e5de vid Redbergsplatsen, mot Gamlestaden till.<\/p>\n\n\n\n<p><strong>Hur \u00e4r Bagarbil organiserat?<\/strong><\/p>\n\n\n\n<p>Det \u00e4r en ideell f\u00f6rening d\u00e4r medlemmarna tillsammans leasar bilar. F\u00f6reningen styrs av en styrelse som v\u00e4ljs av medlemmarna p\u00e5 \u00e5rsm\u00f6tet. Jag sitter i styrelsen som medlemsansvarig, s\u00e5 jag tar emot ans\u00f6kningar om nya medlemmar och om n\u00e5n vill byta arbetslag.<\/p>\n\n\n\n<p><strong>Hur kom du i kontakt med Bagarbil?<\/strong><\/p>\n\n\n\n<p>Jag har varit medveten om bilkooperativ l\u00e4nge eftersom mina f\u00f6r\u00e4ldrar under min uppv\u00e4xt i Alings\u00e5s var med i Alings\u00e5s bilkooperativ som b\u00f6rjade med en bil och har nu har fem bilar. Mina f\u00f6r\u00e4ldrar \u00e4r fortfarande medlemmar.<\/p>\n\n\n\n<p>N\u00e4r jag flyttade till G\u00f6teborg s\u00e5 jag var redan ink\u00f6rd i hur ett bilkooperativ fungerar och letade p\u00e5 webben reda p\u00e5 Bagarbil som var det som var n\u00e4rmast och verkade b\u00e4st f\u00f6r mig som bor i Gamlestan. Det \u00e4r tre och ett halvt \u00e5r sedan nu.<\/p>\n\n\n\n<p><strong>Vad \u00e4r det s\u00e4msta med Bagarbil?<\/strong><\/p>\n\n\n\n<p>Kanske att man m\u00e5ste planera. Kv\u00e4llar och helger \u00e4r bilarna mer upptagna, p\u00e5 en vardagsf\u00f6rmiddag d\u00e4remot \u00e4r de flesta p\u00e5 jobbet och det \u00e4r n\u00e4stan ingen som anv\u00e4nder v\u00e5ra bilar i jobbet s\u00e5 d\u00e5 \u00e4r det betydligt l\u00e4ttare att boka in en bil. Har man lite framf\u00f6rh\u00e5llning p\u00e5 en vecka eller s\u00e5 brukar det finnas en bil tillg\u00e4nglig.<\/p>\n\n\n\n<p><strong>Hur ofta l\u00e5nar du sj\u00e4lv bil?<\/strong><\/p>\n\n\n\n<p>Jag lever ett ganska bilfritt liv, men anv\u00e4nder bilen ungef\u00e4r en g\u00e5ng i m\u00e5naden. De flesta resorna \u00e4r kortare, som att \u00e5ka till Ikea, till \u00e5tervinningscentralen, ta en tur l\u00e5ngf\u00e4rdsskridskor vid H\u00e4rskogen eller att h\u00e4lsa p\u00e5 mina v\u00e4nner p\u00e5 landet utanf\u00f6r Kung\u00e4lv. Jag betalar ungef\u00e4r 200-500 kr\/m\u00e5n till f\u00f6reningen totalt inklusive \u00e5rsavgiften.<\/p>\n\n\n\n<div class=\"wp-block-image\"><figure class=\"alignleft\"><img src=\"https:\/\/lh4.googleusercontent.com\/9GH9oS6aA16dhoxcQnXSCCEPCrS8jRrmQ8eI9hHp0bd2EZg8Td_zFVzz1dU1jNNWnqP7yjjBUJLVWkp3ulLIC-g32_9CaV5xohu_lKyXb-nwRzEr6a0MwsyUn8432DXj-V3TdaxT\" alt=\"Bokningssystemet Bagarbil\"\/><figcaption>Bokningssystemet Bagarbil<\/figcaption><\/figure><\/div>\n\n\n\n<p><\/p>\n\n\n\n<p><strong>Hur fungerar det n\u00e4r man hyr bilen?<\/strong><\/p>\n\n\n\n<p>Man betalar b\u00e5de f\u00f6r tid och str\u00e4cka. Den lilla kostar 14 kronor i timmen, medan den st\u00f6rre 18 kronor per timme och bilarna \u00e4r utrustade med ett system som l\u00e4ser av ditt k\u00f6rkort f\u00f6r att \u00f6ppna bilen och skickar en m\u00e5natlig faktura p\u00e5 den tid och de kilometer du k\u00f6rt med bilen. Den st\u00f6rre bilen har dragkrok och i den \u00e4r det ok att ta med sina fyrfotade v\u00e4nner. Tr\u00e4ngselavgifter betalas kollektivt av f\u00f6reningen.<\/p>\n\n\n\n<p><strong>Finns det n\u00e5gon social f\u00f6rdel med Bagarbil kontra att hyra en bil p\u00e5 macken?<\/strong><\/p>\n\n\n\n<p>Vi i styrelsen m\u00f6ter varandra kontinuerligt i styrelsem\u00f6ten och vi har roligt. Vi har druckit \u00f6l en g\u00e5ng under mina tre \u00e5r i f\u00f6reningen, men jag umg\u00e5s inte privat med n\u00e5gon i f\u00f6reningen.<\/p>\n\n\n\n<p><strong>Vilka \u00e4r m\u00e4nniskorna i f\u00f6reningen? \u00c4r de allm\u00e4nt inte bilintresserade, har de ett milj\u00f6t\u00e4nk?<\/strong><\/p>\n\n\n\n<p>Jo, milj\u00f6t\u00e4nket finns nog hos m\u00e5nga och de flesta \u00e4r inte s\u00e5 intresserad av bilar, det \u00e4r inte roligt att \u00e4ga bil. Idealism kring kooperativt \u00e4gande finns nog ocks\u00e5 hos m\u00e5nga.<\/p>\n\n\n\n<p><strong>N\u00e4r du beskriver det \u00e4r det ett delande, inte ett hyrande.<\/strong><\/p>\n\n\n\n<p>Man \u00e4r ju \u00e4nd\u00e5 kollektivt ansvariga, det kr\u00e4ver engagemang, antingen sitter man i styrelsen eller s\u00e5 k\u00f6r man bilen till tv\u00e4tten en g\u00e5ng i kvartalet. Det skr\u00e4p jag l\u00e4mnar i bilen \u00e4r det n\u00e5n annan som f\u00e5r st\u00e4da bort. Det \u00e4r inte som p\u00e5 macken n\u00e4r man bara l\u00e4mnar tillbaka skiten n\u00e4r man \u00e4r klar. Man har n\u00e5n sorts ansvarsk\u00e4nsla mot de andra medlemmarna.<\/p>\n\n\n\n<p><strong>Vad \u00e4r det du gillar Bagarbil?<\/strong><\/p>\n\n\n\n<p>Det \u00e4r billigare, jag slipper kr\u00e5ngel och bidrar till milj\u00f6vinsten med att det \u00e4r f\u00e4rre bilar i samh\u00e4llet.<\/p>\n\n\n\n<p><strong>Gillar du att ni g\u00f6r det h\u00e4r tillsammans?<\/strong><\/p>\n\n\n\n<p>Det \u00e4r n\u00e5n vacker tanke med det \u00e4nd\u00e5. Det hade kanske inte funkat om det var dyrare eller kr\u00e5ngligare.<\/p>\n\n\n\n<p><strong>Vad \u00e4r det f\u00f6r f\u00f6retag ni leasar av, har de n\u00e5gra problem med att ni \u00e4r en f\u00f6rening som leasar?<\/strong><\/p>\n\n\n\n<p>Toyota G\u00f6teborg i Sisj\u00f6n. Eventuellt skaffar vi ett annat m\u00e4rke p\u00e5 n\u00e4sta bil. De har inte haft n\u00e5gra problem med att vi som leasar \u00e4r en f\u00f6rening, s\u00e5 om n\u00e5n blir inspirerad att starta en f\u00f6rening efter v\u00e5r modell har jag inget att klaga p\u00e5 hos Toyota.<\/p>\n\n\n\n<p><strong>Har det varit n\u00e5gra problem med att folk missk\u00f6ter bilar, krockar etc?<\/strong><\/p>\n\n\n\n<p>Nej, egentligen inte. F\u00f6rutom att det brann upp en bil f\u00f6r n\u00e5gra \u00e5r sedan. Bilen stod p\u00e5 sin parkering och vi fick aldrig reda p\u00e5 om det var elfel eller vad som orsakade branden. Den verkade inte ha varit anlagd i vart fall.<\/p>\n\n\n\n<p><strong>Hur klarade f\u00f6reningen den krisen?<\/strong><\/p>\n\n\n\n<p>Ja, vi fick ju en bil mindre s\u00e5 det var ju lite krisigt, men vi beh\u00f6vde inte h\u00f6ja medlemsavgifter eller s\u00e5 f\u00f6r att l\u00f6sa det. Tillg\u00e5ngen p\u00e5 bilar var givetvis s\u00e4mre medan vi fick till en ers\u00e4ttningsbil, men det gick r\u00e4tt fort.<\/p>\n\n\n\n<p><strong>Varf\u00f6r engagerar du dig i f\u00f6reningen?<\/strong><\/p>\n\n\n\n<p>Jag blev uppringd av ordf\u00f6rande i styrelsen, det \u00e4r s\u00e5 man f\u00e5r folk att engagera sig idag. Majornas bilkooperativ var ett ganska stort kooperativ med runt hundra medlemmar som fick l\u00e4gga ner f\u00f6r att folk inte engagerade sig i f\u00f6reningen.<\/p>\n\n\n\n<p><strong>Ska man kunna vara medlem i kooperativet utan att vara engagerad?<\/strong><\/p>\n\n\n\n<p>Helt oengagerad ska man inte kunna vara, du m\u00e5ste g\u00f6ra din del genom att k\u00f6ra bilen till tv\u00e4tt eller service en g\u00e5ng i kvartalet eller hj\u00e4lpa till att dela ut flygblad vid Redbergsplatsen eller rodda Facebook-annonser. Minsta tid du m\u00e5ste l\u00e4gga \u00e4r ungef\u00e4r en timme eller tv\u00e5 i kvartalet.<\/p>\n\n\n\n<p><strong>Vilka \u00e4r med i f\u00f6reningen?<\/strong><\/p>\n\n\n\n<p>I styrelsen \u00e4r vi tv\u00e5 i sextio\u00e5rs\u00e5ldern, en i femtio\u00e5rs\u00e5ldern och jag \u00e4r nog yngst med mina 34 \u00e5r. Jag har inte riktig koll p\u00e5 alla medlemmar, men skulle s\u00e4ga att familjer \u00e4r underrepresenterade, de har ofta ett annat behov av bil. Tio-tjugo procent av medlemmarna \u00e4r pension\u00e4rer. Det finns inget krav att bo i Bagarg\u00e5rden, det bor medlemmar i Lunden, K\u00e5lltorp eller som mig sj\u00e4lv, i Gamlestan. Till och med Hisingsbor \u00e4r v\u00e4lkomna att g\u00e5 med!<\/p>\n\n\n\n<p><strong>Vad h\u00e4nder fram\u00f6ver i f\u00f6reningen?<\/strong><\/p>\n\n\n\n<p>Vi kommer ut\u00f6ka flottan med en till bil, h\u00f6gst sannolikt en liten elbil. Vi kommer ha den nya bilen parallellt tills leasingen av v\u00e5r lilla bil g\u00e5r ut i sommar, f\u00f6r att testa och kolla om det b\u00e4r sig ekonomiskt att ha tre bilar.<\/p>\n\n\n\n<p><strong>Hur vill du avsluta intervjun?<\/strong><\/p>\n\n\n\n<p>Jag vill g\u00e4rna uppmana l\u00e4sarna att g\u00e5 med i ett bilkooperativ! Kontakta mig om ni vill g\u00e5 med i Bagarbil eller om du har n\u00e5gra fler fr\u00e5gor kring v\u00e5rt uppl\u00e4gg!<\/p>\n\n\n\n<p><a href=\"https:\/\/www.smartakartan.se\/goteborg\/bagarbil\">Bagarbil<\/a> \u00e4r en av flera bilpooler i G\u00f6teborg. Titta g\u00e4rna vidare och j\u00e4mf\u00f6r med <a href=\"https:\/\/www.smartakartan.se\/sambil\">Sambil<\/a>, <a href=\"https:\/\/www.smartakartan.se\/goteborg\/move-about\">Move About<\/a> och de andra vad som passar b\u00e4st f\u00f6r dina bilbehov.<\/p>\n\n\n\n<div class=\"wp-block-image\"><figure class=\"aligncenter size-large\"><img loading=\"lazy\" width=\"401\" height=\"300\" src=\"\/wp-content\/uploads\/Namnlo\u0308st-1-1-401x300.png\" alt=\"\" class=\"wp-image-7494\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1-1-401x300.png 401w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1-1-300x225.png 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Namnlo\u0308st-1-1.png 454w\" sizes=\"(max-width: 401px) 100vw, 401px\" \/><\/figure><\/div>\n\n\n\n<p><\/p>\n\n\n\n<h2><strong>M\u00f6t morgondagens trafikanter<\/strong> som reser med hyrd elbil!<\/h2>\n\n\n\n<p>Lisa och Oskar tr\u00e4ffades n\u00e4r de byggde Chalmers-cortegen, idag f\u00f6rs\u00f6ker de bygga en b\u00e4ttre v\u00e4rld genom att undvika k\u00f6tt, on\u00f6diga flygresor och att inte \u00e4ga egen bil. Jonathan och Robin fr\u00e5n Kollaborativ ekonomi tr\u00e4ffade dem p\u00e5 Chalmers i slutet av 2018 f\u00f6r en intervju.<\/p>\n\n\n\n<figure class=\"wp-block-image size-large\"><img loading=\"lazy\" width=\"533\" height=\"300\" src=\"\/wp-content\/uploads\/WhatsApp-Image-2019-01-20-at-18.46.54-533x300.jpeg\" alt=\"\" class=\"wp-image-4548\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/WhatsApp-Image-2019-01-20-at-18.46.54-533x300.jpeg 533w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/WhatsApp-Image-2019-01-20-at-18.46.54-300x169.jpeg 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/WhatsApp-Image-2019-01-20-at-18.46.54-768x432.jpeg 768w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/WhatsApp-Image-2019-01-20-at-18.46.54.jpeg 1200w\" sizes=\"(max-width: 533px) 100vw, 533px\" \/><figcaption>Lisa och Oskar. Bild: privat.<\/figcaption><\/figure>\n\n\n\n<p>Lisas ny\u00e5rsl\u00f6fte \u00e4r att inte handla n\u00e5got nytt plagg 2019.<\/p>\n\n\n\n<p>M\u00e5let \u00e4r att komma under tv\u00e5 ton koldioxid per \u00e5r, s\u00e4ger Oskar och forts\u00e4tter, idag ligger vi p\u00e5 2,6 ton och sedan kommer samh\u00e4llet p\u00e5 det (med tv\u00e5 ton).<\/p>\n\n\n\n<p>Paret har nyligen flyttat till Jonsered och d\u00e5 de vill ut och resa tar de f\u00f6rst t\u00e5get till G\u00f6teborgs Centralstation d\u00e4r Move About har en av sina elbilspooler. Det \u00e4r med en av dessa elbilar de k\u00f6r n\u00e4r de ska l\u00e4ngre str\u00e4ckor.<\/p>\n\n\n\n<p>Oskar: Vi har anv\u00e4nt Move About i ungef\u00e4r tv\u00e5 \u00e5r. Det k\u00e4nns som ett familjef\u00f6retag. De svarar alltid snabbt p\u00e5 mail och om vi velat hyra bil \u00f6ver l\u00e4ngre perioder \u00e4n vad det egentligen \u00e4r t\u00e4nkt f\u00f6r s\u00e5 har de hj\u00e4lpt oss med det. Vi planerade hur vi skulle kunna ta oss till Link\u00f6ping genom att anv\u00e4nda <a href=\"https:\/\/abetterrouteplanner.com\/\">Better Route Planner<\/a> och <a href=\"https:\/\/uppladdning.nu\/\">Uppladdning.nu<\/a>, till exempel. Det tar ungef\u00e4r fyra timmar inklusive laddning d\u00e5 vi \u00e4nd\u00e5 passar p\u00e5 att \u00e4ta.<\/p>\n\n\n\n<p><strong>\u00c4r det smidigt att hyra bil i st\u00e4llet f\u00f6r att \u00e4ga? Vad kostar det?<\/strong><\/p>\n\n\n\n<p>O: Vi har en pl\u00e5nbok f\u00f6r alla laddstationskort som vi tar med oss n\u00e4r vi reser och med nyss n\u00e4mnda tj\u00e4nster g\u00e5r det bra, men det \u00e4r lite mer planering \u00e4n om vi skulle k\u00f6ra fossilbil. Det kostar 124 kr i m\u00e5naden (62 f\u00f6r studenter) att vara med i Move About och sedan kostar det 79 kr per timme eller t ex en helg f\u00f6r 695 inklusive fria mil och ja, knappt n\u00e5t f\u00f6r extra br\u00e4nsle om batteriet inte r\u00e4cker till, el \u00e4r ju inte s\u00e5 dyrt.<\/p>\n\n\n\n<p><strong>Hur l\u00e5ngt r\u00e4cker de olika bilarna?<\/strong><\/p>\n\n\n\n<p>O: Det beror j\u00e4ttemycket p\u00e5 hur fort du k\u00f6r och v\u00e4glag och s\u00e5d\u00e4r. Vi brukar k\u00f6ra ungef\u00e4r femton mil innan vi laddar s\u00e5 att vi har lite marginal innan batteriet tar slut.<\/p>\n\n\n\n<p><strong>Vad \u00e4r f\u00f6rdelarna med Move Abouts elbilspool?<\/strong><\/p>\n\n\n\n<p>O: F\u00f6r det f\u00f6rsta att det \u00e4r fossilfritt, men ocks\u00e5 att Move About k\u00e4nns schysta som f\u00f6retag, att de har en vision bortom n\u00e4sta bokslut. En g\u00e5ng luktade det t ex r\u00f6k i bilen och vi ringde och sade till och de sade att det var lugnt och att det var bra att vi sade till. De brukar vara ok med om n\u00e5gon g\u00f6r ett misstag. Jag har kompisar som har k\u00f6rt SunFleet och det \u00e4r mycket h\u00e5rdare, det \u00e4r verkligen att man \u00e5ker dit p\u00e5 det, om man inte rapporterar skadan. En annan g\u00e5ng ringde vi och undrade vad till\u00e4ggsavgiften var f\u00f6r att vi b\u00e5da tv\u00e5 skulle kunna k\u00f6ra bilen och blev glatt \u00f6verraskade att det inte fanns n\u00e5gon s\u00e5dan avgift, vidare har vi bett dem lista batteristorlek p\u00e5 de olika bilarna och den informationen kom sedan upp p\u00e5 hemsidan.<\/p>\n\n\n\n<p><strong>Varf\u00f6r v\u00e4ljer ni Move Abouts bilar framf\u00f6r SunFleet eller hyrbilar p\u00e5 macken?<\/strong><\/p>\n\n\n\n<p>O: Elen, framf\u00f6r allt, t\u00e4nker jag. Vi har en klimatbudget och den exploderar ju totalt, annars. Och sedan \u00e4r det ju priset ocks\u00e5. Dessutom sparar man en halvtimme n\u00e4r man inte beh\u00f6ver tanka bilen vid slutet av en kort bokning, som man beh\u00f6ver p\u00e5 SunFleet t ex.<\/p>\n\n\n\n<p><strong>\u00c4r det helt normalt f\u00f6r er nu att anv\u00e4nda Move About? Att ska ni sticka n\u00e5nstans s\u00e5 \u00e4r det de som g\u00e4ller?<\/strong><\/p>\n\n\n\n<p>Lisa: Ja, oftast \u00e4r det Move About n\u00e4r vi \u00e5ker tillsammans n\u00e5gonstans. Om jag \u00e5ker sj\u00e4lv blir det snarare buss eller t\u00e5g.<\/p>\n\n\n\n<p><strong>Hur ser ni p\u00e5 de tomma platserna i bilen? K\u00e4nner ni till Skjutsgruppen, \u00e4r det ok att ta med folk p\u00e5 det viset f\u00f6r Move About?<\/strong><\/p>\n\n\n\n<p>O: Det borde det ju vara. Det \u00e4r ju bara att vi \u00e4r ansvariga skulle jag gissa p\u00e5.<\/p>\n\n\n\n<p><strong>\u00c4r det n\u00e5t ni skulle kunna t\u00e4nka er, att plocka upp folk via Skjutsgruppen?<\/strong><\/p>\n\n\n\n<p>L: Vi har v\u00e4l inte testat s\u00e5 mycket delningsgrejer faktiskt, men skulle kunna t\u00e4nka mig att testa om man hade lite mer info om personen som skulle \u00e5ka med.<\/p>\n\n\n\n<p>O: Jag tror vi lever mycket i ekorrhjulet med tighta deadlines och det g\u00e4ller att det klaffar. Det \u00e4r v\u00e4l mest det jag k\u00e4nner, annars k\u00e4nns det som en bra grej!<\/p>\n\n\n\n<h1><a href=\"https:\/\/smartakartan.se\/goteborg\/move-about\/\"><strong>L\u00e4s mer om Move About h\u00e4r.<\/strong><\/a><\/h1>\n\n\n\n<h1><a href=\"https:\/\/smartakartan.se\/skjutsgruppen\/\"><strong>L\u00e4s mer om Skjutsgruppen h\u00e4r.<\/strong><\/a><\/h1>\n\n\n\n<p><\/p>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": [
+      {
+        "template_name": "FullPage",
+        "typename": "MenuFullPage",
+        "ID": 108,
+        "post_title": "Menu Full Page",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "1",
+        "post_date": "2020-01-10 09:14:06",
+        "post_date_gmt": "2020-01-10 09:14:06",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "menu-full-page",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2022-11-28 14:42:34",
+        "post_modified_gmt": "2022-11-28 14:42:34",
+        "post_content_filtered": "",
+        "post_parent": [],
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=page_type&#038;p=108",
+        "menu_order": 0,
+        "post_type": "page_type",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 108
+      }
+    ],
+    "acf": [],
+    "lang": "sv",
+    "translations": {
+      "en": 7488,
+      "sv": 7131
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/7131"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=7131"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 7130,
+    "date": "2020-05-11T21:35:54",
+    "date_gmt": "2020-05-11T21:35:54",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=7130"
+    },
+    "modified": "2020-06-26T07:41:12",
+    "modified_gmt": "2020-06-26T07:41:12",
+    "slug": "bli-volontar",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/goteborg-page\/bli-volontar\/",
+    "title": {
+      "rendered": "Bli volont\u00e4r"
+    },
+    "content": {
+      "rendered": "\n<p><strong>Vill du bli volont\u00e4r p\u00e5 n\u00e5n av verksamheterna? <\/strong><br>Kontakta dem via deras sidor, de kommer bli superglada f\u00f6r att du tar dig tid! <\/p>\n\n\n\n<p>Vill du hj\u00e4lpa till med arbetet av Smarta Kartan i G\u00f6teborg mailar du oss p\u00e5 <a href=\"mailto:goteborg@smartakartan.se\"><strong><span style=\"text-decoration: underline;\">goteborg@smartakartan.se<\/span><\/strong><\/a> s\u00e5 h\u00f6r vi av oss. <\/p>\n\n\n\n<p>Vi kollar den mailen minst en g\u00e5ng i m\u00e5naden. <\/p>\n\n\n\n<p>Och kom ih\u00e5g, tid \u00e4r s\u00e5 mycket mer v\u00e4rt \u00e4n pengar!<\/p>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": [
+      {
+        "template_name": "FullPage",
+        "typename": "MenuFullPage",
+        "ID": 108,
+        "post_title": "Menu Full Page",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "1",
+        "post_date": "2020-01-10 09:14:06",
+        "post_date_gmt": "2020-01-10 09:14:06",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "menu-full-page",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2022-11-28 14:42:34",
+        "post_modified_gmt": "2022-11-28 14:42:34",
+        "post_content_filtered": "",
+        "post_parent": [],
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=page_type&#038;p=108",
+        "menu_order": 0,
+        "post_type": "page_type",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 108
+      }
+    ],
+    "acf": [],
+    "lang": "sv",
+    "translations": {
+      "en": 7487,
+      "sv": 7130
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/7130"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=7130"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 99,
+    "date": "2020-01-10T08:58:52",
+    "date_gmt": "2020-01-10T08:58:52",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=99"
+    },
+    "modified": "2020-05-20T12:02:58",
+    "modified_gmt": "2020-05-20T12:02:58",
+    "slug": "kontakta-smarta-kartan-goteborg",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/goteborg-page\/kontakta-smarta-kartan-goteborg\/",
+    "title": {
+      "rendered": "Kontakt, G\u00f6teborg"
+    },
+    "content": {
+      "rendered": "\n<p>Vi som uppdaterar Smarta Kartan i G\u00f6teborg n\u00e5r du p\u00e5 <a href=\"mailto:goteborg@smartakartan.se\">goteborg@smartakartan.se<\/a><\/p>\n\n\n\n<p>Maila oss om du vill f\u00f6resl\u00e5 en \u00e4ndring, en ny verksamhet eller n\u00e5got annat som r\u00f6r Smarta Kartans G\u00f6teborgsdel. <\/p>\n\n\n\n<p>Du kanske har en b\u00e4ttre bild fr\u00e5n n\u00e5n av verksamheterna? Bilder \u00e4r alltid det b\u00e4sta f\u00f6r att inspirera folk att uppt\u00e4cka alla fina verksamheter som vi har kartlagt h\u00e4r! <\/p>\n\n\n\n<p>Vi kollar mailen minst en g\u00e5ng i m\u00e5naden.<\/p>\n\n\n\n<p>Maila p\u00e5! <br><a href=\"mailto:goteborg@smartakartan.se\">goteborg@smartakartan.se<\/a><\/p>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": [
+      {
+        "template_name": "FullPage",
+        "typename": "LeftFooter",
+        "ID": 98,
+        "post_title": "Left footer",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "1",
+        "post_date": "2020-01-10 08:57:47",
+        "post_date_gmt": "2020-01-10 08:57:47",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "left-footer",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2020-02-18 11:23:54",
+        "post_modified_gmt": "2020-02-18 11:23:54",
+        "post_content_filtered": "",
+        "post_parent": [],
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=page_type&#038;p=98",
+        "menu_order": 0,
+        "post_type": "page_type",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 98
+      }
+    ],
+    "acf": [],
+    "lang": "sv",
+    "translations": {
+      "sv": 99
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/99"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=99"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 87,
+    "date": "2020-01-09T15:36:22",
+    "date_gmt": "2020-01-09T15:36:22",
+    "guid": {
+      "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_page&#038;p=87"
+    },
+    "modified": "2020-05-20T11:56:47",
+    "modified_gmt": "2020-05-20T11:56:47",
+    "slug": "om-smarta-kartan-goteborg",
+    "status": "publish",
+    "type": "goteborg_page",
+    "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/goteborg-page\/om-smarta-kartan-goteborg\/",
+    "title": {
+      "rendered": "Om Smarta Kartan G\u00f6teborg"
+    },
+    "content": {
+      "rendered": "<p>Smarta Kartans syfte \u00e4r att f\u00f6ra samman m\u00e4nniskor och underl\u00e4tta f\u00f6r en h\u00e5llbar livsstil genom att \u00f6ka deltagandet i den n\u00e4ra delningsekonomin.<\/p>\n<p>Genom att synligg\u00f6ra nuvarande verksamheter och n\u00e4tverk som finns i staden vill Smarta Kartan i G\u00f6teborg uppmuntra till gemenskap, nya m\u00f6ten och tillg\u00e5ng framf\u00f6r \u00e4gande. P\u00e5 kartan hittar du cykelk\u00f6k, bytesgrupper, gratisbutiker, bilpooler och olika digitala plattformar.<\/p>\n<p>Smarta Kartan i G\u00f6teborg \u00e4r ett samarbete mellan G\u00f6teborgs Stad, konsument- och medborgarservice och den ideella f\u00f6reningen Kollaborativ Ekonomi G\u00f6teborg (KEG), som ocks\u00e5 uppdaterar och driftar den. Alla har m\u00f6jlighet att komma med f\u00f6rslag p\u00e5 verksamheter som ska synas genom att kontakta oss p\u00e5 <strong>goteborg@smartakartan.se<\/strong>.<\/p>\n<p>Smarta Kartan \u00e4r inte Gula Sidorna eller en lista \u00f6ver f\u00f6retag, utan det handlar om m\u00e4nniskor och \u201dcommunities\u201d som delar saker. Vi visar exempelvis inte pantbanker, loppisar eller vinylbutiker etc. Vad som visas best\u00e4ms av v\u00e5ra kriterier som tagits fram i samr\u00e5d mellan den ideella f\u00f6reningen Kollaborativ Ekonomi G\u00f6teborg och G\u00f6teborgs Stad konsument- och medborgarservice. Kriterierna utvecklas \u00e4ven nationellt tillsammans med andra akt\u00f6rer i Sverige.<\/p>\n<p>Smarta Kartan skapades genom ett samarbete i ett id\u00e9buret offentligt partnerskap (IOP) mellan f\u00f6reningen Kollaborativ Ekonomi G\u00f6teborg och G\u00f6teborgs Stad, f\u00f6rvaltningen konsument- och medborgarservice. Smarta Kartan version 3.0 lanserades v\u00e5ren 2020 och har finansierats av G\u00f6teborgs Stad och det nationella programmet Sharing Cities Sweden. SCS \u00e4r en del av det strategiska innovationsprogrammet Viable Cities, gemensamt finansierat av Vinnova, Energimyndigheten och FORMAS.<\/p>\n<p>Smarta Kartan drivs och \u00e4gs av KEG, det \u00e4r \u00e4ven f\u00f6reningen som har publiceringsansvar i G\u00f6teborg, kontakt <a href=\"https:\/\/kollekogbg.se\/\" target=\"_blank\" rel=\"noopener noreferrer\">www.kollekogbg.se<\/a>.&nbsp;<\/p>\n<p>L\u00e4s mer om Smarta Kartans <a href=\"http:\/\/sk-wp.azurewebsites.net\/index.php\/global-page\/om-smarta-kartan\/\">Vision<\/a> och <a href=\"http:\/\/sk-wp.azurewebsites.net\/index.php\/global-page\/vardegrund\/\">V\u00e4rdegrund<\/a>.<\/p>\n\n\n<div class=\"wp-block-image\"><figure class=\"aligncenter is-resized\"><img loading=\"lazy\" src=\"\/wp-content\/uploads\/kollekogbg-gbg-stad.png\" alt=\"\" class=\"wp-image-861\" width=\"462\" height=\"102\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/kollekogbg-gbg-stad.png 666w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/kollekogbg-gbg-stad-300x67.png 300w\" sizes=\"(max-width: 462px) 100vw, 462px\" \/><\/figure><\/div>\n\n\n\n<p class=\"has-text-align-center\">Med st\u00f6d av<\/p>\n\n\n\n<div class=\"wp-block-image size-large\"><figure class=\"aligncenter is-resized\"><img loading=\"lazy\" src=\"\/wp-content\/uploads\/LOGO-SCS_horizontal-w-text-w-strap-2500-px-760x123.png\" alt=\"\" class=\"wp-image-3960\" width=\"438\" height=\"70\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/LOGO-SCS_horizontal-w-text-w-strap-2500-px-760x123.png 760w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/LOGO-SCS_horizontal-w-text-w-strap-2500-px-300x49.png 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/LOGO-SCS_horizontal-w-text-w-strap-2500-px-768x124.png 768w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/LOGO-SCS_horizontal-w-text-w-strap-2500-px.png 1200w\" sizes=\"(max-width: 438px) 100vw, 438px\" \/><\/figure><\/div>\n\n\n\n<div class=\"wp-block-image size-large\"><figure class=\"aligncenter is-resized\"><img loading=\"lazy\" src=\"\/wp-content\/uploads\/Logo_ViableCities-760x122.png\" alt=\"\" class=\"wp-image-3961\" width=\"270\" height=\"43\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Logo_ViableCities-760x122.png 760w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Logo_ViableCities-300x48.png 300w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Logo_ViableCities-768x124.png 768w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Logo_ViableCities.png 1200w\" sizes=\"(max-width: 270px) 100vw, 270px\" \/><\/figure><\/div>\n\n\n\n<div class=\"wp-block-image\"><figure class=\"aligncenter size-large is-resized\"><img loading=\"lazy\" src=\"\/wp-content\/uploads\/Formas-logolimpa-2020.png\" alt=\"\" class=\"wp-image-7372\" width=\"527\" height=\"88\" srcset=\"https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Formas-logolimpa-2020.png 529w, https:\/\/sk-wp.azurewebsites.net\/wp-content\/uploads\/Formas-logolimpa-2020-300x50.png 300w\" sizes=\"(max-width: 527px) 100vw, 527px\" \/><\/figure><\/div>\n\n\n\n<p><\/p>\n",
+      "protected": false
+    },
+    "template": "",
+    "url": "",
+    "page_type": [
+      {
+        "template_name": "FullPage",
+        "typename": "LeftFooter",
+        "ID": 98,
+        "post_title": "Left footer",
+        "post_content": "",
+        "post_excerpt": "",
+        "post_author": "1",
+        "post_date": "2020-01-10 08:57:47",
+        "post_date_gmt": "2020-01-10 08:57:47",
+        "post_status": "publish",
+        "comment_status": "closed",
+        "ping_status": "closed",
+        "post_password": "",
+        "post_name": "left-footer",
+        "to_ping": "",
+        "pinged": "",
+        "post_modified": "2020-02-18 11:23:54",
+        "post_modified_gmt": "2020-02-18 11:23:54",
+        "post_content_filtered": "",
+        "post_parent": [],
+        "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=page_type&#038;p=98",
+        "menu_order": 0,
+        "post_type": "page_type",
+        "post_mime_type": "",
+        "comment_count": "0",
+        "comments": false,
+        "id": 98
+      }
+    ],
+    "acf": [],
+    "lang": "sv",
+    "translations": {
+      "sv": 87,
+      "en": 7347
+    },
+    "pll_sync_post": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page\/87"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_page"
+        }
+      ],
+      "about": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_page"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=87"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https:\/\/api.w.org\/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  }
+]
