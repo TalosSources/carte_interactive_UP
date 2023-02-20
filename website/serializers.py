@@ -21,10 +21,6 @@ class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
         fields = ('url', "id", "title", "initiative")  # -shown under "Properties" in the API JSON
         geo_field = "coordinates"  # this string value must match the PointField field name in models.py
         model = models.Location
-        # TODO: bbox
-        # Two alternatives:
-        # https://github.com/openwisp/django-rest-framework-gis#bounding-box-auto_bbox-and-bbox_geo_field
-        # Also see this: https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/
 
 
 class InitiativeTitleTextSerializer(serializers.ModelSerializer):

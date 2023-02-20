@@ -1,14 +1,17 @@
 import rest_framework.response
 import rest_framework.viewsets
+import rest_framework_gis.filters
 
 from . import models
 from . import serializers
 
 
 class LocationViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
+    bbox_filter_field = "coordinates"
+    filter_backends = (rest_framework_gis.filters.InBBOXFilter,)
+
     queryset = models.Location.objects.all()
     serializer_class = serializers.LocationSerializer
-    # TODO: Filter and bbox
 
 
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
