@@ -186,3 +186,20 @@ smarta_kartan_db=# \dt
  public | [table_name]               | table | postgres
 ```
 
+### Coordinates in Latitude and Longitude
+
+Latitude
+* y-axis
+* Positive coordinates are above the equator
+* Range: -90 (south pole) to +90 (North pole)
+
+Longitude
+* x-axis
+* Positive coordinates are to the east
+* Range: -180 to +180 (where 0 goes through London - These meet at the other side of the globe, from the perspective of an English person)
+
+Example coordinates:
+* Gothenburg: 57.7, 12.0
+* London: 51.5, 0.0
+
+Important: When storing data in GeoDjango data structures (like for example a [Point](https://docs.djangoproject.com/en/4.1/ref/contrib/gis/geos/#django.contrib.gis.geos.Point)) the reverse order is used!

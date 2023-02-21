@@ -1,3 +1,9 @@
+"""
+The ViewSets are used by the API which can be seen here: http://localhost/api/
+
+Overview:
+models.py -> serializers.py -> views.py
+"""
 import rest_framework.response
 import rest_framework.viewsets
 
@@ -16,6 +22,7 @@ class LocationViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
 
     This enables us to do API calls like this:
     curl http://localhost/api/locations/?in_bbox=-90,-180,90,57.6
+    Please note the order: longitude, latitude
     (This specific example will give part of the locations in Gothenburg
 
     References:

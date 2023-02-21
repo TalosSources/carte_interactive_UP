@@ -1,16 +1,15 @@
-# import json
+import dataclasses
 import logging
 import sys
 
 import django.contrib.gis.geos
 import django.core.management.base
 import django.db
-# import django.core.management
 import requests
 
 import website.models
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 """
 
@@ -86,16 +85,88 @@ TAGG_DT = "tagg"
 
 DATA_TYPE_LIST = [
     "faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, REGION_DT, OVERSATTNING_DT, "page_type", "tagg_grupp", TAGG_DT]
-REGION_LIST = ["gavle", GLOBAL_R, GOTEBORG_R, "karlstad", "malmo", "sjuharad", "stockholm", "umea"]
-REGION_NAMES = {
-    "gavle": "Gävle",
-    "goteborg": "Göteborg",
-    "karlstad": "Karlstad",
-    "malmo": "Malmö",
-    "sjuharad": "Sjuhärad",
-    "stockholm": "Stockholm",
-    "umea": "Umeå",
-    "global": "Hela Sverige"
+
+
+@dataclasses.dataclass
+class RegionData:
+    name: str
+    area: django.contrib.gis.geos.Polygon
+
+
+REGION_DATA_DICT = {
+    "gavle": RegionData(name="Gävle", area=django.contrib.gis.geos.Polygon(
+        django.contrib.gis.geos.LinearRing(
+            ((17.077645913509762, 60.699070904289485),
+            (17.11197818698215, 60.63886310495179),
+            (17.204932817408636, 60.655481950213876),
+            (17.167167316589012, 60.6993649396649),
+            (17.077645913509762, 60.699070904289485))
+        )
+    )),
+    "goteborg": RegionData(name="Göteborg", area=django.contrib.gis.geos.Polygon(
+        django.contrib.gis.geos.LinearRing(
+            ((11.925401093582142, 57.689568545605425),
+            (12.03638016933202, 57.68245690713329),
+            (12.03608040451827, 57.62297997831338),
+            (11.933598563618602, 57.61438419604527),
+            (11.925401093582142, 57.689568545605425))
+        )
+    )),
+    "karlstad": RegionData(name="Karlstad", area=django.contrib.gis.geos.Polygon(
+        django.contrib.gis.geos.LinearRing(
+            ((13.475279848392983, 59.41602274519939),
+            (13.604369196649156, 59.393830755190955),
+            (13.553900754644749, 59.35517852830722),
+            (13.397002264875942, 59.386663307532906),
+            (13.475279848392983, 59.41602274519939))
+        )
+    )),
+    "malmo": RegionData(name="Malmö", area=django.contrib.gis.geos.Polygon(
+        django.contrib.gis.geos.LinearRing(
+            ((13.010306234755156, 55.64519863885748),
+            (13.084807268190234, 55.56102410084758),
+            (12.929625392095048, 55.57014849918855),
+            (13.010306234755156, 55.64519863885748))
+        )
+    )),
+    "sjuharad": RegionData(name="Sjuhärad", area=django.contrib.gis.geos.Polygon(
+        django.contrib.gis.geos.LinearRing(
+            ((14.206499714918326, 57.85457566201329),
+            (11.857397392491432, 57.586455763764135),
+            (13.264187269288032, 57.16096031630569),
+            (14.206499714918326, 57.85457566201329))
+        )
+    )),
+    "stockholm": RegionData(name="Stockholm", area=django.contrib.gis.geos.Polygon(
+        django.contrib.gis.geos.LinearRing(
+            ((18.08573118034145, 59.57756097353471),
+            (18.78610955917813, 59.33609249026372),
+            (18.039039288419005, 59.148575718907594),
+            (17.653487857324105, 59.32330815025737),
+            (18.08573118034145, 59.57756097353471))
+        )
+    )),
+    "umea": RegionData(name="Umeå", area=django.contrib.gis.geos.Polygon(
+        django.contrib.gis.geos.LinearRing(
+            ((20.272687805012996, 63.86819938869472),
+            (20.386327630206594, 63.82885670594015),
+            (20.316976437792373, 63.77353273455124),
+            (20.198873417047363, 63.786729400444166),
+            (20.109952828753883, 63.855494691747076),
+            (20.272687805012996, 63.86819938869472))
+        )
+    )),
+    "global": RegionData(name="Hela Sverige", area=django.contrib.gis.geos.Polygon(
+        django.contrib.gis.geos.LinearRing(
+            ((20.352595005064796, 69.02952599870233),
+            (24.351618219128373, 65.86602404663931),
+            (17.84771233251949, 55.838700895944626),
+            (12.969782917562823, 55.16671299640125),
+            (9.981501834526311, 58.711547373103386),
+            (16.52935303117985, 67.99959938511587),
+            (20.352595005064796, 69.02952599870233))
+        )
+    )),
 }
 
 # Contains sub-lists on this format: [sk3_id_en, sk3_id_sv], where the order of langs is undetermined
@@ -111,13 +182,13 @@ def import_sk3_data(i_args: [str]):
     data_type_full_name_list = []
     for data_type in DATA_TYPE_LIST:
         if data_type == ADDRESS_DT:
-            for region in REGION_LIST:
+            for region in REGION_DATA_DICT.keys():
                 if region == GOTEBORG_R:
                     region = "gbg"
                 data_type_full_name = f"{data_type}_{region}"
                 data_type_full_name_list.append(data_type_full_name)
         elif data_type in (PAGE_DT, BUSINESS_DT):
-            for region in REGION_LIST:
+            for region in REGION_DATA_DICT.keys():
                 data_type_full_name = f"{region}_{data_type}"
                 data_type_full_name_list.append(data_type_full_name)
         else:
@@ -135,7 +206,7 @@ def import_sk3_data(i_args: [str]):
 
     nr_added = 0
     nr_skipped = 0
-
+    logging.info(f"Total number of datatypes: {len(data_type_full_name_list)}")
     for data_type_full_name in data_type_full_name_list:
         # ################ FILTERING ################
         if data_type_full_name not in ("goteborg_business", "address_gbg", REGION_DT, TAGG_DT,):
@@ -167,8 +238,7 @@ def import_sk3_data(i_args: [str]):
                 api_url += f"&per_page={PER_PAGE}&page={page_nr}"
                 # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
             api_url = api_url.replace('&', '?', 1)
-            logging.debug(f"{api_url=}")
-
+            logging.info(f"Calling requests.get with {api_url=}")
             response = requests.get(api_url, headers=header_dict)
             response_json = response.json()  # -can be a list or a dict
             if type(response_json) is dict and response_json.get("code", "") == "rest_post_invalid_page_number":
@@ -226,11 +296,15 @@ def import_sk3_data(i_args: [str]):
                         # -this is not because we want Swedish, but because we want the minimal slug
                         # -TODO: In the future we want this translated (so not skipping)
                         continue
+                    slug = resp_row[RJK_SLUG]
+                    region_data = REGION_DATA_DICT[slug]
+                    region_data: RegionData
                     new_obj = website.models.Region(
                         sk3_id=wp_post_id,
-                        slug=resp_row[RJK_SLUG],
+                        slug=slug,
                         welcome_message_html=resp_row[RJK_WELCOME_MESSAGE],
-                        title=REGION_NAMES[resp_row[RJK_SLUG]]
+                        title=region_data.name,
+                        area=region_data.area
                     )
                     if existing_obj is not None:
                         nr_skipped += 1
@@ -261,10 +335,10 @@ def import_sk3_data(i_args: [str]):
                     logging.info(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
                     continue
             page_nr += 1
+    logging.info("=== Reading from sk3 API done. Now starting processing ===")
     process_tagg_rows()
     process_business_rows()
     clear_unused_tags_from_db()
-    logging.debug(f"Total number of datatypes: {len(data_type_full_name_list)}")
 
 
 LANG_CODE_EN = "en"
@@ -368,7 +442,7 @@ def process_business_rows():
         if len(description) > 12000:
             logging.info(f"INFO: Description for {title} is very long: {len(description)} characters")
         region_name = data_type_full_name.split("_")[0]
-        assert region_name in REGION_LIST
+        assert region_name in REGION_DATA_DICT.keys()
 
         region_obj = website.models.Region.objects.get(slug=region_name)
         logging.debug(f"{main_image_url=}")
@@ -483,7 +557,7 @@ class Command(django.core.management.base.BaseCommand):
         logging.debug(f"{args=}")
         logging.debug(f"{options=}")
         if options["clear"]:
-            result_text = input("Are you sure you want to delete the whole database? (y/n)")
+            result_text = input("Are you sure you want to delete the whole database? (y/n) ")
             if result_text == "y":
                 website.models.Region.objects.all().delete()
                 website.models.Tag.objects.all().delete()
