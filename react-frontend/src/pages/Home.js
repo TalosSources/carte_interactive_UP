@@ -159,8 +159,6 @@ function Home() {
 
     function sortInitiativesByDistanceToCenter(initiatives) {
         function initiativeDistanceFromMapCenter(initiative) {
-            console.log("current map center");
-            console.log(mapCenter);
             return Math.min(...initiative.locations.features.map(
                 feature => mapCenter.quickDistanceTo(initiativeLocationFeatureToGeoCoordinate(feature))
             ))
