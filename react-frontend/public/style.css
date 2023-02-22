@@ -3,7 +3,6 @@
     width: calc(50% - 2em);
     float: right;
     margin: 1em;
-    height: 100vh;
   }
   #cards-panel {
     width: 50%;
@@ -12,6 +11,12 @@
     height: 100vh;
     overflow: scroll;
   }
+}
+#map {
+  height: 100vh;
+}
+#cards-panel {
+  clear: left;
 }
 .card-title {
   font-weight: bold;
