@@ -222,7 +222,9 @@ function Home() {
 
     return (
         <div>
-            <h2>Smartakartan</h2>
+            <img id="logo" src="/sk-logotype-topbar.png"/>
+            <div id="sk-title">Smartakartan <a href="/gitver">4.0</a> /</div>
+            <div id="regionSelector">
             <RegionSelector
                 handleSelectChange={event => {
                     console.log(`handleSelectChange - event.target.value=${event.target.value}`);

@@ -60,3 +60,22 @@ ul {
   margin: 0pt;
   padding: 0pt;
 }
+
+#logo {
+  width: 3em;
+  float:left;
+  padding: 0.5em;
+}
+#sk-title {
+  float: left;
+  padding: 1.2em;
+  font-size: larger;
+  font-weight: bold;
+}
+#regionSelector {
+  padding: 1.5em;
+}
+
+#footer {
+  clear:both;
+}
