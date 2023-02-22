@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {MapContainer, TileLayer, Marker, Popup, useMapEvent} from 'react-leaflet';
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import { GeoCoordinate, BoundingBox } from "geocoordinate";
 
 import "leaflet/dist/leaflet.css";
@@ -42,6 +42,7 @@ function RegionSelector(props) {
 
 function Home() {
     let {regionSlug} = useParams();
+    const [queryParameters] = useSearchParams()
     const navigate = useNavigate();
     if (typeof regionSlug == 'undefined') {
         regionSlug = 'global';
@@ -49,7 +50,7 @@ function Home() {
     console.log(regionSlug);
     const [localizedInitiatives, setLocalizedInitiatives] = useState([]);
     const [globalInitiatives, setGlobalInitiatives] = useState([]);
-    const [searchString, setSearchString] = useState("");
+    const [searchString, setSearchString] = useState(queryParameters.get("s"));
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
     const [regionList, setRegionList] = useState([]);
     const [mapCenter, setMapCenter] = useState(GeoCoordinate({'latitude': 50, 'longitude': 12}));
@@ -58,7 +59,11 @@ function Home() {
     const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything);
     const [tags, setTags] = useState([]);
 
-    // first run
+    useEffect(() => {
+        //navigate('/r/' + activeRegionSlug);
+        navigate('/r/' + activeRegionSlug + "?s=" + searchString);
+    }, [activeRegionSlug, searchString]);
+    // fetch initial initiatives
     useEffect(() => {
         const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
         fetch(tag_api_url)
@@ -240,9 +245,7 @@ function Home() {
             <h2>Smartakartan</h2>
             <RegionSelector
                 handleSelectChange={event => {
-                    console.log(`handleSelectChange - event.target.value=${event.target.value}`);
                     const new_region_slug = event.target.value;
-                    navigate('/r/' + new_region_slug);
                     setActiveRegionSlug(new_region_slug);
                 }
                 }
@@ -271,7 +274,12 @@ function Home() {
                 <RegisterMapCenter/>
             </MapContainer>
             <div id="cards-panel">
-                Filter: <input name="search" onChange={event => setSearchString(event.target.value)}/>
+                Filter: <input name="search" value={searchString} onChange={event =>
+                        {
+                            const search_string = event.target.value;
+                            setSearchString(search_string)
+                        }
+                    }/>
                 <select defaultValue={WhatToShow.Everything} onChange={event => setInitiativesToShow(event.target.value)}>
                     <option value={WhatToShow.Everything}>
                         Show all
