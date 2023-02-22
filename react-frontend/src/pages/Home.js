@@ -119,6 +119,9 @@ function Home() {
                 ) ||
                 initiative.initiative_description_texts.some(idt =>
                     idt['text'].toLowerCase().includes(keyword)
+                ) ||
+                initiative.tags.some(tag =>
+                    tag.title.toLowerCase().includes(keyword)
                 )
             );
     };
