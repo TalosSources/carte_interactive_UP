@@ -218,10 +218,6 @@ function Home() {
 
     //markers
     const mapMarkers = renderMapMarkers(initiatives);
-    const listStyle={
-        display: "inline-block",
-        margin: "4px 8px"
-    }
 
     function leafletToGeoCoordinate(leafletCoordinate) {
         return GeoCoordinate({'longitude' : leafletCoordinate['lng'], 'latitude': leafletCoordinate['lat']});
@@ -251,20 +247,17 @@ function Home() {
                 }
                 value={activeRegionSlug}
                 regionList={regionList}
-            />
+            /></div>
             <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
-            <span>Top Tags:</span>
-            <ul style={listStyle}>
+                <div id="tagPanel">
                 {
                     top_tags.map((tagElement) => (
-                        <li style={listStyle} key={tagElement.id}>
-                            <a href={`/tag/${tagElement.id}`}>
-                                <p dangerouslySetInnerHTML={{__html: tagElement.title}}></p>
-                            </a>
-                        </li>
+                        <div class="proposedTag" onClick={() => setSearchString(searchString + " " + tagElement.title)}>
+                            <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
+                            <div class="tagValue">{tagEntropy[tagElement.id]}</div>
+                        </div>
                     ))
-                }
-            </ul>
+                }</div>
             <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false} gestureHandling={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
