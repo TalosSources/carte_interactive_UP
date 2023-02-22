@@ -68,19 +68,6 @@ function Home() {
                 console.log(response_json);
                 setTags(response_json);
             });
-    }, []);
-    function sortTagsByTotalInitiatives(tag_a, tag_b) {
-        return tag_b.initiatives.length - tag_a.initiatives.length
-    }
-    function tagEntropy(tag) {
-        return tag.initiatives.length * (localizedInitiatives.length + globalInitiatives.length -tag.initiatives.length)
-    }
-    function sortTagsByEntropy(tag_a, tag_b) {
-        return tagEntropy(tag_b) - tagEntropy(tag_a)
-    }
-    tags.sort(sortTagsByEntropy);
-    let top_tags = tags.slice(0, 5)
-    useEffect(() => {
         const initiatives_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/`;
         fetch(initiatives_api_url)
             .then(response => response.json())
@@ -118,9 +105,12 @@ function Home() {
     }
 
     // refresh cards
-    const keywords = searchString.split(' ');
 
-    function initiativeMatchesSearch(initiative) {
+    function initiativeMatchesCurrentSearch(initiative) {
+        return initiativeMatchesSearch(initiative, searchString)
+    }
+    function initiativeMatchesSearch(initiative, searchString) {
+        const keywords = searchString.split(' ');
         return keywords
             .map(keyword => keyword.toLowerCase())
             .every(keyword =>
@@ -193,8 +183,30 @@ function Home() {
     if (sorting === Sorting.Alphabetical) {
         initiatives = sortInitiativesByName(initiatives);
     }
-    initiatives = initiatives.filter(initiativeMatchesSearch);
+    initiatives = initiatives.filter(initiativeMatchesCurrentSearch);
     const renderedCards = renderCardCollection(initiatives);
+
+    // Prepare tags
+    /*
+    function sortTagsByTotalInitiatives(tag_a, tag_b) {
+        return tag_b.initiatives.length - tag_a.initiatives.length
+    }
+    */
+    function getEntropyOfTag(tag) {
+        //const tagged_initiatives = initiatives
+        //    .filter(initiative => initiative.tags.some(tag_b=>tag.id == tag_b.id));
+       const tagged_initiatives = initiatives
+           .filter(initiative => initiativeMatchesSearch(initiative, tag.title));
+        return tagged_initiatives.length * (initiatives.length - tagged_initiatives.length)
+    }
+    const tagEntropy = Object.fromEntries(tags.map(tag => [tag.id, getEntropyOfTag(tag)]));
+    function sortTagsByEntropy(tag_a, tag_b) {
+        return tagEntropy[tag_b.id] - tagEntropy[tag_a.id]
+    }
+    tags.sort(sortTagsByEntropy);
+    let top_tags = tags
+        .filter(tag => tagEntropy[tag.id] > 0)
+        //.slice(0, 5)
 
     //markers
     const mapMarkers = renderMapMarkers(initiatives);
