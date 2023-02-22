@@ -1,3 +1,9 @@
+"""
+The ViewSets are used by the API which can be seen here: http://localhost/api/
+
+Overview:
+models.py -> serializers.py -> views.py
+"""
 import rest_framework.response
 import rest_framework.viewsets
 
@@ -8,7 +14,21 @@ from . import serializers
 class LocationViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     queryset = models.Location.objects.all()
     serializer_class = serializers.LocationSerializer
-    # TODO: Filter and bbox
+    """
+    If we want to have bounding boxes for limiting the query results from the API we can add these lines:
+
+    bbox_filter_field = "coordinates"
+    filter_backends = (rest_framework_gis.filters.InBBOXFilter,)
+
+    This enables us to do API calls like this:
+    curl http://localhost/api/locations/?in_bbox=-90,-180,90,57.6
+    Please note the order: longitude, latitude
+    (This specific example will give part of the locations in Gothenburg
+
+    References:
+    * https://github.com/openwisp/django-rest-framework-gis#inbboxfilter
+    * https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/
+    """
 
 
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):

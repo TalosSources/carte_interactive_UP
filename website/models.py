@@ -1,8 +1,9 @@
+from django.contrib.gis import geos
 from django.contrib.gis.db import models as gis_models
 from django.db import models
 
 
-class Region(models.Model):
+class Region(gis_models.Model):
     sk3_id = models.IntegerField(null=True, blank=True, unique=True)
 
     title = models.CharField(max_length=127, unique=True)  # including "alla områden"
@@ -11,6 +12,10 @@ class Region(models.Model):
 
     # header_html = models.CharField(max_length=32767)
     welcome_message_html = models.CharField(max_length=32767)  # called welcome_message in sk3
+
+    area = gis_models.PolygonField(default=geos.Polygon(
+        geos.LinearRing(((12, 58), (12.1, 58.1), (12.1, 58.2), (12, 58)))
+    ))
 
     # footer_html = models.CharField(max_length=32767)
 

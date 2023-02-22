@@ -1,3 +1,60 @@
+"""
+> GeoFeatureModelSerializer is a subclass of rest_framework.ModelSerializer which will output data in a format that
+> is GeoJSON compatible.
+
+> GeoFeatureModelSerializer requires you to define a geo_field to be serialized as the "geometry".
+
+https://github.com/openwisp/django-rest-framework-gis#geofeaturemodelserializer
+
+
+ModelSerializer gives an array like this example below
+```
+[
+    {
+        "url": "http://localhost/api/initiatives/77/",
+        "id": 77,
+        "region": "http://localhost/api/regions/16/",
+        [etc]
+    },
+```
+
+GeoFeatureModelSerializer gives an object like this example below
+Please note:
+* any properties added by us are under obj->features->obj->properties
+* id is located directly under obj->features
+* the top-level object only contains "type" and "features"
+```
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "id": 323,
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    11.925602211999262,
+                    57.69513792779139
+                ]
+            },
+            "properties": {
+                "url": "http://localhost/api/locations/323/",
+                "title": "Såggatan 19",
+                "initiative": null
+            }
+        },
+        [etc]
+    ]
+}
+```
+
+References:
+* https://geojson.org/
+* https://github.com/openwisp/django-rest-framework-gis
+* https://www.django-rest-framework.org/
+
+"""
+
 from rest_framework import serializers
 from rest_framework_gis import serializers as gis_serializers
 
@@ -5,26 +62,10 @@ from . import models
 
 
 class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
-    """
-    > GeoFeatureModelSerializer is a subclass of rest_framework.ModelSerializer which will output data in a format that
-    > is GeoJSON compatible.
-
-    > GeoFeatureModelSerializer requires you to define a geo_field to be serialized as the "geometry".
-
-    > The primary key of the model (usually the "id" attribute) is automatically used as the id field of each GeoJSON
-    > Feature Object.
-
-    https://github.com/openwisp/django-rest-framework-gis#geofeaturemodelserializer
-    """
-
     class Meta:
         fields = ('url', "id", "title", "initiative")  # -shown under "Properties" in the API JSON
         geo_field = "coordinates"  # this string value must match the PointField field name in models.py
         model = models.Location
-        # TODO: bbox
-        # Two alternatives:
-        # https://github.com/openwisp/django-rest-framework-gis#bounding-box-auto_bbox-and-bbox_geo_field
-        # Also see this: https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/
 
 
 class InitiativeTitleTextSerializer(serializers.ModelSerializer):
@@ -39,9 +80,10 @@ class InitiativeDescriptionTextSerializer(serializers.ModelSerializer):
         fields = ['language_code', 'text']
 
 
-class RegionSerializer(serializers.HyperlinkedModelSerializer):
+class RegionSerializer(gis_serializers.GeoFeatureModelSerializer):
     class Meta:
         fields = ('url', 'id', 'slug', 'welcome_message_html', 'title')
+        geo_field = 'area'
         model = models.Region
 
 
