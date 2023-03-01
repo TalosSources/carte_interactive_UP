@@ -79,8 +79,8 @@ root@27a6ea382e00:/code#
 """
 
 
-@admin.register(models.Region)
-class RegionAdmin(admin.ModelAdmin):
+@gis_admin.register(models.Region)
+class RegionAdmin(gis_admin.GISModelAdmin):
     list_display = ("id", "sk3_id", "slug")
     readonly_fields = ("sk3_id",)
 

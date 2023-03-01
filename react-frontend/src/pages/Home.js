@@ -30,8 +30,8 @@ function RegionSelector(props) {
                 props.regionList.map(
                     (regionElement) => (
                         //<option key={regionElement.id} value={regionElement.id}>
-                        <option key={regionElement.id} value={regionElement.slug}>
-                            {regionElement.title}
+                        <option key={regionElement.id} value={regionElement.properties.slug}>
+                            {regionElement.properties.title}
                         </option>
                     )
                 )
@@ -100,14 +100,15 @@ function Home() {
         fetch(region_api_url)
             .then(r => r.json())
             .then(regions =>
-                setRegionList(regions)
+                setRegionList(regions['features'])
             )
             .catch(err => console.error(err));
     }, []);
 
     // refresh region
     const region_slug = activeRegionSlug;
-    const region = regionList.filter(r => r['slug'] === region_slug);
+    console.log(`regionList=${regionList}`)
+    const region = regionList.filter(r => r['properties']['slug'] === region_slug);
     let activeRegion;
     if (region.length == 0) {
         activeRegion = {
