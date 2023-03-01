@@ -1,3 +1,5 @@
+// @ts-check
+
 import React, {useState, useEffect} from "react";
 import {MapContainer, TileLayer, Marker, Popup, useMapEvent} from 'react-leaflet';
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
@@ -7,6 +9,8 @@ import "leaflet/dist/leaflet.css";
 
 import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
+import L from "leaflet";
+
 
 const Sorting = {
   Alphabetical: "1",
@@ -275,9 +279,9 @@ function Home() {
                 <div id="tagPanel">
                 {
                     top_tags.map((tagElement) => (
-                        <div class="proposedTag" onClick={() => setSearchString(searchString + " " + tagElement.title)}>
+                        <div className="proposedTag" onClick={() => setSearchString(searchString + " " + tagElement.title)}>
                             <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
-                            <div class="tagValue">{tagEntropy[tagElement.id]}</div>
+                            <div className="tagValue">{tagEntropy[tagElement.id]}</div>
                         </div>
                     ))
                 }</div>
