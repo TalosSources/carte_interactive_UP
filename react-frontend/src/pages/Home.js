@@ -51,10 +51,16 @@ function Home() {
     if (typeof regionSlug == 'undefined') {
         regionSlug = 'global';
     }
+    let urlSearchString;
+    if (queryParameters.has("s")) {
+        urlSearchString = queryParameters.get("s");
+    } else {
+        urlSearchString = "";
+    }
     console.log(regionSlug);
     const [localizedInitiatives, setLocalizedInitiatives] = useState([]);
     const [globalInitiatives, setGlobalInitiatives] = useState([]);
-    const [searchString, setSearchString] = useState(queryParameters.get("s"));
+    const [searchString, setSearchString] = useState(urlSearchString);
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
     const [regionList, setRegionList] = useState([]);
     const [mapCenter, setMapCenter] = useState(GeoCoordinate({'latitude': 50, 'longitude': 12}));
