@@ -122,11 +122,11 @@ function Home() {
                 initiative.initiative_title_texts.some(itt =>
                     itt['text'].toLowerCase().includes(keyword)
                 ) ||
-                initiative.initiative_description_texts.some(idt =>
-                    idt['text'].toLowerCase().includes(keyword)
-                ) ||
                 initiative.tags.some(tag =>
                     tag.title.toLowerCase().includes(keyword)
+                ) ||
+                initiative.initiative_description_texts.some(idt =>
+                    idt['text'].toLowerCase().includes(keyword)
                 )
             );
     };
@@ -200,21 +200,35 @@ function Home() {
         return tag_b.initiatives.length - tag_a.initiatives.length
     }
     */
-    function getEntropyOfTag(tag) {
-        //const tagged_initiatives = initiatives
-        //    .filter(initiative => initiative.tags.some(tag_b=>tag.id == tag_b.id));
-       const tagged_initiatives = initiatives
-           .filter(initiative => initiativeMatchesSearch(initiative, tag.title));
-        return tagged_initiatives.length * (initiatives.length - tagged_initiatives.length)
+    function calculateTagEntropy(initiatives) {
+        const tag_count = initiatives.reduce((map, initiative) =>
+            initiative.tags.reduce((map, tag) => {
+                if (map.has(tag.id)) {
+                    const n = map.get(tag.id);
+                    map.set(tag.id, n+1);
+                } else {
+                    map.set(tag.id, 1);
+                }
+                return map;
+            },
+            map),
+        new Map());
+        return Object.fromEntries(tags.map(tag => {
+            if (tag_count.has(tag.id)) {
+                const tc = tag_count.get(tag.id); 
+                return [tag.id, tc*(initiatives.length - tc)]
+            } else {
+                return [tag.id, 0]
+            }
+        }));
     }
-    const tagEntropy = Object.fromEntries(tags.map(tag => [tag.id, getEntropyOfTag(tag)]));
+    const tagEntropy = calculateTagEntropy(initiatives);
     function sortTagsByEntropy(tag_a, tag_b) {
         return tagEntropy[tag_b.id] - tagEntropy[tag_a.id]
     }
-    tags.sort(sortTagsByEntropy);
     let top_tags = tags
         .filter(tag => tagEntropy[tag.id] > 0)
-        //.slice(0, 5)
+    top_tags.sort(sortTagsByEntropy);
 
     //markers
     const mapMarkers = renderMapMarkers(initiatives);
