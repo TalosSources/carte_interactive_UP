@@ -249,7 +249,7 @@ function Home() {
                     ))
                 }
             </ul>
-            <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false} gestureHandling={true}>
+            <MapContainer id="map" center={[57.70, 11.97]} zoom={10} scrollWheelZoom={false} gestureHandling={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
