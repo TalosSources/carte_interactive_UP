@@ -2,11 +2,62 @@ import React, {useState, useEffect} from "react";
 import {MapContainer, TileLayer, Marker, Popup, useMapEvent} from 'react-leaflet';
 import {useNavigate, useParams} from "react-router-dom";
 import { GeoCoordinate, BoundingBox } from "geocoordinate";
+import styled from "styled-components";
 
 import "leaflet/dist/leaflet.css";
 
 import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
+
+const FloatingTop = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    position: relative;
+    top: 40px;
+`
+
+const MainContainer = styled.div`
+    background-color: indigo;
+    padding-top: 50px;
+    border-radius: 20px;
+    display: flex: 
+    flex-directon: column;
+
+    `
+const Sides = styled.div`
+    display: flex;
+    flex-direction: row;
+`
+
+const LeftSide = styled.div`
+    flex: 1;
+`
+const RightSide = styled.div`
+    flex: 1;
+`
+
+const WhiteLineButton = styled.button`
+    border-width: 2px;
+    border-color: white;
+    border-radius: 1rem;
+`;
+
+const MainTagButton = styled.div`
+    background-color: WhiteSmoke;
+    border-radius: 1rem;
+    padding: 5px;
+    text-align: center;
+    border-color: gray;
+    border-width: 2px;
+    color: black;
+`
+const SearchRow = styled.div`
+    display: flex;
+    flex-direction: row;
+`
 
 const Sorting = {
   Alphabetical: "1",
@@ -19,6 +70,7 @@ const WhatToShow = {
     WithoutGlobal: "3",
 }
 import {renderCardCollection} from "../Cards";
+import { Icon } from "leaflet";
 
 // Components
 function RegionSelector(props) {
@@ -221,68 +273,118 @@ function Home() {
     }
 
     return (
-        <div>
-            <img id="logo" src="/sk-logotype-topbar.png"/>
-            <div id="sk-title">Smartakartan <a href="/gitver">4.0</a> /</div>
-            <div id="regionSelector">
-            <RegionSelector
-                handleSelectChange={event => {
-                    console.log(`handleSelectChange - event.target.value=${event.target.value}`);
-                    const new_region_slug = event.target.value;
-                    navigate('/r/' + new_region_slug);
-                    setActiveRegionSlug(new_region_slug);
-                }
-                }
-                value={activeRegionSlug}
-                regionList={regionList}
-            />
-            <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
-            <span>Top Tags:</span>
-            <ul style={listStyle}>
-                {
-                    top_tags.map((tagElement) => (
-                        <li style={listStyle} key={tagElement.id}>
-                            <a href={`/tag/${tagElement.id}`}>
-                                <p dangerouslySetInnerHTML={{__html: tagElement.title}}></p>
-                            </a>
-                        </li>
-                    ))
-                }
-            </ul>
-            <MapContainer id="map" center={[57.70, 11.97]} zoom={10} scrollWheelZoom={false} gestureHandling={true}>
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {mapMarkers}
-                <RegisterMapCenter/>
-            </MapContainer>
-            <div id="cards-panel">
-                Filter: <input name="search" onChange={event => setSearchString(event.target.value)}/>
-                <select defaultValue={WhatToShow.Everything} onChange={event => setInitiativesToShow(event.target.value)}>
-                    <option value={WhatToShow.Everything}>
-                        Show all
-                    </option>
-                    <option value={WhatToShow.WithoutGlobal}>
-                        Hide global initiatives
-                    </option>
-                    <option value={WhatToShow.OnlyOnMap}>
-                        only show initiatives on the map
-                    </option>
-                </select>
-                <select defaultValue={Sorting.Distance} onChange={event => setSorting(event.target.value)}>
-                    <option value={Sorting.Distance}>
-                        Sort by distance
-                    </option>
-                    <option value={Sorting.Alphabetical}>
-                        Sort alphabetically
-                    </option>
-                </select>
-                <div id="cards-canvas">
-                    {renderedCards}
+<>
+            <nav className="border-bottom border-bottom-2 border-bottom-danger d-flex flex-row">
+
+                <img id="logo" src="/sk-logotype-topbar.png"/>
+                <div id="sk-title">Smartakartan <a href="/gitver">4.0</a> /
                 </div>
-            </div>
-        </div>
+                <div id="regionSelector">
+                    <RegionSelector
+                        handleSelectChange={event => {
+                            console.log(`handleSelectChange - event.target.value=${event.target.value}`);
+                            const new_region_slug = event.target.value;
+                            navigate('/r/' + new_region_slug);
+                            setActiveRegionSlug(new_region_slug);
+                        }
+                    }
+                    value={activeRegionSlug}
+                    regionList={regionList}
+                    />
+                </div>
+
+                <div>
+                    <span>AAAAAA</span>
+                    <span>BBBBBB</span>
+                    <span>Om oss (i)</span>
+                </div>
+                <div id="menu">==</div>
+            </nav>
+            <header>
+
+                <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
+
+            </header>
+            <FloatingTop>
+                <div className="ExampleThing" style={{flex: 2, height: "20rem", marginRight: "10px", backgroundColor: "gray"}} ></div>
+                <div className="GetInvolved" style={{flex: 1, height: "20rem", backgroundColor: "green"}}></div>
+            </FloatingTop>
+            <MainContainer>
+                <SearchRow>
+                <div>Filter: <input name="search" onChange={event => setSearchString(event.target.value)}/>
+                </div>
+                <div className="vr"/>
+                <div class="custom-control custom-switch">
+  <label class="custom-control-label" for="customSwitches">Öppet nu</label>
+  <input type="checkbox" class="custom-control-input" id="customSwitches" />
+</div>
+                
+                </SearchRow>
+                    <div className="tags-container">
+                    <span>Top Tags:</span>
+
+                    <div className="tagContainer d-flex flex-row">
+
+                        {
+                            top_tags.map((tagElement) => (
+                                <a href={`/tag/${tagElement.id}`}><MainTagButton><p>{tagElement.title}</p>
+                                </MainTagButton></a>
+                            ))
+                        }
+
+                    </div>
+                </div>
+              
+
+                {/* This should be its own component, probably */}
+                <Sides>
+
+                <LeftSide>
+
+                    <select defaultValue={WhatToShow.Everything} onChange={event => setInitiativesToShow(event.target.value)}>
+                        <option value={WhatToShow.Everything}>
+                            Show all
+                        </option>
+                        <option value={WhatToShow.WithoutGlobal}>
+                            Hide global initiatives
+                        </option>
+                        <option value={WhatToShow.OnlyOnMap}>
+                            only show initiatives on the map
+                        </option>
+                    </select>
+                    <select defaultValue={Sorting.Distance} onChange={event => setSorting(event.target.value)}>
+                        <option value={Sorting.Distance}>
+                            Sort by distance
+                        </option>
+                        <option value={Sorting.Alphabetical}>
+                            Sort alphabetically
+                        </option>
+                    </select>
+                    <div id="cards-canvas">
+                        {renderedCards}
+                    </div>
+                </LeftSide>
+                <RightSide>
+
+                    <div className="d-flex flex-row">
+                        <WhiteLineButton>Föreslå en verksamhet</WhiteLineButton>
+                        <WhiteLineButton>Bli volontär</WhiteLineButton>
+                        <WhiteLineButton>Starta en egen grej</WhiteLineButton>
+                    </div>
+                    <MapContainer id="map" center={[57.70, 11.97]} zoom={10} scrollWheelZoom={false} gestureHandling={true}>
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                        {mapMarkers}
+                        <RegisterMapCenter/>
+                    </MapContainer>
+                </RightSide>
+            </Sides>
+
+
+            </MainContainer>
+        </>
     );
 }
 
