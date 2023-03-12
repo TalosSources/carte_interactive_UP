@@ -1,12 +1,16 @@
+// @ts-check
+
 import React, {useState, useEffect} from "react";
 import {MapContainer, TileLayer, Marker, Popup, useMapEvent} from 'react-leaflet';
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import { GeoCoordinate, BoundingBox } from "geocoordinate";
 
 import "leaflet/dist/leaflet.css";
 
 import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
+import L from "leaflet";
+
 
 const Sorting = {
   Alphabetical: "1",
@@ -19,6 +23,7 @@ const WhatToShow = {
     WithoutGlobal: "3",
 }
 import {renderCardCollection} from "../Cards";
+import { createBrowserHistory } from "@remix-run/router";
 
 // Components
 function RegionSelector(props) {
@@ -42,15 +47,34 @@ function RegionSelector(props) {
 
 function Home() {
     let {regionSlug} = useParams();
+    const [queryParameters] = useSearchParams()
     const navigate = useNavigate();
     if (typeof regionSlug == 'undefined') {
         regionSlug = 'global';
     }
+    let urlSearchString;
+    if (queryParameters.has("s")) {
+        urlSearchString = queryParameters.get("s");
+        if (urlSearchString == null) {
+            urlSearchString = "";
+        }
+    } else {
+        urlSearchString = "";
+    }
+    let urlActiveTags;
+    if (queryParameters.has("t") && !(queryParameters.get("t")==null) && !(queryParameters.get("t")=="")) {
+        urlActiveTags = queryParameters.get("t")?.split(",");
+    } else {
+        urlActiveTags = [];
+    }
+    //console.log("UrlActiveTags")
+    //console.log(urlActiveTags)
     console.log(regionSlug);
     const [localizedInitiatives, setLocalizedInitiatives] = useState([]);
     const [globalInitiatives, setGlobalInitiatives] = useState([]);
-    const [searchString, setSearchString] = useState("");
+    const [searchString, setSearchString] = useState(urlSearchString);
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
+    const [activeTags, setActiveTags] = useState(urlActiveTags);
     const [regionList, setRegionList] = useState([]);
     const [mapCenter, setMapCenter] = useState(GeoCoordinate({'latitude': 50, 'longitude': 12}));
     const [mapBounds, setMapBounds] = useState(new BoundingBox());
@@ -58,7 +82,13 @@ function Home() {
     const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything);
     const [tags, setTags] = useState([]);
 
-    // first run
+    useEffect(() => {
+        //navigate('/r/' + activeRegionSlug);
+        const history = createBrowserHistory();
+        const tagPart = activeTags.join(",")
+        history.replace('/r/' + activeRegionSlug + "?s=" + searchString + "&t=" + tagPart);
+    }, [activeRegionSlug, activeTags, searchString]);
+    // fetch initial initiatives
     useEffect(() => {
         const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
         fetch(tag_api_url)
@@ -68,19 +98,6 @@ function Home() {
                 console.log(response_json);
                 setTags(response_json);
             });
-    }, []);
-    function sortTagsByTotalInitiatives(tag_a, tag_b) {
-        return tag_b.initiatives.length - tag_a.initiatives.length
-    }
-    function tagEntropy(tag) {
-        return tag.initiatives.length * (localizedInitiatives.length + globalInitiatives.length -tag.initiatives.length)
-    }
-    function sortTagsByEntropy(tag_a, tag_b) {
-        return tagEntropy(tag_b) - tagEntropy(tag_a)
-    }
-    tags.sort(sortTagsByEntropy);
-    let top_tags = tags.slice(0, 5)
-    useEffect(() => {
         const initiatives_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/`;
         fetch(initiatives_api_url)
             .then(response => response.json())
@@ -119,14 +136,23 @@ function Home() {
     }
 
     // refresh cards
-    const keywords = searchString.split(' ');
 
-    function initiativeMatchesSearch(initiative) {
+    function initiativeMatchesCurrentSearch(initiative) {
+        return initiativeMatchesSearch(initiative, searchString)
+    }
+    function initiativeMatchCurrentTags(initiative) {
+        return activeTags.every(tagSlug => initiative.tags.some(iTag => iTag.slug == tagSlug))
+    }
+    function initiativeMatchesSearch(initiative, searchString) {
+        const keywords = searchString.split(' ');
         return keywords
             .map(keyword => keyword.toLowerCase())
             .every(keyword =>
                 initiative.initiative_title_texts.some(itt =>
                     itt['text'].toLowerCase().includes(keyword)
+                ) ||
+                initiative.tags.some(tag =>
+                    tag.title.toLowerCase().includes(keyword)
                 ) ||
                 initiative.initiative_description_texts.some(idt =>
                     idt['text'].toLowerCase().includes(keyword)
@@ -192,15 +218,48 @@ function Home() {
     if (sorting === Sorting.Alphabetical) {
         initiatives = sortInitiativesByName(initiatives);
     }
-    initiatives = initiatives.filter(initiativeMatchesSearch);
-    const renderedCards = renderCardCollection(initiatives);
+    initiatives = initiatives
+        .filter(initiativeMatchesCurrentSearch)
+        .filter(initiativeMatchCurrentTags);
+
+    // Prepare tags
+    /*
+    function sortTagsByTotalInitiatives(tag_a, tag_b) {
+        return tag_b.initiatives.length - tag_a.initiatives.length
+    }
+    */
+    function calculateTagEntropy(initiatives) {
+        const tag_count = initiatives.reduce((map, initiative) =>
+            initiative.tags.reduce((map, tag) => {
+                if (map.has(tag.id)) {
+                    const n = map.get(tag.id);
+                    map.set(tag.id, n+1);
+                } else {
+                    map.set(tag.id, 1);
+                }
+                return map;
+            },
+            map),
+        new Map());
+        return Object.fromEntries(tags.map(tag => {
+            if (tag_count.has(tag.id)) {
+                const tc = tag_count.get(tag.id); 
+                return [tag.id, tc*(initiatives.length - tc)]
+            } else {
+                return [tag.id, 0]
+            }
+        }));
+    }
+    const tagEntropy = calculateTagEntropy(initiatives);
+    function sortTagsByEntropy(tag_a, tag_b) {
+        return tagEntropy[tag_b.id] - tagEntropy[tag_a.id]
+    }
+    let top_tags = tags
+        .filter(tag => tagEntropy[tag.id] > 0)
+    top_tags.sort(sortTagsByEntropy);
 
     //markers
     const mapMarkers = renderMapMarkers(initiatives);
-    const listStyle={
-        display: "inline-block",
-        margin: "4px 8px"
-    }
 
     function leafletToGeoCoordinate(leafletCoordinate) {
         return GeoCoordinate({'longitude' : leafletCoordinate['lng'], 'latitude': leafletCoordinate['lat']});
@@ -218,15 +277,14 @@ function Home() {
         })
         return null;
     }
+    const renderedCards = renderCardCollection(initiatives, (clickedSlug) => {setActiveTags(activeTags.concat([clickedSlug]))}, tagEntropy);
 
     return (
         <div>
             <h2>Smartakartan</h2>
             <RegionSelector
                 handleSelectChange={event => {
-                    console.log(`handleSelectChange - event.target.value=${event.target.value}`);
                     const new_region_slug = event.target.value;
-                    navigate('/r/' + new_region_slug);
                     setActiveRegionSlug(new_region_slug);
                 }
                 }
@@ -234,18 +292,6 @@ function Home() {
                 regionList={regionList}
             />
             <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
-            <span>Top Tags:</span>
-            <ul style={listStyle}>
-                {
-                    top_tags.map((tagElement) => (
-                        <li style={listStyle} key={tagElement.id}>
-                            <a href={`/tag/${tagElement.id}`}>
-                                <p dangerouslySetInnerHTML={{__html: tagElement.title}}></p>
-                            </a>
-                        </li>
-                    ))
-                }
-            </ul>
             <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false} gestureHandling={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -255,7 +301,33 @@ function Home() {
                 <RegisterMapCenter/>
             </MapContainer>
             <div id="cards-panel">
-                Filter: <input name="search" onChange={event => setSearchString(event.target.value)}/>
+                <div id="tagPanel">
+                {
+                    activeTags.map(tagSlug => {
+                        const tagElement = tags.filter(tag => tag.slug == tagSlug)[0];
+                        if (typeof tagElement == "undefined") {
+                            return ""
+                        }
+                        return <div className="selectedTag" onClick={() => setActiveTags(activeTags.filter(ts => ts !== tagSlug))}>
+                            <div dangerouslySetInnerHTML={{__html: "X " + tagElement.title}}></div>
+                            <div className="tagValue">{tagEntropy[tagElement.id]}</div>
+                        </div>
+                    })
+                }
+                {
+                    top_tags.map((tagElement) => (
+                        <div className="proposedTag" onClick={() => setActiveTags(activeTags.concat([tagElement.slug]))}>
+                            <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
+                            <div className="tagValue">{tagEntropy[tagElement.id]}</div>
+                        </div>
+                    ))
+                }</div>
+                Filter: <input name="search" value={searchString} onChange={event =>
+                        {
+                            const search_string = event.target.value;
+                            setSearchString(search_string)
+                        }
+                    }/>
                 <select defaultValue={WhatToShow.Everything} onChange={event => setInitiativesToShow(event.target.value)}>
                     <option value={WhatToShow.Everything}>
                         Show all
