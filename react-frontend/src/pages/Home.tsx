@@ -1,5 +1,3 @@
-// @ts-check
-
 import React, {useState, useEffect} from "react";
 import {MapContainer, TileLayer, Marker, Popup, useMapEvent} from 'react-leaflet';
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
@@ -11,39 +9,30 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 import L from "leaflet";
+import {renderCardCollection} from "../Cards";
+import GestureHandling from "leaflet-gesture-handling";
 
-class Tag {
-    /**
-     * @type {number}
-     */
-    id;
-    /**
-     * @type {string}
-     */
-    title;
+export interface Tag {
+    id : number;
+    title : string;
 }
 
-class Initiative {
-    /**
-     * @type {number}
-     */
-    id;
-    /**
-     * @type {Tag[]}
-     */
-    tags;
-    /**
-     * @type {{ features: Feature[]; }}
-     */
-    locations;
-    initiative_title_texts;
-    initiative_description_texts;
+export interface Initiative {
+    id : number;
+    tags : Tag[];
+    locations : {features : Feature[]};
+    main_image_url : string;
+    initiative_title_texts : {text : string}[];
+    initiative_description_texts : {text : string}[];
 }
-class Feature {
-    /**
-     * @type {{geometry: {coordinates: number[]}}}
-     */
-    geometry;
+interface Feature {
+    geometry:{coordinates: number[]};
+}
+
+interface Region {
+    id : number;
+    slug : string;
+    title : string;
 }
 
 const Sorting = {
@@ -56,10 +45,16 @@ const WhatToShow = {
     OnlyOnMap: "2",
     WithoutGlobal: "3",
 }
-import {renderCardCollection} from "../Cards";
+class EnabledGestureHandling extends GestureHandling {
+    constructor(arg: L.Map) {
+        super(arg)
+        this.enable()
+    }
+}
+L.Map.addInitHook("addHandler", "gestureHandling", EnabledGestureHandling);
 
 // Components
-function RegionSelector(props) {
+function RegionSelector(props: { value: string; handleSelectChange: React.ChangeEventHandler<HTMLSelectElement>; regionList: Region[]; }) {
     // Inspiration: https://reactjs.org/docs/forms.html#the-select-tag
     console.log(props.value);
     return (
@@ -78,7 +73,7 @@ function RegionSelector(props) {
     );
 }
 
-function Home() {
+export default function Home() {
     let {regionSlug} = useParams();
     const [queryParameters] = useSearchParams()
     const navigate = useNavigate();
@@ -95,13 +90,8 @@ function Home() {
         urlSearchString = "";
     }
     console.log(regionSlug);
-    /**
-     * @type {Initiative[]}
-     */
-    let globalInitiatives;
-    let setGlobalInitiatives;
     const [localizedInitiatives, setLocalizedInitiatives] = useState([]);
-    [globalInitiatives, setGlobalInitiatives] = useState([]);
+    const [globalInitiatives, setGlobalInitiatives] = useState<Initiative[]>([]);
     const [searchString, setSearchString] = useState(urlSearchString);
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
     const [regionList, setRegionList] = useState([]);
@@ -109,12 +99,7 @@ function Home() {
     const [mapBounds, setMapBounds] = useState(new GeoBoundingBox());
     const [sorting, setSorting] = useState(Sorting.Distance);
     const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything);
-    /**
-     * @type {Tag[]}
-     */
-    let tags;
-    let setTags;
-    [tags, setTags] = useState([]);
+    const [tags, setTags] = useState<Tag[]>([]);
 
     useEffect(() => {
         //navigate('/r/' + activeRegionSlug);
@@ -135,7 +120,7 @@ function Home() {
             .then(response => response.json())
             .then(initiatives => {
                 const [global, local] = initiatives
-                    .reduce((/** @type {Initiative[]} */ result, /** @type {Initiative} */ initiative) => {
+                    .reduce((result: Initiative[][], initiative: Initiative) => {
                         result[initiative.locations.features.length > 0 ? 1 : 0].push(initiative);
                         return result;
                     },
@@ -168,17 +153,11 @@ function Home() {
 
     // refresh cards
 
-    /**
-     * @param {Initiative} initiative
-     */
-    function initiativeMatchesCurrentSearch(initiative) {
+    function initiativeMatchesCurrentSearch(initiative: Initiative) {
         return initiativeMatchesSearch(initiative, searchString)
     }
-    /**
-     * @param {Initiative} initiative
-     * @param {string} searchString
-     */
-    function initiativeMatchesSearch(initiative, searchString) {
+
+    function initiativeMatchesSearch(initiative: Initiative, searchString: string) {
         const keywords = searchString.split(' ');
         return keywords
             .map(keyword => keyword.toLowerCase())
@@ -194,27 +173,18 @@ function Home() {
                 )
             );
     };
-    /**
-     * @param {Initiative} initiative
-     */
-    function initiativeInsideMap(initiative) {
+    function initiativeInsideMap(initiative: Initiative) {
         return initiative.locations.features.some(
             feature => mapBounds.contains(initiativeLocationFeatureToGeoCoordinate(feature))
         );
     }
 
-    /**
-     * @param {Feature} feature
-     */
-    function initiativeLocationFeatureToGeoCoordinate(feature) {
-        return new GeoCoordinate({'longitude': feature['geometry']['coordinates'][0], 'latitude': feature['geometry']['coordinates'][1]})
+    function initiativeLocationFeatureToGeoCoordinate(feature: Feature) {
+        return new GeoCoordinate({'longitude': feature.geometry.coordinates[0], 'latitude': feature['geometry']['coordinates'][1]})
     }
 
-    /**
-     * @param {Initiative[]} initiatives
-     */
-    function sortInitiativesByName(initiatives) {
-        let names = [];
+    function sortInitiativesByName(initiatives : Initiative[]) {
+        let names : [number, string][] = [];
         for (var i = 0; i < initiatives.length; i++) {
             names.push([i, initiatives[i].initiative_title_texts[0]['text']]);
         }
@@ -228,14 +198,8 @@ function Home() {
         return sortedInitiatives;
     }
 
-    /**
-     * @param {Initiative[]} initiatives
-     */
-    function sortInitiativesByDistanceToCenter(initiatives) {
-        /**
-         * @param {Initiative} initiative
-         */
-        function initiativeDistanceFromMapCenter(initiative) {
+    function sortInitiativesByDistanceToCenter(initiatives: Initiative[]) {
+        function initiativeDistanceFromMapCenter(initiative: Initiative) {
             console.log("current map center");
             console.log(mapCenter);
             return Math.min(...initiative.locations.features.map(
@@ -257,10 +221,7 @@ function Home() {
         return sortedInitiatives;
     }
 
-    /**
-     * @type {Initiative[]}
-     */
-    let initiatives = localizedInitiatives;
+    let initiatives: Initiative[] = localizedInitiatives;
     if (initiativesToShow === WhatToShow.OnlyOnMap) {
         initiatives = initiatives.filter(initiativeInsideMap);
     }
@@ -282,10 +243,7 @@ function Home() {
         return tag_b.initiatives.length - tag_a.initiatives.length
     }
     */
-    /**
-     * @param {Initiative[]} initiatives
-     */
-    function calculateTagEntropy(initiatives) {
+    function calculateTagEntropy(initiatives: Initiative[]) {
         const tag_count = initiatives.reduce((map, initiative) =>
             initiative.tags.reduce((map, tag) => {
                 if (map.has(tag.id)) {
@@ -308,11 +266,7 @@ function Home() {
         }));
     }
     const tagEntropy = calculateTagEntropy(initiatives);
-    /**
-     * @param {Tag} tag_a
-     * @param {Tag} tag_b
-     */
-    function sortTagsByEntropy(tag_a, tag_b) {
+    function sortTagsByEntropy(tag_a: Tag, tag_b: Tag) {
         return tagEntropy[tag_b.id] - tagEntropy[tag_a.id]
     }
     let top_tags = tags
@@ -322,7 +276,7 @@ function Home() {
     //markers
     const mapMarkers = renderMapMarkers(initiatives);
 
-    function leafletToGeoCoordinate(leafletCoordinate) {
+    function leafletToGeoCoordinate(leafletCoordinate: { lng:number; lat:number; }) {
         return new GeoCoordinate({'longitude' : leafletCoordinate['lng'], 'latitude': leafletCoordinate['lat']});
     }
 
@@ -352,7 +306,7 @@ function Home() {
                 regionList={regionList}
             />
             <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
-            <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false} gestureHandling={true}>
+            <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -405,15 +359,8 @@ function Home() {
 
 // Helpers
 
-/**
- * @param {Initiative[]} initiatives
- */
-function renderMapMarkers(initiatives) {
-    /**
-     * @param {Initiative} initiative
-     * @param {Feature} feature
-     */
-    function feature2Marker(initiative, feature) {
+function renderMapMarkers(initiatives: Initiative[]) {
+    function feature2Marker(initiative: Initiative, feature: Feature) {
         let title = initiative
             .initiative_title_texts[0]['text'];
         return (
@@ -429,5 +376,3 @@ function renderMapMarkers(initiatives) {
         initiative.locations.features.map(feature => feature2Marker(initiative, feature))
     ).flat(1);
 }
-
-export default Home;

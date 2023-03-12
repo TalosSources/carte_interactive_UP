@@ -1,13 +1,15 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {renderCardCollection} from "../Cards";
+import { Tag } from "./Home";
+import { Initiative } from "./Home";
 
-function renderTags(initiative) {
+function renderTags(initiative : Initiative) {
     return <div id="tagPanel">
     {
         initiative.tags.map((tagElement) => (
             <a href={`/?s=${tagElement.title}`}>
-            <div class="proposedTag">
+            <div className="proposedTag">
                 <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
             </div></a>
         ))
@@ -15,7 +17,7 @@ function renderTags(initiative) {
 }
 
 
-function getTitle(initiative) {
+function getTitle(initiative : Initiative) {
     console.log("getTitle")
     if (typeof initiative.initiative_title_texts != 'undefined') {
         console.log(initiative.initiative_title_texts)
@@ -24,7 +26,7 @@ function getTitle(initiative) {
 }
 
 
-function getDescription(initiative) {
+function getDescription(initiative : Initiative) {
     console.log("getDescription")
     if (typeof initiative.initiative_description_texts != 'undefined') {
         console.log(initiative.initiative_description_texts)
@@ -33,12 +35,12 @@ function getDescription(initiative) {
 }
 
 
-function Details() {
+export default function Details() {
     const {initiativeId} = useParams();
 
     const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/` + initiativeId;
-    const [initiative, setInitiative] = useState({tags: []});
-    const [initiatives, setInitiatives] = useState([]);
+    const [initiative, setInitiative] = useState<Initiative>({tags: [], locations:{features:[]},id:0, main_image_url: "",initiative_title_texts: [ ],initiative_description_texts: [ ],});
+    const [initiatives, setInitiatives] = useState<Initiative[]>([]);
 
     useEffect(() => {
         fetch(initiative_api_url)
@@ -61,12 +63,12 @@ function Details() {
     }, []);
 
     const similarInitiatives = initiatives
-    .map(initiativeB => 
-        [
+    .map(function(initiativeB) : [number, Initiative] { 
+        return [
             initiative.tags.filter(tagA => initiativeB.tags.some(tagB => tagA.id === tagB.id)).length,
             initiativeB
         ]
-    )
+    })
     .filter(([c,i]) => c>0)
     .sort(([ca,ia], [cb, ib]) => cb - ca)
     .slice(1,6)
@@ -88,5 +90,3 @@ function Details() {
         </div>
     );
 };
-
-export default Details;

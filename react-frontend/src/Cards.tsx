@@ -1,18 +1,21 @@
-function SkCard(props) {
+import React from "react";
+import { Initiative } from "./pages/Home";
+
+function SkCard(props: { id: number; image_url: string; title: string; description: string; }) {
     // CSS in React: https://www.w3schools.com/react/react_css.asp
     return (
         <a href={'/details/' + props.id}>
-            <img class="card-image" src={props.image_url}/>
-            <div class="card-text">
-                <div class="card-title" dangerouslySetInnerHTML={{__html: props.title}}></div>
-                <div class="card-description" dangerouslySetInnerHTML={{__html: props.description}}></div>
+            <img className="card-image" src={props.image_url}/>
+            <div className="card-text">
+                <div className="card-title" dangerouslySetInnerHTML={{__html: props.title}}></div>
+                <div className="card-description" dangerouslySetInnerHTML={{__html: props.description}}></div>
             </div>
         </a>
     );
 }
 
-export function renderCardCollection(initiatives) {
-    return <div class="cards">
+export function renderCardCollection(initiatives: Initiative[]) {
+    return <div className="cards">
             {initiatives.map(
               (initiativeElement) => {
                 let title = initiativeElement
@@ -20,10 +23,9 @@ export function renderCardCollection(initiatives) {
                 let description = initiativeElement
                     .initiative_description_texts[0]['text'];
                 return (
-                    <div class="card" key={initiativeElement.id}>
+                    <div className="card" key={initiativeElement.id}>
                         <SkCard
                             title={title}
-                            url={initiativeElement.url}
                             id={initiativeElement.id}
                             description={description}
                             image_url={initiativeElement.main_image_url}

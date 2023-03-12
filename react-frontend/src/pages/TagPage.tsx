@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {renderCardCollection} from "../Cards";
+import { Initiative } from "./Home";
 
 const TagPage = () => {
     const {tagId} = useParams();
 
     const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/` + tagId;
-    const [tag, setTag] = useState({'initiatives':[]});
-    const [initiatives, setInitiatives] = useState([]);
+    const [tag, setTag] = useState({title:"",'initiatives':[]});
+    const [initiatives, setInitiatives] = useState<Initiative[]>([]);
 
     useEffect(() => {
         fetch(tag_api_url)
