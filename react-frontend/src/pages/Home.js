@@ -23,6 +23,7 @@ const WhatToShow = {
     WithoutGlobal: "3",
 }
 import {renderCardCollection} from "../Cards";
+import { createBrowserHistory } from "@remix-run/router";
 
 // Components
 function RegionSelector(props) {
@@ -60,11 +61,20 @@ function Home() {
     } else {
         urlSearchString = "";
     }
+    let urlActiveTags;
+    if (queryParameters.has("t") && !(queryParameters.get("t")==null) && !(queryParameters.get("t")=="")) {
+        urlActiveTags = queryParameters.get("t")?.split(",");
+    } else {
+        urlActiveTags = [];
+    }
+    //console.log("UrlActiveTags")
+    //console.log(urlActiveTags)
     console.log(regionSlug);
     const [localizedInitiatives, setLocalizedInitiatives] = useState([]);
     const [globalInitiatives, setGlobalInitiatives] = useState([]);
     const [searchString, setSearchString] = useState(urlSearchString);
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
+    const [activeTags, setActiveTags] = useState(urlActiveTags);
     const [regionList, setRegionList] = useState([]);
     const [mapCenter, setMapCenter] = useState(GeoCoordinate({'latitude': 50, 'longitude': 12}));
     const [mapBounds, setMapBounds] = useState(new BoundingBox());
@@ -74,8 +84,10 @@ function Home() {
 
     useEffect(() => {
         //navigate('/r/' + activeRegionSlug);
-        navigate('/r/' + activeRegionSlug + "?s=" + searchString);
-    }, [activeRegionSlug, searchString]);
+        const history = createBrowserHistory();
+        const tagPart = activeTags.join(",")
+        history.replace('/r/' + activeRegionSlug + "?s=" + searchString + "&t=" + tagPart);
+    }, [activeRegionSlug, activeTags, searchString]);
     // fetch initial initiatives
     useEffect(() => {
         const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
@@ -126,6 +138,9 @@ function Home() {
 
     function initiativeMatchesCurrentSearch(initiative) {
         return initiativeMatchesSearch(initiative, searchString)
+    }
+    function initiativeMatchCurrentTags(initiative) {
+        return activeTags.every(tagSlug => initiative.tags.some(iTag => iTag.slug == tagSlug))
     }
     function initiativeMatchesSearch(initiative, searchString) {
         const keywords = searchString.split(' ');
@@ -204,7 +219,9 @@ function Home() {
     if (sorting === Sorting.Alphabetical) {
         initiatives = sortInitiativesByName(initiatives);
     }
-    initiatives = initiatives.filter(initiativeMatchesCurrentSearch);
+    initiatives = initiatives
+        .filter(initiativeMatchesCurrentSearch)
+        .filter(initiativeMatchCurrentTags);
     const renderedCards = renderCardCollection(initiatives);
 
     // Prepare tags
@@ -287,8 +304,20 @@ function Home() {
             <div id="cards-panel">
                 <div id="tagPanel">
                 {
+                    activeTags.map(tagSlug => {
+                        const tagElement = tags.filter(tag => tag.slug == tagSlug)[0];
+                        if (typeof tagElement == "undefined") {
+                            return ""
+                        }
+                        return <div className="selectedTag" onClick={() => setActiveTags(activeTags.filter(ts => ts !== tagSlug))}>
+                            <div dangerouslySetInnerHTML={{__html: "X " + tagElement.title}}></div>
+                            <div className="tagValue">{tagEntropy[tagElement.id]}</div>
+                        </div>
+                    })
+                }
+                {
                     top_tags.map((tagElement) => (
-                        <div className="proposedTag" onClick={() => setSearchString(searchString + " " + tagElement.title)}>
+                        <div className="proposedTag" onClick={() => setActiveTags(activeTags.concat([tagElement.slug]))}>
                             <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
                             <div className="tagValue">{tagEntropy[tagElement.id]}</div>
                         </div>

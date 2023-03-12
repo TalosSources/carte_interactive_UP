@@ -68,6 +68,18 @@ ul {
   margin: 0pt;
   padding: 0pt;
 }
+.selectedTag:hover {
+  background-color: rgb(226, 111, 117);
+}
+.selectedTag {
+  cursor: pointer;
+  /*float: left;*/
+  display: inline-block;
+  background-color: rgb(87, 170, 87);
+  margin: 0.2em;
+  padding: 0.2em;
+  border-radius: 0.3em;
+}
 
 .proposedTag {
   cursor: pointer;
