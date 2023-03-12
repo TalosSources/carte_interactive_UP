@@ -124,12 +124,12 @@ function Home() {
 
     // refresh region
     const region_slug = activeRegionSlug;
-    console.log(`regionList=${regionList}`)
     const region = regionList.filter(r => r['properties']['slug'] === region_slug);
     let activeRegion;
     if (region.length == 0) {
-        activeRegion = {
+        activeRegion = { properties:{
             welcome_message_html: ""
+        }
         };
     } else {
         activeRegion = region[0];
@@ -291,7 +291,7 @@ function Home() {
                 value={activeRegionSlug}
                 regionList={regionList}
             />
-            <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
+            <div dangerouslySetInnerHTML={{__html: activeRegion.properties.welcome_message_html}}></div>
             <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false} gestureHandling={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
