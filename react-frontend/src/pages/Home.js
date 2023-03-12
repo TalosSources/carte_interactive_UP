@@ -54,6 +54,9 @@ function Home() {
     let urlSearchString;
     if (queryParameters.has("s")) {
         urlSearchString = queryParameters.get("s");
+        if (urlSearchString == null) {
+            urlSearchString = "";
+        }
     } else {
         urlSearchString = "";
     }
@@ -271,7 +274,7 @@ function Home() {
                 }
                 value={activeRegionSlug}
                 regionList={regionList}
-            /></div>
+            />
             <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
             <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false} gestureHandling={true}>
                 <TileLayer
