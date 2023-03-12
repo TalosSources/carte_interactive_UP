@@ -222,7 +222,6 @@ function Home() {
     initiatives = initiatives
         .filter(initiativeMatchesCurrentSearch)
         .filter(initiativeMatchCurrentTags);
-    const renderedCards = renderCardCollection(initiatives);
 
     // Prepare tags
     /*
@@ -279,6 +278,7 @@ function Home() {
         })
         return null;
     }
+    const renderedCards = renderCardCollection(initiatives, (clickedSlug) => {setActiveTags(activeTags.concat([clickedSlug]))}, tagEntropy);
 
     return (
         <div>

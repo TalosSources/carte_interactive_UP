@@ -6,7 +6,7 @@ function renderTags(initiative) {
     return <div id="tagPanel">
     {
         initiative.tags.map((tagElement) => (
-            <a href={`/?s=${tagElement.title}`}>
+            <a href={`/?t=${tagElement.slug}`}>
             <div class="proposedTag">
                 <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
             </div></a>
@@ -71,7 +71,7 @@ function Details() {
     .sort(([ca,ia], [cb, ib]) => cb - ca)
     .slice(1,6)
     .map(([c,i]) => i);
-    const renderedCards = renderCardCollection(similarInitiatives);
+    const renderedCards = renderCardCollection(similarInitiatives, ()=>{}, );
 
     return (
         <div>
