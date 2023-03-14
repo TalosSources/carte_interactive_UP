@@ -80,6 +80,10 @@ Alternatively we can do the same thing with these commands:
 - Create page in [pages folder](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/tree/main/react-frontend/src/pages).
 - data transferred to react via REST API defined in [urls.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/smartakartan4/urls.py) and [views.py](https://gitlab.com/kollaborativ-ekonomi/smartakartan4/-/blob/main/website/views.py)
 
+### Have quick iteration cycles with docker
+The current docker-compose.yml file overwrites the project source copied into the container with volume mounts.
+That means that changes in the outside are directly reflected in the inside making fast iterations possible.
+For fast TS iterations use `npx tsc --watch`.
 
 ## General Product Overview
 
@@ -124,7 +128,7 @@ Tech overview diagram: https://docs.google.com/drawings/d/15sx4YFCvtGF8nAua7IqMI
   * ...
 * Postgresql
   * PostGIS
-* Javascript
+* TypeScript
   * Leaflet
   * React
     * React Router (website is an SPA)
