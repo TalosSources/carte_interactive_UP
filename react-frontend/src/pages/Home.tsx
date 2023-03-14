@@ -172,7 +172,7 @@ export default function Home() {
                     idt['text'].toLowerCase().includes(keyword)
                 )
             );
-    };
+    }
     function initiativeInsideMap(initiative: Initiative) {
         return initiative.locations.features.some(
             feature => mapBounds.contains(initiativeLocationFeatureToGeoCoordinate(feature))
@@ -184,15 +184,15 @@ export default function Home() {
     }
 
     function sortInitiativesByName(initiatives : Initiative[]) {
-        let names : [number, string][] = [];
-        for (var i = 0; i < initiatives.length; i++) {
+        const names : [number, string][] = [];
+        for (let i = 0; i < initiatives.length; i++) {
             names.push([i, initiatives[i].initiative_title_texts[0]['text']]);
         }
         names.sort(function(left, right) {
             return left[1] < right[1] ? -1 : 1;
         });
-        let sortedInitiatives = [];
-        for (var i = 0; i < initiatives.length; i++) {
+        const sortedInitiatives = [];
+        for (let i = 0; i < initiatives.length; i++) {
             sortedInitiatives.push(initiatives[names[i][0]]);
         }
         return sortedInitiatives;
@@ -207,15 +207,15 @@ export default function Home() {
             ))
         }
 
-        let distances = [];
-        for (var i = 0; i < initiatives.length; i++) {
+        const distances = [];
+        for (let i = 0; i < initiatives.length; i++) {
             distances.push([i, initiativeDistanceFromMapCenter(initiatives[i])]);
         }
         distances.sort(function(left, right) {
             return left[1] < right[1] ? -1 : 1;
         });
-        let sortedInitiatives = [];
-        for (var i = 0; i < initiatives.length; i++) {
+        const sortedInitiatives = [];
+        for (let i = 0; i < initiatives.length; i++) {
             sortedInitiatives.push(initiatives[distances[i][0]]);
         }
         return sortedInitiatives;
@@ -269,7 +269,7 @@ export default function Home() {
     function sortTagsByEntropy(tag_a: Tag, tag_b: Tag) {
         return tagEntropy[tag_b.id] - tagEntropy[tag_a.id]
     }
-    let top_tags = tags
+    const top_tags = tags
         .filter(tag => tagEntropy[tag.id] > 0)
     top_tags.sort(sortTagsByEntropy);
 
@@ -281,7 +281,7 @@ export default function Home() {
     }
 
     function RegisterMapCenter() {
-        const map = useMapEvent('moveend', (event) => {
+        const _map = useMapEvent('moveend', (event) => {
             setMapCenter(leafletToGeoCoordinate(event.target.getCenter()));
 
             const newBounds = event.target.getBounds();
@@ -361,7 +361,7 @@ export default function Home() {
 
 function renderMapMarkers(initiatives: Initiative[]) {
     function feature2Marker(initiative: Initiative, feature: Feature) {
-        let title = initiative
+        const title = initiative
             .initiative_title_texts[0]['text'];
         return (
             <Marker position={[feature['geometry']['coordinates'][1], feature['geometry']['coordinates'][0]]}>
