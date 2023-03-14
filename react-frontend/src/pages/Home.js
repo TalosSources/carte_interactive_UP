@@ -5,9 +5,11 @@ import { GeoCoordinate, BoundingBox } from "geocoordinate";
 import styled from "styled-components";
 
 import "leaflet/dist/leaflet.css";
-
 import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
+
+import NavBar from "../components/NavBar";
+
 
 const FloatingTop = styled.div`
     display: flex;
@@ -72,25 +74,7 @@ const WhatToShow = {
 import {renderCardCollection} from "../Cards";
 import { Icon } from "leaflet";
 
-// Components
-function RegionSelector(props) {
-    // Inspiration: https://reactjs.org/docs/forms.html#the-select-tag
-    console.log(props.value);
-    return (
-        <select value={props.value} onChange={props.handleSelectChange}>
-            {
-                props.regionList.map(
-                    (regionElement) => (
-                        //<option key={regionElement.id} value={regionElement.id}>
-                        <option key={regionElement.id} value={regionElement.slug}>
-                            {regionElement.title}
-                        </option>
-                    )
-                )
-            }
-        </select>
-    );
-}
+
 
 function Home() {
     let {regionSlug} = useParams();
@@ -272,34 +256,20 @@ function Home() {
         return null;
     }
 
+    const handleRegionChange = (event) => {
+        console.log(`handleSelectChange - event.target.value=${event.target.value}`);
+        const new_region_slug = event.target.value;
+        navigate('/r/' + new_region_slug);
+        setActiveRegionSlug(new_region_slug);
+    }
+
     return (
-<>
-            <nav className="border-bottom border-bottom-2 border-bottom-danger d-flex flex-row">
-
-                <img id="logo" src="/sk-logotype-topbar.png"/>
-                <div id="sk-title">Smartakartan <a href="/gitver">4.0</a> /
-                </div>
-                <div id="regionSelector">
-                    <RegionSelector
-                        handleSelectChange={event => {
-                            console.log(`handleSelectChange - event.target.value=${event.target.value}`);
-                            const new_region_slug = event.target.value;
-                            navigate('/r/' + new_region_slug);
-                            setActiveRegionSlug(new_region_slug);
-                        }
-                    }
-                    value={activeRegionSlug}
-                    regionList={regionList}
-                    />
-                </div>
-
-                <div>
-                    <span>AAAAAA</span>
-                    <span>BBBBBB</span>
-                    <span>Om oss (i)</span>
-                </div>
-                <div id="menu">==</div>
-            </nav>
+        <>
+        <NavBar
+            handleRegionChange={handleRegionChange}
+            activeRegionSlug={activeRegionSlug}
+            regionList={regionList}
+        />
             <header>
 
                 <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
