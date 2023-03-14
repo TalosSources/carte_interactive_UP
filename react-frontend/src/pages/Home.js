@@ -9,17 +9,8 @@ import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 
 import NavBar from "../components/NavBar";
+import FloatingTop from "../components/FloatingTop";
 
-
-const FloatingTop = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    padding-left: 5vw;
-    padding-right: 5vw;
-    position: relative;
-    top: 40px;
-`
 
 const MainContainer = styled.div`
     background-color: indigo;
@@ -275,10 +266,8 @@ function Home() {
                 <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
 
             </header>
-            <FloatingTop>
-                <div className="ExampleThing" style={{flex: 2, height: "20rem", marginRight: "10px", backgroundColor: "gray"}} ></div>
-                <div className="GetInvolved" style={{flex: 1, height: "20rem", backgroundColor: "green"}}></div>
-            </FloatingTop>
+            <FloatingTop>Wat</FloatingTop>
+
             <MainContainer>
                 <SearchRow>
                 <div>Filter: <input name="search" onChange={event => setSearchString(event.target.value)}/>
