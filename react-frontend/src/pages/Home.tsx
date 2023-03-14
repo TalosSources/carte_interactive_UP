@@ -393,6 +393,7 @@ function renderMapMarkers(initiatives: Initiative[]) {
     function feature2Marker(initiative: Initiative, feature: Feature) {
         const title = initiative
             .initiative_title_texts[0]['text'];
+        L.Icon.Default.imagePath="/"
         return (
             <Marker position={[feature['geometry']['coordinates'][1], feature['geometry']['coordinates'][0]]}>
                 <Popup>

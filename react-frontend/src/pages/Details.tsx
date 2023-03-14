@@ -18,7 +18,7 @@ function renderTags(initiative : Initiative) {
 
 function getTitle(initiative : Initiative) {
     console.log("getTitle")
-    if (typeof initiative.initiative_title_texts != 'undefined') {
+    if (initiative.initiative_title_texts.length > 0) {
         console.log(initiative.initiative_title_texts)
         return initiative.initiative_title_texts[0].text
     }
@@ -27,7 +27,7 @@ function getTitle(initiative : Initiative) {
 
 function getDescription(initiative : Initiative) {
     console.log("getDescription")
-    if (typeof initiative.initiative_description_texts != 'undefined') {
+    if (initiative.initiative_description_texts.length >0) {
         console.log(initiative.initiative_description_texts)
         return initiative.initiative_description_texts[0].text
     }
