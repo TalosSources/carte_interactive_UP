@@ -1,14 +1,13 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {renderCardCollection} from "../Cards";
-import { Tag } from "./Home";
 import { Initiative } from "./Home";
 
 function renderTags(initiative : Initiative) {
     return <div id="tagPanel">
     {
         initiative.tags.map((tagElement) => (
-            <a href={`/?s=${tagElement.title}`}>
+            <a href={`/?t=${tagElement.slug}`}>
             <div className="proposedTag">
                 <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
             </div></a>
@@ -73,7 +72,7 @@ export default function Details() {
     .sort(([ca,ia], [cb, ib]) => cb - ca)
     .slice(1,6)
     .map(([c,i]) => i);
-    const renderedCards = renderCardCollection(similarInitiatives);
+    const renderedCards = renderCardCollection(similarInitiatives, ()=>null, undefined);
 
     return (
         <div>
@@ -89,4 +88,4 @@ export default function Details() {
 
         </div>
     );
-};
+}

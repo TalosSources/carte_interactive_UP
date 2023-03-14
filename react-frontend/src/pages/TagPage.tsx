@@ -40,7 +40,7 @@ const TagPage = () => {
             <h2>Tag page</h2>
             <h3>ID: {tagId}</h3>
             <h3>Title: {tag.title}</h3>
-            {renderCardCollection(taggedInitiatives)}
+            {renderCardCollection(taggedInitiatives, ()=>null, undefined)}
         </div>
     );
 };
