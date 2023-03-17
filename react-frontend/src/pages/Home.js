@@ -285,9 +285,6 @@ function Home() {
                                     )
                                 )
                             }
-                            <a class="dropdown-item" href="#" onClick={() => console.log("action!")}>Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
                         </div>
                         </div>
 
