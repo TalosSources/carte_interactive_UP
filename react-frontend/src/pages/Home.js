@@ -77,8 +77,6 @@ function Home() {
         fetch(tag_api_url)
             .then(response => response.json())
             .then(response_json => {
-                console.log("response_json:");
-                console.log(response_json);
                 setTags(response_json);
             });
     }, []);
@@ -172,8 +170,6 @@ function Home() {
 
     function sortInitiativesByDistanceToCenter(initiatives) {
         function initiativeDistanceFromMapCenter(initiative) {
-            console.log("current map center");
-            console.log(mapCenter);
             return Math.min(...initiative.locations.features.map(
                 feature => mapCenter.quickDistanceTo(initiativeLocationFeatureToGeoCoordinate(feature))
             ))
@@ -234,7 +230,6 @@ function Home() {
     }
 
     const handleRegionChange = (event) => {
-        console.log(`handleSelectChange - event.target.value=${event.target.value}`);
         const new_region_slug = event.target.value;
         navigate('/r/' + new_region_slug);
         setActiveRegionSlug(new_region_slug);

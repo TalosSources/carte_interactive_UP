@@ -31,9 +31,6 @@ export function renderCardCollection(initiatives) {
                 let description = initiativeElement
                     .initiative_description_texts[0]['text'];
                 const image_url = initiativeElement.main_image_url;
-                console.log(image_url)
-                const thumbnail = makeThumbnailUrl(image_url)
-                console.log("thumbnail", thumbnail)
                 
                 return (
                     <div class="card" key={initiativeElement.id}>
