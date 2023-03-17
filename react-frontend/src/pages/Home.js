@@ -10,6 +10,7 @@ import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 import NavBar from "../components/NavBar";
 import FloatingTop from "../components/FloatingTop";
+import RegionSelectorDropdown from "../components/RegionSelectorDropdown";
 
 
 const MainContainer = styled.div`
@@ -59,7 +60,7 @@ function Home() {
     if (typeof regionSlug == 'undefined') {
         regionSlug = 'global';
     }
-    console.log(regionSlug);
+
     const [localizedInitiatives, setLocalizedInitiatives] = useState([]);
     const [globalInitiatives, setGlobalInitiatives] = useState([]);
     const [searchString, setSearchString] = useState("");
@@ -254,34 +255,11 @@ function Home() {
                 > 
                     
                     {/* Region select dropdown */}
-                    <div class="dropdown show bg-indigo ml-4">
-                        <a class="btn btn-indigo text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {(() => {
-                                const region = regionList.find(reg => reg.slug == activeRegionSlug)
-                                return region?.title || "Välj ort";
-                            })() }
-                        </a>
-
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            {
-                                regionList.map(
-                                    (regionElement) => (
-                                        <a className="dropdown-item" 
-                                            href="#"
-                                            key={regionElement.slug}
-                                         onClick={() => {
-                                            console.log(regionElement.slug);
-                                            setActiveRegionSlug(regionElement.slug);
-                                        }
-                                        }>{regionElement.title}</a>
-                                        // <option key={regionElement.id} value={regionElement.slug}>
-                                        //     {regionElement.title}
-                                        // </option>
-                                    )
-                                )
-                            }
-                        </div>
-                        </div>
+                    <RegionSelectorDropdown 
+                        regionList={regionList}
+                        activeRegionSlug={activeRegionSlug}
+                        setActiveRegionSlug={setActiveRegionSlug}
+                    ></RegionSelectorDropdown>
 
                     <input
                         className="form-control" 
