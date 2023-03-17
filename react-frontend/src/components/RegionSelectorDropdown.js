@@ -7,7 +7,6 @@ const RegionSelectorDropdown = ({ regionList, activeRegionSlug, setActiveRegionS
      <a class="btn text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
          {(() => {
              const region = regionList.find(reg => reg.slug == activeRegionSlug)
-             console.log("bajs", region)
              return region?.title || "Välj ort";
          })() }
      </a>
