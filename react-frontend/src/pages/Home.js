@@ -4,10 +4,10 @@ import {useNavigate, useParams} from "react-router-dom";
 import { GeoCoordinate, BoundingBox } from "geocoordinate";
 import styled from "styled-components";
 
+
 import "leaflet/dist/leaflet.css";
 import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
-
 import NavBar from "../components/NavBar";
 import FloatingTop from "../components/FloatingTop";
 
@@ -32,24 +32,11 @@ const RightSide = styled.div`
     flex: 1;
 `
 
-const WhiteLineButton = styled.button`
-    border-width: 2px;
-    border-color: white;
-    border-radius: 1rem;
-`;
 
-const MainTagButton = styled.div`
-    background-color: WhiteSmoke;
-    border-radius: 1rem;
-    padding: 5px;
-    text-align: center;
-    border-color: gray;
-    border-width: 2px;
-    color: black;
-`
 const SearchRow = styled.div`
     display: flex;
     flex-direction: row;
+    width: 100vw;
 `
 
 const Sorting = {
@@ -63,7 +50,6 @@ const WhatToShow = {
     WithoutGlobal: "3",
 }
 import {renderCardCollection} from "../Cards";
-import { Icon } from "leaflet";
 
 
 
@@ -262,37 +248,77 @@ function Home() {
             regionList={regionList}
         />
             <header>
-
                 <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
-
             </header>
-            <FloatingTop>Wat</FloatingTop>
+            <FloatingTop>
 
-            <MainContainer>
-                <SearchRow>
-                <div>Filter: <input name="search" onChange={event => setSearchString(event.target.value)}/>
-                </div>
-                <div className="vr"/>
-                <div class="custom-control custom-switch">
-  <label class="custom-control-label" for="customSwitches">Öppet nu</label>
-  <input type="checkbox" class="custom-control-input" id="customSwitches" />
+            </FloatingTop>
+
+            <MainContainer className="p-2 pt-5">
+                <SearchRow className="d-flex flex-row w-100"
+                > 
+                    
+                    {/* Region select dropdown */}
+                    <div class="dropdown show bg-indigo ml-4">
+                        <a class="btn btn-indigo text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {(() => {
+                                const region = regionList.find(reg => reg.slug == activeRegionSlug)
+                                return region?.title || "Välj ort";
+                            })() }
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            {
+                                regionList.map(
+                                    (regionElement) => (
+                                        <a className="dropdown-item" 
+                                            href="#"
+                                            key={regionElement.slug}
+                                         onClick={() => {
+                                            console.log(regionElement.slug);
+                                            setActiveRegionSlug(regionElement.slug);
+                                        }
+                                        }>{regionElement.title}</a>
+                                        // <option key={regionElement.id} value={regionElement.slug}>
+                                        //     {regionElement.title}
+                                        // </option>
+                                    )
+                                )
+                            }
+                            <a class="dropdown-item" href="#" onClick={() => console.log("action!")}>Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                        </div>
+
+                    <input
+                        className="form-control" 
+                        name="search" 
+                        onChange={event => setSearchString(event.target.value)}/>
+                    <div className="form-check checkbox-lg ml-4">
+  <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+  <label className="form-check-label text-white" for="flexSwitchCheckDefault"
+    style={{minWidth: "100px"}}
+  >Öppet nu</label>
 </div>
-                
                 </SearchRow>
-                    <div className="tags-container">
-                    <span>Top Tags:</span>
 
-                    <div className="tagContainer d-flex flex-row">
 
+                    <div className="tagContainer d-flex flex-row mb-2">
                         {
                             top_tags.map((tagElement) => (
-                                <a href={`/tag/${tagElement.id}`}><MainTagButton><p>{tagElement.title}</p>
-                                </MainTagButton></a>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-light mr-2 mt-2" 
+                                    style={{minWidth: "150px"}}
+                                    onClick={() => navigate(`/tag/${tagElement.id}`)}>
+                                    <span className></span>{tagElement.title}
+                                </button>
+                            
                             ))
                         }
 
                     </div>
-                </div>
               
 
                 {/* This should be its own component, probably */}
@@ -326,9 +352,9 @@ function Home() {
                 <RightSide>
 
                     <div className="d-flex flex-row">
-                        <WhiteLineButton>Föreslå en verksamhet</WhiteLineButton>
-                        <WhiteLineButton>Bli volontär</WhiteLineButton>
-                        <WhiteLineButton>Starta en egen grej</WhiteLineButton>
+                        <button className="btn btn-outline-light ml-2">Föreslå en verksamhet</button>
+                        <button className="btn btn-outline-light ml-2">Bli volonär</button>
+                        <button className="btn btn-outline-light ml-2">Starta en egen grej</button>
                     </div>
                     <MapContainer id="map" center={[57.70, 11.97]} zoom={10} scrollWheelZoom={false} gestureHandling={true}>
                         <TileLayer
