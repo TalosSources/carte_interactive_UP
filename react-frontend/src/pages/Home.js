@@ -350,12 +350,14 @@ function Home() {
 // Helpers
 
 function renderMapMarkers(initiatives) {
-    function feature2Marker(initiative, feature) {
+    function feature2Marker(initiative, feature, index) {
         let title = initiative
             .initiative_title_texts[0]['text'];
         L.Icon.Default.imagePath="/"
         return (
-            <Marker position={[feature['geometry']['coordinates'][1], feature['geometry']['coordinates'][0]]}>
+            <Marker 
+                key={`m_${initiative.id}_${index}`}
+                position={[feature['geometry']['coordinates'][1], feature['geometry']['coordinates'][0]]}>
                 <Popup>
                     <a href={'/details/' + initiative.id}>{title}</a>
                 </Popup>
@@ -363,8 +365,8 @@ function renderMapMarkers(initiatives) {
         );
     }
 
-    return initiatives.map(initiative =>
-        initiative.locations.features.map(feature => feature2Marker(initiative, feature))
+    return initiatives.map((initiative) =>
+        initiative.locations.features.map((feature, index) => feature2Marker(initiative, feature, index))
     ).flat(1);
 }
 
