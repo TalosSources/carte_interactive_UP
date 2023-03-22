@@ -17,6 +17,21 @@ import SelectFromObject from "../components/SelectFromObject";
 import {renderCardCollection} from "../Cards";
 
 
+
+const Header = styled.header`
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column
+    align-items: center;
+    margin: auto;
+    width: 80vw;
+
+    h1 {
+        font-weight: bold;
+    }
+    
+`
+
 const MainContainer = styled.div`
     background-color: indigo;
     padding-top: 50px;
@@ -247,9 +262,9 @@ function Home() {
             activeRegionSlug={activeRegionSlug}
             regionList={regionList}
         />
-            <header>
+            <Header>
                 <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
-            </header>
+            </Header>
             <FloatingTop>
 
             </FloatingTop>
@@ -258,7 +273,6 @@ function Home() {
                 <SearchRow className="d-flex flex-row w-100"
                 > 
                     
-                    {/* Region select dropdown */}
                     <RegionSelectorDropdown 
                         regionList={regionList}
                         activeRegionSlug={activeRegionSlug}
@@ -270,7 +284,7 @@ function Home() {
                         name="search" 
                         onChange={event => setSearchString(event.target.value)}/>
                     <div className="form-check checkbox-lg ml-4">
-  <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                        <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
                         <label className="form-check-label text-white" htmlFor="flexSwitchCheckDefault"
                             style={{minWidth: "100px"}}
                         >Öppet nu</label>
