@@ -11,6 +11,7 @@ import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 import NavBar from "../components/NavBar";
 import FloatingTop from "../components/FloatingTop";
 import TopTagButton from "../components/TopTagButton";
+import OutlineButton from "../components/OutlineButton";
 import RegionSelectorDropdown from "../components/RegionSelectorDropdown";
 
 
@@ -318,9 +319,9 @@ function Home() {
                 <RightSide>
 
                     <div className="d-flex flex-row">
-                        <button className="btn btn-outline-light ml-2">Föreslå en verksamhet</button>
-                        <button className="btn btn-outline-light ml-2">Bli volonär</button>
-                        <button className="btn btn-outline-light ml-2">Starta en egen grej</button>
+                        <OutlineButton>Föreslå en verksamhet</OutlineButton>
+                        <OutlineButton>Bli volontär</OutlineButton>
+                        <OutlineButton>Starta en grej</OutlineButton>
                     </div>
                     <MapContainer id="map" center={[57.70, 11.97]} zoom={10} scrollWheelZoom={false} gestureHandling={true}>
                         <TileLayer
