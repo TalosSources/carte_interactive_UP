@@ -6,29 +6,26 @@ const RegionSelectorDropdown = ({ regionList, activeRegionSlug, setActiveRegionS
      return (<div className="dropdown show ml-4">
      <a className="btn text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
          {(() => {
-             const region = regionList.find(reg => reg.slug == activeRegionSlug)
-             return region?.title || "Välj ort";
+             const region = regionList.find(reg => reg.properties.slug == activeRegionSlug)
+             return region?.properties.title || "Välj ort";
          })() }
      </a>
 
-     <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-         {
-             regionList.map(
-                 (regionElement) => (
+    <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        {
+            regionList.map(
+                (regionElement) => (
                      <a className="dropdown-item" 
-                         href="#"
-                         key={regionElement.id}
-                      onClick={() => {
-                         console.log(regionElement.slug);
-                         setActiveRegionSlug(regionElement.slug);
-                     }
-                     }>{regionElement.title}</a>
-                 )
+                     key={regionElement.id}
+                     onClick={() => {
+                         setActiveRegionSlug(regionElement.properties.slug);
+                        }
+                    }>{regionElement.properties.title}</a>
+                )
              )
          }
      </div>
      </div>)
 }
 
-console.log("RSD", RegionSelectorDropdown)
 export default RegionSelectorDropdown;
