@@ -33,7 +33,7 @@ const NavItems = styled.ul`
 
 const NavBar = ( { handleRegionChange, activeRegionSlug, regionList } ) => {
     return ( 
-    <nav className="border-bottom border-bottom-2 border-bottom-danger d-flex flex-row align-items-center">
+    <nav className="border-bottom border-bottom-5 border-primary d-flex flex-row align-items-center bg-white">
         <img id="logo" src="/sk-logotype-topbar.png"/>
         <div id="sk-title">Smartakartan <a href="/gitver">4.0</a> /
         </div>

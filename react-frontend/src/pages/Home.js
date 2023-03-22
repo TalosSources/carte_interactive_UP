@@ -38,6 +38,8 @@ const MainContainer = styled.div`
     border-radius: 20px;
     display: flex: 
     flex-directon: column;
+    margin-left: 2rem;
+    margin-right: 2rem;
 
     `
 const Sides = styled.div`
