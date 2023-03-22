@@ -24,7 +24,7 @@ const makeThumbnailUrl = (main_url) => {
 
 export function renderCardCollection(initiatives) {
     return <div className="cards">
-            {initiatives.slice(0, 10).map(
+            {initiatives.map(
               (initiativeElement) => {
                 let title = initiativeElement
                     .initiative_title_texts[0]['text'];
