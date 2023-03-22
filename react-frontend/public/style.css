@@ -84,3 +84,7 @@ ul {
 #footer {
   clear:both;
 }
+
+div::-webkit-scrollbar {
+  display: none;
+}
