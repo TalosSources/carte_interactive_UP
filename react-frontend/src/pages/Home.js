@@ -10,6 +10,7 @@ import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 import NavBar from "../components/NavBar";
 import FloatingTop from "../components/FloatingTop";
+import TopTagButton from "../components/TopTagButton";
 import RegionSelectorDropdown from "../components/RegionSelectorDropdown";
 
 
@@ -277,14 +278,9 @@ function Home() {
                     <div className="tagContainer d-flex flex-row mb-2">
                         {
                             top_tags.map((tagElement) => (
-                                <button 
-                                    type="button" 
-                                    className="btn btn-light mr-2 mt-2" 
-                                    style={{minWidth: "150px"}}
-                                    onClick={() => navigate(`/tag/${tagElement.id}`)}>
-                                    <span className></span>{tagElement.title}
-                                </button>
-                            
+                                <TopTagButton 
+                                    key={tagElement.title}
+                                    tagElement={tagElement} />
                             ))
                         }
 
