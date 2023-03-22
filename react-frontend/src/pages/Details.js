@@ -3,18 +3,15 @@ import {useParams} from "react-router-dom";
 import {renderCardCollection} from "../Cards";
 
 function renderTags(initiative) {
-    console.log("renderTags")
-    if (Object.hasOwn(initiative, 'tags') && typeof initiative.tags != 'undefined') {
-        console.log(initiative.tags)
-        // const tag_href_str=`${process.env.REACT_APP_BACKEND_URL}/tags/${tagElement.id}`;
-        return initiative.tags.map(
-            (tagElement) => (
-                <li key={tagElement.id}>
-                    <a href={`/tag/${tagElement.id}`}>{tagElement.title}</a>
-                </li>
-            )
-        );
-    }
+    return <div id="tagPanel">
+    {
+        initiative.tags.map((tagElement) => (
+            <a href={`/?t=${tagElement.slug}`}>
+            <div class="proposedTag">
+                <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
+            </div></a>
+        ))
+    }</div>
 }
 
 
@@ -40,7 +37,7 @@ function Details() {
     const {initiativeId} = useParams();
 
     const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/` + initiativeId;
-    const [initiative, setInitiative] = useState({});
+    const [initiative, setInitiative] = useState({tags: []});
     const [initiatives, setInitiatives] = useState([]);
 
     useEffect(() => {
@@ -74,7 +71,7 @@ function Details() {
     .sort(([ca,ia], [cb, ib]) => cb - ca)
     .slice(1,6)
     .map(([c,i]) => i);
-    const renderedCards = renderCardCollection(similarInitiatives);
+    const renderedCards = renderCardCollection(similarInitiatives, ()=>{}, );
 
     return (
         <div>
@@ -82,10 +79,7 @@ function Details() {
             <h3>{getTitle(initiative)}</h3>
             <img src={initiative.main_image_url}/>
             <p dangerouslySetInnerHTML={{__html: "Description: " + getDescription(initiative)}}></p>
-            <h3>Tags:</h3>
-            <ul>
-                {renderTags(initiative)}
-            </ul>
+            {renderTags(initiative)}
             <h3>You may also like</h3>
             <div id="similarInitiativesCanvas">
                 {renderedCards}

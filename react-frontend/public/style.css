@@ -53,7 +53,7 @@ a:active { text-decoration: none; }
 .card {
   float: left;
   width: 10em;
-  height: 15em;
+  height: 16.5em;
   background-color: beige;
   margin: 1em;
   border-radius: 0.3em;
@@ -87,4 +87,41 @@ ul {
 
 div::-webkit-scrollbar {
   display: none;
+}
+.selectedTag:hover {
+  background-color: rgb(226, 111, 117);
+}
+.selectedTag {
+  cursor: pointer;
+  /*float: left;*/
+  display: inline-block;
+  background-color: rgb(87, 170, 87);
+  margin: 0.2em;
+  padding: 0.2em;
+  border-radius: 0.3em;
+}
+
+.proposedTag {
+  cursor: pointer;
+  /*float: left;*/
+  display: inline-block;
+  background-color: orange;
+  margin: 0.2em;
+  padding: 0.2em;
+  border-radius: 0.3em;
+}
+.tagValue {
+  font-size:x-small;
+}
+#tagPanel {
+  clear: left;
+  overflow-x: scroll;
+  white-space: nowrap;
+  height: 3.5em;
+}
+.cardTagPanel {
+  overflow-x: scroll;
+  white-space: nowrap;
+  height: 2.5em;
+  font-size: small;
 }

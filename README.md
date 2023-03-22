@@ -32,4 +32,8 @@ $ docker-compose down
 $ git pull
 $ docker-compose up -d --build
 ```
-
+## Contributors
+@SunyataZero
+@ytterdorr
+@antonhedstrom
+@BImpobhYF2
