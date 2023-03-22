@@ -13,6 +13,8 @@ import FloatingTop from "../components/FloatingTop";
 import TopTagButton from "../components/TopTagButton";
 import OutlineButton from "../components/OutlineButton";
 import RegionSelectorDropdown from "../components/RegionSelectorDropdown";
+import SelectFromObject from "../components/SelectFromObject";
+import {renderCardCollection} from "../Cards";
 
 
 const MainContainer = styled.div`
@@ -43,16 +45,16 @@ const SearchRow = styled.div`
 `
 
 const Sorting = {
-  Alphabetical: "1",
-  Distance: "2",
+  Alphabetical: { value: "1", text: "Sort alphabetically"},
+  Distance: { value: "2", text: "Sort by distance" }
 };
 
 const WhatToShow = {
-    Everything: "1",
-    OnlyOnMap: "2",
-    WithoutGlobal: "3",
+    Everything: {value: "1", text:"Show all" },
+    OnlyOnMap: {value: "2", text:"Only show initiatives on the map"},
+    WithoutGlobal: {value: "3", text:"Hide global initiatives"}
 }
-import {renderCardCollection} from "../Cards";
+
 
 
 
@@ -70,8 +72,8 @@ function Home() {
     const [regionList, setRegionList] = useState([]);
     const [mapCenter, setMapCenter] = useState(GeoCoordinate({'latitude': 50, 'longitude': 12}));
     const [mapBounds, setMapBounds] = useState(new BoundingBox());
-    const [sorting, setSorting] = useState(Sorting.Distance);
-    const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything);
+    const [sorting, setSorting] = useState(Sorting.Distance.value);
+    const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value);
     const [tags, setTags] = useState([]);
 
     // first run
@@ -193,16 +195,16 @@ function Home() {
     }
 
     let initiatives = localizedInitiatives;
-    if (initiativesToShow === WhatToShow.OnlyOnMap) {
+    if (initiativesToShow === WhatToShow.OnlyOnMap.value) {
         initiatives = initiatives.filter(initiativeInsideMap);
     }
-    if (sorting === Sorting.Distance) {
+    if (sorting === Sorting.Distance.value) {
         initiatives = sortInitiativesByDistanceToCenter(initiatives);
     }
-    if (initiativesToShow === WhatToShow.Everything) {
+    if (initiativesToShow === WhatToShow.Everything.value) {
         initiatives = globalInitiatives.concat(initiatives);
     }
-    if (sorting === Sorting.Alphabetical) {
+    if (sorting === Sorting.Alphabetical.value) {
         initiatives = sortInitiativesByName(initiatives);
     }
     initiatives = initiatives.filter(initiativeMatchesSearch);
@@ -293,25 +295,16 @@ function Home() {
 
                 <LeftSide>
 
-                    <select defaultValue={WhatToShow.Everything} onChange={event => setInitiativesToShow(event.target.value)}>
-                        <option value={WhatToShow.Everything}>
-                            Show all
-                        </option>
-                        <option value={WhatToShow.WithoutGlobal}>
-                            Hide global initiatives
-                        </option>
-                        <option value={WhatToShow.OnlyOnMap}>
-                            only show initiatives on the map
-                        </option>
-                    </select>
-                    <select defaultValue={Sorting.Distance} onChange={event => setSorting(event.target.value)}>
-                        <option value={Sorting.Distance}>
-                            Sort by distance
-                        </option>
-                        <option value={Sorting.Alphabetical}>
-                            Sort alphabetically
-                        </option>
-                    </select>
+                    <SelectFromObject 
+                        obj={WhatToShow}
+                        defaultValue={WhatToShow.Everything.value}
+                        onChange={event => setInitiativesToShow(event.target.value)} 
+                    />
+                    <SelectFromObject 
+                        obj={Sorting}
+                        defaultValue={Sorting.Distance.value}
+                        onChange={event => setSorting(event.target.value)}
+                    />
                     <div id="cards-canvas">
                         {renderedCards}
                     </div>
