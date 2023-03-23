@@ -112,6 +112,15 @@ REGION_DATA_DICT = {
             (11.925401093582142, 57.689568545605425))
         )
     )),
+    "linkoping": RegionData(name="Linköping", area=django.contrib.gis.geos.Polygon(
+        django.contrib.gis.geos.LinearRing( # = Göteborg TODO
+            ((11.925401093582142, 57.689568545605425),
+            (12.03638016933202, 57.68245690713329),
+            (12.03608040451827, 57.62297997831338),
+            (11.933598563618602, 57.61438419604527),
+            (11.925401093582142, 57.689568545605425))
+        )
+    )),
     "karlstad": RegionData(name="Karlstad", area=django.contrib.gis.geos.Polygon(
         django.contrib.gis.geos.LinearRing(
             ((13.475279848392983, 59.41602274519939),
@@ -409,6 +418,7 @@ def process_business_rows():
         for translation_for_added_post_dict in translations_for_added_posts_dict_list:
             translation_for_added_post_dict: dict
             for lng_code_, sk3_id_ in translation_for_added_post_dict.items():
+                # This works because we have at most two languages right now.
                 if sk3_id_ == wp_post_id:
                     logging.debug(f"{translation_for_added_post_dict=}")
                     first_translation_has_been_added = True
