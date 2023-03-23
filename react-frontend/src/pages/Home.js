@@ -16,6 +16,9 @@ import TopTagButton from "../components/TopTagButton";
 import OutlineButton from "../components/OutlineButton";
 import RegionSelectorDropdown from "../components/RegionSelectorDropdown";
 import SelectFromObject from "../components/SelectFromObject";
+import GetInvolved from "../components/GetInvolved";
+import HighlightInitiative from "../components/HighlightInitiative";
+
 import {renderCardCollection} from "../Cards";
 import { createBrowserHistory } from "@remix-run/router";
 
@@ -375,7 +378,8 @@ function Home() {
                 <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
             </Header>
             <FloatingTop>
-
+                <HighlightInitiative />
+                <GetInvolved />
             </FloatingTop>
 
             <MainContainer className="p-2 pt-5">
