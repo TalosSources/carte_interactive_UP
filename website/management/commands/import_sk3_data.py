@@ -453,9 +453,13 @@ def clear_unused_tags_from_db():
 def process_business_rows(businessRows):
     def getImageUrl(row):
         try:
-            return row[RJK_ACF][RJSK_ACF_MAIN_IMAGE][RJSK_ACF_MAIN_IMAGE_URL]
-        except KeyError:
-            return ""
+            if row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]: # : false | Dict
+                return row[RJK_ACF][RJSK_ACF_MAIN_IMAGE][RJSK_ACF_MAIN_IMAGE_URL]
+            else:
+                return ""
+        except KeyError as e:
+            logging.error(f"Key error for {row=}")
+            raise e
     def getFirstTranslation(thisTranslationSK3Id):
         first_translation_has_been_added = False
         first_translation_wp_post_id = -1
