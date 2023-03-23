@@ -181,112 +181,58 @@ REGION_DATA_DICT = {
 # Contains sub-lists on this format: [sk3_id_en, sk3_id_sv], where the order of langs is undetermined
 # business_lang_combos_list = []
 
-business_resp_row_list = []
-tagg_resp_row_list = []
-
-
-def import_sk3_data(i_args: [str]):
-    # göteborg, karlstad, etc
-    # Please note: address for Göteborg uses gbg instead
-    data_type_full_name_list = []
-    for data_type in DATA_TYPE_LIST:
-        if data_type == ADDRESS_DT:
-            for region in REGION_DATA_DICT.keys():
-                if region == GOTEBORG_R:
-                    region = "gbg"
-                data_type_full_name = f"{data_type}_{region}"
-                data_type_full_name_list.append(data_type_full_name)
-        elif data_type in (PAGE_DT, BUSINESS_DT):
-            for region in REGION_DATA_DICT.keys():
-                data_type_full_name = f"{region}_{data_type}"
-                data_type_full_name_list.append(data_type_full_name)
-        else:
-            if data_type == OVERSATTNING_DT:
-                data_type = "translations_comparison"  # -specified in the WP Pods field "REST Base (if any)"
-            data_type_full_name_list.append(data_type)
-    data_type_full_name_list.append("non-existing")  # -for testing/verification purposes
-
-    assert REGION_DT in data_type_full_name_list
-    data_type_full_name_list.remove(REGION_DT)
-    data_type_full_name_list.insert(0, REGION_DT)
-
+# check
+def requestSK3API(data_type_full_name, per_page=None, fields=None, page_nr=None):
     bearer_token = "LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7"
     header_dict = {"Authorization": f"Bearer {bearer_token}"}
+    api_url = f"https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/{data_type_full_name}/"
+    if fields:
+        api_url += f"&_fields={','.join(FIELDS)}"
+        # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_fields
+    if per_page:
+        api_url += f"&per_page={PER_PAGE}&page={page_nr}"
+        # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
+    api_url = api_url.replace('&', '?', 1)
+    logging.info(f"Calling requests.get with {api_url=}")
+    response = requests.get(api_url, headers=header_dict)
+    response_json = response.json()  # -can be a list or a dict
+    if type(response_json) is dict and response_json.get("code", "") == "rest_post_invalid_page_number":
+        logging.info(f"No more data found for {page_nr=} Exiting while loop")
+        return None
 
-    nr_added = 0
-    nr_skipped = 0
-    logging.info(f"Total number of datatypes: {len(data_type_full_name_list)}")
-    for data_type_full_name in data_type_full_name_list:
-        # ################ FILTERING ################
-        if data_type_full_name not in ("goteborg_business", "address_gbg", REGION_DT, TAGG_DT,):
-            # "goteborg_business", "address_gbg", REGION_DT, TAGG_DT,
-            continue
-        """
-        if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
-            continue
-        DATA_TYPE_FILTER: list = []
-        if DATA_TYPE_FILTER and data_type_full_name not in DATA_TYPE_FILTER:
-            continue
-        if BUSINESS_DT not in data_type_full_name:
-            continue
-        if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
-            continue
-        if data_type_full_name not in ("goteborg_business", "address_gbg",):
-            continue
-        """
-        logging.info(f"=== {data_type_full_name=} ===")
+    if response.status_code != 200:
+        logging.warning(f"WARNING response code was not 200 --- {response.status_code=}")
+        return None
+    return response_json
 
+# check
+def getAllDataOf(dataTypeFullName):
         page_nr = 1
+        responses = []
         while True:
             logging.debug(f"Page nr: {page_nr}")
-            api_url = f"https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/{data_type_full_name}/"
-            if FIELDS:
-                api_url += f"&_fields={','.join(FIELDS)}"
-                # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_fields
-            if PER_PAGE:
-                api_url += f"&per_page={PER_PAGE}&page={page_nr}"
-                # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
-            api_url = api_url.replace('&', '?', 1)
-            logging.info(f"Calling requests.get with {api_url=}")
-            response = requests.get(api_url, headers=header_dict)
-            response_json = response.json()  # -can be a list or a dict
-            if type(response_json) is dict and response_json.get("code", "") == "rest_post_invalid_page_number":
-                logging.info(f"No more data found for {page_nr=} Exiting while loop")
+            response_json = requestSK3API(dataTypeFullName, PER_PAGE, FIELDS, page_nr)  # -can be a list or a dict
+            if response_json is None:
                 break
 
-            if response.status_code != 200:
-                logging.warning(f"WARNING response code was not 200 --- {response.status_code=}")
-                break
-
-            if FIELDS and RJK_ACF not in FIELDS:
-                logging.info(f"{response_json=}")
             logging.debug(f"Number of rows: {len(response_json)}")
 
-            lowest_nr_of_cols = sys.maxsize
-            highest_nr_of_cols = 0
-            nr_of_cols = -1
-            if response_json:
-                for row in response_json:
-                    nr_of_cols = len(row)
-                    lowest_nr_of_cols = min(lowest_nr_of_cols, nr_of_cols)
-                    highest_nr_of_cols = max(highest_nr_of_cols, nr_of_cols)
-                if lowest_nr_of_cols != highest_nr_of_cols:
-                    logging.warning(
-                        "WARNING: The lowest_nr_of_cols per row and highest_nr_of_cols per row do not match")
-                    logging.info(f"{lowest_nr_of_cols=}")
-                    logging.info(f"{highest_nr_of_cols=}")
-                else:
-                    pass
-                    logging.debug(f"{nr_of_cols=}")
-            else:
-                logging.warning("WARNING: No rows in response")
-                break
+            responses += response_json
+            page_nr += 1
+            #TODO
+            break
+        return responses
+    
+# check
+def isPublished(json_row):
+    status = json_row[RJK_STATUS]
+    return(status == STATUS_PUBLISH)
 
-            for resp_row in response_json:
-                wp_post_id = resp_row[RJK_ID]
-                title = resp_row[RJK_TITLE][RJSK_RENDERED]
-                status = resp_row[RJK_STATUS]
-                # TODO: move all except wp_post_id down to the places where they are used
+# check
+def importRegions():
+    regions = getAllDataOf(REGION_DT)
+    regions = filter(lambda row: isPublished(row), regions)
+    for resp_row in regions:
 
         """
         {'id': 19,
@@ -345,58 +291,95 @@ def import_sk3_data(i_args: [str]):
         }
         """
 
-                if status != STATUS_PUBLISH:
-                    logging.info(f"INFO: {status=}")
-                    continue
+        logging.debug(resp_row)
+        wp_post_id = resp_row[RJK_ID]
+        try:
+            existing_obj = website.models.Region.objects.get(sk3_id=wp_post_id)
+            continue
+        except website.models.Region.DoesNotExist:
+            pass
 
-                if REGION_DT in data_type_full_name:
-                    lang_code = resp_row[RJK_LANGUAGE_CODE]
-                    if lang_code != "sv":
-                        # -this is not because we want Swedish, but because we want the minimal slug
-                        # -TODO: In the future we want this translated (so not skipping)
-                        continue
-                    slug = resp_row[RJK_SLUG]
-                    region_data = REGION_DATA_DICT[slug]
-                    region_data: RegionData
-                    new_obj = website.models.Region(
-                        sk3_id=wp_post_id,
-                        slug=slug,
-                        welcome_message_html=resp_row[RJK_WELCOME_MESSAGE],
-                        title=region_data.name,
-                        area=region_data.area
-                    )
-                    if existing_obj is not None:
-                        nr_skipped += 1
-                    else:
-                        new_obj.save()
-                        nr_added += 1
+        lang_code = resp_row[RJK_LANGUAGE_CODE]
+        if lang_code != "sv":
+            # -this is not because we want Swedish, but because we want the minimal slug
+            # -TODO: In the future we want this translated (so not skipping)
+            continue
+        slug = resp_row[RJK_SLUG]
+        region_data = REGION_DATA_DICT[slug]
+        region_data: RegionData
+        new_obj = website.models.Region(
+            sk3_id=wp_post_id,
+            slug=slug,
+            welcome_message_html=resp_row[RJK_WELCOME_MESSAGE],
+            title=region_data.name, # TODO take this from response
+            area=region_data.area
+        )
+        new_obj.save()
 
-                elif ADDRESS_DT in data_type_full_name:
-                    latitude: str = resp_row[RJK_LATITUDE]
-                    latitude = latitude.replace(',', '.')
-                    longitude: str = resp_row[RJK_LONGITUDE]
-                    longitude = longitude.replace(',', '.')
-                    geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
-                    # -please note order of lat and lng
-                    new_obj = website.models.Location(
-                        sk3_id=wp_post_id,
-                        title=title,
-                        coordinates=geo_point
-                    )
-                    new_obj.save()
-                    nr_added += 1
-                    # logging.debug(f"{title=}")
-                elif BUSINESS_DT in data_type_full_name:
-                    business_resp_row_list.append(resp_row)
-                elif TAGG_DT == data_type_full_name:
-                    tagg_resp_row_list.append(resp_row)
-                else:
-                    logging.info(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
-                    continue
-            page_nr += 1
+# check
+def importAddresses(region):
+
+
+    if region == GOTEBORG_R:
+        region = "gbg"
+    data_type_full_name = f"{ADDRESS_DT}_{region}"
+    addresses = getAllDataOf(data_type_full_name)
+    addresses = filter(lambda row: isPublished(row), addresses)
+    for resp_row in addresses:
+        wp_post_id = resp_row[RJK_ID]
+        try:
+            existing_obj = website.models.Location.objects.get(sk3_id=wp_post_id)
+            continue
+        except website.models.Location.DoesNotExist:
+            pass
+        latitude: str = resp_row[RJK_LATITUDE]
+        latitude = latitude.replace(',', '.')
+        longitude: str = resp_row[RJK_LONGITUDE]
+        longitude = longitude.replace(',', '.')
+        geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
+        # -please note order of lat and lng
+        title = resp_row[RJK_TITLE][RJSK_RENDERED]
+        new_obj = website.models.Location(
+            sk3_id=wp_post_id,
+            title=title,
+            coordinates=geo_point
+        )
+        new_obj.save()
+
+# check
+def importPages(region):
+    data_type_full_name = f"{region}_{PAGE_DT}"
+    pages = getAllDataOf(data_type_full_name)
+    pages = filter(lambda row: isPublished(row), pages)
+    logging.info(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
+
+def importInitiatives(region : str):
+    data_type_full_name = f"{region}_{BUSINESS_DT}"
+    initiatives = response_json = getAllDataOf(data_type_full_name)
+    return list(filter(lambda row: isPublished(row), initiatives))
+
+def importTags():
+    tags = response_json = getAllDataOf(TAGG_DT)
+    tags = filter(lambda row: isPublished(row), tags)
+    return list(tags)
+
+# check
+def import_sk3_data(i_args: List[str]):
+    importRegions()
+    tags = importTags()
+    process_tagg_rows(tags)
+
+    #TODO for region in REGION_DATA_DICT.keys():
+    for region in ["goteborg"]:
+        importAddresses(region)
+        importPages(region)
+        businessRows = importInitiatives(region)
+        beforeBusiness = datetime.now()
+        process_business_rows(businessRows)
+        afterBusiness = datetime.now()
+        logging.debug(f"Importing buisnesses took {afterBusiness-beforeBusiness}")
+
     logging.info("=== Reading from sk3 API done. Now starting processing ===")
-    process_tagg_rows()
-    process_business_rows()
     clear_unused_tags_from_db()
 
 
@@ -415,7 +398,7 @@ def clear_unused_tags_from_db():
             tag_obj.delete()
 
 
-def process_business_rows():
+def process_business_rows(businessRows):
     def getImageUrl(row):
         try:
             return row[RJK_ACF][RJSK_ACF_MAIN_IMAGE][RJSK_ACF_MAIN_IMAGE_URL]
@@ -450,7 +433,7 @@ def process_business_rows():
     translations_for_added_posts = []
     # : {lngcode : sk3_id}[]
 
-    business_resp_row_list_reversed = list(reversed(business_resp_row_list))  # -so sv comes first
+    business_resp_row_list_reversed = list(reversed(businessRows))  # -so sv comes first
     logging.debug(f"{len(business_resp_row_list_reversed)=}")
     """
     for resp_row in business_resp_row_list_reversed:
