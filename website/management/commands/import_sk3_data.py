@@ -371,6 +371,21 @@ def process_business_rows():
             return row[RJK_ACF][RJSK_ACF_MAIN_IMAGE][RJSK_ACF_MAIN_IMAGE_URL]
         except KeyError:
             return ""
+    def getFirstTranslation(thisTranslationSK3Id):
+        first_translation_has_been_added = False
+        first_translation_wp_post_id = -1
+        for translation_for_added_post_dict in translations_for_added_posts:
+            translation_for_added_post_dict: dict
+            for lng_code_, sk3_id_ in translation_for_added_post_dict.items():
+                # This works because we have at most two languages right now.
+                if sk3_id_ == wp_post_id:
+                    logging.debug(f"{translation_for_added_post_dict=}")
+                    first_translation_has_been_added = True
+                else:
+                    first_translation_wp_post_id = sk3_id_
+            if first_translation_has_been_added:
+                return first_translation_wp_post_id
+        return None
     """
     "translations": {
       "en": 11636,
@@ -550,21 +565,8 @@ def process_business_rows():
         if LANG_CODE_EN not in translations_dict:
             logging.warning(f"Missing English translation for {wp_post_id=}")
 
-        first_translation_has_been_added = False
-        first_translation_wp_post_id = -1
-        for translation_for_added_post_dict in translations_for_added_posts:
-            translation_for_added_post_dict: dict
-            for lng_code_, sk3_id_ in translation_for_added_post_dict.items():
-                # This works because we have at most two languages right now.
-                if sk3_id_ == wp_post_id:
-                    logging.debug(f"{translation_for_added_post_dict=}")
-                    first_translation_has_been_added = True
-                else:
-                    first_translation_wp_post_id = sk3_id_
-            if first_translation_has_been_added:
-                break
-        if first_translation_has_been_added:
-            assert first_translation_wp_post_id != -1
+        first_translation_wp_post_id = getFirstTranslation(wp_post_id)
+        if not first_translation_wp_post_id is None:
             old_obj = website.models.Initiative.objects.get(sk3_id=first_translation_wp_post_id)
             new_title_obj = website.models.InitiativeTitleText(
                 sk3_id=wp_post_id,
