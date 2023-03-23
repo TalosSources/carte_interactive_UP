@@ -13,6 +13,7 @@
     "react-router-dom": "^6.4.4",
     "react-scripts": "5.0.1",
     "reactstrap": "^9.1.5",
+    "sanitize-html": "^2.10.0",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4"
   },

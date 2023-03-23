@@ -52,6 +52,7 @@ const Sides = styled.div`
 
 const LeftSide = styled.div`
     flex: 1;
+    max-height: 100vh;
 `
 const RightSide = styled.div`
     flex: 1;
@@ -344,7 +345,6 @@ function Home() {
         })
         return null;
     }
-    const renderedCards = renderCardCollection(initiatives, (clickedSlug) => {setActiveTags(activeTags.concat([clickedSlug]))}, tagEntropy);
 
     const handleRegionChange = (event) => {
         const new_region_slug = event.target.value;
@@ -442,7 +442,9 @@ function Home() {
                         onChange={event => setSorting(event.target.value)}
                     />
                     <div id="cards-canvas">
-                        {renderedCards}
+                    {renderCardCollection(
+                        initiatives, 
+                        (clickedSlug) => {toggleActiveTag(clickedSlug)}, tagEntropy)}
                     </div>
                 </LeftSide>
                 <RightSide>
