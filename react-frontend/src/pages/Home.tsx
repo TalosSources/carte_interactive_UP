@@ -1,16 +1,20 @@
-// @ts-check
-
 import React, {useState, useEffect} from "react";
 import {MapContainer, TileLayer, Marker, Popup, useMapEvent} from 'react-leaflet';
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
-import { GeoCoordinate, BoundingBox } from "geocoordinate";
+// import { GeoCoordinate, BoundingBox } from "geocoordinate";
 import styled from "styled-components";
+// import {useParams, useSearchParams} from "react-router-dom";
+import { GeoCoordinate } from "../Coordinate";
+import { GeoBoundingBox } from "../BoundingBox";
 
 
 import "leaflet/dist/leaflet.css";
 import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 import L from "leaflet";
+import {renderCardCollection} from "../Cards";
+import GestureHandling from "leaflet-gesture-handling";
+import { createBrowserHistory } from "@remix-run/router";
 
 import NavBar from "../components/NavBar";
 import FloatingTop from "../components/FloatingTop";
@@ -21,13 +25,27 @@ import SelectFromObject from "../components/SelectFromObject";
 import GetInvolved from "../components/GetInvolved";
 import HighlightInitiative from "../components/HighlightInitiative";
 
-import {renderCardCollection} from "../Cards";
-import { createBrowserHistory } from "@remix-run/router";
-
 import useWindowSize from "../hooks/useWindowSize";
 
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
 
+export interface Tag {
+    id : number;
+    title : string;
+    slug : string;
+}
+
+export interface Initiative {
+    id : number;
+    tags : Tag[];
+    locations : {features : Feature[]};
+    main_image_url : string;
+    initiative_title_texts : {text : string}[];
+    initiative_description_texts : {text : string}[];
+}
+interface Feature {
+    geometry:{coordinates: number[]};
+}
 
 
 const Header = styled.header`
@@ -102,6 +120,13 @@ const TagContainer = styled.div`
     overflow-x: scroll;
 
 `;
+interface Region {
+    id : number;
+    properties : {
+        slug : string;
+        title : string;
+    }
+}
 
 const Sorting = {
   Alphabetical: { value: "1", text: "Sort alphabetically"},
@@ -114,9 +139,16 @@ const WhatToShow = {
     WithoutGlobal: {value: "3", text:"Hide global initiatives"}
 }
 
+class EnabledGestureHandling extends GestureHandling {
+    constructor(arg: L.Map) {
+        super(arg)
+        this.enable()
+    }
+}
+L.Map.addInitHook("addHandler", "gestureHandling", EnabledGestureHandling);
 
 // Components
-function RegionSelector(props) {
+function RegionSelector(props: { value: string; handleSelectChange: React.ChangeEventHandler<HTMLSelectElement>; regionList: Region[]; }) {
     // Inspiration: https://reactjs.org/docs/forms.html#the-select-tag
     console.log(props.value);
     return (
@@ -135,10 +167,9 @@ function RegionSelector(props) {
     );
 }
 
-function Home() {
+export default function Home() {
     let {regionSlug} = useParams();
     const [queryParameters] = useSearchParams()
-    const navigate = useNavigate();
     if (typeof regionSlug == 'undefined') {
         regionSlug = 'global';
     }
@@ -151,9 +182,10 @@ function Home() {
     } else {
         urlSearchString = "";
     }
-    let urlActiveTags;
-    if (queryParameters.has("t") && !(queryParameters.get("t")==null) && !(queryParameters.get("t")=="")) {
-        urlActiveTags = queryParameters.get("t")?.split(",");
+    let urlActiveTags : string[];
+    const activeTagsPart = queryParameters.get("t")
+    if (!(activeTagsPart==null) && !(activeTagsPart=="")) {
+        urlActiveTags = activeTagsPart.split(","); 
     } else {
         urlActiveTags = [];
     }
@@ -161,17 +193,18 @@ function Home() {
     //console.log(urlActiveTags)
     console.log(regionSlug);
     const [localizedInitiatives, setLocalizedInitiatives] = useState([]);
-    const [globalInitiatives, setGlobalInitiatives] = useState([]);
+    const [globalInitiatives, setGlobalInitiatives] = useState<Initiative[]>([]);
     const [searchString, setSearchString] = useState(urlSearchString);
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
     const [activeRegion, setActiveRegion] = useState({properties: { welcome_message_html: ""}});
-    const [activeTags, setActiveTags] = useState(urlActiveTags);
+    const [activeTags, setActiveTags] = useState<string[]>(urlActiveTags);
     const [regionList, setRegionList] = useState([]);
-    const [mapCenter, setMapCenter] = useState(GeoCoordinate({'latitude': 50, 'longitude': 12}));
-    const [mapBounds, setMapBounds] = useState(new BoundingBox());
-    const [sorting, setSorting] = useState(Sorting.Distance.value);
-    const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value);
-    const [tags, setTags] = useState([]);
+    const [mapCenter, setMapCenter] = useState(new GeoCoordinate({latitude: 50, longitude: 12}));
+    const [mapBounds, setMapBounds] = useState(new GeoBoundingBox());
+    const [sorting, setSorting] = useState(Sorting.Distance);
+    const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything);
+    const [tags, setTags] = useState<Tag[]>([]);
+
 
     const windowSize = useWindowSize();
 
@@ -207,7 +240,7 @@ function Home() {
             .then(response => response.json())
             .then(initiatives => {
                 const [global, local] = initiatives
-                    .reduce((result, initiative) => {
+                    .reduce((result: Initiative[][], initiative: Initiative) => {
                         result[initiative.locations.features.length > 0 ? 1 : 0].push(initiative);
                         return result;
                     },
@@ -247,14 +280,15 @@ function Home() {
 
     // refresh cards
 
-    function initiativeMatchesCurrentSearch(initiative) {
+    function initiativeMatchesCurrentSearch(initiative: Initiative) {
         return initiativeMatchesSearch(initiative, searchString)
     }
-    function initiativeMatchCurrentTags(initiative) {
-        // Initiative has some of each tag?
-        return activeTags.every(activeTagSlug => initiative.tags.some(iTag => iTag.slug == activeTagSlug))
+
+    function initiativeMatchCurrentTags(initiative: Initiative) {
+        return activeTags.every(tagSlug => initiative.tags.some(iTag => iTag.slug == tagSlug))
+
     }
-    function initiativeMatchesSearch(initiative, searchString) {
+    function initiativeMatchesSearch(initiative: Initiative, searchString: string) {
         const keywords = searchString.split(' ');
         return keywords
             .map(keyword => keyword.toLowerCase())
@@ -269,54 +303,54 @@ function Home() {
                     idt['text'].toLowerCase().includes(keyword)
                 )
             );
-    };
-    function initiativeInsideMap(initiative) {
+    }
+    function initiativeInsideMap(initiative: Initiative) {
         return initiative.locations.features.some(
             feature => mapBounds.contains(initiativeLocationFeatureToGeoCoordinate(feature))
         );
     }
 
-    function initiativeLocationFeatureToGeoCoordinate(feature) {
-        return GeoCoordinate({'longitude': feature['geometry']['coordinates'][0], 'latitude': feature['geometry']['coordinates'][1]})
+    function initiativeLocationFeatureToGeoCoordinate(feature: Feature) {
+        return new GeoCoordinate({'longitude': feature.geometry.coordinates[0], 'latitude': feature['geometry']['coordinates'][1]})
     }
 
-    function sortInitiativesByName(initiatives) {
-        let names = [];
-        for (var i = 0; i < initiatives.length; i++) {
+    function sortInitiativesByName(initiatives : Initiative[]) {
+        const names : [number, string][] = [];
+        for (let i = 0; i < initiatives.length; i++) {
             names.push([i, initiatives[i].initiative_title_texts[0]['text']]);
         }
         names.sort(function(left, right) {
             return left[1] < right[1] ? -1 : 1;
         });
-        let sortedInitiatives = [];
-        for (var i = 0; i < initiatives.length; i++) {
+        const sortedInitiatives = [];
+        for (let i = 0; i < initiatives.length; i++) {
             sortedInitiatives.push(initiatives[names[i][0]]);
         }
         return sortedInitiatives;
     }
 
-    function sortInitiativesByDistanceToCenter(initiatives) {
-        function initiativeDistanceFromMapCenter(initiative) {
+    function sortInitiativesByDistanceToCenter(initiatives: Initiative[]) {
+        function initiativeDistanceFromMapCenter(initiative: Initiative) {
             return Math.min(...initiative.locations.features.map(
                 feature => mapCenter.quickDistanceTo(initiativeLocationFeatureToGeoCoordinate(feature))
             ))
         }
 
-        let distances = [];
-        for (var i = 0; i < initiatives.length; i++) {
+        const distances = [];
+        for (let i = 0; i < initiatives.length; i++) {
             distances.push([i, initiativeDistanceFromMapCenter(initiatives[i])]);
         }
         distances.sort(function(left, right) {
             return left[1] < right[1] ? -1 : 1;
         });
-        let sortedInitiatives = [];
-        for (var i = 0; i < initiatives.length; i++) {
+        const sortedInitiatives = [];
+        for (let i = 0; i < initiatives.length; i++) {
             sortedInitiatives.push(initiatives[distances[i][0]]);
         }
         return sortedInitiatives;
     }
 
-    let initiatives = localizedInitiatives;
+    let initiatives: Initiative[] = localizedInitiatives;
     if (initiativesToShow === WhatToShow.OnlyOnMap.value) {
         initiatives = initiatives.filter(initiativeInsideMap);
     }
@@ -339,7 +373,7 @@ function Home() {
         return tag_b.initiatives.length - tag_a.initiatives.length
     }
     */
-    function calculateTagEntropy(initiatives) {
+    function calculateTagEntropy(initiatives: Initiative[]) {
         const tag_count = initiatives.reduce((map, initiative) =>
             initiative.tags.reduce((map, tag) => {
                 if (map.has(tag.id)) {
@@ -352,7 +386,7 @@ function Home() {
             },
             map),
         new Map());
-        return Object.fromEntries(tags.map(tag => {
+        return Object.fromEntries(tags.map((/** @type {Tag} */ tag) => {
             if (tag_count.has(tag.id)) {
                 const tc = tag_count.get(tag.id); 
                 return [tag.id, tc*(initiatives.length - tc)]
@@ -362,7 +396,7 @@ function Home() {
         }));
     }
     const tagEntropy = calculateTagEntropy(initiatives);
-    function sortTagsByEntropy(tag_a, tag_b) {
+    function sortTagsByEntropy(tag_a: Tag, tag_b: Tag) {
         return tagEntropy[tag_b.id] - tagEntropy[tag_a.id]
     }
 
@@ -376,18 +410,18 @@ function Home() {
     //markers
     const mapMarkers = renderMapMarkers(initiatives);
 
-    function leafletToGeoCoordinate(leafletCoordinate) {
-        return GeoCoordinate({'longitude' : leafletCoordinate['lng'], 'latitude': leafletCoordinate['lat']});
+    function leafletToGeoCoordinate(leafletCoordinate: { lng:number; lat:number; }) {
+        return new GeoCoordinate({'longitude' : leafletCoordinate['lng'], 'latitude': leafletCoordinate['lat']});
     }
 
     function RegisterMapCenter() {
-        const map = useMapEvent('moveend', (event) => {
+        const _map = useMapEvent('moveend', (event) => {
             setMapCenter(leafletToGeoCoordinate(event.target.getCenter()));
 
             const newBounds = event.target.getBounds();
-            setMapBounds(BoundingBox.fromCoordinates(
+            setMapBounds(GeoBoundingBox.fromCoordinates([
                 leafletToGeoCoordinate(newBounds['_northEast']),
-                leafletToGeoCoordinate(newBounds['_southWest'])
+                leafletToGeoCoordinate(newBounds['_southWest'])]
             ));
         })
         return null;
@@ -473,8 +507,28 @@ function Home() {
                     obj={Sorting}
                     defaultValue={Sorting.Distance.value}
                     onChange={event => setSorting(event.target.value)}
+                 />
+                 </div>
+{/* =======
+        <div>
+            <h2>Smartakartan</h2>
+            <RegionSelector
+                handleSelectChange={event => {
+                    const new_region_slug = event.target.value;
+                    setActiveRegionSlug(new_region_slug);
+                }
+                }
+                value={activeRegionSlug}
+                regionList={regionList}
+            />
+            <div dangerouslySetInnerHTML={{__html: activeRegion.properties.welcome_message_html}}></div>
+            <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false}>
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+>>>>>>> 112-typescript:react-frontend/src/pages/Home.tsx
                 />
-                </div>
+                </div> */}
 
 
 
@@ -507,8 +561,6 @@ function Home() {
                 <Sides>
 
                 <LeftSide>
-
-
                     <div id="cards-canvas">
                     {renderCardCollection(
                         initiatives, 
@@ -541,9 +593,9 @@ function Home() {
 
 // Helpers
 
-function renderMapMarkers(initiatives) {
-    function feature2Marker(initiative, feature, index) {
-        let title = initiative
+function renderMapMarkers(initiatives: Initiative[]) {
+    function feature2Marker(initiative: Initiative, feature: Feature, index: number) {
+        const title = initiative
             .initiative_title_texts[0]['text'];
         L.Icon.Default.imagePath="/"
         return (
@@ -561,5 +613,3 @@ function renderMapMarkers(initiatives) {
         initiative.locations.features.map((feature, index) => feature2Marker(initiative, feature, index))
     ).flat(1);
 }
-
-export default Home;

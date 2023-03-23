@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
+import { Tag } from "./Home";
 
 
-function renderTags(tags) {
+function renderTags(tags : Tag[]) {
     console.log("renderTags")
     if (typeof tags != 'undefined') {
         console.log(tags)
