@@ -382,8 +382,8 @@ def process_business_rows():
     """
     logging.debug("============= entered function process_business_rows")
     nr_added = 0
-    # business_resp_row_list_copy = business_resp_row_list.copy()
-    translations_for_added_posts_dict_list = []
+    translations_for_added_posts = []
+    # : {lngcode : sk3_id}[]
 
     business_resp_row_list_reversed = list(reversed(business_resp_row_list))  # -so sv comes first
     logging.debug(f"{len(business_resp_row_list_reversed)=}")
@@ -415,7 +415,7 @@ def process_business_rows():
 
         first_translation_has_been_added = False
         first_translation_wp_post_id = -1
-        for translation_for_added_post_dict in translations_for_added_posts_dict_list:
+        for translation_for_added_post_dict in translations_for_added_posts:
             translation_for_added_post_dict: dict
             for lng_code_, sk3_id_ in translation_for_added_post_dict.items():
                 # This works because we have at most two languages right now.
@@ -456,6 +456,7 @@ def process_business_rows():
 
         region_obj = website.models.Region.objects.get(slug=region_name)
         logging.debug(f"{main_image_url=}")
+        translations_for_added_posts.append(translations_dict)
         new_initiative_obj = website.models.Initiative(
             sk3_id=wp_post_id,
             region=region_obj,
@@ -463,7 +464,6 @@ def process_business_rows():
         )
         logging.debug(f"Saving Initiative object for {wp_post_id=}")
         new_initiative_obj.save()
-        translations_for_added_posts_dict_list.append(translations_dict)
         nr_added += 1
         # logging.debug(f"Added initiative with {initiative.id=}")
 
