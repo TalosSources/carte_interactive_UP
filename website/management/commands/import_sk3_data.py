@@ -451,6 +451,18 @@ def clear_unused_tags_from_db():
 
 
 def process_business_rows(businessRows):
+    """
+    Background information
+
+    SK3 data scheme:
+        For every language and initiative, there is a full datarow of information.
+          This contain besides others: localized title, localized description, image_url and tags. (Yes, duplicated data.)
+          And a dict with all translations of this initiative.
+
+    SK4 scheme:
+        For every initiative, there is a _InitiativeBases_ containing the tags, slug and image_url.
+        And in a separate table, there are _InitiatveTranslations_ for every language.
+    """
     def getImageUrl(row):
         try:
             if row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]: # : false | Dict
@@ -464,7 +476,6 @@ def process_business_rows(businessRows):
         first_translation_has_been_added = False
         first_translation_wp_post_id = -1
         for translation_for_added_post_dict in translations_for_added_posts:
-            translation_for_added_post_dict: dict
             for lng_code_, sk3_id_ in translation_for_added_post_dict.items():
                 # This works because we have at most two languages right now.
                 if sk3_id_ == wp_post_id:
@@ -475,44 +486,124 @@ def process_business_rows(businessRows):
             if first_translation_has_been_added:
                 return first_translation_wp_post_id
         return None
-    def addTranslation(rowWithNewTranslation, idOfExistingObj):
+
+    def addTranslationToInitiativeBySK3Id(row, idOfExistingObj):
+        old_obj = website.models.Initiative.objects.get(sk3_id=idOfExistingObj)
+        addTranslation2(row, old_obj)
+
+    def addTranslationToInitiativeBase(row, initiativeBase):
         wp_post_id = row[RJK_ID]
         lang_code = row[RJK_LANG]
         title = row[RJK_TITLE][RJSK_RENDERED]
         afc = row[RJK_ACF]
         description = afc[RJSK_ACF_DESCRIPTION_ID]
-
-        old_obj = website.models.Initiative.objects.get(sk3_id=idOfExistingObj)
         new_title_obj = website.models.InitiativeTitleText(
             sk3_id=wp_post_id,
             language_code=lang_code,
             text=title,
-            initiative=old_obj
+            initiative=initiativeBase
         )
+        try:
+            new_title_obj.save()
+        except:
+            otherTitle = website.models.InitiativeTitleText.objects.get(sk3_id=wp_post_id)
+            logging.warn(f"Title for initiative {title} {wp_post_id} in lang {lang_code} was already present. Bound to initiative {otherTitle.initiative.sk3_id}")
         new_description_obj = website.models.InitiativeDescriptionText(
             sk3_id=wp_post_id,
             language_code=lang_code,
             text=description,
-            initiative=old_obj
+            initiative=initiativeBase
         )
         try:
-            new_title_obj.save()
             new_description_obj.save()
         except:
-            logging.info(f"Titel or description {title} for {wp_post_id} was already present.")
+            logging.warn(f"Description for initiative {title} {wp_post_id} in lang {lang_code} was already present.")
+
+    def checkRow(row):
+        resp_row_afc = row[RJK_ACF]
+        description = resp_row_afc[RJSK_ACF_DESCRIPTION_ID]
+        translations_dict = row[RJK_TRANSLATIONS]
+        title = row[RJK_TITLE][RJSK_RENDERED]
+
+        if LANG_CODE_SV not in translations_dict:
+            logging.warning(f"Missing Swedish translation for {wp_post_id=}")
+        if LANG_CODE_EN not in translations_dict:
+            logging.warning(f"Missing English translation for {wp_post_id=}")
+        if not description:
+            logging.warning(f"WARNING: Description for {title} is empty")
+            description = "-"
+        if len(description) > 12000:
+            logging.info(f"INFO: Description for {title} is very long: {len(description)} characters")
+
+    def addNewBaseInitiative(row):
+        wp_post_id = row[RJK_ID]
+        data_type_full_name = row[RJK_TYPE]
+        main_image_url = getImageUrl(row)
+        region_name = data_type_full_name.split("_")[0]
+        assert region_name in REGION_DATA_DICT.keys()
+
+        region_obj = website.models.Region.objects.get(slug=region_name)
+        logging.debug(f"{main_image_url=}")
+        try:
+            website.models.Initiative.objects.get(sk3_id=wp_post_id)
+            return None
+        except:
+            logging.debug("Initiative not there")
+            pass
+        new_initiative_obj = website.models.Initiative(
+            sk3_id=wp_post_id,
+            region=region_obj,
+            main_image_url=main_image_url
+        )
+        logging.debug(f"Saving Initiative object for {wp_post_id=}")
+        new_initiative_obj.save()
+        return new_initiative_obj
+    
+    def linkLocations(row, initiativeObj):
+        data_type_full_name = row[RJK_TYPE]
+        if RJK_ADDRESS_AND_COORDINATE in row:
+            address_and_coordinate_list_or_bool = row[RJK_ADDRESS_AND_COORDINATE]
+            if type(address_and_coordinate_list_or_bool) is bool and not address_and_coordinate_list_or_bool:
+                # This means that the initiative has no locations
+                return
+            for aac_dict in address_and_coordinate_list_or_bool:
+                # Address comes first, so we can connect here (and don't have to save until later)
+                location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
+                try:
+                    location = website.models.Location.objects.get(sk3_id=location_id)
+                    # -only works when added to db, so will not work during testing
+                    location.initiative = initiativeObj
+                    location.save()
+                except website.models.Location.DoesNotExist:
+                    logging.error(f"Location doesn't exist for sk3_id '{location_id}'")
+                    #TODO sys.exit()
+        else:
+            if GLOBAL_R not in data_type_full_name:
+                logging.warning(f"WARNING: No location available for initiative: {new_initiative_obj}")
+
+    def linkTags(row, initiativeObj):
+        all_tags_list = []
+        for rjk in [RJK_HUVUDTAGGAR, RJK_TAGGAR, RJK_SUBTAGGAR, RJK_TRANSAKTIONSFORM]:
+            tags_list_or_bool = row[rjk]
+            if tags_list_or_bool:  # ensures that this is not False or []
+                all_tags_list.extend(tags_list_or_bool)
+        logging.debug(f"{len(all_tags_list)=}")
+        for tag_title in all_tags_list:
+            tag_title: str
+            try:
+                tag = website.models.Tag.objects.get(title=tag_title)
+                initiativeObj.tags.add(tag)
+            except:
+                logging.warn(f"Failure when loading tag {tag_title}")
     logging.debug("============= entered function process_business_rows")
     nr_added = 0
     translations_for_added_posts = []
     # : {lngcode : sk3_id}[]
 
-    business_resp_row_list_reversed = list(reversed(businessRows))  # -so sv comes first
+    business_resp_row_list_reversed = list((businessRows))  # -so sv comes first
     logging.debug(f"{len(business_resp_row_list_reversed)=}")
-    """
-    for resp_row in business_resp_row_list_reversed:
-        translations_dict = resp_row[RJK_TRANSLATIONS]
-        translations_dict_list.append(translations_dict)  # -will contain duplicates
-    """
-    for resp_row in business_resp_row_list_reversed:
+
+    for row in business_resp_row_list_reversed:
         """
         {
             "id": 11636,
@@ -650,98 +741,26 @@ def process_business_rows(businessRows):
             }
         },
         """
-        wp_post_id = resp_row[RJK_ID]
-        lang_code = resp_row[RJK_LANG]
-        logging.debug(f"{wp_post_id=}, {lang_code=}")
-        title = resp_row[RJK_TITLE][RJSK_RENDERED]
-        data_type_full_name = resp_row[RJK_TYPE]
+        checkRow(row)
 
-        resp_row_afc = resp_row[RJK_ACF]
-        description = resp_row_afc[RJSK_ACF_DESCRIPTION_ID]
-
-        translations_dict = resp_row[RJK_TRANSLATIONS]
-        main_image_url = getImageUrl(resp_row)
-
-        # if sk3id in translations_dict[others]
-        # wp_post_id
-
-        if LANG_CODE_SV not in translations_dict:
-            logging.warning(f"Missing Swedish translation for {wp_post_id=}")
-        if LANG_CODE_EN not in translations_dict:
-            logging.warning(f"Missing English translation for {wp_post_id=}")
-
+        wp_post_id = row[RJK_ID]
         first_translation_wp_post_id = getFirstTranslation(wp_post_id)
-        if not first_translation_wp_post_id is None:
-            addTranslation(resp_row, first_translation_wp_post_id)
-            continue
-        # if is first
-        if not description:
-            logging.warning(f"WARNING: Description for {title} is empty")
-            description = "-"
-        if len(description) > 12000:
-            logging.info(f"INFO: Description for {title} is very long: {len(description)} characters")
-        region_name = data_type_full_name.split("_")[0]
-        assert region_name in REGION_DATA_DICT.keys()
-
-        region_obj = website.models.Region.objects.get(slug=region_name)
-        logging.debug(f"{main_image_url=}")
-        translations_for_added_posts.append(translations_dict)
-        new_initiative_obj = website.models.Initiative(
-            sk3_id=wp_post_id,
-            region=region_obj,
-            main_image_url=main_image_url
-        )
-        logging.debug(f"Saving Initiative object for {wp_post_id=}")
-        new_initiative_obj.save()
-        nr_added += 1
-        # logging.debug(f"Added initiative with {initiative.id=}")
-
-        new_title_obj = website.models.InitiativeTitleText(
-            sk3_id=wp_post_id,
-            language_code=lang_code,
-            text=title,
-            initiative=new_initiative_obj
-        )
-        new_title_obj.save()
-        new_description_obj = website.models.InitiativeDescriptionText(
-            sk3_id=wp_post_id,
-            language_code=lang_code,
-            text=description,
-            initiative=new_initiative_obj
-        )
-        new_description_obj.save()
-
-        if RJK_ADDRESS_AND_COORDINATE in resp_row:
-            address_and_coordinate_list_or_bool = resp_row[RJK_ADDRESS_AND_COORDINATE]
-            # print(f"{type(address_and_coordinate_list)=}")
-            if type(address_and_coordinate_list_or_bool) is bool and not address_and_coordinate_list_or_bool:
-                # This means that the initiative has no locations
+        if first_translation_wp_post_id is None:
+            # if is first
+            translations_dict = row[RJK_TRANSLATIONS]
+            translations_for_added_posts.append(translations_dict)
+            # logging.debug(f"Added initiative with {initiative.id=}")
+            new_initiative_obj = addNewBaseInitiative(row)
+            if new_initiative_obj is None:
                 continue
-            for aac_dict in address_and_coordinate_list_or_bool:
-                # Address comes first, so we can connect here (and don't have to save until later)
-                location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
-                try:
-                    location = website.models.Location.objects.get(sk3_id=location_id)
-                    # -only works when added to db, so will not work during testing
-                except website.models.Location.DoesNotExist:
-                    logging.error(f"Location doesn't exist for sk3_id '{location_id}'")
-                    sys.exit()
-                location.initiative = new_initiative_obj
-                location.save()
-        else:
-            if GLOBAL_R not in data_type_full_name:
-                logging.warning(f"WARNING: No location available for initiative: {new_initiative_obj}")
 
-        all_tags_list = []
-        for rjk in [RJK_HUVUDTAGGAR, RJK_TAGGAR, RJK_SUBTAGGAR, RJK_TRANSAKTIONSFORM]:
-            tags_list_or_bool = resp_row[rjk]
-            if tags_list_or_bool:  # ensures that this is not False or []
-                all_tags_list.extend(tags_list_or_bool)
-        logging.debug(f"{len(all_tags_list)=}")
-        for tag_title in all_tags_list:
-            tag_title: str
-            tag = website.models.Tag.objects.get(title=tag_title)
-            new_initiative_obj.tags.add(tag)
+            addTranslation2(row, new_initiative_obj)
+
+            linkLocations(row, new_initiative_obj)
+
+            linkTags(row, new_initiative_obj)
+        else:
+            addTranslationToInitiativeBySK3Id(row, first_translation_wp_post_id)
 
     # return nr_added
     logging.info(f"{nr_added=}")
