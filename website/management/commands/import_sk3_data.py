@@ -475,6 +475,31 @@ def process_business_rows(businessRows):
             if first_translation_has_been_added:
                 return first_translation_wp_post_id
         return None
+    def addTranslation(rowWithNewTranslation, idOfExistingObj):
+        wp_post_id = row[RJK_ID]
+        lang_code = row[RJK_LANG]
+        title = row[RJK_TITLE][RJSK_RENDERED]
+        afc = row[RJK_ACF]
+        description = afc[RJSK_ACF_DESCRIPTION_ID]
+
+        old_obj = website.models.Initiative.objects.get(sk3_id=idOfExistingObj)
+        new_title_obj = website.models.InitiativeTitleText(
+            sk3_id=wp_post_id,
+            language_code=lang_code,
+            text=title,
+            initiative=old_obj
+        )
+        new_description_obj = website.models.InitiativeDescriptionText(
+            sk3_id=wp_post_id,
+            language_code=lang_code,
+            text=description,
+            initiative=old_obj
+        )
+        try:
+            new_title_obj.save()
+            new_description_obj.save()
+        except:
+            logging.info(f"Titel or description {title} for {wp_post_id} was already present.")
     logging.debug("============= entered function process_business_rows")
     nr_added = 0
     translations_for_added_posts = []
@@ -647,24 +672,9 @@ def process_business_rows(businessRows):
 
         first_translation_wp_post_id = getFirstTranslation(wp_post_id)
         if not first_translation_wp_post_id is None:
-            old_obj = website.models.Initiative.objects.get(sk3_id=first_translation_wp_post_id)
-            new_title_obj = website.models.InitiativeTitleText(
-                sk3_id=wp_post_id,
-                language_code=lang_code,
-                text=title,
-                initiative=old_obj
-            )
-            new_title_obj.save()
-            new_description_obj = website.models.InitiativeDescriptionText(
-                sk3_id=wp_post_id,
-                language_code=lang_code,
-                text=description,
-                initiative=old_obj
-            )
-            new_description_obj.save()
-
+            addTranslation(resp_row, first_translation_wp_post_id)
             continue
-
+        # if is first
         if not description:
             logging.warning(f"WARNING: Description for {title} is empty")
             description = "-"
