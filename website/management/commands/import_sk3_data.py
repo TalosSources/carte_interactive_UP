@@ -1,6 +1,7 @@
 import dataclasses
 import logging
 import sys
+from datetime import datetime
 
 import django.contrib.gis.geos
 import django.core.management.base
@@ -9,7 +10,23 @@ import requests
 
 import website.models
 
-logging.basicConfig(level=logging.INFO)
+from typing import Dict, List, Optional
+
+"""
+Loglevel:
+- Debug
+- Info: something that may be interesting to know, but is expectable
+  - if initiatives, tags, … was already in the DB
+- Warning: something that we observed that is unexpected
+  - if the data if found to be strange
+- Error: ?
+- Critical: something that may render the process useless
+  - if tags or locations to be linked cannot be found
+- Fatal: something that make the process fail
+  - nothing so far
+"""
+logging.basicConfig(level=logging.WARN)
+
 
 """
 
@@ -82,9 +99,6 @@ OVERSATTNING_DT = "oversattning"
 GLOBAL_R = "global"
 REGION_DT = "region"
 TAGG_DT = "tagg"
-
-DATA_TYPE_LIST = [
-    "faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, REGION_DT, OVERSATTNING_DT, "page_type", "tagg_grupp", TAGG_DT]
 
 
 @dataclasses.dataclass
@@ -181,7 +195,6 @@ REGION_DATA_DICT = {
 # Contains sub-lists on this format: [sk3_id_en, sk3_id_sv], where the order of langs is undetermined
 # business_lang_combos_list = []
 
-# check
 def requestSK3API(data_type_full_name, per_page=None, fields=None, page_nr=None):
     bearer_token = "LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7"
     header_dict = {"Authorization": f"Bearer {bearer_token}"}
@@ -205,7 +218,6 @@ def requestSK3API(data_type_full_name, per_page=None, fields=None, page_nr=None)
         return None
     return response_json
 
-# check
 def getAllDataOf(dataTypeFullName):
         page_nr = 1
         responses = []
@@ -219,16 +231,12 @@ def getAllDataOf(dataTypeFullName):
 
             responses += response_json
             page_nr += 1
-            #TODO
-            break
         return responses
     
-# check
 def isPublished(json_row):
     status = json_row[RJK_STATUS]
     return(status == STATUS_PUBLISH)
 
-# check
 def importRegions():
     regions = getAllDataOf(REGION_DT)
     regions = filter(lambda row: isPublished(row), regions)
@@ -306,7 +314,6 @@ def importRegions():
             continue
         slug = resp_row[RJK_SLUG]
         region_data = REGION_DATA_DICT[slug]
-        region_data: RegionData
         new_obj = website.models.Region(
             sk3_id=wp_post_id,
             slug=slug,
@@ -316,7 +323,6 @@ def importRegions():
         )
         new_obj.save()
 
-# check
 def importAddresses(region):
 
     """
@@ -398,7 +404,6 @@ def importAddresses(region):
         )
         new_obj.save()
 
-# check
 def importPages(region):
     data_type_full_name = f"{region}_{PAGE_DT}"
     pages = getAllDataOf(data_type_full_name)
@@ -415,7 +420,6 @@ def importTags():
     tags = filter(lambda row: isPublished(row), tags)
     return list(tags)
 
-# check
 def import_sk3_data(i_args: List[str]):
     importRegions()
     tags = importTags()
@@ -439,16 +443,13 @@ LANG_CODE_EN = "en"
 LANG_CODE_SV = "sv"
 
 
-def clear_unused_tags_from_db():
+def clear_unused_tags_from_db() -> None:
     for tag_obj in website.models.Tag.objects.all():
-        count = 0
-        tag_obj: website.models.Tag
         for initiative_obj in website.models.Initiative.objects.all():
             if tag_obj in initiative_obj.tags.all():
-                count += 1
-        if count == 0:
+                break
+        else:
             tag_obj.delete()
-
 
 def process_business_rows(businessRows):
     """
@@ -504,6 +505,7 @@ def process_business_rows(businessRows):
             logging.info(f"Description for initiative {title} {wp_post_id} in lang {lang_code} was already present.")
 
     def checkRow(row):
+        wp_post_id = row[RJK_ID]
         resp_row_afc = row[RJK_ACF]
         description = resp_row_afc[RJSK_ACF_DESCRIPTION_ID]
         translations_dict = row[RJK_TRANSLATIONS]
@@ -545,23 +547,20 @@ def process_business_rows(businessRows):
         data_type_full_name = row[RJK_TYPE]
         if RJK_ADDRESS_AND_COORDINATE in row:
             address_and_coordinate_list_or_bool = row[RJK_ADDRESS_AND_COORDINATE]
-            if type(address_and_coordinate_list_or_bool) is bool and not address_and_coordinate_list_or_bool:
-                # This means that the initiative has no locations
-                return
-            for aac_dict in address_and_coordinate_list_or_bool:
-                # Address comes first, so we can connect here (and don't have to save until later)
-                location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
-                try:
-                    location = website.models.Location.objects.get(sk3_id=location_id)
-                    # -only works when added to db, so will not work during testing
-                    location.initiative = initiativeObj
-                    location.save()
-                except website.models.Location.DoesNotExist:
-                    logging.critical(f"Location doesn't exist for sk3_id '{location_id}'")
-                    #TODO sys.exit()
+            if address_and_coordinate_list_or_bool:
+                for aac_dict in address_and_coordinate_list_or_bool:
+                    # Address comes first, so we can connect here (and don't have to save until later)
+                    location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
+                    try:
+                        location = website.models.Location.objects.get(sk3_id=location_id)
+                        # -only works when added to db, so will not work during testing
+                        location.initiative = initiativeObj
+                        location.save()
+                    except website.models.Location.DoesNotExist:
+                        logging.critical(f"Location doesn't exist for sk3_id '{location_id}'")
         else:
             if GLOBAL_R not in data_type_full_name:
-                logging.warning(f"WARNING: No location available for initiative: {initiativeBase}")
+                logging.warning(f"WARNING: No location available for non-global initiative: {initiativeBase}")
 
     def linkTags(row, initiativeObj):
         all_tags_list = []
@@ -571,7 +570,6 @@ def process_business_rows(businessRows):
                 all_tags_list.extend(tags_list_or_bool)
         logging.debug(f"{len(all_tags_list)=}")
         for tag_title in all_tags_list:
-            tag_title: str
             try:
                 tag = website.models.Tag.objects.get(title=tag_title)
                 initiativeObj.tags.add(tag)
@@ -585,10 +583,7 @@ def process_business_rows(businessRows):
     logging.debug("============= entered function process_business_rows")
     initiativeBasesOfTranslations = {} # : {sk3TranslationId : sk4InitiativeBaseObj}
 
-    business_resp_row_list_reversed = list((businessRows))  # -so sv comes first
-    logging.debug(f"{len(business_resp_row_list_reversed)=}")
-
-    for row in business_resp_row_list_reversed:
+    for row in businessRows:
         """
         {
             "id": 11636,
@@ -737,7 +732,6 @@ def process_business_rows(businessRows):
             linkTags(row, initiativeBase)
         addTranslationToInitiativeBase(row, initiativeBase)
 
-#check
 def process_tagg_rows(tags):
 
     """
@@ -860,7 +854,6 @@ def process_tagg_rows(tags):
         except:
             logging.info(f"Tag with slug {tagg_dict[tag_title]} was already present")
 
-#check
 class Command(django.core.management.base.BaseCommand):
     help = "Migrate data from sk3"
 
