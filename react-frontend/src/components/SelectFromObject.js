@@ -1,11 +1,16 @@
 import React from "react";
 
-const SelectFromObject = ( {obj, defaultValue, onChange}) => {
-    // obj : { value, text }
+// type Alternative = { value: string, text: string};
+// type AlternativeMap = {[key: string] : Alternative};
+// type Props = {obj: AlternativeMap, defaultValue: string, onChange: () => void} 
+
+// const SelectFromObject = ({obj, defaultValue, onChange}: Props) => {
+    const SelectFromObject = ({obj, defaultValue, onChange}) => {
+    // obj :{ alnternative { value, text }}
     const options = Object.keys(obj).map( key => obj[key]);
     return (
         <select 
-            defaultValue={defaultValue || obj[keys[0]].value}
+            defaultValue={defaultValue || Object.values(obj)[0]?.value}
             onChange={onChange}
         >
             {options.map( (opt, i) => {
