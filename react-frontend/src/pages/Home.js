@@ -141,14 +141,25 @@ function Home() {
         const tagPart = activeTags.join(",")
         history.replace('/r/' + activeRegionSlug + "?s=" + searchString + "&t=" + tagPart);
     }, [activeRegionSlug, activeTags, searchString]);
-    // fetch initial initiatives
     useEffect(() => {
+        // fetch tags
         const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
         fetch(tag_api_url)
-            .then(response => response.json())
-            .then(response_json => {
-                setTags(response_json);
-            });
+        .then(response => response.json())
+        .then(response_json => {
+            console.log("tags", response_json);
+            const tags = response_json.map(tag => {
+                let isActive = urlActiveTags.includes(tag.slug)
+                tag.title = tag.title.replace("&amp;", "&")
+                return {...tag, active: isActive}
+
+                
+            }) 
+            setTags(tags);
+            // remove invalid strings in activeTags
+            // setActiveTags(tags.filter(tag => tag.active).map(tag => tag.slug));
+        });
+        // fetch initial initiatives
         const initiatives_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/`;
         fetch(initiatives_api_url)
             .then(response => response.json())
@@ -167,7 +178,7 @@ function Home() {
         const region_api_url = `${process.env.REACT_APP_BACKEND_URL}/regions/`;
         fetch(region_api_url)
             .then(r => r.json())
-            .then(regions =>
+            .then(regions => 
                 setRegionList(regions['features'])
             )
             .catch(err => console.error(err));
@@ -192,7 +203,8 @@ function Home() {
         return initiativeMatchesSearch(initiative, searchString)
     }
     function initiativeMatchCurrentTags(initiative) {
-        return activeTags.every(tagSlug => initiative.tags.some(iTag => iTag.slug == tagSlug))
+        // Initiative has some of each tag?
+        return activeTags.every(activeTagSlug => initiative.tags.some(iTag => iTag.slug == activeTagSlug))
     }
     function initiativeMatchesSearch(initiative, searchString) {
         const keywords = searchString.split(' ');
@@ -305,9 +317,13 @@ function Home() {
     function sortTagsByEntropy(tag_a, tag_b) {
         return tagEntropy[tag_b.id] - tagEntropy[tag_a.id]
     }
+
+    const TOP_TAGS_LIMIT = 10;
     let top_tags = tags
         .filter(tag => tagEntropy[tag.id] > 0)
     top_tags.sort(sortTagsByEntropy);
+    top_tags = top_tags.slice(0, TOP_TAGS_LIMIT) // Limit top tags
+    console.log("top_tags", top_tags)
 
     //markers
     const mapMarkers = renderMapMarkers(initiatives);
@@ -335,6 +351,18 @@ function Home() {
         navigate('/r/' + new_region_slug);
         setActiveRegionSlug(new_region_slug);
     }
+
+    const toggleActiveTag = (tagSlug) => {
+        console.log(tagSlug)
+        if (activeTags.find(ts => tagSlug == ts)) {
+            console.log("Remove from activeTags:", tagSlug)
+            const newTagList = activeTags.filter(ts => ts !== tagSlug)
+            setActiveTags(newTagList);
+        } else {
+            console.log("Add to activeTags:", tagSlug)
+            setActiveTags([...activeTags, tagSlug]);
+        }
+    } 
 
     return (
         <>
@@ -373,12 +401,25 @@ function Home() {
                 </SearchRow>
 
 
-                    <div className="tagContainer d-flex flex-row mb-2">
+                    <div className="tagContainer d-flex flex-row mb-2 mt-3 overflow-hidden">
+                        {
+                            activeTags.map((tagSlug) => {
+                                return (<TopTagButton 
+                                    key={tagSlug}
+                                    title={tags.find(tag => tag?.slug === tagSlug)?.title}
+                                    onClick={() => toggleActiveTag(tagSlug)}
+                                    active={true}
+                                />)
+                            })
+                        }
                         {
                             top_tags.map((tagElement) => (
                                 <TopTagButton 
                                     key={tagElement.title}
-                                    tagElement={tagElement} />
+                                    title={tagElement.title} 
+                                    onClick={() => toggleActiveTag(tagElement.slug)}
+                                    active={activeTags.find(ts => tagElement.slug == ts)}
+                                    />
                             ))
                         }
 
@@ -425,6 +466,80 @@ function Home() {
 
             </MainContainer>
         </>
+// =======
+//         <div>
+//             <h2>Smartakartan</h2>
+//             <RegionSelector
+//                 handleSelectChange={event => {
+//                     const new_region_slug = event.target.value;
+//                     setActiveRegionSlug(new_region_slug);
+//                 }
+//                 }
+//                 value={activeRegionSlug}
+//                 regionList={regionList}
+//             />
+//             <div dangerouslySetInnerHTML={{__html: activeRegion.properties.welcome_message_html}}></div>
+//             <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false} gestureHandling={true}>
+//                 <TileLayer
+//                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+//                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+//                 />
+//                 {mapMarkers}
+//                 <RegisterMapCenter/>
+//             </MapContainer>
+//             <div id="cards-panel">
+//                 <div id="tagPanel">
+//                 {
+//                     activeTags.map(tagSlug => {
+//                         const tagElement = tags.filter(tag => tag.slug == tagSlug)[0];
+//                         if (typeof tagElement == "undefined") {
+//                             return ""
+//                         }
+//                         return <div className="selectedTag" onClick={() => setActiveTags(activeTags.filter(ts => ts !== tagSlug))}>
+//                             <div dangerouslySetInnerHTML={{__html: "X " + tagElement.title}}></div>
+//                             <div className="tagValue">{tagEntropy[tagElement.id]}</div>
+//                         </div>
+//                     })
+//                 }
+//                 {
+//                     top_tags.map((tagElement) => (
+//                         <div className="proposedTag" onClick={() => setActiveTags(activeTags.concat([tagElement.slug]))}>
+//                             <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
+//                             <div className="tagValue">{tagEntropy[tagElement.id]}</div>
+//                         </div>
+//                     ))
+//                 }</div>
+//                 Filter: <input name="search" value={searchString} onChange={event =>
+//                         {
+//                             const search_string = event.target.value;
+//                             setSearchString(search_string)
+//                         }
+//                     }/>
+//                 <select defaultValue={WhatToShow.Everything} onChange={event => setInitiativesToShow(event.target.value)}>
+//                     <option value={WhatToShow.Everything}>
+//                         Show all
+//                     </option>
+//                     <option value={WhatToShow.WithoutGlobal}>
+//                         Hide global initiatives
+//                     </option>
+//                     <option value={WhatToShow.OnlyOnMap}>
+//                         only show initiatives on the map
+//                     </option>
+//                 </select>
+//                 <select defaultValue={Sorting.Distance} onChange={event => setSorting(event.target.value)}>
+//                     <option value={Sorting.Distance}>
+//                         Sort by distance
+//                     </option>
+//                     <option value={Sorting.Alphabetical}>
+//                         Sort alphabetically
+//                     </option>
+//                 </select>
+//                 <div id="cards-canvas">
+//                     {renderedCards}
+//                 </div>
+//             </div>
+//         </div>
+// >>>>>>> main
     );
 }
 
