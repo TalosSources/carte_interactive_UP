@@ -193,15 +193,15 @@ def requestSK3API(data_type_full_name, per_page=None, fields=None, page_nr=None)
         api_url += f"&per_page={PER_PAGE}&page={page_nr}"
         # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
     api_url = api_url.replace('&', '?', 1)
-    logging.info(f"Calling requests.get with {api_url=}")
+    logging.debug(f"Calling requests.get with {api_url=}")
     response = requests.get(api_url, headers=header_dict)
     response_json = response.json()  # -can be a list or a dict
     if type(response_json) is dict and response_json.get("code", "") == "rest_post_invalid_page_number":
-        logging.info(f"No more data found for {page_nr=} Exiting while loop")
+        logging.debug(f"No more data found for {page_nr=} Exiting while loop")
         return None
 
     if response.status_code != 200:
-        logging.warning(f"WARNING response code was not 200 --- {response.status_code=}")
+        logging.critical(f"WARNING response code was not 200 --- {response.status_code=}")
         return None
     return response_json
 
@@ -403,7 +403,7 @@ def importPages(region):
     data_type_full_name = f"{region}_{PAGE_DT}"
     pages = getAllDataOf(data_type_full_name)
     pages = filter(lambda row: isPublished(row), pages)
-    logging.info(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
+    logging.warning(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
 
 def importInitiatives(region : str):
     data_type_full_name = f"{region}_{BUSINESS_DT}"
@@ -431,7 +431,7 @@ def import_sk3_data(i_args: List[str]):
         afterBusiness = datetime.now()
         logging.debug(f"Importing buisnesses took {afterBusiness-beforeBusiness}")
 
-    logging.info("=== Reading from sk3 API done. Now starting processing ===")
+    logging.debug("=== Reading from sk3 API done. Now starting processing ===")
     clear_unused_tags_from_db()
 
 
@@ -464,32 +464,16 @@ def process_business_rows(businessRows):
         And in a separate table, there are _InitiatveTranslations_ for every language.
     """
     def getImageUrl(row):
-        try:
-            if row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]: # : false | Dict
-                return row[RJK_ACF][RJSK_ACF_MAIN_IMAGE][RJSK_ACF_MAIN_IMAGE_URL]
-            else:
-                return ""
-        except KeyError as e:
-            logging.error(f"Key error for {row=}")
-            raise e
-    def getFirstTranslation(thisTranslationSK3Id):
-        first_translation_has_been_added = False
-        first_translation_wp_post_id = -1
-        for translation_for_added_post_dict in translations_for_added_posts:
-            for lng_code_, sk3_id_ in translation_for_added_post_dict.items():
-                # This works because we have at most two languages right now.
-                if sk3_id_ == wp_post_id:
-                    logging.debug(f"{translation_for_added_post_dict=}")
-                    first_translation_has_been_added = True
-                else:
-                    first_translation_wp_post_id = sk3_id_
-            if first_translation_has_been_added:
-                return first_translation_wp_post_id
-        return None
+        if row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]: # : false | Dict
+            return row[RJK_ACF][RJSK_ACF_MAIN_IMAGE][RJSK_ACF_MAIN_IMAGE_URL]
+        else:
+            return ""
 
-    def addTranslationToInitiativeBySK3Id(row, idOfExistingObj):
-        old_obj = website.models.Initiative.objects.get(sk3_id=idOfExistingObj)
-        addTranslation2(row, old_obj)
+    def getInitiativeBase(thisTranslationSK3):
+        thisTranslationSK3Id = thisTranslationSK3[RJK_ID]
+        if thisTranslationSK3Id in initiativeBasesOfTranslations:
+            return initiativeBasesOfTranslations[thisTranslationSK3Id]
+        return None
 
     def addTranslationToInitiativeBase(row, initiativeBase):
         wp_post_id = row[RJK_ID]
@@ -507,7 +491,7 @@ def process_business_rows(businessRows):
             new_title_obj.save()
         except:
             otherTitle = website.models.InitiativeTitleText.objects.get(sk3_id=wp_post_id)
-            logging.warn(f"Title for initiative {title} {wp_post_id} in lang {lang_code} was already present. Bound to initiative {otherTitle.initiative.sk3_id}")
+            logging.info(f"Title for initiative {title} {wp_post_id} in lang {lang_code} was already present. Bound to initiative {otherTitle.initiative.sk3_id}")
         new_description_obj = website.models.InitiativeDescriptionText(
             sk3_id=wp_post_id,
             language_code=lang_code,
@@ -517,7 +501,7 @@ def process_business_rows(businessRows):
         try:
             new_description_obj.save()
         except:
-            logging.warn(f"Description for initiative {title} {wp_post_id} in lang {lang_code} was already present.")
+            logging.info(f"Description for initiative {title} {wp_post_id} in lang {lang_code} was already present.")
 
     def checkRow(row):
         resp_row_afc = row[RJK_ACF]
@@ -545,10 +529,8 @@ def process_business_rows(businessRows):
         region_obj = website.models.Region.objects.get(slug=region_name)
         logging.debug(f"{main_image_url=}")
         try:
-            website.models.Initiative.objects.get(sk3_id=wp_post_id)
-            return None
+            return website.models.Initiative.objects.get(sk3_id=wp_post_id)
         except:
-            logging.debug("Initiative not there")
             pass
         new_initiative_obj = website.models.Initiative(
             sk3_id=wp_post_id,
@@ -575,11 +557,11 @@ def process_business_rows(businessRows):
                     location.initiative = initiativeObj
                     location.save()
                 except website.models.Location.DoesNotExist:
-                    logging.error(f"Location doesn't exist for sk3_id '{location_id}'")
+                    logging.critical(f"Location doesn't exist for sk3_id '{location_id}'")
                     #TODO sys.exit()
         else:
             if GLOBAL_R not in data_type_full_name:
-                logging.warning(f"WARNING: No location available for initiative: {new_initiative_obj}")
+                logging.warning(f"WARNING: No location available for initiative: {initiativeBase}")
 
     def linkTags(row, initiativeObj):
         all_tags_list = []
@@ -594,11 +576,14 @@ def process_business_rows(businessRows):
                 tag = website.models.Tag.objects.get(title=tag_title)
                 initiativeObj.tags.add(tag)
             except:
-                logging.warn(f"Failure when loading tag {tag_title}")
+                logging.critical(f"Failure when loading tag {tag_title}")
+    def registerInitiativeBase(initiativeBase, row):
+        translations_dict = row[RJK_TRANSLATIONS]
+        for translationId in translations_dict:
+            initiativeBasesOfTranslations[translationId] = initiativeBase
+
     logging.debug("============= entered function process_business_rows")
-    nr_added = 0
-    translations_for_added_posts = []
-    # : {lngcode : sk3_id}[]
+    initiativeBasesOfTranslations = {} # : {sk3TranslationId : sk4InitiativeBaseObj}
 
     business_resp_row_list_reversed = list((businessRows))  # -so sv comes first
     logging.debug(f"{len(business_resp_row_list_reversed)=}")
@@ -743,28 +728,14 @@ def process_business_rows(businessRows):
         """
         checkRow(row)
 
-        wp_post_id = row[RJK_ID]
-        first_translation_wp_post_id = getFirstTranslation(wp_post_id)
-        if first_translation_wp_post_id is None:
-            # if is first
-            translations_dict = row[RJK_TRANSLATIONS]
-            translations_for_added_posts.append(translations_dict)
-            # logging.debug(f"Added initiative with {initiative.id=}")
-            new_initiative_obj = addNewBaseInitiative(row)
-            if new_initiative_obj is None:
-                continue
+        initiativeBase = getInitiativeBase(row)
+        if initiativeBase is None:
+            initiativeBase = addNewBaseInitiative(row)
+            registerInitiativeBase(initiativeBase, row)
 
-            addTranslation2(row, new_initiative_obj)
-
-            linkLocations(row, new_initiative_obj)
-
-            linkTags(row, new_initiative_obj)
-        else:
-            addTranslationToInitiativeBySK3Id(row, first_translation_wp_post_id)
-
-    # return nr_added
-    logging.info(f"{nr_added=}")
-
+            linkLocations(row, initiativeBase)
+            linkTags(row, initiativeBase)
+        addTranslationToInitiativeBase(row, initiativeBase)
 
 #check
 def process_tagg_rows(tags):
@@ -884,9 +855,12 @@ def process_tagg_rows(tags):
             slug=tagg_dict[tag_title],
             title=tag_title
         )
-        new_obj.save()
+        try:
+            new_obj.save()
+        except:
+            logging.info(f"Tag with slug {tagg_dict[tag_title]} was already present")
 
-
+#check
 class Command(django.core.management.base.BaseCommand):
     help = "Migrate data from sk3"
 
