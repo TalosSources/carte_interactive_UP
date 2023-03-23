@@ -707,35 +707,38 @@ def process_business_rows():
     logging.info(f"{nr_added=}")
 
 
-tagg_dict = {}
-"""
-tagg_dict uses this format:
-{
-title: slug
-}
-"""
+#check
+def process_tagg_rows(tags):
 
 
-def process_tagg_rows():
-    logging.debug("============= entered function process_tagg_rows")
-    nr_of_duplicates = 0
-    logging.debug(f"{len(tagg_resp_row_list)=}")
-    for resp_row in tagg_resp_row_list:
-        title = resp_row[RJK_TITLE][RJSK_RENDERED]
-        slug = resp_row[RJK_SLUG]
-        wp_post_id = resp_row[RJK_ID]
-
-        if title in tagg_dict.keys():
-            nr_of_duplicates += 1
-            if len(slug) < len(tagg_dict[title]):
+    def getShortestSlugs(tag_rows):
+        tagg_dict = {}
+        """
+        tagg_dict uses this format:
+        {
+        [title : string] : slug
+        }
+        """
+        logging.debug("============= entered function process_tagg_rows")
+        nr_of_duplicates = 0
+        logging.debug(f"{len(tag_rows)=}")
+        for resp_row in tag_rows:
+            title = resp_row[RJK_TITLE][RJSK_RENDERED]
+            slug = resp_row[RJK_SLUG]
+            wp_post_id = resp_row[RJK_ID]
+            if title in tagg_dict.keys():
+                nr_of_duplicates += 1
+                if len(slug) < len(tagg_dict[title]):
+                    tagg_dict[title] = slug
+            else:
                 tagg_dict[title] = slug
-            continue
-        else:
-            tagg_dict[title] = slug
+        return tagg_dict
 
-    logging.debug(f"{nr_of_duplicates=}")
-    logging.debug(f"{len(tagg_dict)=}")
 
+        logging.debug(f"{nr_of_duplicates=}")
+        logging.debug(f"{len(tagg_dict)=}")
+
+    tagg_dict = getShortestSlugs(tags)
     for tag_title in tagg_dict.keys():
         new_obj = website.models.Tag(
             slug=tagg_dict[tag_title],
