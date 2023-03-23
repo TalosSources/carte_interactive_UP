@@ -366,6 +366,11 @@ def clear_unused_tags_from_db():
 
 
 def process_business_rows():
+    def getImageUrl(row):
+        try:
+            return row[RJK_ACF][RJSK_ACF_MAIN_IMAGE][RJSK_ACF_MAIN_IMAGE_URL]
+        except KeyError:
+            return ""
     """
     "translations": {
       "en": 11636,
@@ -397,13 +402,9 @@ def process_business_rows():
 
         resp_row_afc = resp_row[RJK_ACF]
         description = resp_row_afc[RJSK_ACF_DESCRIPTION_ID]
-        main_image_url = ""
-        if resp_row_afc and RJSK_ACF_MAIN_IMAGE in resp_row_afc:
-            resp_row_afc_main_image = resp_row_afc[RJSK_ACF_MAIN_IMAGE]
-            if resp_row_afc_main_image and RJSK_ACF_MAIN_IMAGE_URL in resp_row_afc_main_image:
-                main_image_url = resp_row_afc_main_image[RJSK_ACF_MAIN_IMAGE_URL]
 
         translations_dict = resp_row[RJK_TRANSLATIONS]
+        main_image_url = getImageUrl(resp_row)
 
         # if sk3id in translations_dict[others]
         # wp_post_id
