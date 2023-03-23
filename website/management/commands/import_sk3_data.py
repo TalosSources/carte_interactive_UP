@@ -475,15 +475,6 @@ def process_business_rows(businessRows):
             if first_translation_has_been_added:
                 return first_translation_wp_post_id
         return None
-    """
-    "translations": {
-      "en": 11636,
-      "sv": 11629
-    },
-
-    This function relies on the fact that:
-    the resp_row for en always has a higher sk3id than for sv
-    """
     logging.debug("============= entered function process_business_rows")
     nr_added = 0
     translations_for_added_posts = []
