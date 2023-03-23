@@ -10,6 +10,8 @@ import styled from "styled-components";
 import "leaflet/dist/leaflet.css";
 import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
+import L from "leaflet";
+
 import NavBar from "../components/NavBar";
 import FloatingTop from "../components/FloatingTop";
 import TopTagButton from "../components/TopTagButton";
@@ -21,6 +23,10 @@ import HighlightInitiative from "../components/HighlightInitiative";
 
 import {renderCardCollection} from "../Cards";
 import { createBrowserHistory } from "@remix-run/router";
+
+import useWindowSize from "../hooks/useWindowSize";
+
+import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
 
 
 
@@ -40,35 +46,62 @@ const Header = styled.header`
 
 const MainContainer = styled.div`
     background-color: indigo;
+    padding: 2rem;
     padding-top: 50px;
     border-radius: 20px;
     display: flex: 
     flex-directon: column;
     margin-left: 2rem;
     margin-right: 2rem;
+    @media (max-width: ${SMALL_SCREEN_WIDTH}px) {
+        margin-left: 0;
+        margin-right: 0;
+        padding: 1rem;
+        margin-top: 2rem;
+    }
 
     `
 const Sides = styled.div`
     display: flex;
     flex-direction: row;
+    @media (max-width: ${SMALL_SCREEN_WIDTH}px) {
+        flex-direction: column;
+    }
 `
 
 const LeftSide = styled.div`
     flex: 1;
     max-height: 100vh;
+    @media (max-width: ${SMALL_SCREEN_WIDTH}px) {
+        order: 2;
+        width: 100%;
+        height: 100vh;
+        overflow-y: scroll;
+    }
 `
 const RightSide = styled.div`
     flex: 1;
+    @media( max-width: 800px) {
+        order: 1;
+        width: 100%;
+        height: 30vh;
+        margin-bottom: 1rem;
+    }
 `
 
 
 const SearchRow = styled.div`
     display: flex;
     flex-direction: row;
+    align-items: center;
+    margin-bottom: 0.5rem;
     width: 100vw;
 `
-import L from "leaflet";
 
+const TagContainer = styled.div`
+    overflow-x: scroll;
+
+`;
 
 const Sorting = {
   Alphabetical: { value: "1", text: "Sort alphabetically"},
@@ -131,6 +164,7 @@ function Home() {
     const [globalInitiatives, setGlobalInitiatives] = useState([]);
     const [searchString, setSearchString] = useState(urlSearchString);
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
+    const [activeRegion, setActiveRegion] = useState({properties: { welcome_message_html: ""}});
     const [activeTags, setActiveTags] = useState(urlActiveTags);
     const [regionList, setRegionList] = useState([]);
     const [mapCenter, setMapCenter] = useState(GeoCoordinate({'latitude': 50, 'longitude': 12}));
@@ -139,12 +173,16 @@ function Home() {
     const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value);
     const [tags, setTags] = useState([]);
 
+    const windowSize = useWindowSize();
+
     useEffect(() => {
         //navigate('/r/' + activeRegionSlug);
         const history = createBrowserHistory();
         const tagPart = activeTags.join(",")
         history.replace('/r/' + activeRegionSlug + "?s=" + searchString + "&t=" + tagPart);
     }, [activeRegionSlug, activeTags, searchString]);
+
+    
     useEffect(() => {
         // fetch tags
         const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
@@ -179,26 +217,32 @@ function Home() {
                 setGlobalInitiatives(global);
             })
             .catch(err => console.error(err));
+
+        // Fetch regions
         const region_api_url = `${process.env.REACT_APP_BACKEND_URL}/regions/`;
         fetch(region_api_url)
             .then(r => r.json())
-            .then(regions => 
-                setRegionList(regions['features'])
+            .then(regions => {
+                console.log("regionList", regions['features']);
+                setRegionList(regions['features']);
+                setActiveRegion(regions['features'].find(region => region.properties.slug == activeRegionSlug))
+            }
             )
             .catch(err => console.error(err));
     }, []);
 
     // refresh region
     const region_slug = activeRegionSlug;
+    console.log("regionList", regionList);
     const region = regionList.filter(r => r['properties']['slug'] === region_slug);
-    let activeRegion;
+    let activeReg;
     if (region.length == 0) {
-        activeRegion = { properties:{
+        activeReg = { properties:{
             welcome_message_html: ""
         }
         };
     } else {
-        activeRegion = region[0];
+        activeReg = region[0];
     }
 
     // refresh cards
@@ -367,6 +411,11 @@ function Home() {
         }
     } 
 
+    function findRegionFromSlug (regionSlug) { 
+        return regionList.filter(reg => reg.properties.slug === regionSlug)[0]
+
+    }
+
     return (
         <>
         <NavBar
@@ -375,14 +424,26 @@ function Home() {
             regionList={regionList}
         />
             <Header>
-                <div dangerouslySetInnerHTML={{__html: activeRegion.welcome_message_html}}></div>
-            </Header>
-            <FloatingTop>
-                <HighlightInitiative />
-                <GetInvolved />
-            </FloatingTop>
+                    {(() => {
+                        let aRegion = findRegionFromSlug(activeRegionSlug)
+                        return (
+                <div dangerouslySetInnerHTML={{__html: aRegion?.properties?.welcome_message_html}}>
+                    </div>
 
-            <MainContainer className="p-2 pt-5">
+                        )
+                    })()
+                    }
+            </Header>
+            {/*  
+                 */}
+            {windowSize.width > SMALL_SCREEN_WIDTH && <FloatingTop>
+                <HighlightInitiative />
+                {windowSize.width > MEDIUM_SCREEN_WIDTH && <GetInvolved />}
+            </FloatingTop>}
+
+            <MainContainer>
+                <div>
+
                 <SearchRow className="d-flex flex-row w-100"
                 > 
                     
@@ -403,9 +464,21 @@ function Home() {
                         >Öppet nu</label>
                     </div>
                 </SearchRow>
+                <SelectFromObject 
+                    obj={WhatToShow}
+                    defaultValue={WhatToShow.Everything.value}
+                    onChange={event => setInitiativesToShow(event.target.value)} 
+                />
+                <SelectFromObject 
+                    obj={Sorting}
+                    defaultValue={Sorting.Distance.value}
+                    onChange={event => setSorting(event.target.value)}
+                />
+                </div>
 
 
-                    <div className="tagContainer d-flex flex-row mb-2 mt-3 overflow-hidden">
+
+                    <TagContainer className="d-flex flex-row mb-2 mt-3 overflowX-scroll">
                         {
                             activeTags.map((tagSlug) => {
                                 return (<TopTagButton 
@@ -427,7 +500,7 @@ function Home() {
                             ))
                         }
 
-                    </div>
+                    </TagContainer>
               
 
                 {/* This should be its own component, probably */}
@@ -435,16 +508,7 @@ function Home() {
 
                 <LeftSide>
 
-                    <SelectFromObject 
-                        obj={WhatToShow}
-                        defaultValue={WhatToShow.Everything.value}
-                        onChange={event => setInitiativesToShow(event.target.value)} 
-                    />
-                    <SelectFromObject 
-                        obj={Sorting}
-                        defaultValue={Sorting.Distance.value}
-                        onChange={event => setSorting(event.target.value)}
-                    />
+
                     <div id="cards-canvas">
                     {renderCardCollection(
                         initiatives, 
@@ -453,11 +517,11 @@ function Home() {
                 </LeftSide>
                 <RightSide>
 
-                    <div className="d-flex flex-row">
+                    {windowSize.width > SMALL_SCREEN_WIDTH && <div className="d-flex flex-row">
                         <OutlineButton onClick={() => {}}>Föreslå en verksamhet</OutlineButton>
                         <OutlineButton onClick={() => {}}>Bli volontär</OutlineButton>
                         <OutlineButton onClick={() => {}}>Starta en grej</OutlineButton>
-                    </div>
+                    </div>}
                     <MapContainer id="map" center={[57.70, 11.97]} zoom={10} scrollWheelZoom={false} gestureHandling={true}>
                         <TileLayer
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -472,80 +536,6 @@ function Home() {
 
             </MainContainer>
         </>
-// =======
-//         <div>
-//             <h2>Smartakartan</h2>
-//             <RegionSelector
-//                 handleSelectChange={event => {
-//                     const new_region_slug = event.target.value;
-//                     setActiveRegionSlug(new_region_slug);
-//                 }
-//                 }
-//                 value={activeRegionSlug}
-//                 regionList={regionList}
-//             />
-//             <div dangerouslySetInnerHTML={{__html: activeRegion.properties.welcome_message_html}}></div>
-//             <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false} gestureHandling={true}>
-//                 <TileLayer
-//                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-//                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-//                 />
-//                 {mapMarkers}
-//                 <RegisterMapCenter/>
-//             </MapContainer>
-//             <div id="cards-panel">
-//                 <div id="tagPanel">
-//                 {
-//                     activeTags.map(tagSlug => {
-//                         const tagElement = tags.filter(tag => tag.slug == tagSlug)[0];
-//                         if (typeof tagElement == "undefined") {
-//                             return ""
-//                         }
-//                         return <div className="selectedTag" onClick={() => setActiveTags(activeTags.filter(ts => ts !== tagSlug))}>
-//                             <div dangerouslySetInnerHTML={{__html: "X " + tagElement.title}}></div>
-//                             <div className="tagValue">{tagEntropy[tagElement.id]}</div>
-//                         </div>
-//                     })
-//                 }
-//                 {
-//                     top_tags.map((tagElement) => (
-//                         <div className="proposedTag" onClick={() => setActiveTags(activeTags.concat([tagElement.slug]))}>
-//                             <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
-//                             <div className="tagValue">{tagEntropy[tagElement.id]}</div>
-//                         </div>
-//                     ))
-//                 }</div>
-//                 Filter: <input name="search" value={searchString} onChange={event =>
-//                         {
-//                             const search_string = event.target.value;
-//                             setSearchString(search_string)
-//                         }
-//                     }/>
-//                 <select defaultValue={WhatToShow.Everything} onChange={event => setInitiativesToShow(event.target.value)}>
-//                     <option value={WhatToShow.Everything}>
-//                         Show all
-//                     </option>
-//                     <option value={WhatToShow.WithoutGlobal}>
-//                         Hide global initiatives
-//                     </option>
-//                     <option value={WhatToShow.OnlyOnMap}>
-//                         only show initiatives on the map
-//                     </option>
-//                 </select>
-//                 <select defaultValue={Sorting.Distance} onChange={event => setSorting(event.target.value)}>
-//                     <option value={Sorting.Distance}>
-//                         Sort by distance
-//                     </option>
-//                     <option value={Sorting.Alphabetical}>
-//                         Sort alphabetically
-//                     </option>
-//                 </select>
-//                 <div id="cards-canvas">
-//                     {renderedCards}
-//                 </div>
-//             </div>
-//         </div>
-// >>>>>>> main
     );
 }
 

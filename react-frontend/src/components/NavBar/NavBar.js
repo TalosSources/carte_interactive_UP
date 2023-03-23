@@ -1,6 +1,8 @@
 import React from 'react';
 import RegionSelector from '../RegionSelector';
 import styled from 'styled-components';
+import { SMALL_SCREEN_WIDTH } from '../../constants';
+import useWindowSize from '../../hooks/useWindowSize';
 
 const NavRight = styled.div`
     display: flex;
@@ -32,21 +34,27 @@ const NavItems = styled.ul`
 
 
 const NavBar = ( { handleRegionChange, activeRegionSlug, regionList } ) => {
+
+    const windowSize = useWindowSize();
     return ( 
     <nav className="border-bottom border-bottom-5 border-primary d-flex flex-row align-items-center bg-white">
         <img id="logo" src="/sk-logotype-topbar.png"/>
         <div id="sk-title">Smartakartan <a href="/gitver">4.0</a> /
         </div>
+        { windowSize.width > SMALL_SCREEN_WIDTH && 
         <div id="regionSelector">
             <RegionSelector
                 handleSelectChange={handleRegionChange}
                 value={activeRegionSlug}
                 regionList={regionList}
-            />
+                />
         </div>
+        }
         <NavRight>
 
         <NavItems className="nav-links">
+            {windowSize.width > SMALL_SCREEN_WIDTH ? 
+            <>
             <NavItem><a href="#"><span>AAAAAA</span></a></NavItem>
             <NavItem>
                 <a href="#"><span>BBBBBB</span></a>
@@ -54,7 +62,10 @@ const NavBar = ( { handleRegionChange, activeRegionSlug, regionList } ) => {
             <NavItem>
                 <a href="#"><span>Om oss (i)</span></a>
             </NavItem>
-            <NavItem id="burger-menu">==</NavItem>
+            </>
+            : null
+            }
+            <NavItem><button className="btn">==</button></NavItem>
         </NavItems>
         </NavRight>
     </nav>)

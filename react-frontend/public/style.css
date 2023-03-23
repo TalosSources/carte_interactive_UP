@@ -16,6 +16,14 @@
 #map {
   height: 100vh;
 }
+
+@media (max-width: 800px) {
+  #map {
+    height: 30vh;
+  }
+}
+
+
 #cards-panel {
   clear: left;
 }
