@@ -397,7 +397,6 @@ def process_business_rows():
         lang_code = resp_row[RJK_LANG]
         logging.debug(f"{wp_post_id=}, {lang_code=}")
         title = resp_row[RJK_TITLE][RJSK_RENDERED]
-        status = resp_row[RJK_STATUS]
         data_type_full_name = resp_row[RJK_TYPE]
 
         resp_row_afc = resp_row[RJK_ACF]
