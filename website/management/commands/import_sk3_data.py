@@ -319,6 +319,58 @@ def importRegions():
 # check
 def importAddresses(region):
 
+    """
+    {
+        "id": 12247,
+        "date": "2023-01-23T20:14:11",
+        "date_gmt": "2023-01-23T20:14:11",
+        "guid": {
+        "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12247"
+        },
+        "modified": "2023-01-23T20:14:11",
+        "modified_gmt": "2023-01-23T20:14:11",
+        "slug": "saggatan-19",
+        "status": "publish",
+        "type": "address_gbg",
+        "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/saggatan-19\/",
+        "title": {
+        "rendered": "S\u00e5ggatan 19"
+        },
+        "template": "",
+        "latitude": "57.69513792779139",
+        "longitude": "11.925602211999262",
+        "acf": [],
+        "_links": {
+        "self": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12247"
+            }
+        ],
+        "collection": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+            }
+        ],
+        "about": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+            }
+        ],
+        "wp:attachment": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12247"
+            }
+        ],
+        "curies": [
+            {
+            "name": "wp",
+            "href": "https:\/\/api.w.org\/{rel}",
+            "templated": true
+            }
+        ]
+        }
+    }
+    """
 
     if region == GOTEBORG_R:
         region = "gbg"
