@@ -710,6 +710,87 @@ def process_business_rows():
 #check
 def process_tagg_rows(tags):
 
+    """
+    {
+        "id": 12291,
+        "date": "2023-01-27T10:19:28",
+        "date_gmt": "2023-01-27T10:19:28",
+        "guid": {
+        "rendered": "https:\/\/sk-wp.azurewebsites.net\/index.php\/tagg\/ramar\/"
+        },
+        "modified": "2023-01-27T10:19:28",
+        "modified_gmt": "2023-01-27T10:19:28",
+        "slug": "ramar",
+        "status": "publish",
+        "type": "tagg",
+        "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/tagg\/ramar\/",
+        "title": {
+        "rendered": "Ramar"
+        },
+        "template": "",
+        "grupp": false,
+        "beskrivning": "",
+        "goteborg_huvudtagg": false,
+        "goteborg_subtagg": false,
+        "goteborg_transaktionsform": false,
+        "malmo_huvudtagg": false,
+        "malmo_subtagg": false,
+        "malmo_transaktionsform": false,
+        "global_huvudtagg": false,
+        "global_subtagg": false,
+        "global_transaktionsform": false,
+        "karlstad_huvudtagg": false,
+        "karlstad_subtagg": false,
+        "karlstad_transaktionsform": false,
+        "sjuharda_huvudtagg": false,
+        "sjuharda_subtagg": false,
+        "sjuharda_transaktionsform": false,
+        "umea_huvudtagg": false,
+        "umea_subtagg": false,
+        "umea_transaktionsform": false,
+        "stockholm_huvudtagg": false,
+        "stockholm_subtagg": false,
+        "stockholm_transaktionsform": false,
+        "gavle_huvudtagg": false,
+        "gavle_subtagg": false,
+        "gavle_transaktionsform": false,
+        "acf": [],
+        "lang": "sv",
+        "translations": {
+        "sv": 12291
+        },
+        "pll_sync_post": [],
+        "_links": {
+        "self": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/tagg\/12291"
+            }
+        ],
+        "collection": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/tagg"
+            }
+        ],
+        "about": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/tagg"
+            }
+        ],
+        "wp:attachment": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12291"
+            }
+        ],
+        "curies": [
+            {
+            "name": "wp",
+            "href": "https:\/\/api.w.org\/{rel}",
+            "templated": true
+            }
+        ]
+        }
+    },
+    """
 
     def getShortestSlugs(tag_rows):
         tagg_dict = {}
