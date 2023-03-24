@@ -1,8 +1,9 @@
 import React from 'react';
-import RegionSelector from '../RegionSelector';
+import RegionSelector from './RegionSelector';
 import styled from 'styled-components';
-import { SMALL_SCREEN_WIDTH } from '../../constants';
-import useWindowSize from '../../hooks/useWindowSize';
+import { SMALL_SCREEN_WIDTH } from '../constants';
+import { Region } from '../types/Region';
+import useWindowSize from '../hooks/useWindowSize';
 
 const NavRight = styled.div`
     display: flex;
@@ -30,10 +31,13 @@ const NavItems = styled.ul`
 
 `;
 
+type PropTypes = {
+    handleRegionChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    activeRegionSlug: string;
+    regionList: Region[];
+}
 
-
-
-const NavBar = ( { handleRegionChange, activeRegionSlug, regionList } ) => {
+const NavBar = ( { handleRegionChange, activeRegionSlug, regionList }: PropTypes ) => {
 
     const windowSize = useWindowSize();
     return ( 

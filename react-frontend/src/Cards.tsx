@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import sanitizeHtml from "sanitize-html";
-import { Initiative, Tag } from "./pages/Home";
+import { Initiative, Tag } from './types/Initiative';
 
 const CardContainer = styled.div`
     display: flex;
@@ -76,7 +76,7 @@ const CardTagPanel = styled.div`
 
 function SkCard(props: {key?: number; id: number; image_url: string; title: string; description: string; tags: Tag[], tagClick: ((clickedSlug: string) => void)}) {
     // CSS in React: https://www.w3schools.com/react/react_css.asp
-    const { id, image_url, title, description} = props
+    const { id, image_url, title, description, tags, tagClick} = props
     
     const cleanDescription = sanitizeHtml(description, { allowedTags: []})
     return (
@@ -92,7 +92,7 @@ function SkCard(props: {key?: number; id: number; image_url: string; title: stri
             </a>
             <CardTagPanel className="cardTagPanel">
             {
-                tags.map((tagElement) => (
+                tags.map((tagElement: Tag) => (
                     <div 
                         key={tagElement.slug}
                         className="proposedTag" 

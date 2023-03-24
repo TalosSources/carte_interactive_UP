@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
-import { Tag } from "./Home";
+import { Tag } from "../types/Initiative"; 
 
 
 function renderTags(tags : Tag[]) {

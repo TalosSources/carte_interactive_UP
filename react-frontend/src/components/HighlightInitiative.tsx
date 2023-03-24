@@ -59,7 +59,6 @@ const StyledExample = styled.div`
 `;
 
 
-
 const HighlightInitiative = () => {
     return <StyledExample>
         <div className="TextPart">
@@ -81,7 +80,7 @@ const HighlightInitiative = () => {
             </div>
         </div>
         <div className="imageContainer">
-            <img src="https://picsum.photos/id/26/200/200"></img>
+            <img src="https://picsum.photos/id/26/200/200" />
         </div>
 
     </StyledExample>

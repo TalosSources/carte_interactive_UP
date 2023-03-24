@@ -1,7 +1,13 @@
 import React from 'react';
+import { Region } from '../types/Region';
 
+type PropTypes = {
+    value: string;
+    handleSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    regionList: Region[];
+}
 // Components
-function RegionSelector({ value, handleSelectChange, regionList }) {
+function RegionSelector({ value, handleSelectChange, regionList }: PropTypes) {
     // Inspiration: https://reactjs.org/docs/forms.html#the-select-tag
     return (
         <select value={value} onChange={(event) => handleSelectChange(event)}>

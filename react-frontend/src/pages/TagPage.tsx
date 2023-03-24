@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {renderCardCollection} from "../Cards";
-import { Initiative } from "./Home";
+import { Initiative } from "../types/Initiative";
 
 const TagPage = () => {
     const {tagId} = useParams();

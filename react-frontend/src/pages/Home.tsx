@@ -11,7 +11,7 @@ import { GeoBoundingBox } from "../BoundingBox";
 import "leaflet/dist/leaflet.css";
 import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
-import L from "leaflet";
+import L, { LeafletEvent } from "leaflet";
 import {renderCardCollection} from "../Cards";
 import GestureHandling from "leaflet-gesture-handling";
 import { createBrowserHistory } from "@remix-run/router";
@@ -21,31 +21,18 @@ import FloatingTop from "../components/FloatingTop";
 import TopTagButton from "../components/TopTagButton";
 import OutlineButton from "../components/OutlineButton";
 import RegionSelectorDropdown from "../components/RegionSelectorDropdown";
-import SelectFromObject from "../components/SelectFromObject";
+import SelectFromObject, { AlternativeMap } from "../components/SelectFromObject";
 import GetInvolved from "../components/GetInvolved";
 import HighlightInitiative from "../components/HighlightInitiative";
 
 import useWindowSize from "../hooks/useWindowSize";
 
+// Types
+import { Tag, Initiative, Feature } from "../types/Initiative";
+import { Region } from "../types/Region";
+
+// Constants
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
-
-export interface Tag {
-    id : number;
-    title : string;
-    slug : string;
-}
-
-export interface Initiative {
-    id : number;
-    tags : Tag[];
-    locations : {features : Feature[]};
-    main_image_url : string;
-    initiative_title_texts : {text : string}[];
-    initiative_description_texts : {text : string}[];
-}
-interface Feature {
-    geometry:{coordinates: number[]};
-}
 
 
 const Header = styled.header`
@@ -120,13 +107,7 @@ const TagContainer = styled.div`
     overflow-x: scroll;
 
 `;
-interface Region {
-    id : number;
-    properties : {
-        slug : string;
-        title : string;
-    }
-}
+
 
 const Sorting = {
   Alphabetical: { value: "1", text: "Sort alphabetically"},
@@ -168,6 +149,9 @@ function RegionSelector(props: { value: string; handleSelectChange: React.Change
 }
 
 export default function Home() {
+
+    const navigate = useNavigate();
+
     let {regionSlug} = useParams();
     const [queryParameters] = useSearchParams()
     if (typeof regionSlug == 'undefined') {
@@ -196,13 +180,13 @@ export default function Home() {
     const [globalInitiatives, setGlobalInitiatives] = useState<Initiative[]>([]);
     const [searchString, setSearchString] = useState(urlSearchString);
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
-    const [activeRegion, setActiveRegion] = useState({properties: { welcome_message_html: ""}});
+    // const [activeRegion, setActiveRegion] = useState({properties: { welcome_message_html: ""}});
     const [activeTags, setActiveTags] = useState<string[]>(urlActiveTags);
     const [regionList, setRegionList] = useState([]);
     const [mapCenter, setMapCenter] = useState(new GeoCoordinate({latitude: 50, longitude: 12}));
     const [mapBounds, setMapBounds] = useState(new GeoBoundingBox());
-    const [sorting, setSorting] = useState(Sorting.Distance);
-    const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything);
+    const [sorting, setSorting] = useState(Sorting.Distance.value);
+    const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value);
     const [tags, setTags] = useState<Tag[]>([]);
 
 
@@ -223,7 +207,7 @@ export default function Home() {
         .then(response => response.json())
         .then(response_json => {
             console.log("tags", response_json);
-            const tags = response_json.map(tag => {
+            const tags = response_json.map((tag: Tag) => {
                 let isActive = urlActiveTags.includes(tag.slug)
                 tag.title = tag.title.replace("&amp;", "&")
                 return {...tag, active: isActive}
@@ -258,7 +242,7 @@ export default function Home() {
             .then(regions => {
                 console.log("regionList", regions['features']);
                 setRegionList(regions['features']);
-                setActiveRegion(regions['features'].find(region => region.properties.slug == activeRegionSlug))
+                // setActiveRegion(regions['features'].find((region: Region) => region.properties.slug == activeRegionSlug))
             }
             )
             .catch(err => console.error(err));
@@ -267,7 +251,7 @@ export default function Home() {
     // refresh region
     const region_slug = activeRegionSlug;
     console.log("regionList", regionList);
-    const region = regionList.filter(r => r['properties']['slug'] === region_slug);
+    const region = regionList.filter((r: Region) => r['properties']['slug'] === region_slug);
     let activeReg;
     if (region.length == 0) {
         activeReg = { properties:{
@@ -285,7 +269,7 @@ export default function Home() {
     }
 
     function initiativeMatchCurrentTags(initiative: Initiative) {
-        return activeTags.every(tagSlug => initiative.tags.some(iTag => iTag.slug == tagSlug))
+        return activeTags.every((tagSlug: string) => initiative.tags.some(iTag => iTag.slug == tagSlug))
 
     }
     function initiativeMatchesSearch(initiative: Initiative, searchString: string) {
@@ -386,7 +370,7 @@ export default function Home() {
             },
             map),
         new Map());
-        return Object.fromEntries(tags.map((/** @type {Tag} */ tag) => {
+        return Object.fromEntries(tags.map((/** @type {Tag} */ tag: Tag) => {
             if (tag_count.has(tag.id)) {
                 const tc = tag_count.get(tag.id); 
                 return [tag.id, tc*(initiatives.length - tc)]
@@ -402,7 +386,7 @@ export default function Home() {
 
     const TOP_TAGS_LIMIT = 10;
     let top_tags = tags
-        .filter(tag => tagEntropy[tag.id] > 0)
+        .filter((tag: Tag) => tagEntropy[tag.id] > 0)
     top_tags.sort(sortTagsByEntropy);
     top_tags = top_tags.slice(0, TOP_TAGS_LIMIT) // Limit top tags
     console.log("top_tags", top_tags)
@@ -415,10 +399,10 @@ export default function Home() {
     }
 
     function RegisterMapCenter() {
-        const _map = useMapEvent('moveend', (event) => {
-            setMapCenter(leafletToGeoCoordinate(event.target.getCenter()));
+        const _map = useMapEvent('moveend', (e: LeafletEvent) => {
+            setMapCenter(leafletToGeoCoordinate(e.target.getCenter()));
 
-            const newBounds = event.target.getBounds();
+            const newBounds = e.target.getBounds();
             setMapBounds(GeoBoundingBox.fromCoordinates([
                 leafletToGeoCoordinate(newBounds['_northEast']),
                 leafletToGeoCoordinate(newBounds['_southWest'])]
@@ -427,17 +411,17 @@ export default function Home() {
         return null;
     }
 
-    const handleRegionChange = (event) => {
-        const new_region_slug = event.target.value;
+    const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const new_region_slug: string = e.target.value;
         navigate('/r/' + new_region_slug);
         setActiveRegionSlug(new_region_slug);
     }
 
-    const toggleActiveTag = (tagSlug) => {
+    const toggleActiveTag = (tagSlug: string) => {
         console.log(tagSlug)
-        if (activeTags.find(ts => tagSlug == ts)) {
+        if (activeTags.find((ts: string) => tagSlug == ts)) {
             console.log("Remove from activeTags:", tagSlug)
-            const newTagList = activeTags.filter(ts => ts !== tagSlug)
+            const newTagList = activeTags.filter((ts: string) => ts !== tagSlug)
             setActiveTags(newTagList);
         } else {
             console.log("Add to activeTags:", tagSlug)
@@ -445,8 +429,8 @@ export default function Home() {
         }
     } 
 
-    function findRegionFromSlug (regionSlug) { 
-        return regionList.filter(reg => reg.properties.slug === regionSlug)[0]
+    function findRegionFromSlug (regionSlug: string) { 
+        return regionList.filter((reg: Region) => reg.properties.slug === regionSlug)[0]
 
     }
 
@@ -459,7 +443,7 @@ export default function Home() {
         />
             <Header>
                     {(() => {
-                        let aRegion = findRegionFromSlug(activeRegionSlug)
+                        let aRegion: Region = findRegionFromSlug(activeRegionSlug)
                         return (
                 <div dangerouslySetInnerHTML={{__html: aRegion?.properties?.welcome_message_html}}>
                     </div>
@@ -472,7 +456,7 @@ export default function Home() {
                  */}
             {windowSize.width > SMALL_SCREEN_WIDTH && <FloatingTop>
                 <HighlightInitiative />
-                {windowSize.width > MEDIUM_SCREEN_WIDTH && <GetInvolved />}
+                { windowSize.width > MEDIUM_SCREEN_WIDTH ? <GetInvolved /> : <></>}
             </FloatingTop>}
 
             <MainContainer>
@@ -501,12 +485,12 @@ export default function Home() {
                 <SelectFromObject 
                     obj={WhatToShow}
                     defaultValue={WhatToShow.Everything.value}
-                    onChange={event => setInitiativesToShow(event.target.value)} 
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
                 />
                 <SelectFromObject 
                     obj={Sorting}
                     defaultValue={Sorting.Distance.value}
-                    onChange={event => setSorting(event.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
                  />
                  </div>
 {/* =======
@@ -537,19 +521,23 @@ export default function Home() {
                             activeTags.map((tagSlug) => {
                                 return (<TopTagButton 
                                     key={tagSlug}
-                                    title={tags.find(tag => tag?.slug === tagSlug)?.title}
+                                    title={tags.find(tag => tag.slug === tagSlug)?.title || ""}
                                     onClick={() => toggleActiveTag(tagSlug)}
                                     active={true}
                                 />)
                             })
                         }
                         {
-                            top_tags.map((tagElement) => (
+                            top_tags.map((tagElement: Tag) => (
                                 <TopTagButton 
                                     key={tagElement.title}
                                     title={tagElement.title} 
                                     onClick={() => toggleActiveTag(tagElement.slug)}
-                                    active={activeTags.find(ts => tagElement.slug == ts)}
+                                    active={(() => {
+                                        const isActive = activeTags.find((ts: string) => tagElement.slug == ts)
+                                        return isActive ? true: false;
+                                        })()
+                                    }
                                     />
                             ))
                         }
@@ -569,12 +557,18 @@ export default function Home() {
                 </LeftSide>
                 <RightSide>
 
-                    {windowSize.width > SMALL_SCREEN_WIDTH && <div className="d-flex flex-row">
+                    {windowSize?.width > SMALL_SCREEN_WIDTH && <div className="d-flex flex-row">
                         <OutlineButton onClick={() => {}}>Föreslå en verksamhet</OutlineButton>
                         <OutlineButton onClick={() => {}}>Bli volontär</OutlineButton>
                         <OutlineButton onClick={() => {}}>Starta en grej</OutlineButton>
                     </div>}
-                    <MapContainer id="map" center={[57.70, 11.97]} zoom={10} scrollWheelZoom={false} gestureHandling={true}>
+                    <MapContainer 
+                        id="map" 
+                        center={[57.70, 11.97]} 
+                        zoom={10} 
+                        scrollWheelZoom={false} 
+                        // gestureHandling={true}
+                    >
                         <TileLayer
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

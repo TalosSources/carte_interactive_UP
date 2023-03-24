@@ -14,7 +14,7 @@ const FloatContainer = styled.div`
 `;
 
 
-const FloatingTop = ({ children }) => {
+const FloatingTop = ({ children }: { children: React.ReactComponentElement<any>| React.ReactComponentElement<any>[] }) => {
     return (
     <FloatContainer>
         {children}

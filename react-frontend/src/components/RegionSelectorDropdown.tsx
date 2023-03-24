@@ -1,8 +1,16 @@
 import React from "react";
+import { Region } from "../types/Region";
 
 // probably better to work with "active region"
 // Rather than "activeRegionSlug"
-const RegionSelectorDropdown = ({ regionList, activeRegionSlug, setActiveRegionSlug}) => {
+
+type PropTypes = {
+    regionList: Region[];
+    activeRegionSlug: string;
+    setActiveRegionSlug: (aSlug: string) => void;
+}
+
+const RegionSelectorDropdown = ({ regionList, activeRegionSlug, setActiveRegionSlug}: PropTypes) => {
      return (<div className="dropdown show ml-4">
      <a className="btn text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
          {(() => {
