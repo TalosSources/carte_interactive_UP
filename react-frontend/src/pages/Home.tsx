@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import { buildUrl } from 'build-url-ts';
 import {MapContainer, TileLayer, Marker, Popup, useMapEvent} from 'react-leaflet';
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 // import { GeoCoordinate, BoundingBox } from "geocoordinate";
@@ -195,8 +196,16 @@ export default function Home() {
     useEffect(() => {
         //navigate('/r/' + activeRegionSlug);
         const history = createBrowserHistory();
-        const tagPart = activeTags.join(",")
-        history.replace('/r/' + activeRegionSlug + "?s=" + searchString + "&t=" + tagPart);
+        const queryParams : {[param:string] : string | string[]} = {}
+        if (searchString !== "") {
+            queryParams.s = searchString
+        }
+        if (activeTags.length > 0) {
+            queryParams.t = activeTags
+        }
+        const newUrl = buildUrl({path:'/r/' + activeRegionSlug,
+                  queryParams: queryParams})
+        history.replace(newUrl);
     }, [activeRegionSlug, activeTags, searchString]);
 
     
