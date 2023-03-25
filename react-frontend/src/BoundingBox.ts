@@ -54,7 +54,7 @@ export class GeoBoundingBox {
       instance.pushCoordinate(coordinates[i]);
     }
     return instance;
-  };
+  }
 
   pushCoordinate(coord : GeoCoordinate) {
     function updateAxis(value : number, axis:{ range: number; min: number; max: number;}) {
@@ -108,14 +108,14 @@ export class GeoBoundingBox {
 
     updateAxis(coord.getLatitude(), this._latitude);
     updateAxis(coord.getLongitude(), this._longitude);
-  };
+  }
 
   containCircle(centrePoint:GeoCoordinate, radius:number) {
     this.pushCoordinate(centrePoint.pointAtDistance(radius, 0));
     this.pushCoordinate(centrePoint.pointAtDistance(radius, 90));
     this.pushCoordinate(centrePoint.pointAtDistance(radius, 180));
     this.pushCoordinate(centrePoint.pointAtDistance(radius, 270));
-  };
+  }
 
   contains(coord: GeoCoordinate) {
     function outOfBounds(value: number, axis:Axis) {
@@ -153,7 +153,7 @@ export class GeoBoundingBox {
     }
     return !(outOfBounds(coord.getLatitude(), this._latitude) ||
              outOfBounds(coord.getLongitude(), this._longitude))
-  };
+  }
 
   getTopLeft() {
     return new GeoCoordinate({latitude: this._latitude.max, longitude: this._longitude.min});
@@ -165,18 +165,18 @@ export class GeoBoundingBox {
 
   centerLatitude() {
     return (this._latitude.min + this._latitude.max) / 2;
-  };
+  }
 
   centerLongitude() {
     return (this._longitude.min + this._longitude.max) / 2;
-  };
+  }
 
   center() {
     return new GeoCoordinate({
       latitude: this.centerLatitude(),
       longitude: this.centerLongitude()
     });
-  };
+  }
 
   /**
    * mergeBox
@@ -198,6 +198,6 @@ export class GeoBoundingBox {
   mergeBBox(other:GeoBoundingBox) {
     this.pushCoordinate(other.getTopLeft());
     this.pushCoordinate(other.getBottomRight());
-  };
+  }
 
 }

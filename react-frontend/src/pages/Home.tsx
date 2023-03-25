@@ -22,7 +22,7 @@ import FloatingTop from "../components/FloatingTop";
 import TopTagButton from "../components/TopTagButton";
 import OutlineButton from "../components/OutlineButton";
 import RegionSelectorDropdown from "../components/RegionSelectorDropdown";
-import SelectFromObject, { AlternativeMap } from "../components/SelectFromObject";
+import SelectFromObject from "../components/SelectFromObject";
 import GetInvolved from "../components/GetInvolved";
 import HighlightInitiative from "../components/HighlightInitiative";
 
@@ -128,26 +128,6 @@ class EnabledGestureHandling extends GestureHandling {
     }
 }
 L.Map.addInitHook("addHandler", "gestureHandling", EnabledGestureHandling);
-
-// Components
-function RegionSelector(props: { value: string; handleSelectChange: React.ChangeEventHandler<HTMLSelectElement>; regionList: Region[]; }) {
-    // Inspiration: https://reactjs.org/docs/forms.html#the-select-tag
-    console.log(props.value);
-    return (
-        <select value={props.value} onChange={props.handleSelectChange}>
-            {
-                props.regionList.map(
-                    (regionElement) => (
-                        //<option key={regionElement.id} value={regionElement.id}>
-                        <option key={regionElement.id} value={regionElement.properties.slug}>
-                            {regionElement.properties.title}
-                        </option>
-                    )
-                )
-            }
-        </select>
-    );
-}
 
 export default function Home() {
 

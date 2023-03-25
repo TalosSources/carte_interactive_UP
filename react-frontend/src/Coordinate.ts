@@ -54,7 +54,7 @@ export class GeoCoordinate {
     const avgLat = (other._latitude + this._latitude) / 2;
     const x = dLon * Math.cos(avgLat * D2R);
     return Math.sqrt(x * x + dLat * dLat) * mPerDegree;
-  };
+  }
 
   preciseDistanceTo(other: GeoCoordinate) {
     const longitudeDelta =
@@ -67,14 +67,14 @@ export class GeoCoordinate {
         Math.pow(Math.sin(longitudeDelta / 2), 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
-  };
+  }
 
   /**
    * Returns the distance in meters between this coordinate and the given one.
    * @param {GeoCoordinate} other
    * @param {boolean} [precise=false] If set to true it will always calculate precise distance
    */
-  distanceTo(other: GeoCoordinate, precise : boolean = true) {
+  distanceTo(other: GeoCoordinate, precise = true) {
     const longitudeDelta = Math.abs(other._longitude - this._longitude);
     const latitudeDelta = Math.abs(other._latitude - this._latitude);
     // check if points are close enough to ingnore error from fast calculation
@@ -87,7 +87,7 @@ export class GeoCoordinate {
     } else {
       return this.quickDistanceTo(other);
     }
-  };
+  }
 
   /**
    * This method modifies array in-place
@@ -95,12 +95,11 @@ export class GeoCoordinate {
    * @returns {GeoCoordinate[]} Sorted arr
    */
   sortArrayByReferencePoint(arr: GeoCoordinate[]): GeoCoordinate[] {
-    const that = this;
-    arr.sort(function(a, b) {
-      return that.quickDistanceTo(a) - that.quickDistanceTo(b);
+    arr.sort((a, b) => {
+      return this.quickDistanceTo(a) - this.quickDistanceTo(b);
     });
     return arr;
-  };
+  }
 
   /**
    * Calculates a distance between two points, assuming they are on a plain area, correcting by actual latitude distortion.
@@ -118,7 +117,7 @@ export class GeoCoordinate {
     const avgLat = (other._latitude + this._latitude) / 2;
     const x = dLon * Math.cos(avgLat * D2R);
     return Math.sqrt(x * x + dLat * dLat + dAlt * dAlt);
-  };
+  }
 
   /** Calculates the coordinate that is a given number of meters from this coordinate at the given angle
    *  @param {number} distance the distance in meters the new coordinate is way from this coordinate.
@@ -138,7 +137,7 @@ export class GeoCoordinate {
         Math.cos(distance / R) - Math.sin(latitudeRadians) * Math.sin(lat2)
       );
     return new GeoCoordinate({latitude: lat2/D2R, longitude:  lon2 / D2R});
-  };
+  }
 
   /**
    * calculates the bearing from this point to a given Geocoordinate
@@ -155,7 +154,7 @@ export class GeoCoordinate {
       Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLong);
     const bearing = Math.atan2(y, x);
     return bearing < 0 ? 2 * Math.PI + bearing : bearing;
-  };
+  }
 
   /**
    * calculates the bearing from this point to a given Geocoordinate
@@ -164,6 +163,6 @@ export class GeoCoordinate {
    */
   bearingTo(other: GeoCoordinate): number {
     return this.bearingRadTo(other) / D2R;
-  };
+  }
 
 }

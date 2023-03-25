@@ -19,8 +19,6 @@ function renderTags(tags : Tag[]) {
 
 
 const Sitemap = () => {
-    const {tagId} = useParams();
-
     const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
     const [tags, setTags] = useState([]);
 
