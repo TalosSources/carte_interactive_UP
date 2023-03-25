@@ -483,6 +483,7 @@ export default function Home() {
                     <input
                         className="form-control" 
                         name="search" 
+                        value={searchString}
                         onChange={event => setSearchString(event.target.value)}/>
                     <div className="form-check checkbox-lg ml-4">
                         <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
