@@ -163,7 +163,7 @@ export default function Home() {
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
     // const [activeRegion, setActiveRegion] = useState({properties: { welcome_message_html: ""}});
     const [activeTags, setActiveTags] = useState<string[]>(urlActiveTags);
-    const [regionList, setRegionList] = useState([]);
+    const [regionList, setRegionList] = useState<Region[]>([]);
     const [mapCenter, setMapCenter] = useState(new GeoCoordinate({latitude: 50, longitude: 12}));
     const [mapBounds, setMapBounds] = useState(new GeoBoundingBox());
     const [sorting, setSorting] = useState(Sorting.Distance.value);
@@ -197,15 +197,11 @@ export default function Home() {
         .then(response_json => {
             console.log("tags", response_json);
             const tags = response_json.map((tag: Tag) => {
-                let isActive = urlActiveTags.includes(tag.slug)
                 tag.title = tag.title.replace("&amp;", "&")
-                return {...tag, active: isActive}
-
-                
+                return tag
             }) 
             setTags(tags);
             // remove invalid strings in activeTags
-            // setActiveTags(tags.filter(tag => tag.active).map(tag => tag.slug));
         });
         // fetch initial initiatives
         const initiatives_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/`;
@@ -231,7 +227,6 @@ export default function Home() {
             .then(regions => {
                 console.log("regionList", regions['features']);
                 setRegionList(regions['features']);
-                // setActiveRegion(regions['features'].find((region: Region) => region.properties.slug == activeRegionSlug))
             }
             )
             .catch(err => console.error(err));
@@ -239,7 +234,6 @@ export default function Home() {
 
     // refresh region
     const region_slug = activeRegionSlug;
-    console.log("regionList", regionList);
     const region = regionList.filter((r: Region) => r['properties']['slug'] === region_slug);
     let activeReg;
     if (region.length == 0) {
@@ -394,7 +388,8 @@ export default function Home() {
             const newBounds = e.target.getBounds();
             setMapBounds(GeoBoundingBox.fromCoordinates([
                 leafletToGeoCoordinate(newBounds['_northEast']),
-                leafletToGeoCoordinate(newBounds['_southWest'])]
+                leafletToGeoCoordinate(newBounds['_southWest'])
+            ]
             ));
         })
         return null;
@@ -418,31 +413,21 @@ export default function Home() {
         }
     } 
 
-    function findRegionFromSlug (regionSlug: string) { 
-        return regionList.filter((reg: Region) => reg.properties.slug === regionSlug)[0]
-
-    }
-
     return (
         <>
-        <NavBar
-            handleRegionChange={handleRegionChange}
-            activeRegionSlug={activeRegionSlug}
-            regionList={regionList}
-        />
+            <NavBar
+                handleRegionChange={handleRegionChange}
+                activeRegionSlug={activeRegionSlug}
+                regionList={regionList}
+            />
             <Header>
                     {(() => {
-                        let aRegion: Region = findRegionFromSlug(activeRegionSlug)
                         return (
-                <div dangerouslySetInnerHTML={{__html: aRegion?.properties?.welcome_message_html}}>
-                    </div>
-
+                            <div dangerouslySetInnerHTML={{__html: activeReg.properties.welcome_message_html}} />
                         )
                     })()
                     }
             </Header>
-            {/*  
-                 */}
             {windowSize.width > SMALL_SCREEN_WIDTH && <FloatingTop>
                 <HighlightInitiative />
                 { windowSize.width > MEDIUM_SCREEN_WIDTH ? <GetInvolved /> : <></>}
@@ -483,93 +468,67 @@ export default function Home() {
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
                  />
                  </div>
-{/* =======
-        <div>
-            <h2>Smartakartan</h2>
-            <RegionSelector
-                handleSelectChange={event => {
-                    const new_region_slug = event.target.value;
-                    setActiveRegionSlug(new_region_slug);
-                }
-                }
-                value={activeRegionSlug}
-                regionList={regionList}
-            />
-            <div dangerouslySetInnerHTML={{__html: activeRegion.properties.welcome_message_html}}></div>
-            <MapContainer id="map" center={[57.70, 11.97]} zoom={13} scrollWheelZoom={false}>
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
->>>>>>> 112-typescript:react-frontend/src/pages/Home.tsx
-                />
-                </div> */}
 
+                <TagContainer className="d-flex flex-row mb-2 mt-3 overflowX-scroll">
+                    {
+                        activeTags.map((tagSlug) => {
+                            return (<TopTagButton
+                                key={tagSlug}
+                                title={tags.find(tag => tag.slug === tagSlug)?.title || ""}
+                                onClick={() => toggleActiveTag(tagSlug)}
+                                active={true}
+                            />)
+                        })
+                    }
+                    {
+                        top_tags.map((tagElement: Tag) => (
+                            <TopTagButton
+                                key={tagElement.title}
+                                title={tagElement.title}
+                                onClick={() => toggleActiveTag(tagElement.slug)}
+                                active={(() => 
+                                    activeTags.some((ts: string) => tagElement.slug == ts)
+                                    )()
+                                }
+                                />
+                        ))
+                    }
 
-
-                    <TagContainer className="d-flex flex-row mb-2 mt-3 overflowX-scroll">
-                        {
-                            activeTags.map((tagSlug) => {
-                                return (<TopTagButton 
-                                    key={tagSlug}
-                                    title={tags.find(tag => tag.slug === tagSlug)?.title || ""}
-                                    onClick={() => toggleActiveTag(tagSlug)}
-                                    active={true}
-                                />)
-                            })
-                        }
-                        {
-                            top_tags.map((tagElement: Tag) => (
-                                <TopTagButton 
-                                    key={tagElement.title}
-                                    title={tagElement.title} 
-                                    onClick={() => toggleActiveTag(tagElement.slug)}
-                                    active={(() => {
-                                        const isActive = activeTags.find((ts: string) => tagElement.slug == ts)
-                                        return isActive ? true: false;
-                                        })()
-                                    }
-                                    />
-                            ))
-                        }
-
-                    </TagContainer>
+                </TagContainer>
               
 
                 {/* This should be its own component, probably */}
                 <Sides>
 
-                <LeftSide>
-                    <div id="cards-canvas">
-                    {renderCardCollection(
-                        initiatives, 
-                        (clickedSlug) => {toggleActiveTag(clickedSlug)}, tagEntropy)}
-                    </div>
-                </LeftSide>
-                <RightSide>
+                    <LeftSide>
+                        <div id="cards-canvas">
+                        {renderCardCollection(
+                            initiatives,
+                            (clickedSlug) => {toggleActiveTag(clickedSlug)}, tagEntropy)}
+                        </div>
+                    </LeftSide>
+                    <RightSide>
 
-                    {windowSize?.width > SMALL_SCREEN_WIDTH && <div className="d-flex flex-row">
-                        <OutlineButton onClick={() => {}}>Föreslå en verksamhet</OutlineButton>
-                        <OutlineButton onClick={() => {}}>Bli volontär</OutlineButton>
-                        <OutlineButton onClick={() => {}}>Starta en grej</OutlineButton>
-                    </div>}
-                    <MapContainer 
-                        id="map" 
-                        center={[57.70, 11.97]} 
-                        zoom={10} 
-                        scrollWheelZoom={false} 
-                        // gestureHandling={true}
-                    >
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                        {mapMarkers}
-                        <RegisterMapCenter/>
-                    </MapContainer>
-                </RightSide>
-            </Sides>
-
-
+                        {windowSize?.width > SMALL_SCREEN_WIDTH && <div className="d-flex flex-row">
+                            <OutlineButton onClick={() => console.log("Proposing new feature not implemented.")}>Föreslå en verksamhet</OutlineButton>
+                            <OutlineButton onClick={() => console.log("Becoming a volunteer not implemented.")}>Bli volontär</OutlineButton>
+                            <OutlineButton onClick={() => console.log("Starting something not implemented.")}>Starta en grej</OutlineButton>
+                        </div>}
+                        <MapContainer 
+                            id="map" 
+                            center={[57.70, 11.97]} 
+                            zoom={10} 
+                            scrollWheelZoom={false} 
+                        >
+                            <TileLayer
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                />
+                            {mapMarkers}
+                            <RegisterMapCenter/>
+                        </MapContainer>
+                    </RightSide>
+                </Sides>
             </MainContainer>
         </>
     );
