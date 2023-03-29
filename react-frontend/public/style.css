@@ -1,46 +1,33 @@
-#map {
-    height: 500px;
-}
-
-body {
-    background-color: magenta;
-}
-
 @media screen and (min-width: 56rem) { /* = 2*28. 2 cards take 2*10inner+4padding+4margin */
   #map {
-    width: calc(50% - 2em);
-    float: right;
+    width: calc(100% - 2em);
+    /* float: right; */
     margin: 1em;
-    height: 100vh;
   }
   #cards-panel {
     width: 50%;
   }
   #cards-canvas {
-    height: 100vh;
+    height: 100%;
     overflow: scroll;
+    max-width: 100%;
   }
 }
-.card-title {
-  font-weight: bold;
-  color: black;
-  padding: 0.5em;
-  font-size: smaller;
+#map {
+  height: 100vh;
 }
-.card-description {
-  font-size: 0.8em;
-  color: black;
-  padding: 0.2em;
+
+@media (max-width: 800px) {
+  #map {
+    height: 30vh;
+  }
 }
-.card-text {
-  height: 7.5em;
-  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
-  -webkit-mask-repeat: no-repeat;
+
+
+#cards-panel {
+  clear: left;
 }
-.card-text p {
-  padding: 0pt;
-  margin: 0pt;
-}
+
 a:link { text-decoration: none; }
 
 a:visited { text-decoration: none; }
@@ -50,23 +37,34 @@ a:hover { text-decoration: none; }
 a:active { text-decoration: none; }
 .card-image {
   width: 100%;
-  height: 7em;
   border-radius: 0.3em 0.3em 0 0;
-}
-.card {
-  float: left;
-  width: 10em;
-  height: 16.5em;
-  background-color: beige;
-  margin: 1em;
-  border-radius: 0.3em;
-  border: black;
-  overflow: hidden;
-  /*padding: 1em;*/
 }
 ul {
   margin: 0pt;
   padding: 0pt;
+}
+
+#logo {
+  width: 3em;
+  float:left;
+  padding: 0.5em;
+}
+#sk-title {
+  float: left;
+  padding: 1.2em;
+  font-size: larger;
+  font-weight: bold;
+}
+#regionSelector {
+  padding: 1.5em;
+}
+
+#footer {
+  clear:both;
+}
+
+div::-webkit-scrollbar {
+  display: none;
 }
 .selectedTag:hover {
   background-color: rgb(226, 111, 117);
@@ -98,10 +96,4 @@ ul {
   overflow-x: scroll;
   white-space: nowrap;
   height: 3.5em;
-}
-.cardTagPanel {
-  overflow-x: scroll;
-  white-space: nowrap;
-  height: 2.5em;
-  font-size: small;
 }

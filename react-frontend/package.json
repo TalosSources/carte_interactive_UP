@@ -4,16 +4,17 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.6.0",
+    "build-url-ts": "^6.1.5",
     "leaflet": "^1.9.3",
     "leaflet-gesture-handling": "^1.2.2",
-    "geocoordinate": "^2.0.31",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-leaflet": "^4.2.0",
-    "react-router-dom": "^6.4.4",
+    "react-leaflet": "^4.2.1",
+    "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
-    "reactstrap": "^9.1.5",
-    "styled-components": "^5.3.6",
+    "reactstrap": "^9.1.6",
+    "sanitize-html": "^2.10.0",
+    "styled-components": "^5.3.9",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -29,6 +30,16 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "concurrently": "^7.6.0"
+    "@types/node": "^18.15.0",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@types/styled-components": "^5.1.26",
+    "@types/sanitize-html": "^2.9.0",
+    "@types/leaflet": "^1.9.1",
+    "concurrently": "^7.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
+    "eslint": "^8.36.0",
+    "typescript": "^4.9.5"
   }
 }
