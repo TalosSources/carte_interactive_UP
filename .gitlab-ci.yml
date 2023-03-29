@@ -47,12 +47,12 @@ deploy:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
     - cd /var/lib/smartakartan/smartakartan-cd
-    - sudo git reset --hard
-    - sudo git pull
-    - sudo bash -c 'git describe --long --all --dirty > gitver'
-    - sudo patch docker-compose.yml < compose-deploy.patch
-    - sudo patch nginx.conf < nginx-deploy.patch
-    - sudo bash -c "echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development"
+    - git reset --hard
+    - git pull
+    - git describe --long --all --dirty > gitver
+    - patch docker-compose.yml < compose-deploy.patch
+    - patch nginx.conf < nginx-deploy.patch
+    - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose down
     - sudo docker-compose rm
     - sudo docker-compose up --build -d
@@ -60,7 +60,7 @@ deploy:
     - sudo docker image prune -f
     - sudo docker container prune -f
     # needs to have some temporal difference to the start, so the db is prepared
-    - sleep 10
+    - sleep 20
     - sudo docker-compose run api /code/manage.py import_sk3_data
   environment:
     name: production
