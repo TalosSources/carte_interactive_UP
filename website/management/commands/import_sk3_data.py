@@ -465,7 +465,7 @@ def process_business_rows(businessRows):
         And in a separate table, there are _InitiatveTranslations_ for every language.
     """
     def getImageUrl(row):
-        if row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]: # : false | Dict
+        if RJSK_ACF_MAIN_IMAGE in row[RJK_ACF] and row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]: # : false | Dict
             return row[RJK_ACF][RJSK_ACF_MAIN_IMAGE][RJSK_ACF_MAIN_IMAGE_URL]
         else:
             return ""
