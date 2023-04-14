@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
+import { Tag } from "../types/Initiative"; 
 
 
-function renderTags(tags) {
+function renderTags(tags : Tag[]) {
     console.log("renderTags")
     if (typeof tags != 'undefined') {
         console.log(tags)
@@ -18,8 +19,6 @@ function renderTags(tags) {
 
 
 const Sitemap = () => {
-    const {tagId} = useParams();
-
     const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
     const [tags, setTags] = useState([]);
 

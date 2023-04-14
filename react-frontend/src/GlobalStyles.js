@@ -5,13 +5,7 @@ const GlobalStyles = createGlobalStyle`
     margin: 0;
     padding: 0;
     font-family: sans-serif;
-    background-color: magenta;
-  }
-
-  .leaflet-container {
-    width: 100vw;
-    height: 40vh;
-    z-index: 1;
+    background-color: #f8f8f8;
   }
 `
 
