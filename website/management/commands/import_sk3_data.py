@@ -426,7 +426,7 @@ def import_sk3_data(i_args: List[str]):
     process_tagg_rows(tags)
 
     #TODO for region in REGION_DATA_DICT.keys():
-    for region in ["goteborg"]:
+    for region in ["goteborg", "malmo"]:
         importAddresses(region)
         importPages(region)
         businessRows = importInitiatives(region)
