@@ -1,6 +1,7 @@
 import dataclasses
 import logging
 import sys
+from datetime import datetime
 
 import django.contrib.gis.geos
 import django.core.management.base
@@ -9,7 +10,23 @@ import requests
 
 import website.models
 
+from typing import Dict, List, Optional
+
+"""
+Loglevel:
+- Debug
+- Info: something that may be interesting to know, but is expectable
+  - if initiatives, tags, … was already in the DB
+- Warning: something that we observed that is unexpected
+  - if the data if found to be strange
+- Error: ?
+- Critical: something that may render the process useless
+  - if tags or locations to be linked cannot be found
+- Fatal: something that make the process fail
+  - nothing so far
+"""
 logging.basicConfig(level=logging.INFO)
+
 
 """
 
@@ -82,9 +99,6 @@ OVERSATTNING_DT = "oversattning"
 GLOBAL_R = "global"
 REGION_DT = "region"
 TAGG_DT = "tagg"
-
-DATA_TYPE_LIST = [
-    "faq", ADDRESS_DT, PAGE_DT, BUSINESS_DT, REGION_DT, OVERSATTNING_DT, "page_type", "tagg_grupp", TAGG_DT]
 
 
 @dataclasses.dataclass
@@ -181,281 +195,367 @@ REGION_DATA_DICT = {
 # Contains sub-lists on this format: [sk3_id_en, sk3_id_sv], where the order of langs is undetermined
 # business_lang_combos_list = []
 
-business_resp_row_list = []
-tagg_resp_row_list = []
-
-
-def import_sk3_data(i_args: [str]):
-    # göteborg, karlstad, etc
-    # Please note: address for Göteborg uses gbg instead
-    data_type_full_name_list = []
-    for data_type in DATA_TYPE_LIST:
-        if data_type == ADDRESS_DT:
-            for region in REGION_DATA_DICT.keys():
-                if region == GOTEBORG_R:
-                    region = "gbg"
-                data_type_full_name = f"{data_type}_{region}"
-                data_type_full_name_list.append(data_type_full_name)
-        elif data_type in (PAGE_DT, BUSINESS_DT):
-            for region in REGION_DATA_DICT.keys():
-                data_type_full_name = f"{region}_{data_type}"
-                data_type_full_name_list.append(data_type_full_name)
-        else:
-            if data_type == OVERSATTNING_DT:
-                data_type = "translations_comparison"  # -specified in the WP Pods field "REST Base (if any)"
-            data_type_full_name_list.append(data_type)
-    data_type_full_name_list.append("non-existing")  # -for testing/verification purposes
-
-    assert REGION_DT in data_type_full_name_list
-    data_type_full_name_list.remove(REGION_DT)
-    data_type_full_name_list.insert(0, REGION_DT)
-
+def requestSK3API(data_type_full_name, per_page=None, fields=None, page_nr=None):
     bearer_token = "LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7"
     header_dict = {"Authorization": f"Bearer {bearer_token}"}
+    api_url = f"https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/{data_type_full_name}/"
+    if fields:
+        api_url += f"&_fields={','.join(FIELDS)}"
+        # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_fields
+    if per_page:
+        api_url += f"&per_page={PER_PAGE}&page={page_nr}"
+        # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
+    api_url = api_url.replace('&', '?', 1)
+    logging.debug(f"Calling requests.get with {api_url=}")
+    response = requests.get(api_url, headers=header_dict)
+    response_json = response.json()  # -can be a list or a dict
+    if type(response_json) is dict and response_json.get("code", "") == "rest_post_invalid_page_number":
+        logging.debug(f"No more data found for {page_nr=} Exiting while loop")
+        return None
 
-    nr_added = 0
-    nr_skipped = 0
-    logging.info(f"Total number of datatypes: {len(data_type_full_name_list)}")
-    for data_type_full_name in data_type_full_name_list:
-        # ################ FILTERING ################
-        if data_type_full_name not in ("goteborg_business", "address_gbg", REGION_DT, TAGG_DT,):
-            # "goteborg_business", "address_gbg", REGION_DT, TAGG_DT,
-            continue
-        """
-        if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
-            continue
-        DATA_TYPE_FILTER: list = []
-        if DATA_TYPE_FILTER and data_type_full_name not in DATA_TYPE_FILTER:
-            continue
-        if BUSINESS_DT not in data_type_full_name:
-            continue
-        if ADDRESS_DT not in data_type_full_name and BUSINESS_DT not in data_type_full_name:
-            continue
-        if data_type_full_name not in ("goteborg_business", "address_gbg",):
-            continue
-        """
-        logging.info(f"=== {data_type_full_name=} ===")
+    if response.status_code != 200:
+        logging.critical(f"WARNING response code was not 200 --- {response.status_code=}")
+        return None
+    return response_json
 
+def getAllDataOf(dataTypeFullName):
         page_nr = 1
+        responses = []
         while True:
             logging.debug(f"Page nr: {page_nr}")
-            api_url = f"https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/{data_type_full_name}/"
-            if FIELDS:
-                api_url += f"&_fields={','.join(FIELDS)}"
-                # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/#_fields
-            if PER_PAGE:
-                api_url += f"&per_page={PER_PAGE}&page={page_nr}"
-                # -documentation: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
-            api_url = api_url.replace('&', '?', 1)
-            logging.info(f"Calling requests.get with {api_url=}")
-            response = requests.get(api_url, headers=header_dict)
-            response_json = response.json()  # -can be a list or a dict
-            if type(response_json) is dict and response_json.get("code", "") == "rest_post_invalid_page_number":
-                logging.info(f"No more data found for {page_nr=} Exiting while loop")
+            response_json = requestSK3API(dataTypeFullName, PER_PAGE, FIELDS, page_nr)  # -can be a list or a dict
+            if response_json is None:
                 break
 
-            if response.status_code != 200:
-                logging.warning(f"WARNING response code was not 200 --- {response.status_code=}")
-                break
-
-            if FIELDS and RJK_ACF not in FIELDS:
-                logging.info(f"{response_json=}")
             logging.debug(f"Number of rows: {len(response_json)}")
 
-            lowest_nr_of_cols = sys.maxsize
-            highest_nr_of_cols = 0
-            nr_of_cols = -1
-            if response_json:
-                for row in response_json:
-                    nr_of_cols = len(row)
-                    lowest_nr_of_cols = min(lowest_nr_of_cols, nr_of_cols)
-                    highest_nr_of_cols = max(highest_nr_of_cols, nr_of_cols)
-                if lowest_nr_of_cols != highest_nr_of_cols:
-                    logging.warning(
-                        "WARNING: The lowest_nr_of_cols per row and highest_nr_of_cols per row do not match")
-                    logging.info(f"{lowest_nr_of_cols=}")
-                    logging.info(f"{highest_nr_of_cols=}")
-                else:
-                    pass
-                    logging.debug(f"{nr_of_cols=}")
-            else:
-                logging.warning("WARNING: No rows in response")
-                break
-
-            for resp_row in response_json:
-                wp_post_id = resp_row[RJK_ID]
-                title = resp_row[RJK_TITLE][RJSK_RENDERED]
-                status = resp_row[RJK_STATUS]
-                # TODO: move all except wp_post_id down to the places where they are used
-
-                try:
-                    existing_obj = website.models.Region.objects.get(sk3_id=wp_post_id)
-                    nr_skipped += 1
-                    continue
-                except website.models.Region.DoesNotExist:
-                    existing_obj = None
-
-                if status != STATUS_PUBLISH:
-                    logging.info(f"INFO: {status=}")
-                    continue
-
-                if REGION_DT in data_type_full_name:
-                    lang_code = resp_row[RJK_LANGUAGE_CODE]
-                    if lang_code != "sv":
-                        # -this is not because we want Swedish, but because we want the minimal slug
-                        # -TODO: In the future we want this translated (so not skipping)
-                        continue
-                    slug = resp_row[RJK_SLUG]
-                    region_data = REGION_DATA_DICT[slug]
-                    region_data: RegionData
-                    new_obj = website.models.Region(
-                        sk3_id=wp_post_id,
-                        slug=slug,
-                        welcome_message_html=resp_row[RJK_WELCOME_MESSAGE],
-                        title=region_data.name,
-                        area=region_data.area
-                    )
-                    if existing_obj is not None:
-                        nr_skipped += 1
-                    else:
-                        new_obj.save()
-                        nr_added += 1
-
-                elif ADDRESS_DT in data_type_full_name:
-                    latitude: str = resp_row[RJK_LATITUDE]
-                    latitude = latitude.replace(',', '.')
-                    longitude: str = resp_row[RJK_LONGITUDE]
-                    longitude = longitude.replace(',', '.')
-                    geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
-                    # -please note order of lat and lng
-                    new_obj = website.models.Location(
-                        sk3_id=wp_post_id,
-                        title=title,
-                        coordinates=geo_point
-                    )
-                    new_obj.save()
-                    nr_added += 1
-                    # logging.debug(f"{title=}")
-                elif BUSINESS_DT in data_type_full_name:
-                    business_resp_row_list.append(resp_row)
-                elif TAGG_DT == data_type_full_name:
-                    tagg_resp_row_list.append(resp_row)
-                else:
-                    logging.info(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
-                    continue
+            responses += response_json
             page_nr += 1
-    logging.info("=== Reading from sk3 API done. Now starting processing ===")
-    process_tagg_rows()
-    process_business_rows()
+        return responses
+    
+def isPublished(json_row):
+    status = json_row[RJK_STATUS]
+    return(status == STATUS_PUBLISH)
+
+def importRegions():
+    regions = getAllDataOf(REGION_DT)
+    regions = filter(lambda row: isPublished(row), regions)
+    for resp_row in regions:
+
+        """
+        {'id': 19,
+         'date': '2020-01-09T12:05:16',
+         'date_gmt': '2020-01-09T12:05:16',
+         'guid': {
+            'rendered': 'http://sk-wp.azurewebsites.net/?post_type=region&#038;p=19'},
+            'modified': '2023-03-16T12:20:05',
+            'modified_gmt': '2023-03-16T12:20:05',
+            'slug': 'gothenburg',
+            'status': 'publish',
+            'type': 'region',
+            'link': 'https://sk-wp.azurewebsites.net/index.php/en/region/gothenburg/',
+            'title': {'rendered': 'Gothenburg'
+         },
+         'template': '',
+         'url_path': 'gothenburg',
+         'pages_api_path': 'goteborg_page',
+         'businesses_api_path': 'goteborg_business',
+         'language_code': 'en',
+         'welcome_message': '<h2>Explore the Gothenburg sharing initiatives that make it easy to rent, share, borrow, give and take!</h2>',
+         'region_menu_order': '30',
+         'hide': '0',
+         'acf': [],
+         'lang': 'en',
+         'translations': {
+           'en': 19,
+           'sv': 20
+         },
+         'pll_sync_post': [],
+         '_links': {
+           'self': [
+            {
+                'href': 'https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/region/19'}],
+                'collection': [{'href': 'https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/region'
+            }
+           ],
+           'about': [
+            {
+                'href': 'https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/types/region'
+            }
+           ],
+           'wp:attachment': [
+            {
+                'href': 'https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/media?parent=19'
+            }
+           ],
+           'curies': [
+            {
+                'name': 'wp',
+                'href': 'https://api.w.org/{rel}',
+                'templated': True
+            }
+           ]
+         }
+        }
+        """
+
+        logging.debug(resp_row)
+        wp_post_id = resp_row[RJK_ID]
+        try:
+            existing_obj = website.models.Region.objects.get(sk3_id=wp_post_id)
+            continue
+        except website.models.Region.DoesNotExist:
+            pass
+
+        lang_code = resp_row[RJK_LANGUAGE_CODE]
+        if lang_code != "sv":
+            # -this is not because we want Swedish, but because we want the minimal slug
+            # -TODO: In the future we want this translated (so not skipping)
+            continue
+        slug = resp_row[RJK_SLUG]
+        region_data = REGION_DATA_DICT[slug]
+        new_obj = website.models.Region(
+            sk3_id=wp_post_id,
+            slug=slug,
+            welcome_message_html=resp_row[RJK_WELCOME_MESSAGE],
+            title=region_data.name, # TODO take this from response
+            area=region_data.area
+        )
+        new_obj.save()
+
+def importAddresses(region):
+
+    """
+    {
+        "id": 12247,
+        "date": "2023-01-23T20:14:11",
+        "date_gmt": "2023-01-23T20:14:11",
+        "guid": {
+        "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12247"
+        },
+        "modified": "2023-01-23T20:14:11",
+        "modified_gmt": "2023-01-23T20:14:11",
+        "slug": "saggatan-19",
+        "status": "publish",
+        "type": "address_gbg",
+        "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/saggatan-19\/",
+        "title": {
+        "rendered": "S\u00e5ggatan 19"
+        },
+        "template": "",
+        "latitude": "57.69513792779139",
+        "longitude": "11.925602211999262",
+        "acf": [],
+        "_links": {
+        "self": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12247"
+            }
+        ],
+        "collection": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
+            }
+        ],
+        "about": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
+            }
+        ],
+        "wp:attachment": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12247"
+            }
+        ],
+        "curies": [
+            {
+            "name": "wp",
+            "href": "https:\/\/api.w.org\/{rel}",
+            "templated": true
+            }
+        ]
+        }
+    }
+    """
+
+    if region == GOTEBORG_R:
+        region = "gbg"
+    data_type_full_name = f"{ADDRESS_DT}_{region}"
+    addresses = getAllDataOf(data_type_full_name)
+    addresses = filter(lambda row: isPublished(row), addresses)
+    for resp_row in addresses:
+        wp_post_id = resp_row[RJK_ID]
+        try:
+            existing_obj = website.models.Location.objects.get(sk3_id=wp_post_id)
+            continue
+        except website.models.Location.DoesNotExist:
+            pass
+        latitude: str = resp_row[RJK_LATITUDE]
+        latitude = latitude.replace(',', '.')
+        longitude: str = resp_row[RJK_LONGITUDE]
+        longitude = longitude.replace(',', '.')
+        geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
+        # -please note order of lat and lng
+        title = resp_row[RJK_TITLE][RJSK_RENDERED]
+        new_obj = website.models.Location(
+            sk3_id=wp_post_id,
+            title=title,
+            coordinates=geo_point
+        )
+        new_obj.save()
+
+def importPages(region):
+    data_type_full_name = f"{region}_{PAGE_DT}"
+    pages = getAllDataOf(data_type_full_name)
+    pages = filter(lambda row: isPublished(row), pages)
+    logging.warning(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
+
+def importInitiatives(region : str):
+    data_type_full_name = f"{region}_{BUSINESS_DT}"
+    initiatives = response_json = getAllDataOf(data_type_full_name)
+    return list(filter(lambda row: isPublished(row), initiatives))
+
+def importTags():
+    tags = response_json = getAllDataOf(TAGG_DT)
+    tags = filter(lambda row: isPublished(row), tags)
+    return list(tags)
+
+def generateStatistics():
+    tag_count = {}
+    for initiative_obj in website.models.Initiative.objects.all():
+        for tag_obj in initiative_obj.tags.all():
+            if tag_obj.slug in tag_count:
+                tag_count[tag_obj.slug] += 1
+            else:
+                tag_count[tag_obj.slug] = 1
+    logging.info(tag_count)
+
+
+
+def import_sk3_data(i_args: List[str]):
+    importRegions()
+    tags = importTags()
+    process_tagg_rows(tags)
+
+    #TODO for region in REGION_DATA_DICT.keys():
+    for region in ["goteborg", "malmo"]:
+        importAddresses(region)
+        importPages(region)
+        businessRows = importInitiatives(region)
+        beforeBusiness = datetime.now()
+        process_business_rows(businessRows)
+        afterBusiness = datetime.now()
+        logging.debug(f"Importing buisnesses took {afterBusiness-beforeBusiness}")
+
+    logging.debug("=== Reading from sk3 API done. Now starting processing ===")
     clear_unused_tags_from_db()
+    generateStatistics()
 
 
 LANG_CODE_EN = "en"
 LANG_CODE_SV = "sv"
 
 
-def clear_unused_tags_from_db():
+def clear_unused_tags_from_db() -> None:
     for tag_obj in website.models.Tag.objects.all():
-        count = 0
-        tag_obj: website.models.Tag
         for initiative_obj in website.models.Initiative.objects.all():
             if tag_obj in initiative_obj.tags.all():
-                count += 1
-        if count == 0:
+                break
+        else:
             tag_obj.delete()
 
-
-def process_business_rows():
+def process_business_rows(businessRows):
     """
-    "translations": {
-      "en": 11636,
-      "sv": 11629
-    },
+    Background information
 
-    This function relies on the fact that:
-    the resp_row for en always has a higher sk3id than for sv
-    """
-    logging.debug("============= entered function process_business_rows")
-    nr_added = 0
-    # business_resp_row_list_copy = business_resp_row_list.copy()
-    translations_for_added_posts_dict_list = []
+    SK3 data scheme:
+        For every language and initiative, there is a full datarow of information.
+          This contain besides others: localized title, localized description, image_url and tags. (Yes, duplicated data.)
+          And a dict with all translations of this initiative.
 
-    business_resp_row_list_reversed = list(reversed(business_resp_row_list))  # -so sv comes first
-    logging.debug(f"{len(business_resp_row_list_reversed)=}")
+    SK4 scheme:
+        For every initiative, there is a _InitiativeBases_ containing the tags, slug and image_url.
+        And in a separate table, there are _InitiatveTranslations_ for every language.
     """
-    for resp_row in business_resp_row_list_reversed:
-        translations_dict = resp_row[RJK_TRANSLATIONS]
-        translations_dict_list.append(translations_dict)  # -will contain duplicates
-    """
-    for resp_row in business_resp_row_list_reversed:
-        wp_post_id = resp_row[RJK_ID]
-        lang_code = resp_row[RJK_LANG]
-        logging.debug(f"{wp_post_id=}, {lang_code=}")
-        title = resp_row[RJK_TITLE][RJSK_RENDERED]
-        status = resp_row[RJK_STATUS]
-        data_type_full_name = resp_row[RJK_TYPE]
+    def getImageUrl(row):
+        if RJSK_ACF_MAIN_IMAGE in row[RJK_ACF] and row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]: # : false | Dict
+            return row[RJK_ACF][RJSK_ACF_MAIN_IMAGE][RJSK_ACF_MAIN_IMAGE_URL]
+        else:
+            return ""
 
-        resp_row_afc = resp_row[RJK_ACF]
+    def createOrGetInitiativeBase(thisTranslationSK3):
+        thisTranslationSK3Id = thisTranslationSK3[RJK_ID]
+        if thisTranslationSK3Id in initiativeBasesOfTranslations:
+            return initiativeBasesOfTranslations[thisTranslationSK3Id]
+        translations_dict = thisTranslationSK3[RJK_TRANSLATIONS]
+        try:
+            return website.models.Initiative.objects.get(sk3_id=thisTranslationSK3Id)
+        except:
+            pass
+        for translationId in translations_dict:
+            try:
+                return website.models.Initiative.objects.get(sk3_id=translationId)
+            except:
+                pass
+        initiativeBase = addNewBaseInitiative(thisTranslationSK3)
+        registerInitiativeBase(initiativeBase, thisTranslationSK3)
+        linkLocations(thisTranslationSK3, initiativeBase)
+        return initiativeBase
+
+    def addTranslationToInitiativeBase(row, initiativeBase):
+        wp_post_id = row[RJK_ID]
+        lang_code = row[RJK_LANG]
+        title = row[RJK_TITLE][RJSK_RENDERED]
+        afc = row[RJK_ACF]
+        description = afc[RJSK_ACF_DESCRIPTION_ID]
+        new_title_obj = website.models.InitiativeTitleText(
+            sk3_id=wp_post_id,
+            language_code=lang_code,
+            text=title,
+            initiative=initiativeBase
+        )
+        try:
+            new_title_obj.save()
+        except:
+            otherTitle = website.models.InitiativeTitleText.objects.get(sk3_id=wp_post_id)
+            logging.info(f"Title for initiative {title} {wp_post_id} in lang {lang_code} was already present. Bound to initiative {otherTitle.initiative.sk3_id}")
+        new_description_obj = website.models.InitiativeDescriptionText(
+            sk3_id=wp_post_id,
+            language_code=lang_code,
+            text=description,
+            initiative=initiativeBase
+        )
+        try:
+            new_description_obj.save()
+        except:
+            logging.info(f"Description for initiative {title} {wp_post_id} in lang {lang_code} was already present.")
+
+    def checkRow(row):
+        wp_post_id = row[RJK_ID]
+        resp_row_afc = row[RJK_ACF]
         description = resp_row_afc[RJSK_ACF_DESCRIPTION_ID]
-        main_image_url = ""
-        if resp_row_afc and RJSK_ACF_MAIN_IMAGE in resp_row_afc:
-            resp_row_afc_main_image = resp_row_afc[RJSK_ACF_MAIN_IMAGE]
-            if resp_row_afc_main_image and RJSK_ACF_MAIN_IMAGE_URL in resp_row_afc_main_image:
-                main_image_url = resp_row_afc_main_image[RJSK_ACF_MAIN_IMAGE_URL]
-
-        translations_dict = resp_row[RJK_TRANSLATIONS]
-
-        # if sk3id in translations_dict[others]
-        # wp_post_id
+        translations_dict = row[RJK_TRANSLATIONS]
+        title = row[RJK_TITLE][RJSK_RENDERED]
 
         if LANG_CODE_SV not in translations_dict:
             logging.warning(f"Missing Swedish translation for {wp_post_id=}")
         if LANG_CODE_EN not in translations_dict:
             logging.warning(f"Missing English translation for {wp_post_id=}")
-
-        first_translation_has_been_added = False
-        first_translation_wp_post_id = -1
-        for translation_for_added_post_dict in translations_for_added_posts_dict_list:
-            translation_for_added_post_dict: dict
-            for lng_code_, sk3_id_ in translation_for_added_post_dict.items():
-                # This works because we have at most two languages right now.
-                if sk3_id_ == wp_post_id:
-                    logging.debug(f"{translation_for_added_post_dict=}")
-                    first_translation_has_been_added = True
-                else:
-                    first_translation_wp_post_id = sk3_id_
-            if first_translation_has_been_added:
-                break
-        if first_translation_has_been_added:
-            assert first_translation_wp_post_id != -1
-            old_obj = website.models.Initiative.objects.get(sk3_id=first_translation_wp_post_id)
-            new_title_obj = website.models.InitiativeTitleText(
-                sk3_id=wp_post_id,
-                language_code=lang_code,
-                text=title,
-                initiative=old_obj
-            )
-            new_title_obj.save()
-            new_description_obj = website.models.InitiativeDescriptionText(
-                sk3_id=wp_post_id,
-                language_code=lang_code,
-                text=description,
-                initiative=old_obj
-            )
-            new_description_obj.save()
-
-            continue
-
         if not description:
             logging.warning(f"WARNING: Description for {title} is empty")
             description = "-"
         if len(description) > 12000:
             logging.info(f"INFO: Description for {title} is very long: {len(description)} characters")
+
+    def addNewBaseInitiative(row):
+        wp_post_id = row[RJK_ID]
+        data_type_full_name = row[RJK_TYPE]
+        main_image_url = getImageUrl(row)
         region_name = data_type_full_name.split("_")[0]
         assert region_name in REGION_DATA_DICT.keys()
 
-        region_obj = website.models.Region.objects.get(slug=region_name)
         logging.debug(f"{main_image_url=}")
+        region_obj = website.models.Region.objects.get(slug=region_name)
         new_initiative_obj = website.models.Initiative(
             sk3_id=wp_post_id,
             region=region_obj,
@@ -463,97 +563,316 @@ def process_business_rows():
         )
         logging.debug(f"Saving Initiative object for {wp_post_id=}")
         new_initiative_obj.save()
-        translations_for_added_posts_dict_list.append(translations_dict)
-        nr_added += 1
-        # logging.debug(f"Added initiative with {initiative.id=}")
-
-        new_title_obj = website.models.InitiativeTitleText(
-            sk3_id=wp_post_id,
-            language_code=lang_code,
-            text=title,
-            initiative=new_initiative_obj
-        )
-        new_title_obj.save()
-        new_description_obj = website.models.InitiativeDescriptionText(
-            sk3_id=wp_post_id,
-            language_code=lang_code,
-            text=description,
-            initiative=new_initiative_obj
-        )
-        new_description_obj.save()
-
-        if RJK_ADDRESS_AND_COORDINATE in resp_row:
-            address_and_coordinate_list_or_bool = resp_row[RJK_ADDRESS_AND_COORDINATE]
-            # print(f"{type(address_and_coordinate_list)=}")
-            if type(address_and_coordinate_list_or_bool) is bool and not address_and_coordinate_list_or_bool:
-                # This means that the initiative has no locations
-                continue
-            for aac_dict in address_and_coordinate_list_or_bool:
-                # Address comes first, so we can connect here (and don't have to save until later)
-                location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
-                try:
-                    location = website.models.Location.objects.get(sk3_id=location_id)
-                    # -only works when added to db, so will not work during testing
-                except website.models.Location.DoesNotExist:
-                    logging.error(f"Location doesn't exist for sk3_id '{location_id}'")
-                    sys.exit()
-                location.initiative = new_initiative_obj
-                location.save()
+        return new_initiative_obj
+    
+    def linkLocations(row, initiativeObj):
+        data_type_full_name = row[RJK_TYPE]
+        if RJK_ADDRESS_AND_COORDINATE in row:
+            address_and_coordinate_list_or_bool = row[RJK_ADDRESS_AND_COORDINATE]
+            if address_and_coordinate_list_or_bool:
+                for aac_dict in address_and_coordinate_list_or_bool:
+                    # Address comes first, so we can connect here (and don't have to save until later)
+                    location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
+                    try:
+                        location = website.models.Location.objects.get(sk3_id=location_id)
+                        # -only works when added to db, so will not work during testing
+                        location.initiative = initiativeObj
+                        location.save()
+                    except website.models.Location.DoesNotExist:
+                        logging.critical(f"Location doesn't exist for sk3_id '{location_id}'")
         else:
             if GLOBAL_R not in data_type_full_name:
-                logging.warning(f"WARNING: No location available for initiative: {new_initiative_obj}")
+                logging.warning(f"WARNING: No location available for non-global initiative: {initiativeBase}")
 
+    def linkTags(row, initiativeObj):
         all_tags_list = []
         for rjk in [RJK_HUVUDTAGGAR, RJK_TAGGAR, RJK_SUBTAGGAR, RJK_TRANSAKTIONSFORM]:
-            tags_list_or_bool = resp_row[rjk]
+            tags_list_or_bool = row[rjk]
             if tags_list_or_bool:  # ensures that this is not False or []
                 all_tags_list.extend(tags_list_or_bool)
         logging.debug(f"{len(all_tags_list)=}")
         for tag_title in all_tags_list:
-            tag_title: str
-            tag = website.models.Tag.objects.get(title=tag_title)
-            new_initiative_obj.tags.add(tag)
+            try:
+                tag = website.models.Tag.objects.get(title=tag_title)
+                initiativeObj.tags.add(tag)
+            except:
+                logging.critical(f"Failure when loading tag {tag_title}")
+        return all_tags_list
 
-    # return nr_added
-    logging.info(f"{nr_added=}")
+    def registerInitiativeBase(initiativeBase, row):
+        translations_dict = row[RJK_TRANSLATIONS]
+        for translationId in translations_dict:
+            initiativeBasesOfTranslations[translationId] = initiativeBase
 
+    logging.debug("============= entered function process_business_rows")
+    initiativeBasesOfTranslations = {} # : {sk3TranslationId : sk4InitiativeBaseObj}
 
-tagg_dict = {}
-"""
-tagg_dict uses this format:
-{
-title: slug
-}
-"""
+    for row in businessRows:
+        """
+        {
+            "id": 11636,
+            "date": "2022-09-20T15:09:25",
+            "date_gmt": "2022-09-20T15:09:25",
+            "guid": {
+            "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_business&#038;p=11636"
+            },
+            "modified": "2022-09-20T15:09:25",
+            "modified_gmt": "2022-09-20T15:09:25",
+            "slug": "the-free-shop-aterbruket-lansmansgarden",
+            "status": "publish",
+            "type": "goteborg_business",
+            "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/en\/goteborg-business\/the-free-shop-aterbruket-lansmansgarden\/",
+            "title": {
+            "rendered": "The Free Shop \u00c5terbruket L\u00e4nsmansg\u00e5rden"
+            },
+            "template": "",
+            "address_and_coordinate": [
+            {
+                "latitude": "57.73348851727369",
+                "longitude": "11.898837895906174",
+                "ID": 11634,
+                "post_title": "S\u00f6dra Fj\u00e4dermolnsgatan 12",
+                "post_content": "",
+                "post_excerpt": "",
+                "post_author": "12",
+                "post_date": "2022-09-20 15:00:19",
+                "post_date_gmt": "2022-09-20 15:00:19",
+                "post_status": "publish",
+                "comment_status": "closed",
+                "ping_status": "closed",
+                "post_password": "",
+                "post_name": "sodra-fjadermolnsgatan-12",
+                "to_ping": "",
+                "pinged": "",
+                "post_modified": "2022-09-20 15:00:19",
+                "post_modified_gmt": "2022-09-20 15:00:19",
+                "post_content_filtered": "",
+                "post_parent": 0,
+                "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=11634",
+                "menu_order": 0,
+                "post_type": "address_gbg",
+                "post_mime_type": "",
+                "comment_count": "0",
+                "comments": false,
+                "id": 11634
+            }
+            ],
+            "icon": "",
+            "huvudtaggar": [
+            "Things"
+            ],
+            "subtaggar": [
+            "Board games",
+            "Books &amp; media",
+            "Clothes",
+            "Gadgets",
+            "Sports and leisure equipment",
+            "Toys"
+            ],
+            "transaktionsform": [
+            "Give &amp; get"
+            ],
+            "taggar": [
+            "L\u00e4nsmansg\u00e5rden",
+            "Free shop",
+            "Free",
+            "Give away"
+            ],
+            "acf": {
+            "email": "",
+            "phone": "",
+            "phone_number": "0704-990899",
+            "instagram_username": "",
+            "facebook_url": "",
+            "website_url": "",
+            "online_only": false,
+            "city": [
+                19
+            ],
+            "area": "L\u00e4nsmansg\u00e5rden",
+            "main_image": false,
+            "short_description": "Gratisbutik i L\u00e4nsmansg\u00e5rden",
+            "description": "<p>For more than ten year pensioneer Roine has run \u00c5terbruket, a free shop in L\u00e4nsmansg\u00e5rden. Come and collect a sweater, a book or why not a VHS tape?<\/p>\n<p>A free shop is like a second hand shop, with the difference that everything is for free. So swing by and drop off something you have that works, but you don&#8217;t need.<\/p>\n<p>You&#8217;re more than welcome to drop off things in the free shop during it&#8217;s opening hours. It&#8217;s only during these hours that Roine will pick up the phone.<\/p>\n",
+            "hide_opening_hours": false,
+            "always_open": false,
+            "text_for_opening_hours": "",
+            "closed_on_monday": false,
+            "opening_hour_monday": "11:00",
+            "closing_hour_monday": "15:00",
+            "closed_on_tuesday": true,
+            "closed_on_wednesday": false,
+            "opening_hour_wednesday": "16:00",
+            "closing_hour_wednesday": "19:00",
+            "closed_on_thursday": true,
+            "closed_on_friday": true,
+            "closed_on_saturday": true,
+            "closed_on_sunday": true
+            },
+            "lang": "en",
+            "translations": {
+            "en": 11636,
+            "sv": 11629
+            },
+            "pll_sync_post": [],
+            "_links": {
+            "self": [
+                {
+                "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_business\/11636"
+                }
+            ],
+            "collection": [
+                {
+                "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_business"
+                }
+            ],
+            "about": [
+                {
+                "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_business"
+                }
+            ],
+            "wp:attachment": [
+                {
+                "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=11636"
+                }
+            ],
+            "curies": [
+                {
+                "name": "wp",
+                "href": "https:\/\/api.w.org\/{rel}",
+                "templated": true
+                }
+            ]
+            }
+        },
+        """
+        checkRow(row)
 
+        initiativeBase = createOrGetInitiativeBase(row)
+        tags = linkTags(row, initiativeBase)
+        addTranslationToInitiativeBase(row, initiativeBase)
 
-def process_tagg_rows():
-    logging.debug("============= entered function process_tagg_rows")
-    nr_of_duplicates = 0
-    logging.debug(f"{len(tagg_resp_row_list)=}")
-    for resp_row in tagg_resp_row_list:
-        title = resp_row[RJK_TITLE][RJSK_RENDERED]
-        slug = resp_row[RJK_SLUG]
-        wp_post_id = resp_row[RJK_ID]
+def process_tagg_rows(tags):
 
-        if title in tagg_dict.keys():
-            nr_of_duplicates += 1
-            if len(slug) < len(tagg_dict[title]):
+    """
+    {
+        "id": 12291,
+        "date": "2023-01-27T10:19:28",
+        "date_gmt": "2023-01-27T10:19:28",
+        "guid": {
+        "rendered": "https:\/\/sk-wp.azurewebsites.net\/index.php\/tagg\/ramar\/"
+        },
+        "modified": "2023-01-27T10:19:28",
+        "modified_gmt": "2023-01-27T10:19:28",
+        "slug": "ramar",
+        "status": "publish",
+        "type": "tagg",
+        "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/tagg\/ramar\/",
+        "title": {
+        "rendered": "Ramar"
+        },
+        "template": "",
+        "grupp": false,
+        "beskrivning": "",
+        "goteborg_huvudtagg": false,
+        "goteborg_subtagg": false,
+        "goteborg_transaktionsform": false,
+        "malmo_huvudtagg": false,
+        "malmo_subtagg": false,
+        "malmo_transaktionsform": false,
+        "global_huvudtagg": false,
+        "global_subtagg": false,
+        "global_transaktionsform": false,
+        "karlstad_huvudtagg": false,
+        "karlstad_subtagg": false,
+        "karlstad_transaktionsform": false,
+        "sjuharda_huvudtagg": false,
+        "sjuharda_subtagg": false,
+        "sjuharda_transaktionsform": false,
+        "umea_huvudtagg": false,
+        "umea_subtagg": false,
+        "umea_transaktionsform": false,
+        "stockholm_huvudtagg": false,
+        "stockholm_subtagg": false,
+        "stockholm_transaktionsform": false,
+        "gavle_huvudtagg": false,
+        "gavle_subtagg": false,
+        "gavle_transaktionsform": false,
+        "acf": [],
+        "lang": "sv",
+        "translations": {
+        "sv": 12291
+        },
+        "pll_sync_post": [],
+        "_links": {
+        "self": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/tagg\/12291"
+            }
+        ],
+        "collection": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/tagg"
+            }
+        ],
+        "about": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/tagg"
+            }
+        ],
+        "wp:attachment": [
+            {
+            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12291"
+            }
+        ],
+        "curies": [
+            {
+            "name": "wp",
+            "href": "https:\/\/api.w.org\/{rel}",
+            "templated": true
+            }
+        ]
+        }
+    },
+    """
+
+    def getShortestSlugs(tag_rows):
+        tagg_dict = {}
+        """
+        tagg_dict uses this format:
+        {
+        [title : string] : slug
+        }
+        """
+        logging.debug("============= entered function process_tagg_rows")
+        nr_of_duplicates = 0
+        logging.debug(f"{len(tag_rows)=}")
+        for resp_row in tag_rows:
+            title = resp_row[RJK_TITLE][RJSK_RENDERED]
+            slug = resp_row[RJK_SLUG]
+            wp_post_id = resp_row[RJK_ID]
+            if title in tagg_dict.keys():
+                logging.warn(f"Found duplicate tag {title}. Slugs: '{slug}' vs. '{tagg_dict[title]}'")
+                nr_of_duplicates += 1
+                if len(slug) < len(tagg_dict[title]):
+                    tagg_dict[title] = slug
+            else:
                 tagg_dict[title] = slug
-            continue
-        else:
-            tagg_dict[title] = slug
+        return tagg_dict
 
-    logging.debug(f"{nr_of_duplicates=}")
-    logging.debug(f"{len(tagg_dict)=}")
 
+        logging.debug(f"{nr_of_duplicates=}")
+        logging.debug(f"{len(tagg_dict)=}")
+
+    tagg_dict = getShortestSlugs(tags)
     for tag_title in tagg_dict.keys():
         new_obj = website.models.Tag(
             slug=tagg_dict[tag_title],
             title=tag_title
         )
-        new_obj.save()
-
+        try:
+            new_obj.save()
+        except:
+            logging.info(f"Tag with slug {tagg_dict[tag_title]} was already present")
 
 class Command(django.core.management.base.BaseCommand):
     help = "Migrate data from sk3"
