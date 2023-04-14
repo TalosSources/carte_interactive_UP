@@ -25,7 +25,7 @@ Loglevel:
 - Fatal: something that make the process fail
   - nothing so far
 """
-logging.basicConfig(level=logging.WARN)
+logging.basicConfig(level=logging.INFO)
 
 
 """
@@ -420,6 +420,18 @@ def importTags():
     tags = filter(lambda row: isPublished(row), tags)
     return list(tags)
 
+def generateStatistics():
+    tag_count = {}
+    for initiative_obj in website.models.Initiative.objects.all():
+        for tag_obj in initiative_obj.tags.all():
+            if tag_obj.slug in tag_count:
+                tag_count[tag_obj.slug] += 1
+            else:
+                tag_count[tag_obj.slug] = 1
+    logging.info(tag_count)
+
+
+
 def import_sk3_data(i_args: List[str]):
     importRegions()
     tags = importTags()
@@ -437,6 +449,7 @@ def import_sk3_data(i_args: List[str]):
 
     logging.debug("=== Reading from sk3 API done. Now starting processing ===")
     clear_unused_tags_from_db()
+    generateStatistics()
 
 
 LANG_CODE_EN = "en"
@@ -470,11 +483,24 @@ def process_business_rows(businessRows):
         else:
             return ""
 
-    def getInitiativeBase(thisTranslationSK3):
+    def createOrGetInitiativeBase(thisTranslationSK3):
         thisTranslationSK3Id = thisTranslationSK3[RJK_ID]
         if thisTranslationSK3Id in initiativeBasesOfTranslations:
             return initiativeBasesOfTranslations[thisTranslationSK3Id]
-        return None
+        translations_dict = thisTranslationSK3[RJK_TRANSLATIONS]
+        try:
+            return website.models.Initiative.objects.get(sk3_id=thisTranslationSK3Id)
+        except:
+            pass
+        for translationId in translations_dict:
+            try:
+                return website.models.Initiative.objects.get(sk3_id=translationId)
+            except:
+                pass
+        initiativeBase = addNewBaseInitiative(thisTranslationSK3)
+        registerInitiativeBase(initiativeBase, thisTranslationSK3)
+        linkLocations(thisTranslationSK3, initiativeBase)
+        return initiativeBase
 
     def addTranslationToInitiativeBase(row, initiativeBase):
         wp_post_id = row[RJK_ID]
@@ -528,12 +554,8 @@ def process_business_rows(businessRows):
         region_name = data_type_full_name.split("_")[0]
         assert region_name in REGION_DATA_DICT.keys()
 
-        region_obj = website.models.Region.objects.get(slug=region_name)
         logging.debug(f"{main_image_url=}")
-        try:
-            return website.models.Initiative.objects.get(sk3_id=wp_post_id)
-        except:
-            pass
+        region_obj = website.models.Region.objects.get(slug=region_name)
         new_initiative_obj = website.models.Initiative(
             sk3_id=wp_post_id,
             region=region_obj,
@@ -575,6 +597,8 @@ def process_business_rows(businessRows):
                 initiativeObj.tags.add(tag)
             except:
                 logging.critical(f"Failure when loading tag {tag_title}")
+        return all_tags_list
+
     def registerInitiativeBase(initiativeBase, row):
         translations_dict = row[RJK_TRANSLATIONS]
         for translationId in translations_dict:
@@ -723,13 +747,8 @@ def process_business_rows(businessRows):
         """
         checkRow(row)
 
-        initiativeBase = getInitiativeBase(row)
-        if initiativeBase is None:
-            initiativeBase = addNewBaseInitiative(row)
-            registerInitiativeBase(initiativeBase, row)
-
-            linkLocations(row, initiativeBase)
-            linkTags(row, initiativeBase)
+        initiativeBase = createOrGetInitiativeBase(row)
+        tags = linkTags(row, initiativeBase)
         addTranslationToInitiativeBase(row, initiativeBase)
 
 def process_tagg_rows(tags):
@@ -832,6 +851,7 @@ def process_tagg_rows(tags):
             slug = resp_row[RJK_SLUG]
             wp_post_id = resp_row[RJK_ID]
             if title in tagg_dict.keys():
+                logging.warn(f"Found duplicate tag {title}. Slugs: '{slug}' vs. '{tagg_dict[title]}'")
                 nr_of_duplicates += 1
                 if len(slug) < len(tagg_dict[title]):
                     tagg_dict[title] = slug
