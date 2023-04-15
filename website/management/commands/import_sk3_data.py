@@ -492,7 +492,7 @@ def process_business_rows(businessRows):
             return website.models.Initiative.objects.get(sk3_id=thisTranslationSK3Id)
         except:
             pass
-        for translationId in translations_dict:
+        for translationId in translations_dict.values():
             try:
                 return website.models.Initiative.objects.get(sk3_id=translationId)
             except:
@@ -601,7 +601,7 @@ def process_business_rows(businessRows):
 
     def registerInitiativeBase(initiativeBase, row):
         translations_dict = row[RJK_TRANSLATIONS]
-        for translationId in translations_dict:
+        for translationId in translations_dict.values():
             initiativeBasesOfTranslations[translationId] = initiativeBase
 
     logging.debug("============= entered function process_business_rows")
