@@ -1,8 +1,10 @@
 import dataclasses
 import logging
 import sys
+import os
 from datetime import datetime
 
+import json
 import django.contrib.gis.geos
 import django.core.management.base
 import django.db
@@ -195,7 +197,13 @@ REGION_DATA_DICT = {
 # Contains sub-lists on this format: [sk3_id_en, sk3_id_sv], where the order of langs is undetermined
 # business_lang_combos_list = []
 
+TMP_FOLDER = "./cache"
 def requestSK3API(data_type_full_name, per_page=None, fields=None, page_nr=None):
+    CACHE_FILE_NAME = f"{data_type_full_name}_{page_nr}"
+    CACHE_FILE_PATH = os.path.join(TMP_FOLDER, CACHE_FILE_NAME)
+    if os.path.isfile(CACHE_FILE_PATH):
+        with open(CACHE_FILE_PATH, 'r') as f:
+            return json.load(f)
     bearer_token = "LbjFbvboclZd7bcjhNMkMJLl0SIv1Pe7"
     header_dict = {"Authorization": f"Bearer {bearer_token}"}
     api_url = f"https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/{data_type_full_name}/"
@@ -216,22 +224,33 @@ def requestSK3API(data_type_full_name, per_page=None, fields=None, page_nr=None)
     if response.status_code != 200:
         logging.critical(f"WARNING response code was not 200 --- {response.status_code=}")
         return None
+    os.makedirs(os.path.dirname(CACHE_FILE_PATH), exist_ok=True)
+    with open(CACHE_FILE_PATH, 'w') as f:
+        json.dump(response_json, f)
     return response_json
 
 def getAllDataOf(dataTypeFullName):
-        page_nr = 1
-        responses = []
-        while True:
-            logging.debug(f"Page nr: {page_nr}")
-            response_json = requestSK3API(dataTypeFullName, PER_PAGE, FIELDS, page_nr)  # -can be a list or a dict
-            if response_json is None:
-                break
+    CACHE_FILE_NAME = f"{dataTypeFullName}"
+    CACHE_FILE_PATH = os.path.join(TMP_FOLDER, CACHE_FILE_NAME)
+    if os.path.isfile(CACHE_FILE_PATH):
+        with open(CACHE_FILE_PATH, 'r') as f:
+            return json.load(f)
+    page_nr = 1
+    responses = []
+    while True:
+        logging.debug(f"Page nr: {page_nr}")
+        response_json = requestSK3API(dataTypeFullName, PER_PAGE, FIELDS, page_nr)  # -can be a list or a dict
+        if response_json is None:
+            break
 
-            logging.debug(f"Number of rows: {len(response_json)}")
+        logging.debug(f"Number of rows: {len(response_json)}")
 
-            responses += response_json
-            page_nr += 1
-        return responses
+        responses += response_json
+        page_nr += 1
+    os.makedirs(os.path.dirname(CACHE_FILE_PATH), exist_ok=True)
+    with open(CACHE_FILE_PATH, 'w') as f:
+        json.dump(responses, f)
+    return responses
     
 def isPublished(json_row):
     status = json_row[RJK_STATUS]
@@ -492,7 +511,7 @@ def process_business_rows(businessRows):
             return website.models.Initiative.objects.get(sk3_id=thisTranslationSK3Id)
         except:
             pass
-        for translationId in translations_dict:
+        for translationId in translations_dict.values():
             try:
                 return website.models.Initiative.objects.get(sk3_id=translationId)
             except:
@@ -601,7 +620,7 @@ def process_business_rows(businessRows):
 
     def registerInitiativeBase(initiativeBase, row):
         translations_dict = row[RJK_TRANSLATIONS]
-        for translationId in translations_dict:
+        for translationId in translations_dict.values():
             initiativeBasesOfTranslations[translationId] = initiativeBase
 
     logging.debug("============= entered function process_business_rows")
