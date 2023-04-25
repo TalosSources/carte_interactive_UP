@@ -36,24 +36,24 @@ django_test:
   stage: test
   script:
     - patch docker-compose.yml < compose-test.patch
-    - sudo docker-compose up --build -d #initialize db
+    - sudo docker-compose -p test up --build -d #initialize db
     - sleep 10
-    - sudo docker-compose run api /code/manage.py test
-    - sudo docker-compose down
+    - sudo docker-compose -p test run api /code/manage.py test
+    - sudo docker-compose -p test down
 
 dryrun:
   stage: test
   script:
     - git describe --long --all --dirty > gitver
-    - patch docker-compose.yml < compose-deploy.patch
+    - patch docker-compose.yml < compose-dryrun.patch
     - patch nginx.conf < nginx-deploy.patch
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
-    - sudo docker-compose up --build -d
+    - sudo docker-compose -p dryrun up --build -d
     # needs to have some temporal difference to the start, so the db is prepared
     - sleep 20
-    - sudo docker-compose run api /code/manage.py import_sk3_data
-    - sudo docker-compose down
-    - sudo docker-compose rm
+    - sudo docker-compose -p dryrun run api /code/manage.py import_sk3_data
+    - sudo docker-compose -p dryrun down
+    - sudo docker-compose -p dryrun rm
     - sudo docker volume prune -f
     - sudo docker image prune -f
     - sudo docker container prune -f
