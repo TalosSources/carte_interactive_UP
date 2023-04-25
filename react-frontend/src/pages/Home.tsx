@@ -28,12 +28,9 @@ import HighlightInitiative from "../components/HighlightInitiative";
 
 import useWindowSize from "../hooks/useWindowSize";
 
-// Types
-import { Tag, Initiative, Feature } from "../types/Initiative";
-import { Region } from "../types/Region";
-
 // Constants
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
+import { Feature, fetchInitiatives, fetchRegions, fetchTags, getTitleWithFallback, Initiative, initiativeLocationFeatureToGeoCoordinate, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
 
 
 const Header = styled.header`
@@ -157,7 +154,7 @@ export default function Home() {
     //console.log("UrlActiveTags")
     //console.log(urlActiveTags)
     console.log(regionSlug);
-    const [localizedInitiatives, setLocalizedInitiatives] = useState([]);
+    const [localizedInitiatives, setLocalizedInitiatives] = useState<Initiative[]>([]);
     const [globalInitiatives, setGlobalInitiatives] = useState<Initiative[]>([]);
     const [searchString, setSearchString] = useState(urlSearchString);
     const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
@@ -169,9 +166,15 @@ export default function Home() {
     const [sorting, setSorting] = useState(Sorting.Distance.value);
     const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value);
     const [tags, setTags] = useState<Tag[]>([]);
+    const [tagsByInitiatives, setTagsByInitiatives] = useState<Map<string, Tag[]>>(new Map());
 
 
     const windowSize = useWindowSize();
+    useEffect(() => {
+        const localizedIMap = matchTagsWithInitiatives(localizedInitiatives, tags);
+        const globalizedIMap = matchTagsWithInitiatives(globalInitiatives, tags);
+        setTagsByInitiatives(new Map([...localizedIMap, ...globalizedIMap]));
+    }, [tags, localizedInitiatives, globalInitiatives]);
 
     useEffect(() => {
         //navigate('/r/' + activeRegionSlug);
@@ -191,9 +194,7 @@ export default function Home() {
     
     useEffect(() => {
         // fetch tags
-        const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
-        fetch(tag_api_url)
-        .then(response => response.json())
+        fetchTags()
         .then(response_json => {
             console.log("tags", response_json);
             const tags = response_json.map((tag: Tag) => {
@@ -204,9 +205,7 @@ export default function Home() {
             // remove invalid strings in activeTags
         });
         // fetch initial initiatives
-        const initiatives_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/`;
-        fetch(initiatives_api_url)
-            .then(response => response.json())
+        fetchInitiatives()
             .then(initiatives => {
                 const [global, local] = initiatives
                     .reduce((result: Initiative[][], initiative: Initiative) => {
@@ -221,12 +220,10 @@ export default function Home() {
             .catch(err => console.error(err));
 
         // Fetch regions
-        const region_api_url = `${process.env.REACT_APP_BACKEND_URL}/regions/`;
-        fetch(region_api_url)
-            .then(r => r.json())
+        fetchRegions()
             .then(regions => {
-                console.log("regionList", regions['features']);
-                setRegionList(regions['features']);
+                console.log("regionList", regions);
+                setRegionList(regions);
             }
             )
             .catch(err => console.error(err));
@@ -252,7 +249,7 @@ export default function Home() {
     }
 
     function initiativeMatchCurrentTags(initiative: Initiative) {
-        return activeTags.every((tagSlug: string) => initiative.tags.some(iTag => iTag.slug == tagSlug))
+        return activeTags.every((tagSlug: string) => initiative.tags.some(iTag => iTag == tagSlug))
 
     }
     function initiativeMatchesSearch(initiative: Initiative, searchString: string) {
@@ -260,15 +257,19 @@ export default function Home() {
         return keywords
             .map(keyword => keyword.toLowerCase())
             .every(keyword =>
-                initiative.initiative_title_texts.some(itt =>
-                    itt['text'].toLowerCase().includes(keyword)
+                Object.entries(initiative.initiative_translations).some(([langCode, trans], i) =>
+                    trans['title'].toLowerCase().includes(keyword)
                 ) ||
-                initiative.tags.some(tag =>
+                tagsByInitiatives.get(initiative.slug)?.some(tag =>
                     tag.title.toLowerCase().includes(keyword)
                 ) ||
-                initiative.initiative_description_texts.some(idt =>
-                    idt['text'].toLowerCase().includes(keyword)
-                )
+                Object.entries(initiative.initiative_translations).some(([langCode, trans], i) =>
+                    trans['short_description'].toLowerCase().includes(keyword)
+                ) ||
+                Object.entries(initiative.initiative_translations).some(([langCode, trans], i) =>
+                    trans['description'].toLowerCase().includes(keyword)
+                ) ||
+                false
             );
     }
     function initiativeInsideMap(initiative: Initiative) {
@@ -277,14 +278,10 @@ export default function Home() {
         );
     }
 
-    function initiativeLocationFeatureToGeoCoordinate(feature: Feature) {
-        return new GeoCoordinate({'longitude': feature.geometry.coordinates[0], 'latitude': feature['geometry']['coordinates'][1]})
-    }
-
     function sortInitiativesByName(initiatives : Initiative[]) {
         const names : [number, string][] = [];
         for (let i = 0; i < initiatives.length; i++) {
-            names.push([i, initiatives[i].initiative_title_texts[0]['text']]);
+            names.push([i, getTitleWithFallback(initiatives[i], 'en')]);
         }
         names.sort(function(left, right) {
             return left[1] < right[1] ? -1 : 1;
@@ -343,33 +340,33 @@ export default function Home() {
     function calculateTagEntropy(initiatives: Initiative[]) {
         const tag_count = initiatives.reduce((map, initiative) =>
             initiative.tags.reduce((map, tag) => {
-                if (map.has(tag.id)) {
-                    const n = map.get(tag.id);
-                    map.set(tag.id, n+1);
+                const n = map.get(tag)
+                if (typeof n !== 'undefined') {
+                    map.set(tag, n+1);
                 } else {
-                    map.set(tag.id, 1);
+                    map.set(tag, 1);
                 }
                 return map;
             },
             map),
-        new Map());
-        return Object.fromEntries(tags.map((/** @type {Tag} */ tag: Tag) => {
-            if (tag_count.has(tag.id)) {
-                const tc = tag_count.get(tag.id); 
-                return [tag.id, tc*(initiatives.length - tc)]
+            new Map<string, number>());
+        return Object.fromEntries(tags.map((tag: Tag) => {
+            const tc = tag_count.get(tag.slug); 
+            if (typeof tc !== 'undefined') {
+                return [tag.slug, tc*(initiatives.length - tc)]
             } else {
-                return [tag.id, 0]
+                return [tag.slug, 0]
             }
         }));
     }
     const tagEntropy = calculateTagEntropy(initiatives);
     function sortTagsByEntropy(tag_a: Tag, tag_b: Tag) {
-        return tagEntropy[tag_b.id] - tagEntropy[tag_a.id]
+        return tagEntropy[tag_b.slug] - tagEntropy[tag_a.slug]
     }
 
     const TOP_TAGS_LIMIT = 10;
     let top_tags = tags
-        .filter((tag: Tag) => tagEntropy[tag.id] > 0)
+        .filter((tag: Tag) => tagEntropy[tag.slug] > 0)
     top_tags.sort(sortTagsByEntropy);
     top_tags = top_tags.slice(0, TOP_TAGS_LIMIT) // Limit top tags
     console.log("top_tags", top_tags)
@@ -504,6 +501,7 @@ export default function Home() {
                         <div id="cards-canvas">
                         {renderCardCollection(
                             initiatives,
+                            tagsByInitiatives,
                             (clickedSlug) => {toggleActiveTag(clickedSlug)}, tagEntropy)}
                         </div>
                     </LeftSide>
@@ -538,8 +536,7 @@ export default function Home() {
 
 function renderMapMarkers(initiatives: Initiative[]) {
     function feature2Marker(initiative: Initiative, feature: Feature, index: number) {
-        const title = initiative
-            .initiative_title_texts[0]['text'];
+        const title = getTitleWithFallback(initiative, 'en')
         L.Icon.Default.imagePath="/"
         return (
             <Marker 

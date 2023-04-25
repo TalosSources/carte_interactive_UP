@@ -3,6 +3,7 @@ import logging
 import sys
 import os
 from datetime import datetime
+from slugify import slugify
 
 import json
 import django.contrib.gis.geos
@@ -197,6 +198,18 @@ REGION_DATA_DICT = {
 # Contains sub-lists on this format: [sk3_id_en, sk3_id_sv], where the order of langs is undetermined
 # business_lang_combos_list = []
 
+def generateNewSlug(beginning, model):
+    slugified_beginning = slugify(beginning)
+    possible_slug = slugified_beginning
+    n = 0
+    while 1:
+        try:
+            model.objects.get(slug=possible_slug)
+            n += 1
+            possible_slug = slugified_beginning + str(n)
+        except model.DoesNotExist:
+            return possible_slug
+
 TMP_FOLDER = "./cache"
 def requestSK3API(data_type_full_name, per_page=None, fields=None, page_nr=None):
     CACHE_FILE_NAME = f"{data_type_full_name}_{page_nr}"
@@ -343,60 +356,6 @@ def importRegions():
         new_obj.save()
 
 def importAddresses(region):
-
-    """
-    {
-        "id": 12247,
-        "date": "2023-01-23T20:14:11",
-        "date_gmt": "2023-01-23T20:14:11",
-        "guid": {
-        "rendered": "https:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=12247"
-        },
-        "modified": "2023-01-23T20:14:11",
-        "modified_gmt": "2023-01-23T20:14:11",
-        "slug": "saggatan-19",
-        "status": "publish",
-        "type": "address_gbg",
-        "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/address-gbg\/saggatan-19\/",
-        "title": {
-        "rendered": "S\u00e5ggatan 19"
-        },
-        "template": "",
-        "latitude": "57.69513792779139",
-        "longitude": "11.925602211999262",
-        "acf": [],
-        "_links": {
-        "self": [
-            {
-            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg\/12247"
-            }
-        ],
-        "collection": [
-            {
-            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/address_gbg"
-            }
-        ],
-        "about": [
-            {
-            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/address_gbg"
-            }
-        ],
-        "wp:attachment": [
-            {
-            "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=12247"
-            }
-        ],
-        "curies": [
-            {
-            "name": "wp",
-            "href": "https:\/\/api.w.org\/{rel}",
-            "templated": true
-            }
-        ]
-        }
-    }
-    """
-
     if region == GOTEBORG_R:
         region = "gbg"
     data_type_full_name = f"{ADDRESS_DT}_{region}"
@@ -409,19 +368,6 @@ def importAddresses(region):
             continue
         except website.models.Location.DoesNotExist:
             pass
-        latitude: str = resp_row[RJK_LATITUDE]
-        latitude = latitude.replace(',', '.')
-        longitude: str = resp_row[RJK_LONGITUDE]
-        longitude = longitude.replace(',', '.')
-        geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
-        # -please note order of lat and lng
-        title = resp_row[RJK_TITLE][RJSK_RENDERED]
-        new_obj = website.models.Location(
-            sk3_id=wp_post_id,
-            title=title,
-            coordinates=geo_point
-        )
-        new_obj.save()
 
 def importPages(region):
     data_type_full_name = f"{region}_{PAGE_DT}"
@@ -458,7 +404,7 @@ def import_sk3_data(i_args: List[str]):
 
     #TODO for region in REGION_DATA_DICT.keys():
     for region in ["goteborg", "malmo"]:
-        importAddresses(region)
+        #importAddresses(region)
         importPages(region)
         businessRows = importInitiatives(region)
         beforeBusiness = datetime.now()
@@ -468,7 +414,7 @@ def import_sk3_data(i_args: List[str]):
 
     logging.debug("=== Reading from sk3 API done. Now starting processing ===")
     clear_unused_tags_from_db()
-    generateStatistics()
+    #generateStatistics()
 
 
 LANG_CODE_EN = "en"
@@ -502,23 +448,37 @@ def process_business_rows(businessRows):
         else:
             return ""
 
+    def getImageDict(row):
+        result = {}
+        if RJSK_ACF_MAIN_IMAGE in row[RJK_ACF] and row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]: # : false | Dict
+            sizes = row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]['sizes']
+            for key in sizes:
+                if 'height' in key:
+                    continue
+                if 'width' in key:
+                    continue
+                width = sizes[key+'-width']
+                height = sizes[key+'-height']
+                result[(width, height)] = sizes[key]
+        return result
+
     def createOrGetInitiativeBase(thisTranslationSK3):
         thisTranslationSK3Id = thisTranslationSK3[RJK_ID]
         if thisTranslationSK3Id in initiativeBasesOfTranslations:
             return initiativeBasesOfTranslations[thisTranslationSK3Id]
         translations_dict = thisTranslationSK3[RJK_TRANSLATIONS]
         try:
-            return website.models.Initiative.objects.get(sk3_id=thisTranslationSK3Id)
+            return website.models.InitiativeTranslation.objects.get(sk3_id=thisTranslationSK3Id).initiative
         except:
             pass
         for translationId in translations_dict.values():
             try:
-                return website.models.Initiative.objects.get(sk3_id=translationId)
+                return website.models.InitiativeTranslation.objects.get(sk3_id=translationId).initiative
             except:
                 pass
         initiativeBase = addNewBaseInitiative(thisTranslationSK3)
         registerInitiativeBase(initiativeBase, thisTranslationSK3)
-        linkLocations(thisTranslationSK3, initiativeBase)
+        importLocations(thisTranslationSK3, initiativeBase)
         return initiativeBase
 
     def addTranslationToInitiativeBase(row, initiativeBase):
@@ -527,27 +487,20 @@ def process_business_rows(businessRows):
         title = row[RJK_TITLE][RJSK_RENDERED]
         afc = row[RJK_ACF]
         description = afc[RJSK_ACF_DESCRIPTION_ID]
-        new_title_obj = website.models.InitiativeTitleText(
+        short_description = afc['short_description']
+        new_title_obj = website.models.InitiativeTranslation(
             sk3_id=wp_post_id,
             language_code=lang_code,
-            text=title,
+            title=title,
+            short_description=short_description,
+            description=description,
             initiative=initiativeBase
         )
         try:
             new_title_obj.save()
         except:
-            otherTitle = website.models.InitiativeTitleText.objects.get(sk3_id=wp_post_id)
-            logging.info(f"Title for initiative {title} {wp_post_id} in lang {lang_code} was already present. Bound to initiative {otherTitle.initiative.sk3_id}")
-        new_description_obj = website.models.InitiativeDescriptionText(
-            sk3_id=wp_post_id,
-            language_code=lang_code,
-            text=description,
-            initiative=initiativeBase
-        )
-        try:
-            new_description_obj.save()
-        except:
-            logging.info(f"Description for initiative {title} {wp_post_id} in lang {lang_code} was already present.")
+            otherTitle = website.models.InitiativeTranslation.objects.get(sk3_id=wp_post_id)
+            logging.info(f"Translation for initiative {title} {wp_post_id} in lang {lang_code} was already present. Bound to initiative {otherTitle.sk3_id}")
 
     def checkRow(row):
         wp_post_id = row[RJK_ID]
@@ -567,7 +520,14 @@ def process_business_rows(businessRows):
             logging.info(f"INFO: Description for {title} is very long: {len(description)} characters")
 
     def addNewBaseInitiative(row):
-        wp_post_id = row[RJK_ID]
+        def getPhone():
+            if 'phone_number' in row['acf']:
+                if 'phone' in row['acf'] and row['acf']['phone'] != '':
+                    logging.warn(f"Found 'phone' and 'phone_number' entry for {title}")
+                return row['acf']['phone_number']
+            if 'phone' in row['acf']:
+                return row['acf']['phone']
+            return None
         data_type_full_name = row[RJK_TYPE]
         main_image_url = getImageUrl(row)
         region_name = data_type_full_name.split("_")[0]
@@ -575,30 +535,58 @@ def process_business_rows(businessRows):
 
         logging.debug(f"{main_image_url=}")
         region_obj = website.models.Region.objects.get(slug=region_name)
+        title = row[RJK_TITLE][RJSK_RENDERED]
+        phone = getPhone()
+        mail = row['acf']['email']
+        if len(mail)>127:
+            print(f"Mail for {title} seems unreasonably long: '{mail}'")
+        facebook = row['acf']['facebook_url']
+        if len(facebook)>255:
+            print(f"Facebook for {title} seems unreasonably long: '{facebook}'")
+        website_url = row['acf']['website_url']
+        if len(website_url)>511:
+            print(f"Homepage-URL for {title} seems unreasonably long: '{website_url}'")
+        instagram = row['acf']['instagram_username']
+        if len(instagram)>127:
+            print(f"Instagram for {title} seems unreasonably long: '{instagram}'")
+        slug = generateNewSlug(title, website.models.Initiative) # TODO: Ideally, we want to have the english version
         new_initiative_obj = website.models.Initiative(
-            sk3_id=wp_post_id,
             region=region_obj,
-            main_image_url=main_image_url
+            main_image_url=main_image_url,
+            slug=slug,
+            mail=mail,
+            phone=phone,
+            homepage=website_url,
+            instagram=instagram,
+            facebook=facebook
         )
-        logging.debug(f"Saving Initiative object for {wp_post_id=}")
         new_initiative_obj.save()
+        for (imageSize, url) in getImageDict(row).items():
+            width, height = imageSize
+            website.models.InitiativeImage(width=width,height=height,
+                                           url=url, initiative=new_initiative_obj).save()
         return new_initiative_obj
     
-    def linkLocations(row, initiativeObj):
+    def importLocations(row, initiativeObj):
         data_type_full_name = row[RJK_TYPE]
         if RJK_ADDRESS_AND_COORDINATE in row:
             address_and_coordinate_list_or_bool = row[RJK_ADDRESS_AND_COORDINATE]
             if address_and_coordinate_list_or_bool:
                 for aac_dict in address_and_coordinate_list_or_bool:
-                    # Address comes first, so we can connect here (and don't have to save until later)
                     location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
-                    try:
-                        location = website.models.Location.objects.get(sk3_id=location_id)
-                        # -only works when added to db, so will not work during testing
-                        location.initiative = initiativeObj
-                        location.save()
-                    except website.models.Location.DoesNotExist:
-                        logging.critical(f"Location doesn't exist for sk3_id '{location_id}'")
+                    latitude: str = aac_dict['latitude']
+                    latitude = latitude.replace(',', '.')
+                    longitude: str = aac_dict['longitude']
+                    longitude = longitude.replace(',', '.')
+                    # -please note order of lat and lng
+                    geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
+                    title = aac_dict['post_title']
+                    new_obj = website.models.Location(
+                        title=title,
+                        coordinates=geo_point,
+                        initiative=initiativeObj,
+                    )
+                    new_obj.save()
         else:
             if GLOBAL_R not in data_type_full_name:
                 logging.warning(f"WARNING: No location available for non-global initiative: {initiativeBase}")
@@ -627,147 +615,12 @@ def process_business_rows(businessRows):
     initiativeBasesOfTranslations = {} # : {sk3TranslationId : sk4InitiativeBaseObj}
 
     for row in businessRows:
-        """
-        {
-            "id": 11636,
-            "date": "2022-09-20T15:09:25",
-            "date_gmt": "2022-09-20T15:09:25",
-            "guid": {
-            "rendered": "http:\/\/sk-wp.azurewebsites.net\/?post_type=goteborg_business&#038;p=11636"
-            },
-            "modified": "2022-09-20T15:09:25",
-            "modified_gmt": "2022-09-20T15:09:25",
-            "slug": "the-free-shop-aterbruket-lansmansgarden",
-            "status": "publish",
-            "type": "goteborg_business",
-            "link": "https:\/\/sk-wp.azurewebsites.net\/index.php\/en\/goteborg-business\/the-free-shop-aterbruket-lansmansgarden\/",
-            "title": {
-            "rendered": "The Free Shop \u00c5terbruket L\u00e4nsmansg\u00e5rden"
-            },
-            "template": "",
-            "address_and_coordinate": [
-            {
-                "latitude": "57.73348851727369",
-                "longitude": "11.898837895906174",
-                "ID": 11634,
-                "post_title": "S\u00f6dra Fj\u00e4dermolnsgatan 12",
-                "post_content": "",
-                "post_excerpt": "",
-                "post_author": "12",
-                "post_date": "2022-09-20 15:00:19",
-                "post_date_gmt": "2022-09-20 15:00:19",
-                "post_status": "publish",
-                "comment_status": "closed",
-                "ping_status": "closed",
-                "post_password": "",
-                "post_name": "sodra-fjadermolnsgatan-12",
-                "to_ping": "",
-                "pinged": "",
-                "post_modified": "2022-09-20 15:00:19",
-                "post_modified_gmt": "2022-09-20 15:00:19",
-                "post_content_filtered": "",
-                "post_parent": 0,
-                "guid": "http:\/\/sk-wp.azurewebsites.net\/?post_type=address_gbg&#038;p=11634",
-                "menu_order": 0,
-                "post_type": "address_gbg",
-                "post_mime_type": "",
-                "comment_count": "0",
-                "comments": false,
-                "id": 11634
-            }
-            ],
-            "icon": "",
-            "huvudtaggar": [
-            "Things"
-            ],
-            "subtaggar": [
-            "Board games",
-            "Books &amp; media",
-            "Clothes",
-            "Gadgets",
-            "Sports and leisure equipment",
-            "Toys"
-            ],
-            "transaktionsform": [
-            "Give &amp; get"
-            ],
-            "taggar": [
-            "L\u00e4nsmansg\u00e5rden",
-            "Free shop",
-            "Free",
-            "Give away"
-            ],
-            "acf": {
-            "email": "",
-            "phone": "",
-            "phone_number": "0704-990899",
-            "instagram_username": "",
-            "facebook_url": "",
-            "website_url": "",
-            "online_only": false,
-            "city": [
-                19
-            ],
-            "area": "L\u00e4nsmansg\u00e5rden",
-            "main_image": false,
-            "short_description": "Gratisbutik i L\u00e4nsmansg\u00e5rden",
-            "description": "<p>For more than ten year pensioneer Roine has run \u00c5terbruket, a free shop in L\u00e4nsmansg\u00e5rden. Come and collect a sweater, a book or why not a VHS tape?<\/p>\n<p>A free shop is like a second hand shop, with the difference that everything is for free. So swing by and drop off something you have that works, but you don&#8217;t need.<\/p>\n<p>You&#8217;re more than welcome to drop off things in the free shop during it&#8217;s opening hours. It&#8217;s only during these hours that Roine will pick up the phone.<\/p>\n",
-            "hide_opening_hours": false,
-            "always_open": false,
-            "text_for_opening_hours": "",
-            "closed_on_monday": false,
-            "opening_hour_monday": "11:00",
-            "closing_hour_monday": "15:00",
-            "closed_on_tuesday": true,
-            "closed_on_wednesday": false,
-            "opening_hour_wednesday": "16:00",
-            "closing_hour_wednesday": "19:00",
-            "closed_on_thursday": true,
-            "closed_on_friday": true,
-            "closed_on_saturday": true,
-            "closed_on_sunday": true
-            },
-            "lang": "en",
-            "translations": {
-            "en": 11636,
-            "sv": 11629
-            },
-            "pll_sync_post": [],
-            "_links": {
-            "self": [
-                {
-                "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_business\/11636"
-                }
-            ],
-            "collection": [
-                {
-                "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/goteborg_business"
-                }
-            ],
-            "about": [
-                {
-                "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/types\/goteborg_business"
-                }
-            ],
-            "wp:attachment": [
-                {
-                "href": "https:\/\/sk-wp.azurewebsites.net\/index.php\/wp-json\/wp\/v2\/media?parent=11636"
-                }
-            ],
-            "curies": [
-                {
-                "name": "wp",
-                "href": "https:\/\/api.w.org\/{rel}",
-                "templated": true
-                }
-            ]
-            }
-        },
-        """
         checkRow(row)
 
         initiativeBase = createOrGetInitiativeBase(row)
-        tags = linkTags(row, initiativeBase)
+        lang_code = row[RJK_LANG]
+        if lang_code == 'en': # only take english tags for now
+            tags = linkTags(row, initiativeBase)
         addTranslationToInitiativeBase(row, initiativeBase)
 
 def process_tagg_rows(tags):

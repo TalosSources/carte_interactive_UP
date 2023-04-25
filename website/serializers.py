@@ -63,36 +63,38 @@ from . import models
 
 class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
     class Meta:
-        fields = ('url', "id", "title", "initiative")  # -shown under "Properties" in the API JSON
+        fields = ("title", "id")  # -shown under "Properties" in the API JSON
         geo_field = "coordinates"  # this string value must match the PointField field name in models.py
         model = models.Location
 
 
-class InitiativeTitleTextSerializer(serializers.ModelSerializer):
+class InitiativeTranslationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.InitiativeTitleText
-        fields = ['language_code', 'text']
+        model = models.InitiativeTranslation
+        fields = ['language_code', 'title', 'short_description', 'description']
 
-
-class InitiativeDescriptionTextSerializer(serializers.ModelSerializer):
+class InitiativeImagesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.InitiativeDescriptionText
-        fields = ['language_code', 'text']
+        model = models.InitiativeImage
+        fields = ['width', 'height', 'url']
 
 
 class RegionSerializer(gis_serializers.GeoFeatureModelSerializer):
     class Meta:
-        fields = ('url', 'id', 'slug', 'welcome_message_html', 'title')
+        fields = ('slug', 'welcome_message_html', 'title')
         geo_field = 'area'
         model = models.Region
 
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
-    # initiatives = InitiativeSerializer(many=True, read_only=True)
-    # 'initiatives'
     class Meta:
         model = models.Tag
-        fields = ['url', 'id', 'title', 'slug', 'initiatives']
+        fields = ['title', 'slug']
+
+class SlimTagSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.Tag
+        fields = ['slug']
 
 
 class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
@@ -101,30 +103,22 @@ class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
     https://www.django-rest-framework.org/api-guide/relations/#reverse-relations
     """
     locations = LocationSerializer(many=True, read_only=True)
-    tags = TagSerializer(many=True, read_only=True)
-    initiative_title_texts = InitiativeTitleTextSerializer(many=True, read_only=True)
-    initiative_description_texts = InitiativeDescriptionTextSerializer(many=True, read_only=True)
+    tags = SlimTagSerializer(many=True, read_only=True)
+    initiative_translations = InitiativeTranslationSerializer(many=True, read_only=True)
+    initiative_images = InitiativeImagesSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Initiative
         fields = [
-            'url', 'id', 'region', 'main_image_url',
-            'locations', 'initiative_title_texts', 'initiative_description_texts', 'tags'
+            'slug', 'id',
+            'locations', 'initiative_translations', 'tags',
+            'initiative_images',
+            'main_image_url',
+            'facebook', 'instagram', 'phone', 'homepage', 'mail'
         ]
 
 
-class TagDetailInitiativeSerializer(serializers.ModelSerializer):
-    initiative_title_texts = InitiativeTitleTextSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = models.Initiative
-        fields = ['id', 'initiative_title_texts']
-
-
 class TagDetailSerializer(serializers.ModelSerializer):
-    initiatives = TagDetailInitiativeSerializer(many=True, read_only=True)
-
-    # 'initiatives'
     class Meta:
         model = models.Tag
-        fields = ['id', 'title', 'slug', 'initiatives']
+        fields = ['title', 'slug']

@@ -2,8 +2,8 @@ import React from 'react';
 import RegionSelector from './RegionSelector';
 import styled from 'styled-components';
 import { SMALL_SCREEN_WIDTH } from '../constants';
-import { Region } from '../types/Region';
 import useWindowSize from '../hooks/useWindowSize';
+import { Region } from '../KesApi';
 
 const NavRight = styled.div`
     display: flex;
