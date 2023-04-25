@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',
     'csp.middleware.CSPMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # <-
     'django.middleware.security.SecurityMiddleware',
