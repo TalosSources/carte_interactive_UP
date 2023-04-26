@@ -36,10 +36,16 @@ django_test:
   stage: test
   script:
     - patch docker-compose.yml < compose-test.patch
+    - sudo docker-compose -p test down
+    - sudo docker-compose -p test rm
     - sudo docker-compose -p test up --build -d #initialize db
     - sleep 10
     - sudo docker-compose -p test run api /code/manage.py test
     - sudo docker-compose -p test down
+    - sudo docker-compose -p test rm
+    - sudo docker volume prune -f
+    - sudo docker image prune -f
+    - sudo docker container prune -f
 
 dryrun:
   stage: test
