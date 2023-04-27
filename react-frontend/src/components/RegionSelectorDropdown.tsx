@@ -1,5 +1,5 @@
 import React from "react";
-import { Region } from "../types/Region";
+import { Region } from "../KesApi";
 
 // probably better to work with "active region"
 // Rather than "activeRegionSlug"

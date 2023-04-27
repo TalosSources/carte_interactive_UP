@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import sanitizeHtml from "sanitize-html";
-import { Initiative, Tag } from './types/Initiative';
+import { getShortDescriptionWithFallback, getTitleWithFallback, Initiative, Tag } from './KesApi';
 
 const CardContainer = styled.div`
     display: flex;
@@ -74,7 +74,7 @@ const CardTagPanel = styled.div`
     font-size: small;
 `;
 
-function SkCard(props: {key?: number; id: number; image_url: string; title: string; description: string; tags: Tag[], tagClick: ((clickedSlug: string) => void)}) {
+function SkCard(props: {key?: string; id: string; image_url: string; title: string; description: string; tags: Tag[], tagClick: ((clickedSlug: string) => void)}) {
     // CSS in React: https://www.w3schools.com/react/react_css.asp
     const { id, image_url, title, description, tags, tagClick} = props
     
@@ -131,31 +131,32 @@ function SkCard(props: {key?: number; id: number; image_url: string; title: stri
 
 function sortTagsByValue(tags : Tag[], values:{ [x: string]: number; }) {
     function sortTagsByValue(tag_a: Tag, tag_b: Tag) {
-        return values[tag_b.id] - values[tag_a.id]
+        return values[tag_b.slug] - values[tag_a.slug]
     }
     tags.sort(sortTagsByValue);
     return tags
 
 }
 
-export function renderCardCollection(initiatives: Initiative[], tagClick: ((clickedSlug: string) => void), tagSorting: { [x: string]: number; } | undefined) {
+export function renderCardCollection(initiatives: Initiative[], tagsByInitiatives : Map<string, Tag[]>, tagClick: ((clickedSlug: string) => void), tagSorting: { [x: string]: number; } | undefined) {
     return (<CardContainer>
             {initiatives.map(
               (initiativeElement) => {
-                const title = initiativeElement
-                    .initiative_title_texts[0]['text'];
-                const description = initiativeElement
-                    .initiative_description_texts[0]['text'];
-                const top_tags = initiativeElement.tags
+                const title = getTitleWithFallback(initiativeElement, 'en');
+                const description = getShortDescriptionWithFallback(initiativeElement, 'en');
+                let top_tags = tagsByInitiatives.get(initiativeElement.slug)
+                if (typeof top_tags === 'undefined') {
+                    // tags not yet propagated
+                    top_tags = []
+                }
                 if (!(typeof tagSorting == "undefined")) {
                     sortTagsByValue(top_tags, tagSorting)
                 }
-                console.log(top_tags);
                 return (
                         <SkCard
-                            key={initiativeElement.id}
+                            key={initiativeElement.slug}
                             title={title}
-                            id={initiativeElement.id}
+                            id={initiativeElement.slug}
                             description={description}
                             image_url={initiativeElement.main_image_url}
                             tags={top_tags}

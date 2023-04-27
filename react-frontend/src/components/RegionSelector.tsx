@@ -1,5 +1,5 @@
 import React from 'react';
-import { Region } from '../types/Region';
+import { Region } from '../KesApi';
 
 type PropTypes = {
     value: string;

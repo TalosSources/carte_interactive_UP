@@ -13,20 +13,17 @@ class LocationAdmin(gis_admin.GISModelAdmin):
     list_max_show_all = 1000
 
 
-class InitiativeTitleTextInline(admin.TabularInline):
-    # show_change_link = True
-    model = models.InitiativeTitleText
-    readonly_fields = ("sk3_id",)
-    extra = 0  # -adds an extra row that is always visible
-    min_num = 2
-
-
 class InitiativeDescriptionTextInline(admin.StackedInline):
     # show_change_link = True
-    model = models.InitiativeDescriptionText
+    model = models.InitiativeTranslation
+    fields = ("language_code", "title", "short_description", "description", "sk3_id")
     readonly_fields = ("sk3_id",)
-    extra = 0
-    min_num = 2
+    extra = 0  # -adds an extra row that is always visible
+    min_num = 1
+
+class InitiativeImagesInline(admin.TabularInline):
+    model = models.InitiativeImage
+    extra = 0  # -adds an extra row that is always visible
 
 
 class TagInitiativeInline(admin.TabularInline):
@@ -39,10 +36,10 @@ class InitiativeAdmin(admin.ModelAdmin):
     def title_func(self, initiative_obj):
         # obj: models.Initiative
         # initiative_id = self..id.id
-        initiative_title_list = models.InitiativeTitleText.objects.filter(initiative_id=initiative_obj.id)
+        initiative_title_list = models.InitiativeTranslation.objects.filter(initiative_id=initiative_obj.id)
         representation = ""
         for initiative_title in initiative_title_list:
-            representation += " --- " + initiative_title.text
+            representation += " --- " + initiative_title.title
         representation += " --- "
         return representation
 
@@ -61,22 +58,12 @@ class InitiativeAdmin(admin.ModelAdmin):
         return format_html(locations_html)
 
     filter_horizontal = ("tags",)
-    list_display = ("id", "sk3_id", "title_func")
+    list_display = ("id", "title_func")
     # TODO: Adding title_func for details view
-    readonly_fields = ("sk3_id", "location_list")
+    readonly_fields = ["location_list"]
     list_max_show_all = 1000
-    inlines = [InitiativeTitleTextInline, InitiativeDescriptionTextInline]
+    inlines = [InitiativeImagesInline, InitiativeDescriptionTextInline]
 
-
-"""
-# , "title"
-
-ERRORS:
-<class 'website.admin.InitiativeAdmin'>: (admin.E108) The value of 'list_display[2]' refers to 'title', which is not a
-callable, an attribute of 'InitiativeAdmin', or an attribute or method on 'website.Initiative'.
-root@27a6ea382e00:/code# 
-
-"""
 
 
 @gis_admin.register(models.Region)

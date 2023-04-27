@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
-import { Tag } from "../types/Initiative"; 
+import { Tag } from "../KesApi";
 
 
 function renderTags(tags : Tag[]) {
@@ -9,8 +9,8 @@ function renderTags(tags : Tag[]) {
         console.log(tags)
         return tags.map(
             (tagElement) => (
-                <li key={tagElement.id}>
-                    <a href={`/tag/${tagElement.id}`}>{tagElement.title}</a>
+                <li key={tagElement.slug}>
+                    <a href={`/tag/${tagElement.slug}`}>{tagElement.title}</a>
                 </li>
             )
         );
