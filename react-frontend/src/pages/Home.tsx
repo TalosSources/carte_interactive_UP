@@ -127,6 +127,7 @@ class EnabledGestureHandling extends GestureHandling {
 L.Map.addInitHook("addHandler", "gestureHandling", EnabledGestureHandling);
 
 export default function Home() {
+    const homeStart = performance.now()
 
     const navigate = useNavigate();
 
@@ -314,6 +315,7 @@ export default function Home() {
         return sortedInitiatives;
     }
 
+    const preInitiatives = performance.now()
     let initiatives: Initiative[] = localizedInitiatives;
     if (initiativesToShow === WhatToShow.OnlyOnMap.value) {
         initiatives = initiatives.filter(initiativeInsideMap);
@@ -327,9 +329,11 @@ export default function Home() {
     if (sorting === Sorting.Alphabetical.value) {
         initiatives = sortInitiativesByName(initiatives);
     }
+    const preSearch = performance.now()
     initiatives = initiatives
         .filter(initiativeMatchesCurrentSearch)
         .filter(initiativeMatchCurrentTags);
+    const postInitiatives = performance.now()
 
     // Prepare tags
     /*
@@ -359,7 +363,9 @@ export default function Home() {
             }
         }));
     }
+    const preTags = performance.now()
     const tagEntropy = calculateTagEntropy(initiatives);
+    const postEntropy = performance.now()
     function sortTagsByEntropy(tag_a: Tag, tag_b: Tag) {
         return tagEntropy[tag_b.slug] - tagEntropy[tag_a.slug]
     }
@@ -368,6 +374,7 @@ export default function Home() {
     let top_tags = tags
         .filter((tag: Tag) => tagEntropy[tag.slug] > 0)
     top_tags.sort(sortTagsByEntropy);
+    const postSort = performance.now()
     top_tags = top_tags.slice(0, TOP_TAGS_LIMIT) // Limit top tags
     console.log("top_tags", top_tags)
 
@@ -409,6 +416,17 @@ export default function Home() {
             setActiveTags([...activeTags, tagSlug]);
         }
     } 
+
+    const homeEnd = performance.now()
+    console.log(`### Home-Timings ###`)
+    console.log(`Start:               ${preInitiatives-homeStart}ms`)
+    console.log(`Initiatives prepare: ${preSearch-homeStart}ms`)
+    console.log(`Initiative searched: ${postInitiatives-homeStart}ms`)
+    console.log(`Initiatives done:    ${preTags-homeStart}ms`)
+    console.log(`Tag entropy calculat:${postEntropy-homeStart}ms`)
+    console.log(`Tags sorted:         ${postSort-homeStart}ms`)
+    console.log(`———————————————————————————————————————————`)
+    console.log(`Total:               ${homeEnd-homeStart}ms`)
 
     return (
         <>
