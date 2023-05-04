@@ -61,15 +61,18 @@ export function getDescriptionWithFallback(i: Initiative, l: string) {
     return getTranslationWithFallback(i, l)['description']
 }
 
+function fetchFromDB(path : string) {
+    const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/${path}/`;
+    return fetch(tag_api_url, {credentials:'omit'});
+}
+
 export async function fetchTags() : Promise<Tag[]> {
-    const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
-    const response = await fetch(tag_api_url);
+    const response = await fetchFromDB('tags')
     return await response.json();
 }
 
 export async function fetchInitiatives() : Promise<Initiative[]> {
-    const initiatives_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/`;
-    const response = await fetch(initiatives_api_url);
+    const response = await fetchFromDB('initiatives');
     const json = await response.json()
     return json.map((i:any) => {
             i['tags'] = i['tags'].map((t : {slug:string}) => t['slug'])
@@ -78,8 +81,7 @@ export async function fetchInitiatives() : Promise<Initiative[]> {
 }
 
 export async function fetchRegions() : Promise<Region[]> {
-    const region_api_url = `${process.env.REACT_APP_BACKEND_URL}/regions/`;
-    const r = await fetch(region_api_url);
+    const r = await fetchFromDB('regions');
     const json = await r.json();
     return json['features']
 }
