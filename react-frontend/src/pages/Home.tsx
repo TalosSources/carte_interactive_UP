@@ -375,7 +375,7 @@ export default function Home() {
         .filter((tag: Tag) => tagEntropy[tag.slug] > 0)
     top_tags.sort(sortTagsByEntropy);
     const postSort = performance.now()
-    top_tags = top_tags.slice(0, TOP_TAGS_LIMIT) // Limit top tags
+    // top_tags = top_tags.slice(0, TOP_TAGS_LIMIT) // Limit top tags
     console.log("top_tags", top_tags)
 
     //markers
