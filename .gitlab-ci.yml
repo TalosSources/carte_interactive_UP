@@ -59,6 +59,8 @@ dryrun:
     # needs to have some temporal difference to the start, so the db is prepared
     - sleep 20
     - sudo docker-compose -p dryrun run api /code/manage.py import_sk3_data
+    - sudo docker-compose -p dryrun run api /code/manage.py setup_user --su -u admin -p admin_pass
+    - sudo docker-compose -p dryrun run api /code/manage.py setup_user --ca -u curator -p curator_pass
     - sudo docker-compose -p dryrun down
     - sudo docker-compose -p dryrun rm
     - sudo docker volume prune -f
@@ -86,6 +88,8 @@ deploy:
     # needs to have some temporal difference to the start, so the db is prepared
     - sleep 20
     - sudo docker-compose run api /code/manage.py import_sk3_data
+    - sudo docker-compose -p dryrun run api /code/manage.py setup_user --su -u admin -p $ADMIN_PASS
+    - sudo docker-compose -p dryrun run api /code/manage.py setup_user --ca -u curator -p $CURATOR_PASS
   environment:
     name: production
     url: https://smartakartan.entrop.mywire.org
