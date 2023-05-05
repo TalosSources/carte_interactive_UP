@@ -9,6 +9,13 @@ export interface Region {
     }
 }
 
+export interface Language {
+    flag : string;
+    code : string;
+    nativeName : string;
+    englishName : string;
+}
+
 export interface Tag {
     title : string;
     slug : string;
@@ -69,6 +76,10 @@ function fetchFromDB(path : string) {
 export async function fetchTags() : Promise<Tag[]> {
     const response = await fetchFromDB('tags')
     return await response.json();
+}
+
+export async function fetchLanguages() : Promise<Language[]> {
+    return fetchFromDB('languages').then(r => r.json())
 }
 
 export async function fetchInitiatives() : Promise<Initiative[]> {

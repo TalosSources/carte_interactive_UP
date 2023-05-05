@@ -30,7 +30,7 @@ import useWindowSize from "../hooks/useWindowSize";
 
 // Constants
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
-import { Feature, fetchInitiatives, fetchRegions, fetchTags, getTitleWithFallback, Initiative, initiativeLocationFeatureToGeoCoordinate, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
+import { Feature, fetchInitiatives, fetchLanguages, fetchRegions, fetchTags, getTitleWithFallback, Initiative, initiativeLocationFeatureToGeoCoordinate, Language, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
 
 
 const Header = styled.header`
@@ -168,6 +168,7 @@ export default function Home() {
     const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value);
     const [tags, setTags] = useState<Tag[]>([]);
     const [tagsByInitiatives, setTagsByInitiatives] = useState<Map<string, Tag[]>>(new Map());
+    const [languages, setLanguages] = useState<Language[]>([]);
 
 
     const windowSize = useWindowSize();
@@ -228,6 +229,8 @@ export default function Home() {
             }
             )
             .catch(err => console.error(err));
+        
+        fetchLanguages().then(l => setLanguages(l));
     }, []);
 
     // refresh region
@@ -434,6 +437,7 @@ export default function Home() {
                 handleRegionChange={handleRegionChange}
                 activeRegionSlug={activeRegionSlug}
                 regionList={regionList}
+                languages={languages}
             />
             <Header>
                     {(() => {
