@@ -73,6 +73,11 @@ class InitiativeTranslationSerializer(serializers.ModelSerializer):
         model = models.InitiativeTranslation
         fields = ['language_code', 'title', 'short_description', 'description']
 
+class LanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Language
+        fields = ['code', 'flag', 'englishName', 'nativeName']
+
 class InitiativeImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.InitiativeImage

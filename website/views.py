@@ -50,3 +50,7 @@ class TagViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
 class RegionViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     queryset = models.Region.objects.all()
     serializer_class = serializers.RegionSerializer
+
+class LanguageViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
+    queryset = models.Language.objects.all()
+    serializer_class = serializers.LanguageSerializer
