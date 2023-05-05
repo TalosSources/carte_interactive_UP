@@ -31,6 +31,16 @@ class Tag(models.Model):
         return self.title
 
 
+class Language(models.Model):
+    englishName = models.CharField(max_length=20, unique=True)
+    nativeName = models.CharField(max_length=20, unique=True)
+    flag = models.CharField(max_length=2, unique=True)
+    code = models.SlugField(max_length=2, unique=True)
+    default = models.CharField(max_length=1, choices=[("d", "default")], unique=True, null=True)
+
+    def __str__(self):
+        return self.englishName
+
 class Initiative(models.Model):
     # Multiple values can be NULL and not violate uniqueness. See: https://stackoverflow.com/a/1400046/2525237
     # This means that we can use NULL/None for all new rows/items that we add
@@ -68,7 +78,7 @@ class InitiativeImage(models.Model):
 
 class InitiativeTranslation(models.Model):
     sk3_id = models.IntegerField(null=True, blank=True, unique=True)
-    language_code = models.CharField(max_length=2)
+    language = models.ForeignKey(Language, related_name='language', on_delete=models.PROTECT)
     title = models.CharField(max_length=127)
     initiative = models.ForeignKey(Initiative, related_name='initiative_translations', on_delete=models.CASCADE)
     description = models.TextField(max_length=32767)
@@ -79,7 +89,7 @@ class InitiativeTranslation(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['initiative', 'language_code'], name='max one translation per language and initiative')
+            models.UniqueConstraint(fields=['initiative', 'language'], name='max one translation per languageKey and initiative')
         ]
 
 class Location(gis_models.Model):

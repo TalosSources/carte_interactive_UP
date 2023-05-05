@@ -38,8 +38,7 @@ class LocationInline(GeoModelAdminMixin, admin.StackedInline):
 class InitiativeDescriptionTextInline(admin.StackedInline):
     # show_change_link = True
     model = models.InitiativeTranslation
-    fields = ("language_code", "title", "short_description", "description", "sk3_id")
-    readonly_fields = ("sk3_id",)
+    fields = ("language", "title", "short_description", "description")
     extra = 0  # -adds an extra row that is always visible
     min_num = 1
 
@@ -71,6 +70,13 @@ class InitiativeAdmin(admin.ModelAdmin):
 class RegionAdmin(gis_admin.GISModelAdmin):
     list_display = ("slug", "title")
     readonly_fields = ("sk3_id",)
+
+@gis_admin.register(models.Language)
+class LanguageAdmin(admin.ModelAdmin):
+    @admin.display(description="English name")
+    def title_func(self, lang):
+        return lang.englishName
+    list_display = ["title_func"]
 
 
 @admin.register(models.Tag)
