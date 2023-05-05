@@ -46,14 +46,14 @@ class Initiative(models.Model):
     phone = models.CharField(max_length=127, null=True)
 
     def __str__(self):
-        return f"ID: {self.id}"
+        return self.slug
 
     def get_absolute_url(self):
         # https://docs.djangoproject.com/en/4.1/ref/models/instances/#django.db.models.Model.get_absolute_url
         # Better to use reverse?
         # Example: http://localhost/details/2
         # Having defined this method enables "view on site" in the admin interface
-        return f"/details/{self.id}"
+        return f"/details/{self.slug}"
 
 class InitiativeImage(models.Model):
     initiative = models.ForeignKey(Initiative, related_name='initiative_images', on_delete=models.CASCADE)
