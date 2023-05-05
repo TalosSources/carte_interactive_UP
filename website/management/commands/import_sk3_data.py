@@ -413,7 +413,7 @@ def import_sk3_data(i_args: List[str]):
         logging.debug(f"Importing buisnesses took {afterBusiness-beforeBusiness}")
 
     logging.debug("=== Reading from sk3 API done. Now starting processing ===")
-    clear_unused_tags_from_db()
+    #clear_unused_tags_from_db()
     #generateStatistics()
 
 
