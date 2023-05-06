@@ -62,7 +62,7 @@ i18next
     .use(I18nextBrowserLanguageDetector)
     .init({
         resources: translations,
-        fallbackLng: 'en',
+        fallbackLng: ['en', 'sv'],
         debug:true,
         nonExplicitSupportedLngs: true, //support language variation
         interpolation: {
