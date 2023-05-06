@@ -30,6 +30,10 @@ const translations : {[code:string] : {translation :
                         proposeInitiative: "Propose an initiative",
                         becomeVolunteer : "Become volunteer",
                         startAThing : "Start a thing",
+                        onlyOnTheMap: "Only initiatives on the map",
+                        hideGlobal: "Hide global initiatives",
+                        sortByDist: "Sort by distance",
+                        sortAlpha: "Sort by alphabetically",
                         supportTheMap : {
                             headline : "Support the map!",
                             firstSentence : "Become a backer today!",
@@ -46,6 +50,10 @@ const translations : {[code:string] : {translation :
                         proposeInitiative: "Föreslå en verksamhet",
                         becomeVolunteer : "Bli volontär",
                         startAThing : "Starta en grej",
+                        onlyOnTheMap: "Bara verksamheter på kartan",
+                        hideGlobal: "Dölj globala verksamheter",
+                        sortByDist: "Sortera efter avstånd",
+                        sortAlpha: "Sortera i alfabetisk ordning",
                         supportTheMap : {
                             headline : "Supporta kartan!",
                             firstSentence : "Bli månadsgivare idag!",

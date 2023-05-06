@@ -112,14 +112,14 @@ const TagContainer = styled.div`
 
 
 const Sorting = {
-  Alphabetical: { value: "1", text: "Sort alphabetically"},
-  Distance: { value: "2", text: "Sort by distance" }
+  Alphabetical: { value: "1", text: "ui.sortAlpha"},
+  Distance: { value: "2", text: "ui.sortByDist" }
 };
 
 const WhatToShow = {
-    Everything: {value: "1", text:"Show all" },
-    OnlyOnMap: {value: "2", text:"Only show initiatives on the map"},
-    WithoutGlobal: {value: "3", text:"Hide global initiatives"}
+    Everything: {value: "1", text:"ui.allInitiatives" },
+    OnlyOnMap: {value: "2", text:"ui.onlyOnTheMap"},
+    WithoutGlobal: {value: "3", text:"ui.hideGlobal"}
 }
 
 class EnabledGestureHandling extends GestureHandling {
