@@ -495,12 +495,6 @@ export default function Home() {
                         name="search" 
                         value={searchString}
                         onChange={event => setSearchString(event.target.value)}/>
-                    <div className="form-check checkbox-lg ml-4">
-                        <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
-                        <label className="form-check-label text-white" htmlFor="flexSwitchCheckDefault"
-                            style={{minWidth: "100px"}}
-                        >Öppet nu</label>
-                    </div>
                 </SearchRow>
                 <SelectFromObject 
                     obj={WhatToShow}
