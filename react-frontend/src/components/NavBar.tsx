@@ -5,6 +5,7 @@ import { SMALL_SCREEN_WIDTH } from '../constants';
 import useWindowSize from '../hooks/useWindowSize';
 import { Language, Region } from '../KesApi';
 import LanguageSelector from './LanguageSelector';
+import i18next from 'i18next';
 
 const NavRight = styled.div`
     display: flex;
@@ -58,8 +59,8 @@ const NavBar = ( { handleRegionChange, activeRegionSlug, regionList, languages }
         }
         <div id="languageSelector">
             <LanguageSelector
-                handleSelectChange={() => (true)}
-                value={"en"}
+                handleSelectChange={(e) => i18next.changeLanguage(e.target.value)}
+                value={i18next.language}
                 languages={languages}
                 />
         </div>

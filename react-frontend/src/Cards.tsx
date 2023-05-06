@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import styled from "styled-components";
 import sanitizeHtml from "sanitize-html";
-import { getShortDescriptionWithFallback, getTitleWithFallback, Initiative, Tag } from './KesApi';
+import {Initiative, Tag } from './KesApi';
+import { useTranslation } from 'react-i18next';
 
 const CardContainer = styled.div`
     display: flex;
@@ -139,11 +140,10 @@ function sortTagsByValue(tags : Tag[], values:{ [x: string]: number; }) {
 }
 
 export function renderCardCollection(initiatives: Initiative[], tagsByInitiatives : Map<string, Tag[]>, tagClick: ((clickedSlug: string) => void), tagSorting: { [x: string]: number; } | undefined) {
+    const {t} = useTranslation();
     return (<CardContainer>
             {initiatives.map(
               (initiativeElement) => {
-                const title = getTitleWithFallback(initiativeElement, 'en');
-                const description = getShortDescriptionWithFallback(initiativeElement, 'en');
                 let top_tags = tagsByInitiatives.get(initiativeElement.slug)
                 if (typeof top_tags === 'undefined') {
                     // tags not yet propagated
@@ -153,15 +153,16 @@ export function renderCardCollection(initiatives: Initiative[], tagsByInitiative
                     sortTagsByValue(top_tags, tagSorting)
                 }
                 return (
+                    <Suspense>
                         <SkCard
                             key={initiativeElement.slug}
-                            title={title}
+                            title={t('initiatives.'+initiativeElement.slug+'.title')}
                             id={initiativeElement.slug}
-                            description={description}
+                            description={t('initiatives.'+initiativeElement.slug+'.short_description')}
                             image_url={initiativeElement.main_image_url}
                             tags={top_tags}
                             tagClick={tagClick}
-                        />
+                        /></Suspense>
                 );
               }
              )

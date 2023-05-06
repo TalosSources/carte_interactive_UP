@@ -28,9 +28,13 @@ import HighlightInitiative from "../components/HighlightInitiative";
 
 import useWindowSize from "../hooks/useWindowSize";
 
+import { useTranslation } from 'react-i18next';
+import '../i18n';
+
 // Constants
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
 import { Feature, fetchInitiatives, fetchLanguages, fetchRegions, fetchTags, getTitleWithFallback, Initiative, initiativeLocationFeatureToGeoCoordinate, Language, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
+import i18next from "../i18n";
 
 
 const Header = styled.header`
@@ -218,6 +222,9 @@ export default function Home() {
 
                 setLocalizedInitiatives(local);
                 setGlobalInitiatives(global);
+                for (const i of initiatives) {
+                    registerInitiativeTranslations(i);
+                }
             })
             .catch(err => console.error(err));
 
@@ -232,6 +239,25 @@ export default function Home() {
         
         fetchLanguages().then(l => setLanguages(l));
     }, []);
+
+    function registerInitiativeTranslations(i : Initiative) {
+        function registerTranslation(code : string,
+                                     trans : {
+                                        title: string;
+                                        short_description: string;
+                                        description: string;
+                                     }) {
+            const key =  'initiatives.'+i.slug+'.'
+            i18next.addResource(code,'translation', key + 'title', trans.title);
+            i18next.addResource(code,'translation', key + 'short_description', trans.short_description);
+            i18next.addResource(code,'translation', key + 'description', trans.description);
+        }
+        for (const code in i.initiative_translations) {
+            registerTranslation(i.initiative_translations[code].language, i.initiative_translations[code]);
+        }
+    }
+
+    const {t} = useTranslation();
 
     // refresh region
     const region_slug = activeRegionSlug;
@@ -530,9 +556,9 @@ export default function Home() {
                     <RightSide>
 
                         {windowSize?.width > SMALL_SCREEN_WIDTH && <div className="d-flex flex-row">
-                            <OutlineButton onClick={() => console.log("Proposing new feature not implemented.")}>Föreslå en verksamhet</OutlineButton>
-                            <OutlineButton onClick={() => console.log("Becoming a volunteer not implemented.")}>Bli volontär</OutlineButton>
-                            <OutlineButton onClick={() => console.log("Starting something not implemented.")}>Starta en grej</OutlineButton>
+                            <OutlineButton onClick={() => console.log("Proposing new feature not implemented.")}>{t('ui.proposeInitiative')}</OutlineButton>
+                            <OutlineButton onClick={() => console.log("Becoming a volunteer not implemented.")}>{t('ui.becomeVolunteer')}</OutlineButton>
+                            <OutlineButton onClick={() => console.log("Starting something not implemented.")}>{t('ui.startAThing')}</OutlineButton>
                         </div>}
                         <MapContainer 
                             id="map" 

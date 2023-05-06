@@ -32,11 +32,12 @@ export interface Initiative {
     locations : {features : Feature[]};
     main_image_url : string;
     initiative_images : InitiativeImage[];
-    initiative_translations : {[langCode : string] : {
+    initiative_translations : {
+        language : string,
         title : string,
         short_description : string,
         description : string,
-    }};
+    }[];
 }
 
 export interface InitiativeImage {

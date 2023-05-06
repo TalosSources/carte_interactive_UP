@@ -69,9 +69,10 @@ class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
 
 
 class InitiativeTranslationSerializer(serializers.ModelSerializer):
+    language = serializers.SlugRelatedField(read_only=True, slug_field='code')
     class Meta:
         model = models.InitiativeTranslation
-        fields = ['language_code', 'title', 'short_description', 'description']
+        fields = ['language', 'title', 'short_description']
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
