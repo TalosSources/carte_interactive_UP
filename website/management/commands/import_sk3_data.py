@@ -523,7 +523,8 @@ def process_business_rows(businessRows):
         def getPhone():
             if 'phone_number' in row['acf']:
                 if 'phone' in row['acf'] and row['acf']['phone'] != '':
-                    logging.warn(f"Found 'phone' and 'phone_number' entry for {title}")
+                    if (row['acf']['phone'] != row['acf']['phone_number']):
+                        logging.warn(f"Found inequal 'phone' and 'phone_number' entries for {title}.")
                 return row['acf']['phone_number']
             if 'phone' in row['acf']:
                 return row['acf']['phone']
