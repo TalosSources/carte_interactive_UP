@@ -97,19 +97,11 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         model = models.Tag
         fields = ['title', 'slug']
 
-class SlimTagSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = models.Tag
-        fields = ['slug']
-
-
 class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Object name (and below field name) "locations" must match `related_name` in model. DRF docs:
-    https://www.django-rest-framework.org/api-guide/relations/#reverse-relations
-    """
+    # Object name (and below field name) "locations" must match `related_name` in model. DRF docs:
+    # https://www.django-rest-framework.org/api-guide/relations/#reverse-relations
     locations = LocationSerializer(many=True, read_only=True)
-    tags = SlimTagSerializer(many=True, read_only=True)
+    tags = serializers.SlugRelatedField(slug_field='slug', many=True, read_only=True)
     initiative_translations = InitiativeTranslationSerializer(many=True, read_only=True)
     initiative_images = InitiativeImagesSerializer(many=True, read_only=True)
 

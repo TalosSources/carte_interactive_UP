@@ -86,10 +86,7 @@ export async function fetchLanguages() : Promise<Language[]> {
 export async function fetchInitiatives() : Promise<Initiative[]> {
     const response = await fetchFromDB('initiatives');
     const json = await response.json()
-    return json.map((i:any) => {
-            i['tags'] = i['tags'].map((t : {slug:string}) => t['slug'])
-            return i
-        });
+    return json;
 }
 
 export async function fetchRegions() : Promise<Region[]> {
