@@ -15,7 +15,7 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<Layout/>}>
                     <Route index element={<Home/>}/>
-                    <Route path="/details/:initiativeId" element={<Details/>}/>
+                    <Route path="/details/:initiativeSlug" element={<Details/>}/>
                     <Route path="/sitemap" element={<Sitemap/>}/>
                     <Route path="/tag/:tagId" element={<TagPage/>}/>
                     <Route path="/r/:regionSlug" element={<Home/>}/>

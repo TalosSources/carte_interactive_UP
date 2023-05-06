@@ -46,27 +46,8 @@ export interface InitiativeImage {
     url : string;
 }
 
-function getTranslationWithFallback(i: Initiative, l: string) {
-    if (l in i.initiative_translations) {
-        return i.initiative_translations[l]
-    }
-    return Object.entries(i.initiative_translations)[0][1]
-}
-
 export function initiativeLocationFeatureToGeoCoordinate(feature: Feature) {
     return new GeoCoordinate({'longitude': feature.geometry.coordinates[0], 'latitude': feature['geometry']['coordinates'][1]})
-}
-
-export function getTitleWithFallback(i: Initiative, l: string) {
-    return getTranslationWithFallback(i, l)['title']
-}
-
-export function getShortDescriptionWithFallback(i: Initiative, l: string) {
-    return getTranslationWithFallback(i, l)['short_description']
-}
-
-export function getDescriptionWithFallback(i: Initiative, l: string) {
-    return getTranslationWithFallback(i, l)['description']
 }
 
 function fetchFromDB(path : string) {

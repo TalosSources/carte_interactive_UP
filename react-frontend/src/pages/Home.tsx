@@ -33,8 +33,8 @@ import '../i18n';
 
 // Constants
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
-import { Feature, fetchInitiatives, fetchLanguages, fetchRegions, fetchTags, getTitleWithFallback, Initiative, initiativeLocationFeatureToGeoCoordinate, Language, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
-import i18next from "../i18n";
+import { Feature, fetchInitiatives, fetchLanguages, fetchRegions, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, Language, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
+import { registerInitiativeTranslations } from "../i18n";
 
 
 const Header = styled.header`
@@ -240,23 +240,6 @@ export default function Home() {
         fetchLanguages().then(l => setLanguages(l));
     }, []);
 
-    function registerInitiativeTranslations(i : Initiative) {
-        function registerTranslation(code : string,
-                                     trans : {
-                                        title: string;
-                                        short_description: string;
-                                        description: string;
-                                     }) {
-            const key =  'initiatives.'+i.slug+'.'
-            i18next.addResource(code,'translation', key + 'title', trans.title);
-            i18next.addResource(code,'translation', key + 'short_description', trans.short_description);
-            i18next.addResource(code,'translation', key + 'description', trans.description);
-        }
-        for (const code in i.initiative_translations) {
-            registerTranslation(i.initiative_translations[code].language, i.initiative_translations[code]);
-        }
-    }
-
     const {t} = useTranslation();
 
     // refresh region
@@ -311,7 +294,7 @@ export default function Home() {
     function sortInitiativesByName(initiatives : Initiative[]) {
         const names : [number, string][] = [];
         for (let i = 0; i < initiatives.length; i++) {
-            names.push([i, getTitleWithFallback(initiatives[i], 'en')]);
+            names.push([i, t('initiatives.'+initiatives[i].slug+'.title')]);
         }
         names.sort(function(left, right) {
             return left[1] < right[1] ? -1 : 1;
@@ -577,8 +560,9 @@ export default function Home() {
 // Helpers
 
 function renderMapMarkers(initiatives: Initiative[]) {
+    const {t} = useTranslation();
     function feature2Marker(initiative: Initiative, feature: Feature, index: number) {
-        const title = getTitleWithFallback(initiative, 'en')
+        const title = t('initiatives.'+initiative.slug+'.title')
         L.Icon.Default.imagePath="/"
         return (
             <Marker 

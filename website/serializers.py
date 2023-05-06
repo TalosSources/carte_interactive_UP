@@ -63,7 +63,7 @@ from . import models
 
 class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
     class Meta:
-        fields = ("title", "id")  # -shown under "Properties" in the API JSON
+        fields = ("title",)  # -shown under "Properties" in the API JSON
         geo_field = "coordinates"  # this string value must match the PointField field name in models.py
         model = models.Location
 
@@ -72,7 +72,7 @@ class InitiativeTranslationSerializer(serializers.ModelSerializer):
     language = serializers.SlugRelatedField(read_only=True, slug_field='code')
     class Meta:
         model = models.InitiativeTranslation
-        fields = ['language', 'title', 'short_description']
+        fields = ['language', 'title', 'short_description', 'description']
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -108,7 +108,7 @@ class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Initiative
         fields = [
-            'slug', 'id',
+            'slug',
             'locations', 'initiative_translations', 'tags',
             'initiative_images',
             'main_image_url',
