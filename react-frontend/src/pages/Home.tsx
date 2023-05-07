@@ -270,16 +270,16 @@ export default function Home() {
         return keywords
             .map(keyword => keyword.toLowerCase())
             .every(keyword =>
-                Object.entries(initiative.initiative_translations).some(([langCode, trans], i) =>
+                initiative.initiative_translations.some((trans) =>
                     trans['title'].toLowerCase().includes(keyword)
                 ) ||
                 tagsByInitiatives.get(initiative.slug)?.some(tag =>
                     tag.title.toLowerCase().includes(keyword)
                 ) ||
-                Object.entries(initiative.initiative_translations).some(([langCode, trans], i) =>
+                initiative.initiative_translations.some((trans) =>
                     trans['short_description'].toLowerCase().includes(keyword)
                 ) ||
-                Object.entries(initiative.initiative_translations).some(([langCode, trans], i) =>
+                initiative.initiative_translations.some((trans) =>
                     trans['description'].toLowerCase().includes(keyword)
                 ) ||
                 false
