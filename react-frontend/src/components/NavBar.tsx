@@ -3,7 +3,9 @@ import RegionSelector from './RegionSelector';
 import styled from 'styled-components';
 import { SMALL_SCREEN_WIDTH } from '../constants';
 import useWindowSize from '../hooks/useWindowSize';
-import { Region } from '../KesApi';
+import { Language, Region } from '../KesApi';
+import LanguageSelector from './LanguageSelector';
+import i18next from 'i18next';
 
 const NavRight = styled.div`
     display: flex;
@@ -35,9 +37,10 @@ type PropTypes = {
     handleRegionChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     activeRegionSlug: string;
     regionList: Region[];
+    languages:Language[];
 }
 
-const NavBar = ( { handleRegionChange, activeRegionSlug, regionList }: PropTypes ) => {
+const NavBar = ( { handleRegionChange, activeRegionSlug, regionList, languages }: PropTypes) => {
 
     const windowSize = useWindowSize();
     return ( 
@@ -54,6 +57,13 @@ const NavBar = ( { handleRegionChange, activeRegionSlug, regionList }: PropTypes
                 />
         </div>
         }
+        <div id="languageSelector">
+            <LanguageSelector
+                handleSelectChange={(e) => i18next.changeLanguage(e.target.value)}
+                value={i18next.language}
+                languages={languages}
+                />
+        </div>
         <NavRight>
 
         <NavItems className="nav-links">

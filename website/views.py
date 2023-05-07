@@ -32,8 +32,13 @@ class LocationViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
 
 
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
-    queryset = models.Initiative.objects.all()
     serializer_class = serializers.InitiativeSerializer
+    def get_queryset(self):
+        queryset = models.Initiative.objects.all()
+        slug = self.request.query_params.get('slug')
+        if slug is not None:
+            queryset = queryset.filter(slug=slug)
+        return queryset
 
 
 class TagViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
@@ -50,3 +55,7 @@ class TagViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
 class RegionViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     queryset = models.Region.objects.all()
     serializer_class = serializers.RegionSerializer
+
+class LanguageViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
+    queryset = models.Language.objects.all()
+    serializer_class = serializers.LanguageSerializer

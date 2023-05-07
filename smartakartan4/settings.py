@@ -150,11 +150,13 @@ CSRF_TRUSTED_ORIGINS = [PUBLIC_URL]
 CSP_SCRIPT_SRC = [
     "https://unpkg.com",
     "https://cdnjs.cloudflare.com",
+    "https://cdn.jsdelivr.net",
     "'unsafe-inline'",
     HOST
 ]
 CSP_DEFAULT_SRC = [
     "https://unpkg.com",
+    "https://cdn.jsdelivr.net",
     "'unsafe-inline'",
     "'self'",
     "http://a.tile.openstreetmap.org",

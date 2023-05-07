@@ -413,7 +413,7 @@ def import_sk3_data(i_args: List[str]):
         logging.debug(f"Importing buisnesses took {afterBusiness-beforeBusiness}")
 
     logging.debug("=== Reading from sk3 API done. Now starting processing ===")
-    clear_unused_tags_from_db()
+    #clear_unused_tags_from_db()
     #generateStatistics()
 
 
@@ -481,16 +481,52 @@ def process_business_rows(businessRows):
         importLocations(thisTranslationSK3, initiativeBase)
         return initiativeBase
 
+    Languages = {
+        'en' : {
+            'english' : 'english',
+            'native' : 'english',
+            'flag' : '🇬🇧',
+        },
+        'sv' : {
+            'english' : 'swedish',
+            'native' : 'svenska',
+            'flag' : '🇸🇪',
+        },
+        'de' : {
+            'english' : 'german',
+            'native' : 'deutsch',
+            'flag' : '🇩🇪',
+        },
+    }
+    def create_languages(code):
+        Default_Lang = 'en'
+        langs = website.models.Language
+        try:
+            return langs.objects.get(code=code)
+        except langs.DoesNotExist:
+            language = langs.objects.create(
+                code=code,
+                englishName=Languages[code]['english'],
+                nativeName=Languages[code]['native'],
+                flag=Languages[code]['flag'],
+                )
+            if code == Default_Lang:
+                language.default = 'd'
+            language.save()
+            return language
+
+
     def addTranslationToInitiativeBase(row, initiativeBase):
         wp_post_id = row[RJK_ID]
         lang_code = row[RJK_LANG]
+        lang_obj = create_languages(lang_code)
         title = row[RJK_TITLE][RJSK_RENDERED]
         afc = row[RJK_ACF]
         description = afc[RJSK_ACF_DESCRIPTION_ID]
         short_description = afc['short_description']
         new_title_obj = website.models.InitiativeTranslation(
             sk3_id=wp_post_id,
-            language_code=lang_code,
+            language=lang_obj,
             title=title,
             short_description=short_description,
             description=description,
@@ -523,7 +559,8 @@ def process_business_rows(businessRows):
         def getPhone():
             if 'phone_number' in row['acf']:
                 if 'phone' in row['acf'] and row['acf']['phone'] != '':
-                    logging.warn(f"Found 'phone' and 'phone_number' entry for {title}")
+                    if (row['acf']['phone'] != row['acf']['phone_number']):
+                        logging.warn(f"Found inequal 'phone' and 'phone_number' entries for {title}.")
                 return row['acf']['phone_number']
             if 'phone' in row['acf']:
                 return row['acf']['phone']

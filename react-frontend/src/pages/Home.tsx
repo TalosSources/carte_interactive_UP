@@ -28,9 +28,13 @@ import HighlightInitiative from "../components/HighlightInitiative";
 
 import useWindowSize from "../hooks/useWindowSize";
 
+import { useTranslation } from 'react-i18next';
+import '../i18n';
+
 // Constants
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
-import { Feature, fetchInitiatives, fetchRegions, fetchTags, getTitleWithFallback, Initiative, initiativeLocationFeatureToGeoCoordinate, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
+import { Feature, fetchInitiatives, fetchLanguages, fetchRegions, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, Language, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
+import { registerInitiativeTranslations } from "../i18n";
 
 
 const Header = styled.header`
@@ -108,14 +112,14 @@ const TagContainer = styled.div`
 
 
 const Sorting = {
-  Alphabetical: { value: "1", text: "Sort alphabetically"},
-  Distance: { value: "2", text: "Sort by distance" }
+  Alphabetical: { value: "1", text: "ui.sortAlpha"},
+  Distance: { value: "2", text: "ui.sortByDist" }
 };
 
 const WhatToShow = {
-    Everything: {value: "1", text:"Show all" },
-    OnlyOnMap: {value: "2", text:"Only show initiatives on the map"},
-    WithoutGlobal: {value: "3", text:"Hide global initiatives"}
+    Everything: {value: "1", text:"ui.allInitiatives" },
+    OnlyOnMap: {value: "2", text:"ui.onlyOnTheMap"},
+    WithoutGlobal: {value: "3", text:"ui.hideGlobal"}
 }
 
 class EnabledGestureHandling extends GestureHandling {
@@ -168,6 +172,7 @@ export default function Home() {
     const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value);
     const [tags, setTags] = useState<Tag[]>([]);
     const [tagsByInitiatives, setTagsByInitiatives] = useState<Map<string, Tag[]>>(new Map());
+    const [languages, setLanguages] = useState<Language[]>([]);
 
 
     const windowSize = useWindowSize();
@@ -217,6 +222,9 @@ export default function Home() {
 
                 setLocalizedInitiatives(local);
                 setGlobalInitiatives(global);
+                for (const i of initiatives) {
+                    registerInitiativeTranslations(i);
+                }
             })
             .catch(err => console.error(err));
 
@@ -228,7 +236,11 @@ export default function Home() {
             }
             )
             .catch(err => console.error(err));
+        
+        fetchLanguages().then(l => setLanguages(l));
     }, []);
+
+    const {t} = useTranslation();
 
     // refresh region
     const region_slug = activeRegionSlug;
@@ -258,16 +270,16 @@ export default function Home() {
         return keywords
             .map(keyword => keyword.toLowerCase())
             .every(keyword =>
-                Object.entries(initiative.initiative_translations).some(([langCode, trans], i) =>
+                initiative.initiative_translations.some((trans) =>
                     trans['title'].toLowerCase().includes(keyword)
                 ) ||
                 tagsByInitiatives.get(initiative.slug)?.some(tag =>
                     tag.title.toLowerCase().includes(keyword)
                 ) ||
-                Object.entries(initiative.initiative_translations).some(([langCode, trans], i) =>
+                initiative.initiative_translations.some((trans) =>
                     trans['short_description'].toLowerCase().includes(keyword)
                 ) ||
-                Object.entries(initiative.initiative_translations).some(([langCode, trans], i) =>
+                initiative.initiative_translations.some((trans) =>
                     trans['description'].toLowerCase().includes(keyword)
                 ) ||
                 false
@@ -282,7 +294,7 @@ export default function Home() {
     function sortInitiativesByName(initiatives : Initiative[]) {
         const names : [number, string][] = [];
         for (let i = 0; i < initiatives.length; i++) {
-            names.push([i, getTitleWithFallback(initiatives[i], 'en')]);
+            names.push([i, t('initiatives.'+initiatives[i].slug+'.title')]);
         }
         names.sort(function(left, right) {
             return left[1] < right[1] ? -1 : 1;
@@ -434,6 +446,7 @@ export default function Home() {
                 handleRegionChange={handleRegionChange}
                 activeRegionSlug={activeRegionSlug}
                 regionList={regionList}
+                languages={languages}
             />
             <Header>
                     {(() => {
@@ -465,12 +478,6 @@ export default function Home() {
                         name="search" 
                         value={searchString}
                         onChange={event => setSearchString(event.target.value)}/>
-                    <div className="form-check checkbox-lg ml-4">
-                        <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
-                        <label className="form-check-label text-white" htmlFor="flexSwitchCheckDefault"
-                            style={{minWidth: "100px"}}
-                        >Öppet nu</label>
-                    </div>
                 </SearchRow>
                 <SelectFromObject 
                     obj={WhatToShow}
@@ -526,9 +533,9 @@ export default function Home() {
                     <RightSide>
 
                         {windowSize?.width > SMALL_SCREEN_WIDTH && <div className="d-flex flex-row">
-                            <OutlineButton onClick={() => console.log("Proposing new feature not implemented.")}>Föreslå en verksamhet</OutlineButton>
-                            <OutlineButton onClick={() => console.log("Becoming a volunteer not implemented.")}>Bli volontär</OutlineButton>
-                            <OutlineButton onClick={() => console.log("Starting something not implemented.")}>Starta en grej</OutlineButton>
+                            <OutlineButton onClick={() => console.log("Proposing new feature not implemented.")}>{t('ui.proposeInitiative')}</OutlineButton>
+                            <OutlineButton onClick={() => console.log("Becoming a volunteer not implemented.")}>{t('ui.becomeVolunteer')}</OutlineButton>
+                            <OutlineButton onClick={() => console.log("Starting something not implemented.")}>{t('ui.startAThing')}</OutlineButton>
                         </div>}
                         <MapContainer 
                             id="map" 
@@ -553,8 +560,9 @@ export default function Home() {
 // Helpers
 
 function renderMapMarkers(initiatives: Initiative[]) {
+    const {t} = useTranslation();
     function feature2Marker(initiative: Initiative, feature: Feature, index: number) {
-        const title = getTitleWithFallback(initiative, 'en')
+        const title = t('initiatives.'+initiative.slug+'.title')
         L.Icon.Default.imagePath="/"
         return (
             <Marker 

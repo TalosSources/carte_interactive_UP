@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {renderCardCollection} from "../Cards";
-import { fetchInitiatives, fetchTags, getDescriptionWithFallback, getTitleWithFallback, Initiative, matchTagsWithInitiatives, Tag } from "../KesApi";
+import { fetchInitiatives, fetchTags, Initiative, matchTagsWithInitiatives, Tag } from "../KesApi";
+import { useTranslation } from "react-i18next";
+import '../i18n';
+import { registerInitiativeTranslations } from "../i18n";
 
 function renderTags(initiative : Initiative, tagsByInitiatives : Map<string, Tag[]>) {
     return <div id="tagPanel">
@@ -16,16 +19,16 @@ function renderTags(initiative : Initiative, tagsByInitiatives : Map<string, Tag
 }
 
 export default function Details() {
-    const {initiativeId} = useParams();
+    const {initiativeSlug} = useParams();
 
-    const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives/` + initiativeId;
+    const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives?slug=` + initiativeSlug;
     const [initiative, setInitiative] = useState<Initiative>({tags: [],
         id:0,
         initiative_images: [],
         slug:"",
         locations:{features:[]},
         main_image_url: "",
-        initiative_translations: {},
+        initiative_translations: [],
     });
     const [initiatives, setInitiatives] = useState<Initiative[]>([]);
     const [tags, setTags] = useState<Tag[]>([]);
@@ -34,9 +37,7 @@ export default function Details() {
         fetch(initiative_api_url)
             .then(response => response.json())
             .then(response_json => {
-                console.log("response_json:");
-                console.log(response_json);
-                setInitiative(response_json);
+                setInitiative(response_json[0]);
             })
             .catch(err => console.error(err));
     }, []);
@@ -44,6 +45,9 @@ export default function Details() {
         fetchInitiatives()
             .then(initiatives => {
                 setInitiatives(initiatives);
+                for (const i of initiatives) {
+                    registerInitiativeTranslations(i);
+                }
             })
             .catch(err => console.error(err));
         // fetch tags
@@ -73,12 +77,13 @@ export default function Details() {
     const taggedInitiativMatching = matchTagsWithInitiatives(initiatives, tags)
     const renderedCards = renderCardCollection(similarInitiatives, taggedInitiativMatching, ()=>null, undefined);
 
+    const {t}=useTranslation();
     return (
         <div>
             <h2>Details page for Initiative</h2>
-            <h3>{getTitleWithFallback(initiative, 'en')}</h3>
+            <h3>{t('initiatives.'+initiative.slug+'.title')}</h3>
             <img src={initiative.main_image_url}/>
-            <p dangerouslySetInnerHTML={{__html: "Description: " + getDescriptionWithFallback(initiative, 'en')}}></p>
+            <p dangerouslySetInnerHTML={{__html: "Description: " + t('initiatives.'+initiative.slug+'.description')}}></p>
             {renderTags(initiative, taggedInitiativMatching)}
             <h3>You may also like</h3>
             <div id="similarInitiativesCanvas">

@@ -25,10 +25,8 @@ def create_or_update_content_admin_group() -> auth_models.Group:
     all_permissions_list = auth_models.Permission.objects.all()
     content_admin_group.permissions.set(all_permissions_list)
 
-    website_codenames = [
-        "change_region", "delete_region", "add_region",
-        "change_tag", "delete_tag", "add_tag"
-    ]
+    protected_tables = ["region", "tag", "language"]
+    website_codenames = [feature+"_"+table for feature in ["add", "change", "delete"] for table in protected_tables]
     # Using a blacklist approach for the ContentAdmin group (we may want to change this in the future)
     remove_permissions("website", i_codenames=website_codenames)
     remove_permissions("auth")

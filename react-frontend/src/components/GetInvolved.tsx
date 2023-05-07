@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import React from "react";
 import styled from "styled-components";
 
@@ -22,12 +23,12 @@ const StyledInvolved = styled.div`
 
 const GetInvolved = () => {
     return <StyledInvolved>
-        <h3>Supporta kartan!</h3>
+        <h3>{t('ui.supportTheMap.headline')}</h3>
         <p>
-            <span className="ingress">Bli månadsgivare idag! </span> 
-            Vi är en ideell förening som utvecklar Smarta Kartan över hela Sverige, och vi behöver din hjälp!
+            <span className="ingress">{t('ui.supportTheMap.firstSentence')} </span> 
+            {t('ui.supportTheMap.body')}
         </p>
-        <button type="button" className="btn btn-success bg-lightgreen text-white">Hjälp oss att växa</button>
+        <button type="button" className="btn btn-success bg-lightgreen text-white">{t('ui.supportTheMap.button')}</button>
     </StyledInvolved>
 }
 

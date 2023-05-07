@@ -9,6 +9,13 @@ export interface Region {
     }
 }
 
+export interface Language {
+    flag : string;
+    code : string;
+    nativeName : string;
+    englishName : string;
+}
+
 export interface Tag {
     title : string;
     slug : string;
@@ -25,11 +32,12 @@ export interface Initiative {
     locations : {features : Feature[]};
     main_image_url : string;
     initiative_images : InitiativeImage[];
-    initiative_translations : {[langCode : string] : {
+    initiative_translations : {
+        language : string,
         title : string,
         short_description : string,
         description : string,
-    }};
+    }[];
 }
 
 export interface InitiativeImage {
@@ -38,27 +46,8 @@ export interface InitiativeImage {
     url : string;
 }
 
-function getTranslationWithFallback(i: Initiative, l: string) {
-    if (l in i.initiative_translations) {
-        return i.initiative_translations[l]
-    }
-    return Object.entries(i.initiative_translations)[0][1]
-}
-
 export function initiativeLocationFeatureToGeoCoordinate(feature: Feature) {
     return new GeoCoordinate({'longitude': feature.geometry.coordinates[0], 'latitude': feature['geometry']['coordinates'][1]})
-}
-
-export function getTitleWithFallback(i: Initiative, l: string) {
-    return getTranslationWithFallback(i, l)['title']
-}
-
-export function getShortDescriptionWithFallback(i: Initiative, l: string) {
-    return getTranslationWithFallback(i, l)['short_description']
-}
-
-export function getDescriptionWithFallback(i: Initiative, l: string) {
-    return getTranslationWithFallback(i, l)['description']
 }
 
 function fetchFromDB(path : string) {
@@ -71,13 +60,14 @@ export async function fetchTags() : Promise<Tag[]> {
     return await response.json();
 }
 
+export async function fetchLanguages() : Promise<Language[]> {
+    return fetchFromDB('languages').then(r => r.json())
+}
+
 export async function fetchInitiatives() : Promise<Initiative[]> {
     const response = await fetchFromDB('initiatives');
     const json = await response.json()
-    return json.map((i:any) => {
-            i['tags'] = i['tags'].map((t : {slug:string}) => t['slug'])
-            return i
-        });
+    return json;
 }
 
 export async function fetchRegions() : Promise<Region[]> {
