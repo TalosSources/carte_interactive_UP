@@ -481,16 +481,52 @@ def process_business_rows(businessRows):
         importLocations(thisTranslationSK3, initiativeBase)
         return initiativeBase
 
+    Languages = {
+        'en' : {
+            'english' : 'english',
+            'native' : 'english',
+            'flag' : '🇬🇧',
+        },
+        'sv' : {
+            'english' : 'swedish',
+            'native' : 'svenska',
+            'flag' : '🇸🇪',
+        },
+        'de' : {
+            'english' : 'german',
+            'native' : 'deutsch',
+            'flag' : '🇩🇪',
+        },
+    }
+    def create_languages(code):
+        Default_Lang = 'en'
+        langs = website.models.Language
+        try:
+            return langs.objects.get(code=code)
+        except langs.DoesNotExist:
+            language = langs.objects.create(
+                code=code,
+                englishName=Languages[code]['english'],
+                nativeName=Languages[code]['native'],
+                flag=Languages[code]['flag'],
+                )
+            if code == Default_Lang:
+                language.default = 'd'
+            language.save()
+            return language
+
+
     def addTranslationToInitiativeBase(row, initiativeBase):
         wp_post_id = row[RJK_ID]
         lang_code = row[RJK_LANG]
+        lang_obj = create_languages(lang_code)
         title = row[RJK_TITLE][RJSK_RENDERED]
         afc = row[RJK_ACF]
         description = afc[RJSK_ACF_DESCRIPTION_ID]
         short_description = afc['short_description']
         new_title_obj = website.models.InitiativeTranslation(
             sk3_id=wp_post_id,
-            language_code=lang_code,
+            language=lang_obj,
             title=title,
             short_description=short_description,
             description=description,
