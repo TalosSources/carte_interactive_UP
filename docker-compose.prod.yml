@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgis/postgis:14-3.3  # This version was recommended "for new users" 2022-11-03
+    environment:
+      TZ: Europe/Stockholm
+      POSTGRES_PASSWORD: nwKnN7kgftitCpc  # TODO: Security, see "Docker secrets" https://hub.docker.com/_/postgres
+      POSTGRES_DB: smarta_kartan_db  # If not given, the db will be named after the admin user (probably "postgres")
+  api:
+    build: ./django-backend
+    environment:
+      - HOST=smartakartan.entrop.mywire.org
+      - SCHEME=https
+    depends_on:
+      - db
+
+  web:
+    build:
+      dockerfile: react-frontend/Dockerfile.reactprod
+    depends_on:
+      - api
+    ports:
+      - 80:80
+    volumes:
+      - ./gitver:/usr/share/index/html

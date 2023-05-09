@@ -76,12 +76,9 @@ deploy:
     - git reset --hard
     - git pull
     - git describe --long --all --dirty > gitver
-    - patch docker-compose.yml < compose-deploy.patch
-    - patch nginx.conf < nginx-deploy.patch
-    - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose down
     - sudo docker-compose rm
-    - sudo docker-compose up --build -d
+    - sudo docker-compose -f docker-compose.prod.yml up --build -d
     - sudo docker volume prune -f
     - sudo docker image prune -f
     - sudo docker container prune -f
