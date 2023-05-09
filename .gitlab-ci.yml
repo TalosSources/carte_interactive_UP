@@ -53,7 +53,6 @@ dryrun:
   script:
     - git describe --long --all --dirty > gitver
     - patch docker-compose.yml < compose-dryrun.patch
-    - patch nginx.conf < nginx-deploy.patch
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun up --build -d
     # needs to have some temporal difference to the start, so the db is prepared
