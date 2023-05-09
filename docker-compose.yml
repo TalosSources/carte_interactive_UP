@@ -19,7 +19,7 @@ services:
       POSTGRES_PASSWORD: nwKnN7kgftitCpc  # TODO: Security, see "Docker secrets" https://hub.docker.com/_/postgres
       POSTGRES_DB: smarta_kartan_db  # If not given, the db will be named after the admin user (probably "postgres")
   api:
-    build: .
+    build: ./django-backend
     environment:
       - HOST=localhost
       - SCHEME=http
