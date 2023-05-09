@@ -383,7 +383,7 @@ export default function Home() {
     }
 
     const TOP_TAGS_LIMIT = 10;
-    let top_tags = tags
+    const top_tags = tags
         .filter((tag: Tag) => tagEntropy[tag.slug] > 0)
     top_tags.sort(sortTagsByEntropy);
     const postSort = performance.now()
