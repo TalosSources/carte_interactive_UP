@@ -17,7 +17,8 @@ services:
 
   web:
     build:
-      dockerfile: react-frontend/Dockerfile.reactprod
+      context: ./react-frontend
+      dockerfile: Dockerfile.reactprod
     depends_on:
       - api
     ports:
