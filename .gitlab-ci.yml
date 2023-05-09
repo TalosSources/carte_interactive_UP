@@ -75,17 +75,17 @@ deploy:
     - git reset --hard
     - git pull
     - git describe --long --all --dirty > gitver
-    - sudo docker-compose down
-    - sudo docker-compose rm
+    - sudo docker-compose -f docker-compose.prod.yml down
+    - sudo docker-compose -f docker-compose.prod.yml rm
     - sudo docker-compose -f docker-compose.prod.yml up --build -d
     - sudo docker volume prune -f
     - sudo docker image prune -f
     - sudo docker container prune -f
     # needs to have some temporal difference to the start, so the db is prepared
     - sleep 20
-    - sudo docker-compose run api /code/manage.py setup_user --su -u admin -p "$ADMIN_PASS"
-    - sudo docker-compose run api /code/manage.py setup_user --ca -u curator -p "$CURATOR_PASS"
-    - sudo docker-compose run api /code/manage.py import_sk3_data
+    - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py setup_user --su -u admin -p "$ADMIN_PASS"
+    - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py setup_user --ca -u curator -p "$CURATOR_PASS"
+    - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py import_sk3_data
   environment:
     name: production
     url: https://smartakartan.entrop.mywire.org
