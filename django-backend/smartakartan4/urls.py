@@ -16,6 +16,8 @@ Including another URLconf
 import rest_framework.routers
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 from website import views
 
@@ -30,3 +32,6 @@ urlpatterns = [
     path('api/', include(router.urls)),  # API interface
     path('admin/', admin.site.urls),  # Admin interface
 ]
+urlpatterns += [
+    path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

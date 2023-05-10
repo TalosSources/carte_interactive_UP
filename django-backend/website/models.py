@@ -1,6 +1,7 @@
 from django.contrib.gis import geos
 from django.contrib.gis.db import models as gis_models
 from django.db import models
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 class Region(gis_models.Model):
@@ -81,7 +82,7 @@ class InitiativeTranslation(models.Model):
     language = models.ForeignKey(Language, related_name='language', on_delete=models.PROTECT)
     title = models.CharField(max_length=127)
     initiative = models.ForeignKey(Initiative, related_name='initiative_translations', on_delete=models.CASCADE)
-    description = models.TextField(max_length=32767)
+    description = CKEditor5Field(max_length=32767, config_name='defaultWithoutImages')
     short_description = models.TextField(max_length=1000)
 
     def __str__(self):
