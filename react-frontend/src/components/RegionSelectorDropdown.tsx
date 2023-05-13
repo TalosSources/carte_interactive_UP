@@ -24,7 +24,7 @@ const RegionSelectorDropdown = ({ regionList, activeRegionSlug, setActiveRegionS
             regionList.map(
                 (regionElement) => (
                      <a className="dropdown-item" 
-                     key={regionElement.id}
+                     key={regionElement.properties.slug}
                      onClick={() => {
                          setActiveRegionSlug(regionElement.properties.slug);
                         }

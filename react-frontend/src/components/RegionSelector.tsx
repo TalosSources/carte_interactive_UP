@@ -14,7 +14,7 @@ function RegionSelector({ value, handleSelectChange, regionList }: PropTypes) {
             {
                 regionList.map(
                     (regionElement) => (
-                        <option key={regionElement.id} value={regionElement.properties.slug}>
+                        <option key={regionElement.properties.slug} value={regionElement.properties.slug}>
                             {regionElement.properties.title}
                         </option>
                     )

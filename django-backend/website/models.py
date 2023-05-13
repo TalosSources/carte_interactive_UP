@@ -50,11 +50,11 @@ class Initiative(models.Model):
     main_image_url = models.URLField(null=True, blank=True)
     slug = models.SlugField(max_length=127, unique=True)
 
-    instagram = models.CharField(max_length=127, null=True)
-    facebook = models.CharField(max_length=255, null=True)
-    homepage = models.CharField(max_length=1023, null=True)
-    mail = models.CharField(max_length=127, null=True)
-    phone = models.CharField(max_length=127, null=True)
+    instagram = models.CharField(max_length=127, null=True, blank=True)
+    facebook = models.CharField(max_length=255, null=True, blank=True)
+    homepage = models.CharField(max_length=1023, null=True, blank=True)
+    mail = models.CharField(max_length=127, null=True, blank=True)
+    phone = models.CharField(max_length=127, null=True, blank=True)
 
     def __str__(self):
         return self.slug

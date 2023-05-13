@@ -33,7 +33,7 @@
      depends_on:
        - db
 -    volumes:
--      - ./:/code
+-      - ./django-backend:/code
    web:
      build: ./react-frontend
      depends_on:
