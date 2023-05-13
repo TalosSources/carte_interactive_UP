@@ -586,13 +586,17 @@ export default function Home() {
 
 function renderMapMarkers(initiatives: Initiative[]) {
     const {t} = useTranslation();
+    const icon : L.Icon<L.Icon.DefaultIconOptions> = new L.Icon.Default({iconUrl:'/marker-icon.png'})
     function feature2Marker(initiative: Initiative, feature: Feature, index: number) {
         const title = t('initiatives.'+initiative.slug+'.title')
         L.Icon.Default.imagePath="/"
         return (
             <Marker 
                 key={`m_${initiative.id}_${index}`}
-                position={[feature['geometry']['coordinates'][1], feature['geometry']['coordinates'][0]]}>
+                position={[feature['geometry']['coordinates'][1], feature['geometry']['coordinates'][0]]}
+                title={title}
+                icon={icon}
+                >
                 <Popup>
                     <a href={'/details/' + initiative.id}>{title}</a>
                 </Popup>
