@@ -135,7 +135,29 @@ class EnabledGestureHandling extends GestureHandling {
 L.Map.addInitHook("addHandler", "gestureHandling", EnabledGestureHandling);
 
 export default function Home() {
-    const homeStart = performance.now()
+    const timings : [string, number][]= []
+    function registerNow(label : string) {
+        timings.push([label, performance.now()])
+    }
+    function printTimings() {
+        let maxLength = 0;
+        for (const lt of timings) {
+            maxLength = Math.max(maxLength, lt[0].length)
+        }
+        console.log(`### Home-Timings ###`)
+        let lastTime = timings[0][1];
+        const startTime = timings[0][1];
+        for (const lt of timings) {
+            let label = lt[0];
+            const thisTime = lt[1]
+            for (let i=label.length; i<maxLength; i=i+1) {
+                label += ' '
+            }
+            console.log(`${label}: +${thisTime - lastTime}ms = ${thisTime - startTime}ms`)
+            lastTime = lt[1]
+        }
+    }
+    registerNow('Start')
 
     const navigate = useNavigate();
 
@@ -331,7 +353,7 @@ export default function Home() {
         return sortedInitiatives;
     }
 
-    const preInitiatives = performance.now()
+    registerNow('preInitiatives')
     let initiatives: Initiative[] = localizedInitiatives;
     if (initiativesToShow === WhatToShow.OnlyOnMap.value) {
         initiatives = initiatives.filter(initiativeInsideMap);
@@ -345,11 +367,11 @@ export default function Home() {
     if (sorting === Sorting.Alphabetical.value) {
         initiatives = sortInitiativesByName(initiatives);
     }
-    const preSearch = performance.now()
+    registerNow('preSearch')
     initiatives = initiatives
         .filter(initiativeMatchesCurrentSearch)
         .filter(initiativeMatchCurrentTags);
-    const postInitiatives = performance.now()
+    registerNow('postInitiatives')
 
     // Prepare tags
     /*
@@ -379,9 +401,9 @@ export default function Home() {
             }
         }));
     }
-    const preTags = performance.now()
+    registerNow('preTags')
     const tagEntropy = calculateTagEntropy(initiatives);
-    const postEntropy = performance.now()
+    registerNow('postEntropy')
     function sortTagsByEntropy(tag_a: Tag, tag_b: Tag) {
         return tagEntropy[tag_b.slug] - tagEntropy[tag_a.slug]
     }
@@ -390,12 +412,13 @@ export default function Home() {
     const top_tags = tags
         .filter((tag: Tag) => tagEntropy[tag.slug] > 0)
     top_tags.sort(sortTagsByEntropy);
-    const postSort = performance.now()
+    registerNow('postSort')
     // top_tags = top_tags.slice(0, TOP_TAGS_LIMIT) // Limit top tags
     console.log("top_tags", top_tags)
 
     //markers
     const mapMarkers = renderMapMarkers(initiatives);
+    registerNow('postRenderMarkers')
 
     function leafletToGeoCoordinate(leafletCoordinate: { lng:number; lat:number; }) {
         return new GeoCoordinate({'longitude' : leafletCoordinate['lng'], 'latitude': leafletCoordinate['lat']});
@@ -433,18 +456,9 @@ export default function Home() {
         }
     } 
 
-    const homeEnd = performance.now()
-    console.log(`### Home-Timings ###`)
-    console.log(`Start:               ${preInitiatives-homeStart}ms`)
-    console.log(`Initiatives prepare: ${preSearch-homeStart}ms`)
-    console.log(`Initiative searched: ${postInitiatives-homeStart}ms`)
-    console.log(`Initiatives done:    ${preTags-homeStart}ms`)
-    console.log(`Tag entropy calculat:${postEntropy-homeStart}ms`)
-    console.log(`Tags sorted:         ${postSort-homeStart}ms`)
-    console.log(`———————————————————————————————————————————`)
-    console.log(`Total:               ${homeEnd-homeStart}ms`)
+    registerNow('Pre final render')
 
-    return (
+    const result = (
         <>
             <NavBar
                 handleRegionChange={handleRegionChange}
@@ -563,6 +577,9 @@ export default function Home() {
             </MainContainer>
         </>
     );
+    registerNow('End')
+    printTimings()
+    return result;
 }
 
 // Helpers
