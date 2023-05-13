@@ -1,7 +1,6 @@
 import { GeoCoordinate } from "./Coordinate";
 
 export interface Region {
-    id : number;
     properties : {
         slug : string;
         title : string;
