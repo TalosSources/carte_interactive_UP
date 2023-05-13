@@ -1,22 +1,25 @@
+// React
 import React, {useState, useEffect} from "react";
-import { buildUrl } from 'build-url-ts';
-import {MapContainer, TileLayer, Marker, Popup, useMapEvent} from 'react-leaflet';
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 // import { GeoCoordinate, BoundingBox } from "geocoordinate";
 import styled from "styled-components";
 // import {useParams, useSearchParams} from "react-router-dom";
-import { GeoCoordinate } from "../Coordinate";
-import { GeoBoundingBox } from "../BoundingBox";
+import { createBrowserHistory } from "@remix-run/router";
 
-
+// Map
+import {MapContainer, TileLayer, Marker, Popup, useMapEvent} from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import "leaflet-gesture-handling";
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 import L, { LeafletEvent } from "leaflet";
-import {renderCardCollection} from "../Cards";
 import GestureHandling from "leaflet-gesture-handling";
-import { createBrowserHistory } from "@remix-run/router";
+import MarkerClusterGroup from 'react-leaflet-cluster'
 
+import { GeoCoordinate } from "../Coordinate";
+import { GeoBoundingBox } from "../BoundingBox";
+
+
+import {renderCardCollection} from "../Cards";
 import NavBar from "../components/NavBar";
 import FloatingTop from "../components/FloatingTop";
 import TopTagButton from "../components/TopTagButton";
@@ -25,8 +28,8 @@ import RegionSelectorDropdown from "../components/RegionSelectorDropdown";
 import SelectFromObject from "../components/SelectFromObject";
 import GetInvolved from "../components/GetInvolved";
 import HighlightInitiative from "../components/HighlightInitiative";
-import MarkerClusterGroup from 'react-leaflet-cluster'
 
+import { buildUrl } from 'build-url-ts';
 import useWindowSize from "../hooks/useWindowSize";
 
 import { useTranslation } from 'react-i18next';
