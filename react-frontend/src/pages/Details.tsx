@@ -80,8 +80,8 @@ export default function Details() {
     const {t}=useTranslation();
     return (
         <div>
-            <h2>Details page for Initiative</h2>
-            <h3>{t('initiatives.'+initiative.slug+'.title')}</h3>
+            <h2>{t('initiatives.'+initiative.slug+'.title')}</h2>
+            <a href={'/admin/website/initiative/'+initiative.id+'/change/'}>Edit</a><br/>
             <img src={initiative.main_image_url}/>
             <p dangerouslySetInnerHTML={{__html: "Description: " + t('initiatives.'+initiative.slug+'.description')}}></p>
             {renderTags(initiative, taggedInitiativMatching)}
