@@ -25,6 +25,7 @@ import RegionSelectorDropdown from "../components/RegionSelectorDropdown";
 import SelectFromObject from "../components/SelectFromObject";
 import GetInvolved from "../components/GetInvolved";
 import HighlightInitiative from "../components/HighlightInitiative";
+import MarkerClusterGroup from 'react-leaflet-cluster'
 
 import useWindowSize from "../hooks/useWindowSize";
 
@@ -547,8 +548,12 @@ export default function Home() {
                                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                 />
-                            {mapMarkers}
                             <RegisterMapCenter/>
+                            <MarkerClusterGroup
+                                chunkedLoading
+                            >
+                            {mapMarkers}
+                            </MarkerClusterGroup>
                         </MapContainer>
                     </RightSide>
                 </Sides>
