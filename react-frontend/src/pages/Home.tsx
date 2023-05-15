@@ -598,7 +598,7 @@ function renderMapMarkers(initiatives: Initiative[]) {
                 icon={icon}
                 >
                 <Popup>
-                    <a href={'/details/' + initiative.id}>{title}</a>
+                    <a href={'/details/' + initiative.slug}>{title}</a>
                 </Popup>
             </Marker>
         );

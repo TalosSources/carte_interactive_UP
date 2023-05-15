@@ -60,6 +60,8 @@ class InitiativeAdmin(admin.ModelAdmin):
 
     filter_horizontal = ("tags",)
     list_display = ["title_func", "slug"]
+    list_filter = ["region"]
+    search_fields = ["slug"]
     # TODO: Adding title_func for details view
     readonly_fields = ["slug"]
     #list_max_show_all = 1000
