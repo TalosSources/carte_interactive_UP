@@ -355,20 +355,6 @@ def importRegions():
         )
         new_obj.save()
 
-def importAddresses(region):
-    if region == GOTEBORG_R:
-        region = "gbg"
-    data_type_full_name = f"{ADDRESS_DT}_{region}"
-    addresses = getAllDataOf(data_type_full_name)
-    addresses = filter(lambda row: isPublished(row), addresses)
-    for resp_row in addresses:
-        wp_post_id = resp_row[RJK_ID]
-        try:
-            existing_obj = website.models.Location.objects.get(sk3_id=wp_post_id)
-            continue
-        except website.models.Location.DoesNotExist:
-            pass
-
 def importPages(region):
     data_type_full_name = f"{region}_{PAGE_DT}"
     pages = getAllDataOf(data_type_full_name)
@@ -404,7 +390,6 @@ def import_sk3_data(i_args: List[str]):
 
     #TODO for region in REGION_DATA_DICT.keys():
     for region in ["goteborg", "malmo"]:
-        #importAddresses(region)
         importPages(region)
         businessRows = importInitiatives(region)
         beforeBusiness = datetime.now()
@@ -462,7 +447,21 @@ def process_business_rows(businessRows):
                 result[(width, height)] = sizes[key]
         return result
 
+    def getInstagram(row):
+        return row['acf']['instagram_username']
+
     def createOrGetInitiativeBase(thisTranslationSK3):
+        def searchInDict(dict, key, fieldName, falsePositives=[]):
+            if key != '' and key in dict:
+                title = thisTranslationSK3[RJK_TITLE][RJSK_RENDERED]
+                initiativeBase = dict[key]
+                for falsePositive in falsePositives:
+                    if falsePositive in title.lower():
+                        logging.warn(f"Not connecting {title} with {initiativeBase.slug} based on equal {fieldName} because it's a hardcoded false positive.")
+                        return None
+                logging.warn(f"Connecting {title} with {initiativeBase.slug} based on equal {fieldName}.")
+                return initiativeBase
+
         thisTranslationSK3Id = thisTranslationSK3[RJK_ID]
         if thisTranslationSK3Id in initiativeBasesOfTranslations:
             return initiativeBasesOfTranslations[thisTranslationSK3Id]
@@ -476,6 +475,18 @@ def process_business_rows(businessRows):
                 return website.models.InitiativeTranslation.objects.get(sk3_id=translationId).initiative
             except:
                 pass
+        r = searchInDict(initiativeBasesByMainImage, getImageUrl(thisTranslationSK3), 'image url', ['fixoteket', 'plaskdammar'])
+        if not r is None:
+            return r
+        r = searchInDict(initiativeBasesByInstagram, getInstagram(thisTranslationSK3), 'instagram', ['allmänna'])
+        if not r is None:
+            return r
+        r = searchInDict(initiativeBasesByFB, getFB(thisTranslationSK3), 'facebook', ['allmänna'])
+        if not r is None:
+            return r
+        r = searchInDict(initiativeBasesByHomepage, getHomepage(thisTranslationSK3), 'homepage', ['allmänna', 'fixoteket'])
+        if not r is None:
+            return r
         initiativeBase = addNewBaseInitiative(thisTranslationSK3)
         registerInitiativeBase(initiativeBase, thisTranslationSK3)
         importLocations(thisTranslationSK3, initiativeBase)
@@ -537,6 +548,12 @@ def process_business_rows(businessRows):
         except:
             otherTitle = website.models.InitiativeTranslation.objects.get(sk3_id=wp_post_id)
             logging.info(f"Translation for initiative {title} {wp_post_id} in lang {lang_code} was already present. Bound to initiative {otherTitle.sk3_id}")
+        if lang_code == 'sv':
+            missingSvTranslation.discard(initiativeBase.slug)
+        elif lang_code == 'en':
+            missingEnTranslation.discard(initiativeBase.slug)
+        else:
+            logging.critical(f"Unknown language code {lang_code}")
 
     def checkRow(row):
         wp_post_id = row[RJK_ID]
@@ -545,15 +562,17 @@ def process_business_rows(businessRows):
         translations_dict = row[RJK_TRANSLATIONS]
         title = row[RJK_TITLE][RJSK_RENDERED]
 
-        if LANG_CODE_SV not in translations_dict:
-            logging.warning(f"Missing Swedish translation for {wp_post_id=}")
-        if LANG_CODE_EN not in translations_dict:
-            logging.warning(f"Missing English translation for {wp_post_id=}")
         if not description:
             logging.warning(f"WARNING: Description for {title} is empty")
             description = "-"
         if len(description) > 12000:
             logging.info(f"INFO: Description for {title} is very long: {len(description)} characters")
+
+    def getHomepage(row):
+        return row['acf']['website_url']
+
+    def getFB(row):
+        return row['acf']['facebook_url']
 
     def addNewBaseInitiative(row):
         def getPhone():
@@ -577,13 +596,13 @@ def process_business_rows(businessRows):
         mail = row['acf']['email']
         if len(mail)>127:
             print(f"Mail for {title} seems unreasonably long: '{mail}'")
-        facebook = row['acf']['facebook_url']
+        facebook = getFB(row)
         if len(facebook)>255:
             print(f"Facebook for {title} seems unreasonably long: '{facebook}'")
-        website_url = row['acf']['website_url']
+        website_url = getHomepage(row)
         if len(website_url)>511:
             print(f"Homepage-URL for {title} seems unreasonably long: '{website_url}'")
-        instagram = row['acf']['instagram_username']
+        instagram = getInstagram(row)
         if len(instagram)>127:
             print(f"Instagram for {title} seems unreasonably long: '{instagram}'")
         slug = generateNewSlug(title, website.models.Initiative) # TODO: Ideally, we want to have the english version
@@ -598,6 +617,12 @@ def process_business_rows(businessRows):
             facebook=facebook
         )
         new_initiative_obj.save()
+        translations_dict = row[RJK_TRANSLATIONS]
+
+        if LANG_CODE_SV not in translations_dict:
+            missingSvTranslation.add(new_initiative_obj.slug)
+        if LANG_CODE_EN not in translations_dict:
+            missingEnTranslation.add(new_initiative_obj.slug)
         for (imageSize, url) in getImageDict(row).items():
             width, height = imageSize
             website.models.InitiativeImage(width=width,height=height,
@@ -647,9 +672,20 @@ def process_business_rows(businessRows):
         translations_dict = row[RJK_TRANSLATIONS]
         for translationId in translations_dict.values():
             initiativeBasesOfTranslations[translationId] = initiativeBase
+        initiativeBasesByMainImage[getImageUrl(row)] = initiativeBase
+        initiativeBasesByInstagram[getInstagram(row)] = initiativeBase
+        initiativeBasesByFB[getFB(row)] = initiativeBase
+        initiativeBasesByHomepage[getHomepage(row)] = initiativeBase
 
     logging.debug("============= entered function process_business_rows")
     initiativeBasesOfTranslations = {} # : {sk3TranslationId : sk4InitiativeBaseObj}
+    initiativeBasesByMainImage = {}
+    initiativeBasesByInstagram = {}
+    initiativeBasesByFB = {}
+    initiativeBasesByHomepage = {}
+
+    missingEnTranslation = set([])
+    missingSvTranslation = set([])
 
     for row in businessRows:
         checkRow(row)
@@ -659,6 +695,8 @@ def process_business_rows(businessRows):
         if lang_code == 'en': # only take english tags for now
             tags = linkTags(row, initiativeBase)
         addTranslationToInitiativeBase(row, initiativeBase)
+    logging.warn(f"En translations missing for {missingEnTranslation}")
+    logging.warn(f"Sv translations missing for {missingSvTranslation}")
 
 def process_tagg_rows(tags):
 
