@@ -255,6 +255,8 @@ def getAllDataOf(dataTypeFullName):
         response_json = requestSK3API(dataTypeFullName, PER_PAGE, FIELDS, page_nr)  # -can be a list or a dict
         if response_json is None:
             break
+        if len(response_json) == 0:
+            break
 
         logging.debug(f"Number of rows: {len(response_json)}")
 
@@ -389,7 +391,7 @@ def import_sk3_data(i_args: List[str]):
     process_tagg_rows(tags)
 
     #TODO for region in REGION_DATA_DICT.keys():
-    for region in ["goteborg", "malmo", "stockholm"]:
+    for region in ["goteborg", "malmo", "stockholm", "global", "sjuharad"]:
         importPages(region)
         businessRows = importInitiatives(region)
         beforeBusiness = datetime.now()
@@ -452,8 +454,10 @@ def process_business_rows(businessRows):
 
     def createOrGetInitiativeBase(thisTranslationSK3):
         def searchInDict(dict, key, fieldName, falsePositives=[]):
-            #data_type_full_name = thisTranslationSK3[RJK_TYPE]
-            #region_name = data_type_full_name.split("_")[0]
+            data_type_full_name = thisTranslationSK3[RJK_TYPE]
+            region_name = data_type_full_name.split("_")[0]
+            if region_name == 'sjuharad':
+                return None
             if not key is None and key.strip() != '' and key in dict:
                 title = thisTranslationSK3[RJK_TITLE][RJSK_RENDERED]
                 initiativeBase = dict[key]
@@ -467,16 +471,17 @@ def process_business_rows(businessRows):
         thisTranslationSK3Id = thisTranslationSK3[RJK_ID]
         if thisTranslationSK3Id in initiativeBasesOfTranslations:
             return initiativeBasesOfTranslations[thisTranslationSK3Id]
-        translations_dict = thisTranslationSK3[RJK_TRANSLATIONS]
-        try:
-            return website.models.InitiativeTranslation.objects.get(sk3_id=thisTranslationSK3Id).initiative
-        except:
-            pass
-        for translationId in translations_dict.values():
+        if RJK_TRANSLATIONS in thisTranslationSK3:
+            translations_dict = thisTranslationSK3[RJK_TRANSLATIONS]
             try:
-                return website.models.InitiativeTranslation.objects.get(sk3_id=translationId).initiative
+                return website.models.InitiativeTranslation.objects.get(sk3_id=thisTranslationSK3Id).initiative
             except:
                 pass
+            for translationId in translations_dict.values():
+                try:
+                    return website.models.InitiativeTranslation.objects.get(sk3_id=translationId).initiative
+                except:
+                    pass
         r = searchInDict(initiativeBasesByMainImage, getImageUrl(thisTranslationSK3), 'image url', ['fixoteket', 'plaskdammar'])
         if not r is None:
             return r
@@ -484,7 +489,8 @@ def process_business_rows(businessRows):
          ['allmänna', 'solidarity fridge @ kulturhuset cyklopen'])
         if not r is None:
             return r
-        r = searchInDict(initiativeBasesByFB, getFB(thisTranslationSK3), 'facebook', ['allmänna'])
+        r = searchInDict(initiativeBasesByFB, getFB(thisTranslationSK3), 'facebook',
+         ['allmänna', ])
         if not r is None:
             return r
         r = searchInDict(initiativeBasesByHomepage, getHomepage(thisTranslationSK3), 'homepage',
@@ -535,7 +541,10 @@ def process_business_rows(businessRows):
 
     def addTranslationToInitiativeBase(row, initiativeBase):
         wp_post_id = row[RJK_ID]
-        lang_code = row[RJK_LANG]
+        if RJK_LANG in row:
+            lang_code = row[RJK_LANG]
+        else:
+            lang_code = 'en'
         lang_obj = create_languages(lang_code)
         title = row[RJK_TITLE][RJSK_RENDERED]
         afc = row[RJK_ACF]
@@ -571,8 +580,9 @@ def process_business_rows(businessRows):
         wp_post_id = row[RJK_ID]
         resp_row_afc = row[RJK_ACF]
         description = resp_row_afc[RJSK_ACF_DESCRIPTION_ID]
-        translations_dict = row[RJK_TRANSLATIONS]
         title = row[RJK_TITLE][RJSK_RENDERED]
+        if not RJK_TRANSLATIONS in row:
+            logging.warn(f"No translations for {title}?")
 
         if not description:
             logging.warning(f"WARNING: Description for {title} is empty")
@@ -633,12 +643,9 @@ def process_business_rows(businessRows):
             facebook=facebook
         )
         new_initiative_obj.save()
-        translations_dict = row[RJK_TRANSLATIONS]
 
-        if LANG_CODE_SV not in translations_dict:
-            missingSvTranslation.add(new_initiative_obj.slug)
-        if LANG_CODE_EN not in translations_dict:
-            missingEnTranslation.add(new_initiative_obj.slug)
+        missingSvTranslation.add(new_initiative_obj.slug)
+        missingEnTranslation.add(new_initiative_obj.slug)
         for (imageSize, url) in getImageDict(row).items():
             width, height = imageSize
             website.models.InitiativeImage(width=width,height=height,
@@ -685,9 +692,10 @@ def process_business_rows(businessRows):
         return all_tags_list
 
     def registerInitiativeBase(initiativeBase, row):
-        translations_dict = row[RJK_TRANSLATIONS]
-        for translationId in translations_dict.values():
-            initiativeBasesOfTranslations[translationId] = initiativeBase
+        if RJK_TRANSLATIONS in row:
+            translations_dict = row[RJK_TRANSLATIONS]
+            for translationId in translations_dict.values():
+                initiativeBasesOfTranslations[translationId] = initiativeBase
         initiativeBasesByMainImage[getImageUrl(row)] = initiativeBase
         initiativeBasesByInstagram[getInstagram(row)] = initiativeBase
         initiativeBasesByFB[getFB(row)] = initiativeBase
@@ -707,7 +715,11 @@ def process_business_rows(businessRows):
         checkRow(row)
 
         initiativeBase = createOrGetInitiativeBase(row)
-        lang_code = row[RJK_LANG]
+        if RJK_LANG in row:
+            lang_code = row[RJK_LANG]
+        else:
+            lang_code = 'en'
+            logging.critical(f"Initiative {initiativeBase.slug} does not have a language annotation.")
         if lang_code == 'en': # only take english tags for now
             tags = linkTags(row, initiativeBase)
         addTranslationToInitiativeBase(row, initiativeBase)
