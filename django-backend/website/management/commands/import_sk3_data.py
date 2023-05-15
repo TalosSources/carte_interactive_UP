@@ -389,7 +389,7 @@ def import_sk3_data(i_args: List[str]):
     process_tagg_rows(tags)
 
     #TODO for region in REGION_DATA_DICT.keys():
-    for region in ["goteborg", "malmo"]:
+    for region in ["goteborg", "malmo", "stockholm"]:
         importPages(region)
         businessRows = importInitiatives(region)
         beforeBusiness = datetime.now()
@@ -452,14 +452,16 @@ def process_business_rows(businessRows):
 
     def createOrGetInitiativeBase(thisTranslationSK3):
         def searchInDict(dict, key, fieldName, falsePositives=[]):
-            if key != '' and key in dict:
+            #data_type_full_name = thisTranslationSK3[RJK_TYPE]
+            #region_name = data_type_full_name.split("_")[0]
+            if not key is None and key.strip() != '' and key in dict:
                 title = thisTranslationSK3[RJK_TITLE][RJSK_RENDERED]
                 initiativeBase = dict[key]
                 for falsePositive in falsePositives:
                     if falsePositive in title.lower():
-                        logging.warn(f"Not connecting {title} with {initiativeBase.slug} based on equal {fieldName} because it's a hardcoded false positive.")
+                        logging.warn(f"Not connecting {title} with {initiativeBase.slug} based on equal {fieldName} {key} because it's a hardcoded false positive.")
                         return None
-                logging.warn(f"Connecting {title} with {initiativeBase.slug} based on equal {fieldName}.")
+                logging.warn(f"Connecting {title} with {initiativeBase.slug} based on equal {fieldName} {key}.")
                 return initiativeBase
 
         thisTranslationSK3Id = thisTranslationSK3[RJK_ID]
@@ -478,13 +480,17 @@ def process_business_rows(businessRows):
         r = searchInDict(initiativeBasesByMainImage, getImageUrl(thisTranslationSK3), 'image url', ['fixoteket', 'plaskdammar'])
         if not r is None:
             return r
-        r = searchInDict(initiativeBasesByInstagram, getInstagram(thisTranslationSK3), 'instagram', ['allmänna'])
+        r = searchInDict(initiativeBasesByInstagram, getInstagram(thisTranslationSK3), 'instagram',
+         ['allmänna', 'solidarity fridge @ kulturhuset cyklopen'])
         if not r is None:
             return r
         r = searchInDict(initiativeBasesByFB, getFB(thisTranslationSK3), 'facebook', ['allmänna'])
         if not r is None:
             return r
-        r = searchInDict(initiativeBasesByHomepage, getHomepage(thisTranslationSK3), 'homepage', ['allmänna', 'fixoteket'])
+        r = searchInDict(initiativeBasesByHomepage, getHomepage(thisTranslationSK3), 'homepage',
+         ['allmänna', 'fixoteket', 'historic clothes',
+          'lom', 'lappis', 'stockholm outdoor gyms',
+          ])
         if not r is None:
             return r
         initiativeBase = addNewBaseInitiative(thisTranslationSK3)
@@ -534,7 +540,13 @@ def process_business_rows(businessRows):
         title = row[RJK_TITLE][RJSK_RENDERED]
         afc = row[RJK_ACF]
         description = afc[RJSK_ACF_DESCRIPTION_ID]
+        if description is None:
+            logging.critical(f"Description for {title} is None. Fixing it for now.")
+            description = ''
         short_description = afc['short_description']
+        if short_description is None:
+            logging.critical(f"Short description for {title} is None. Fixing it for now.")
+            short_description = ''
         new_title_obj = website.models.InitiativeTranslation(
             sk3_id=wp_post_id,
             language=lang_obj,
@@ -594,17 +606,21 @@ def process_business_rows(businessRows):
         title = row[RJK_TITLE][RJSK_RENDERED]
         phone = getPhone()
         mail = row['acf']['email']
-        if len(mail)>127:
-            print(f"Mail for {title} seems unreasonably long: '{mail}'")
+        if not mail is None:
+            if len(mail)>127:
+                print(f"Mail for {title} seems unreasonably long: '{mail}'")
         facebook = getFB(row)
-        if len(facebook)>255:
-            print(f"Facebook for {title} seems unreasonably long: '{facebook}'")
+        if not facebook is None:
+            if len(facebook)>255:
+                print(f"Facebook for {title} seems unreasonably long: '{facebook}'")
         website_url = getHomepage(row)
-        if len(website_url)>511:
-            print(f"Homepage-URL for {title} seems unreasonably long: '{website_url}'")
+        if not website_url is None:
+            if len(website_url)>511:
+                print(f"Homepage-URL for {title} seems unreasonably long: '{website_url}'")
         instagram = getInstagram(row)
-        if len(instagram)>127:
-            print(f"Instagram for {title} seems unreasonably long: '{instagram}'")
+        if not instagram is None:
+            if len(instagram)>127:
+                print(f"Instagram for {title} seems unreasonably long: '{instagram}'")
         slug = generateNewSlug(title, website.models.Initiative) # TODO: Ideally, we want to have the english version
         new_initiative_obj = website.models.Initiative(
             region=region_obj,
