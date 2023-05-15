@@ -391,7 +391,7 @@ def import_sk3_data(i_args: List[str]):
     process_tagg_rows(tags)
 
     #TODO for region in REGION_DATA_DICT.keys():
-    for region in ["goteborg", "malmo", "stockholm", "global", "sjuharad"]:
+    for region in ["goteborg", "malmo", "stockholm", "global", "sjuharad", "gavle", "linkoping"]:
         importPages(region)
         businessRows = importInitiatives(region)
         beforeBusiness = datetime.now()
@@ -456,7 +456,9 @@ def process_business_rows(businessRows):
         def searchInDict(dict, key, fieldName, falsePositives=[]):
             data_type_full_name = thisTranslationSK3[RJK_TYPE]
             region_name = data_type_full_name.split("_")[0]
-            if region_name == 'sjuharad':
+            # Linköping seems to be well-maintained or just everthing in only one language
+            # sjuhäräd does not even have a language annotation!
+            if region_name in ['sjuharad', 'linkoping']:
                 return None
             if not key is None and key.strip() != '' and key in dict:
                 title = thisTranslationSK3[RJK_TITLE][RJSK_RENDERED]
@@ -482,20 +484,38 @@ def process_business_rows(businessRows):
                     return website.models.InitiativeTranslation.objects.get(sk3_id=translationId).initiative
                 except:
                     pass
-        r = searchInDict(initiativeBasesByMainImage, getImageUrl(thisTranslationSK3), 'image url', ['fixoteket', 'plaskdammar'])
+        r = searchInDict(initiativeBasesByMainImage, getImageUrl(thisTranslationSK3), 'image url',
+         ['fixoteket', 'plaskdammar',
+          'bomhus library',
+          'city library gävle',
+          'sätra library',
+          'valbo library',
+          'forsbacka library',
+          'hedesunda bibliotek'
+         ])
         if not r is None:
             return r
         r = searchInDict(initiativeBasesByInstagram, getInstagram(thisTranslationSK3), 'instagram',
-         ['allmänna', 'solidarity fridge @ kulturhuset cyklopen'])
+         ['allmänna', 'solidarity fridge @ kulturhuset cyklopen',
+          'cultivating with länsmuseet gävleborg',
+          'dospace drottningen',
+          'biståndsgruppen second hand gävle city',
+         ])
         if not r is None:
             return r
         r = searchInDict(initiativeBasesByFB, getFB(thisTranslationSK3), 'facebook',
-         ['allmänna', ])
+         ['allmänna',
+          'the red cross solidarity cabinet',
+          'dospace drottningen',
+         ])
         if not r is None:
             return r
         r = searchInDict(initiativeBasesByHomepage, getHomepage(thisTranslationSK3), 'homepage',
          ['allmänna', 'fixoteket', 'historic clothes',
           'lom', 'lappis', 'stockholm outdoor gyms',
+          'red cross city centre',
+          'the red cross solidarity cabinet',
+          'biståndsgruppen second hand gävle city',
           ])
         if not r is None:
             return r
@@ -544,7 +564,8 @@ def process_business_rows(businessRows):
         if RJK_LANG in row:
             lang_code = row[RJK_LANG]
         else:
-            lang_code = 'en'
+            #for sjuhäräd
+            lang_code = 'sv'
         lang_obj = create_languages(lang_code)
         title = row[RJK_TITLE][RJSK_RENDERED]
         afc = row[RJK_ACF]
