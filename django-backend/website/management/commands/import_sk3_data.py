@@ -743,11 +743,11 @@ def process_business_rows(businessRows):
         initiativeBase = createOrGetInitiativeBase(row)
         if RJK_LANG in row:
             lang_code = row[RJK_LANG]
+            if lang_code == 'sv': # only take swedish tags for now
+                tags = linkTags(row, initiativeBase)
         else:
-            lang_code = 'en'
-            logging.critical(f"Initiative {initiativeBase.slug} does not have a language annotation.")
-        if lang_code == 'en': # only take english tags for now
             tags = linkTags(row, initiativeBase)
+            logging.critical(f"Initiative {initiativeBase.slug} does not have a language annotation.")
         addTranslationToInitiativeBase(row, initiativeBase)
     logging.warn(f"En translations missing for {missingEnTranslation}")
     logging.warn(f"Sv translations missing for {missingSvTranslation}")
