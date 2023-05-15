@@ -51,7 +51,7 @@ class Initiative(models.Model):
     slug = models.SlugField(max_length=127, unique=True)
 
     instagram = models.CharField(max_length=127, null=True, blank=True)
-    facebook = models.CharField(max_length=255, null=True, blank=True)
+    facebook = models.CharField(max_length=1023, null=True, blank=True)
     homepage = models.CharField(max_length=1023, null=True, blank=True)
     mail = models.CharField(max_length=127, null=True, blank=True)
     phone = models.CharField(max_length=127, null=True, blank=True)

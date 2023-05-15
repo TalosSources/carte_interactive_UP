@@ -391,7 +391,7 @@ def import_sk3_data(i_args: List[str]):
     process_tagg_rows(tags)
 
     #TODO for region in REGION_DATA_DICT.keys():
-    for region in ["goteborg", "malmo", "stockholm", "global", "sjuharad", "gavle", "linkoping"]:
+    for region in ["goteborg", "malmo", "stockholm", "global", "sjuharad", "gavle", "linkoping", 'umea', 'karlstad']:
         importPages(region)
         businessRows = importInitiatives(region)
         beforeBusiness = datetime.now()
@@ -458,7 +458,8 @@ def process_business_rows(businessRows):
             region_name = data_type_full_name.split("_")[0]
             # Linköping seems to be well-maintained or just everthing in only one language
             # sjuhäräd does not even have a language annotation!
-            if region_name in ['sjuharad', 'linkoping']:
+            # Karlstad is completely in swedish
+            if region_name in ['sjuharad', 'linkoping', 'karlstad']:
                 return None
             if not key is None and key.strip() != '' and key in dict:
                 title = thisTranslationSK3[RJK_TITLE][RJSK_RENDERED]
@@ -491,7 +492,7 @@ def process_business_rows(businessRows):
           'sätra library',
           'valbo library',
           'forsbacka library',
-          'hedesunda bibliotek'
+          'hedesunda bibliotek',
          ])
         if not r is None:
             return r
@@ -622,7 +623,9 @@ def process_business_rows(businessRows):
             if 'phone_number' in row['acf']:
                 if 'phone' in row['acf'] and row['acf']['phone'] != '':
                     if (row['acf']['phone'] != row['acf']['phone_number']):
-                        logging.warn(f"Found inequal 'phone' and 'phone_number' entries for {title}.")
+                        phone = row['acf']['phone']
+                        phone_number = row['acf']['phone_number']
+                        logging.warn(f"Found inequal 'phone' {phone} and 'phone_number' {phone_number} entries for {title}.")
                 return row['acf']['phone_number']
             if 'phone' in row['acf']:
                 return row['acf']['phone']
@@ -639,11 +642,13 @@ def process_business_rows(businessRows):
         mail = row['acf']['email']
         if not mail is None:
             if len(mail)>127:
-                print(f"Mail for {title} seems unreasonably long: '{mail}'")
+                logging.warn(f"Mail for {title} seems unreasonably long: '{mail}'")
         facebook = getFB(row)
         if not facebook is None:
             if len(facebook)>255:
-                print(f"Facebook for {title} seems unreasonably long: '{facebook}'")
+                logging.warn(f"Facebook for {title} seems unreasonably long: '{facebook}' with length {len(facebook)}")
+            if len(facebook)>1023:
+                logging.critical(f"Facebook for {title} is too long: '{facebook}' with length {len(facebook)}")
         website_url = getHomepage(row)
         if not website_url is None:
             if len(website_url)>511:
