@@ -471,12 +471,12 @@ def process_business_rows(businessRows):
         thisTranslationSK3Id = thisTranslationSK3[RJK_ID]
         if thisTranslationSK3Id in initiativeBasesOfTranslations:
             return initiativeBasesOfTranslations[thisTranslationSK3Id]
+        try:
+            return website.models.InitiativeTranslation.objects.get(sk3_id=thisTranslationSK3Id).initiative
+        except:
+            pass
         if RJK_TRANSLATIONS in thisTranslationSK3:
             translations_dict = thisTranslationSK3[RJK_TRANSLATIONS]
-            try:
-                return website.models.InitiativeTranslation.objects.get(sk3_id=thisTranslationSK3Id).initiative
-            except:
-                pass
             for translationId in translations_dict.values():
                 try:
                     return website.models.InitiativeTranslation.objects.get(sk3_id=translationId).initiative
