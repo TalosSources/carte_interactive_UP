@@ -22,6 +22,7 @@ export interface Tag {
 
 export interface Feature {
     geometry:{coordinates: number[]};
+    properties:{title:string};
 }
 
 export interface Initiative {

@@ -1,10 +1,14 @@
 import React, {useState, useEffect} from "react";
-import {useParams} from "react-router-dom";
-import {renderCardCollection} from "../Cards";
-import { fetchInitiatives, fetchTags, Initiative, matchTagsWithInitiatives, Tag } from "../KesApi";
+import {Link, useParams} from "react-router-dom";
+import {renderCardCollection, renderCards} from "../Cards";
+import { Feature, fetchInitiatives, fetchTags, Initiative, matchTagsWithInitiatives, Tag } from "../KesApi";
 import { useTranslation } from "react-i18next";
-import '../i18n';
 import { registerInitiativeTranslations } from "../i18n";
+import L from "leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { GeoBoundingBox } from "../BoundingBox";
+import { initiativeLocationFeatureToGeoCoordinate } from "../KesApi";
+import { features } from "process";
 
 function renderTags(initiative : Initiative, tagsByInitiatives : Map<string, Tag[]>) {
     return <div id="tagPanel">
@@ -64,21 +68,88 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
     .slice(1,6)
     .map(([c,i]) => i);
     const taggedInitiativMatching = matchTagsWithInitiatives(initiatives, tags)
-    const renderedCards = renderCardCollection(similarInitiatives, taggedInitiativMatching, ()=>null, undefined);
+    const renderedCards = renderCards(similarInitiatives, new Map(), ()=>null, undefined);
 
     const {t}=useTranslation();
+    const mapMarkers = renderMapMarkers(initiative)
     return (
-        <div>
-            <h2>{t('initiatives.'+initiative.slug+'.title')}</h2>
-            <a href={'/admin/website/initiative/'+initiative.id+'/change/'}>Edit</a><br/>
-            <img src={initiative.main_image_url}/>
-            <p dangerouslySetInnerHTML={{__html: "Description: " + t('initiatives.'+initiative.slug+'.description')}}></p>
-            {renderTags(initiative, taggedInitiativMatching)}
-            <h3>You may also like</h3>
-            <div id="similarInitiativesCanvas">
-                {renderedCards}
-            </div>
-
+        <>
+        <div className="alert alert-danger" role="alert">
+            Warning! You are accessing unpublished content. Information might be inaccurate.
         </div>
+        <div className="row business-page">
+            <div className="col-md-8">
+                <article>
+                    <img className="col-md-8 img img-fluid" src={initiative.main_image_url}/>
+                    <div className="business-header">
+                        <h1>{t('initiatives.'+initiative.slug+'.title')}</h1>
+                        <a title="Edit initiative" id="edit-button" href={'/admin/website/initiative/'+initiative.id+'/change/'}><div id="pen">✎</div></a><br/>
+                    </div>
+                    <p dangerouslySetInnerHTML={{__html: t('initiatives.'+initiative.slug+'.description')}}></p>
+                </article>
+            </div>
+            <div className="col-md-4">
+                <MapContainer 
+                    id="details-map" 
+                    center={[59, 15]} 
+                    zoom={6} 
+                    scrollWheelZoom={false} 
+                >
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                    <ZoomToPoints initiative={initiative}/>
+                    {mapMarkers}
+                </MapContainer>
+                <ul>
+                {initiative.locations.features.map((feature) => <li>{feature.properties.title}</li>)}
+                </ul>
+                {renderTags(initiative, taggedInitiativMatching)}
+            </div>
+            <div id="suggestions">
+                <h3>You may also like</h3>
+                <div id="similarInitiativesCanvas">
+                    {renderedCards}
+                </div>
+            </div>
+        </div></>
     );
+}
+
+function ZoomToPoints({initiative } : {initiative : Initiative}) {
+    if (initiative.locations.features.length === 0) {
+        return null;
+    }
+    const bb = GeoBoundingBox.fromCoordinates(initiative.locations.features.map((feature) => initiativeLocationFeatureToGeoCoordinate(feature)))
+    const map = useMap();
+    map.fitBounds([
+        [bb.getTopLeft().getLatitude(), bb.getTopLeft().getLongitude()],
+        [bb.getBottomRight().getLatitude(), bb.getBottomRight().getLongitude()],
+    ])
+    //map.setZoom(Math.max(0, map.getZoom() - 1));
+    return null;
+}
+
+function renderMapMarkers(initiative: Initiative) {
+    const {t} = useTranslation();
+    const icon : L.Icon<L.Icon.DefaultIconOptions> = new L.Icon.Default({iconUrl:'/marker-icon.png'})
+    function feature2Marker(feature: Feature, index: number) {
+        const title = feature.properties.title;
+        L.Icon.Default.imagePath="/"
+        return (
+            <Marker 
+                key={`m_${index}`}
+                position={[feature['geometry']['coordinates'][1], feature['geometry']['coordinates'][0]]}
+                title={title}
+                icon={icon}
+                >
+                <Popup>
+                    {feature.properties.title}
+                </Popup>
+            </Marker>
+        );
+    }
+
+    return initiative.locations.features.map((feature, index) => feature2Marker(feature, index));
 }
