@@ -107,12 +107,16 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
                 </ul>
                 {renderTags(initiative, taggedInitiativMatching)}
             </div>
-            <div id="suggestions">
-                <h3>You may also like</h3>
-                <div id="similarInitiativesCanvas">
-                    {renderedCards}
-                </div>
-            </div>
+            {(()=>{
+                if (similarInitiatives.length > 0) {
+                    return <div id="suggestions">
+                        <h3>You may also like</h3>
+                        <div id="similarInitiativesCanvas" className="card-group">
+                            {renderedCards}
+                        </div>
+                    </div>
+                }
+            })()}
         </div></>
     );
 }
