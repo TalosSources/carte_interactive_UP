@@ -1,6 +1,6 @@
 // React
 import React, {useState, useEffect} from "react";
-import {useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 // import { GeoCoordinate, BoundingBox } from "geocoordinate";
 import styled from "styled-components";
 // import {useParams, useSearchParams} from "react-router-dom";
@@ -81,7 +81,9 @@ const Sides = styled.div`
 
 const LeftSide = styled.div`
     flex: 1;
-    max-height: 100vh;
+    @media (min-width: ${SMALL_SCREEN_WIDTH}px) {
+        max-height: 100vh;
+    }
     @media (max-width: ${SMALL_SCREEN_WIDTH}px) {
         order: 2;
         width: 100%;
@@ -438,32 +440,14 @@ export default function Home(
 
             <MainContainer>
                 <div>
-
-                <SearchRow className="d-flex flex-row w-100"
-                > 
-                    
-                    <RegionSelectorDropdown 
-                        regionList={regionList}
-                        activeRegionSlug={activeRegionSlug}
-                        setActiveRegionSlug={setActiveRegionSlug}
-                    ></RegionSelectorDropdown>
-
-                    <input
-                        className="form-control" 
-                        name="search" 
-                        value={searchString}
-                        onChange={event => setSearchString(event.target.value)}/>
-                </SearchRow>
-                <SelectFromObject 
-                    obj={WhatToShow}
-                    defaultValue={WhatToShow.Everything.value}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
-                />
-                <SelectFromObject 
-                    obj={Sorting}
-                    defaultValue={Sorting.Distance.value}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
-                 />
+                    <SearchRow className="d-flex flex-row w-100"
+                    > 
+                        <input
+                            className="form-control" 
+                            name="search" 
+                            value={searchString}
+                            onChange={event => setSearchString(event.target.value)}/>
+                    </SearchRow>
                  </div>
 
                 <TagContainer className="d-flex flex-row mb-2 mt-3 overflowX-scroll">
@@ -498,6 +482,16 @@ export default function Home(
                 <Sides>
 
                     <LeftSide>
+                        <SelectFromObject 
+                            obj={WhatToShow}
+                            defaultValue={WhatToShow.Everything.value}
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
+                        />
+                        <SelectFromObject 
+                            obj={Sorting}
+                            defaultValue={Sorting.Distance.value}
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
+                        />
                         <div id="cards-canvas">
                         {renderedCards}
                         </div>
