@@ -42,6 +42,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
         initiative_translations: [],
         published: true,
         promote:false,
+        region:'global',
     });
     const [tags, setTags] = useState<Tag[]>([]);
 

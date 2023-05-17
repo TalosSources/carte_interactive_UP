@@ -28,6 +28,7 @@ export interface Feature {
 export interface Initiative {
     id : number;
     slug : string;
+    region : string,
     tags : string[];
     locations : {features : Feature[]};
     main_image_url : string;

@@ -102,6 +102,7 @@ class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
     # https://www.django-rest-framework.org/api-guide/relations/#reverse-relations
     locations = LocationSerializer(many=True, read_only=True)
     tags = serializers.SlugRelatedField(slug_field='slug', many=True, read_only=True)
+    region = serializers.SlugRelatedField(slug_field='slug', read_only=True)
     initiative_translations = InitiativeTranslationSerializer(many=True, read_only=True)
     initiative_images = InitiativeImagesSerializer(many=True, read_only=True)
 
@@ -110,6 +111,7 @@ class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'slug', 'id',
             'locations', 'initiative_translations', 'tags',
+            'region',
             'initiative_images',
             'main_image_url',
             'facebook', 'instagram', 'phone', 'homepage', 'mail',

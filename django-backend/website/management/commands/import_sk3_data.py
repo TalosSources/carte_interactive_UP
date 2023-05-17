@@ -1,6 +1,7 @@
 import dataclasses
 import logging
 import sys
+import random
 import os
 from datetime import datetime
 from slugify import slugify
@@ -657,6 +658,10 @@ def process_business_rows(businessRows):
             if len(instagram)>127:
                 print(f"Instagram for {title} seems unreasonably long: '{instagram}'")
         slug = generateNewSlug(title, website.models.Initiative) # TODO: Ideally, we want to have the english version
+        if random.random() < 0.95:
+            promote=False
+        else:
+            promote=True
         new_initiative_obj = website.models.Initiative(
             region=region_obj,
             main_image_url=main_image_url,
@@ -667,7 +672,7 @@ def process_business_rows(businessRows):
             instagram=instagram,
             facebook=facebook,
             published=isPublished(row),
-            promote=False,
+            promote=promote,
         )
         new_initiative_obj.save()
 
