@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, Suspense} from "react";
 import {Link, useParams} from "react-router-dom";
 import {renderCardCollection, renderCards} from "../Cards";
 import { Feature, fetchTags, Initiative, matchTagsWithInitiatives, Tag } from "../KesApi";
@@ -48,6 +48,8 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
         phone: "",
         homepage: "",
         mail: "",
+        area: "",
+        online_only: false,
     });
     const [tags, setTags] = useState<Tag[]>([]);
 
@@ -102,6 +104,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
             }
         })()}
         <div className="row business-page">
+            <Suspense>
             <div className="col-md-8">
                 <article>
                     <DetailsMainImage className="col-md-8 img img-fluid" src={initiative.main_image_url}/>
@@ -182,7 +185,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
                 {initiative.locations.features.map((feature) => <li>{feature.properties.title}</li>)}
                 </ul>
                 {renderTags(initiative, taggedInitiativMatching)}
-            </div>
+            </div></Suspense>
             {(()=>{
                 if (similarInitiatives.length > 0) {
                     return <div id="suggestions">
