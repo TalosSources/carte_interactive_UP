@@ -16,6 +16,9 @@
 #map {
   height: 100vh;
 }
+#details-map {
+  height: 100%;
+}
 
 @media (max-width: 800px) {
   #map {
@@ -35,10 +38,6 @@ a:visited { text-decoration: none; }
 a:hover { text-decoration: none; }
 
 a:active { text-decoration: none; }
-.card-image {
-  width: 100%;
-  border-radius: 0.3em 0.3em 0 0;
-}
 ul {
   margin: 0pt;
   padding: 0pt;
@@ -79,6 +78,19 @@ div::-webkit-scrollbar {
   border-radius: 0.3em;
 }
 
+#tagPanel .proposedTag {
+  cursor: pointer;
+  /*float: left;*/
+  display: inline-block;
+  background-color: lightgrey;
+  margin: 0.2em;
+  padding: 0.2em;
+  border-radius: 1em;
+  border-style: solid;
+  border-color: grey;
+  border-width: 0.1em;
+  color: black;
+}
 .proposedTag {
   cursor: pointer;
   /*float: left;*/
@@ -91,9 +103,60 @@ div::-webkit-scrollbar {
 .tagValue {
   font-size:x-small;
 }
-#tagPanel {
-  clear: left;
-  overflow-x: scroll;
-  white-space: nowrap;
-  height: 3.5em;
+
+article h1 {
+  display: inline;
+}
+
+#edit-button {
+  top: 0.1em;
+  display: inline-block;
+  position: relative;
+  font-size: 2em;
+  width:1.2em;
+  height: 1.2em;
+  border-radius: 1.5em;
+  border: 0.03em;
+  border-style: solid;
+  color: rgb(196, 196, 196);
+  text-decoration: none;
+  margin-left: 1em;
+}
+#edit-button #pen {
+  position: relative;
+  top: -0.15em;
+  left: 0.1em;
+}
+#edit-button :hover {
+  color: black;
+}
+#similarInitiativesCanvas  {
+  overflow: auto;
+}
+#suggestions {
+  width: 100%;
+}
+#similarInitiativesCanvas > div {
+  display: inline-block;
+  width: 12em;
+}
+
+#unpublishedWarning {
+  background-color: rgb(231, 135, 140);
+  color:rgb(105, 12, 12);
+  border-color: rgb(252, 114, 114);
+  border-style: solid;
+  border-width: 0.05em;
+  border-radius: 0.2em;
+  padding: 0.5em;
+  margin: 1em;
+  text-align: center;
+  padding:1em;
+}
+
+.promotedInitiatives {
+  flex:2;
+}
+.promotedInitiatives div {
+  height: 100%;
 }

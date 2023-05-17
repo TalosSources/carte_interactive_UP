@@ -22,6 +22,7 @@ export interface Tag {
 
 export interface Feature {
     geometry:{coordinates: number[]};
+    properties:{title:string};
 }
 
 export interface Initiative {
@@ -30,6 +31,8 @@ export interface Initiative {
     tags : string[];
     locations : {features : Feature[]};
     main_image_url : string;
+    published : boolean;
+    promote : boolean;
     initiative_images : InitiativeImage[];
     initiative_translations : {
         language : string,

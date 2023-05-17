@@ -365,8 +365,7 @@ def importPages(region):
 
 def importInitiatives(region : str):
     data_type_full_name = f"{region}_{BUSINESS_DT}"
-    initiatives = response_json = getAllDataOf(data_type_full_name)
-    return list(filter(lambda row: isPublished(row), initiatives))
+    return getAllDataOf(data_type_full_name)
 
 def importTags():
     tags = response_json = getAllDataOf(TAGG_DT)
@@ -666,7 +665,9 @@ def process_business_rows(businessRows):
             phone=phone,
             homepage=website_url,
             instagram=instagram,
-            facebook=facebook
+            facebook=facebook,
+            published=isPublished(row),
+            promote=False,
         )
         new_initiative_obj.save()
 

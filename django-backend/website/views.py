@@ -30,11 +30,20 @@ class LocationViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     * https://www.paulox.net/2021/07/19/maps-with-django-part-2-geodjango-postgis-and-leaflet/
     """
 
+class InitiativeDetailsViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.InitiativeSerializer
+    def get_queryset(self):
+        queryset = models.Initiative.objects.all()
+        slug = self.request.query_params.get('slug')
+        if slug is not None:
+            queryset = queryset.filter(slug=slug)
+        return queryset
+
 
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.InitiativeSerializer
     def get_queryset(self):
-        queryset = models.Initiative.objects.all()
+        queryset = models.Initiative.objects.filter(published=True)
         slug = self.request.query_params.get('slug')
         if slug is not None:
             queryset = queryset.filter(slug=slug)

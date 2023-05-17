@@ -3,64 +3,61 @@ import styled from "styled-components";
 import sanitizeHtml from "sanitize-html";
 import {Initiative, Tag } from './KesApi';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import './constants';
 
 const CardContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    max-width: 100%;
-    max-height: 100%;
-    flex-wrap: wrap;
-    overflow: scroll; 
-
+    //gap: 0.5em;
+    //display: flex;
+    //flex-direction: row;
+    //max-width: 100%;
+    //flex-wrap: wrap;
 `;
 
 const Card = styled.div`
-    position: relative;
-    display: flex;
-    flex-direction: column
-    height: fit-content;
-    width: 30%;
-    min-width: 200px;
-    max-width: 300px;
-    max-height: 30rem;
-    background-color: beige;
-    margin: 0.5em;
-    padding: 0.1em;
-    border-radius: 0.3em;
+    //position: relative;
+    //flex: 1 10em;
+    height: 20em;
+    //background-color: beige;
+    //border-radius: 0.3em;
     overflow: hidden;
     // -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
     // -webkit-mask-repeat: no-repeat;
+    min-width: 10em;
 `;
 
 const CardImage = styled.img`
-    width: 100%;
+    //width: 100%;
+    height: 10em;
+    //border-radius: 0.3em 0.3em 0 0;
+    object-fit: cover;
 `;
 
 const CardTextContainer = styled.div`
-    padding: 0.5em;
+    //padding: 0.5em;
     // -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
     // -webkit-mask-repeat: no-repeat;
     
-    p {
-        padding: 0pt;
-        margin: 0pt;
-    }
+    //p {
+        //padding: 0pt;
+        //margin: 0pt;
+    //}
 `;
 
 const CardTitle = styled.h3`
     font-weight: bold;
     color: black;
-    padding: 0.2em;
-    font-size: medium;
+    //padding: 0.2em;
+    font-size: 0.9em;
 
 `;
 
 const CardDescription = styled.p`
-    font-size: 0.8em;
+    font-size: 0.7em;
     color: black;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
+    //display: -webkit-box;
+    //-webkit-line-clamp: 4;
+    //-webkit-box-orient: vertical;
     overflow: hidden;
 `;
 
@@ -71,8 +68,10 @@ const CardTagPanel = styled.div`
     left: 0;
     overflow-x: scroll;
     white-space: nowrap;
-    height: 2.5em;
+    //height: 2.5em;
     font-size: small;
+    padding:0pt;
+    width:100%;
 `;
 
 function SkCard(props: {key?: string; id: string; image_url: string; title: string; description: string; tags: Tag[], tagClick: ((clickedSlug: string) => void)}) {
@@ -81,17 +80,17 @@ function SkCard(props: {key?: string; id: string; image_url: string; title: stri
     
     const cleanDescription = sanitizeHtml(description, { allowedTags: []})
     return (
-        <Card>
-            <a href={'/details/' + id} 
-            style={{paddingBottom: tags?.length ? "2rem" : "0"}}
+        <Card className='card'>
+            <Link to={'/details/' + id} 
+            //style={{paddingBottom: tags?.length ? "2rem" : "0"}}
             >
-                <CardImage className="card-image" src={image_url}/>
-                <CardTextContainer className="card-text">
-                    <CardTitle>{title}</CardTitle>
-                    <CardDescription className="card-description">{cleanDescription}</CardDescription>
+                <CardImage className="card-image card-img-top" src={image_url}/>
+                <CardTextContainer className="card-body">
+                    <CardTitle className='card-title'>{title}</CardTitle>
+                    <CardDescription className="card-text card-description">{cleanDescription}</CardDescription>
                 </CardTextContainer>
-            </a>
-            <CardTagPanel className="cardTagPanel">
+            </Link>
+            <CardTagPanel className="cardTagPanel card-footer">
             {
                 tags.map((tagElement: Tag) => (
                     <div 
@@ -108,28 +107,6 @@ function SkCard(props: {key?: string; id: string; image_url: string; title: stri
     );
 }
 
-// export function renderCardCollection(initiatives, tagClick, tagSorting) {
-//     return <CardContainer>
-// =======
-//         <div>
-//         <a href={'/details/' + props.id}>
-//             <img className="card-image" src={props.image_url}/>
-//             <div className="card-text">
-//                 <div className="card-title" dangerouslySetInnerHTML={{__html: props.title}}></div>
-//                 <div className="card-description" dangerouslySetInnerHTML={{__html: props.description}}></div>
-//             </div>
-//         </a>
-//         <div className="cardTagPanel">
-//         {
-//             props.tags.map((tagElement) => (
-//                 <div className="proposedTag" onClick={() => props.tagClick(tagElement.slug)}>
-//                     <div dangerouslySetInnerHTML={{__html: tagElement.title}}></div>
-//                 </div>
-//             ))
-//         }</div></div>
-//     );
-// }
-
 function sortTagsByValue(tags : Tag[], values:{ [x: string]: number; }) {
     function sortTagsByValue(tag_a: Tag, tag_b: Tag) {
         return values[tag_b.slug] - values[tag_a.slug]
@@ -139,10 +116,9 @@ function sortTagsByValue(tags : Tag[], values:{ [x: string]: number; }) {
 
 }
 
-export function renderCardCollection(initiatives: Initiative[], tagsByInitiatives : Map<string, Tag[]>, tagClick: ((clickedSlug: string) => void), tagSorting: { [x: string]: number; } | undefined) {
+export function renderCards(initiatives: Initiative[], tagsByInitiatives : Map<string, Tag[]>, tagClick: ((clickedSlug: string) => void), tagSorting: { [x: string]: number; } | undefined) {
     const {t} = useTranslation();
-    return (<CardContainer>
-            {initiatives.map(
+    return (initiatives.map(
               (initiativeElement) => {
                 let top_tags = tagsByInitiatives.get(initiativeElement.slug)
                 if (typeof top_tags === 'undefined') {
@@ -166,5 +142,12 @@ export function renderCardCollection(initiatives: Initiative[], tagsByInitiative
                 );
               }
              )
-    }</CardContainer>)
+    )
+}
+
+export function renderCardCollection(initiatives: Initiative[], tagsByInitiatives : Map<string, Tag[]>, tagClick: ((clickedSlug: string) => void), tagSorting: { [x: string]: number; } | undefined) {
+    const {t} = useTranslation();
+    return (<CardContainer className='card-group'>
+            {renderCards(initiatives, tagsByInitiatives, tagClick, tagSorting)}
+            </CardContainer>)
 }

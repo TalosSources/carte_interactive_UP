@@ -1,4 +1,4 @@
-import i18next from "i18next";
+import i18next, { t } from "i18next";
 import I18nextBrowserLanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import { Initiative } from "./KesApi";
@@ -94,5 +94,15 @@ export function registerInitiativeTranslations(i : Initiative) {
             registerTranslation(i.initiative_translations[code].language, i.initiative_translations[code]);
         }
     }
+
+export function getTitle(initiative : Initiative) {
+    return t(('initiatives.'+initiative.slug+'.title'))
+}
+export function getShortDescription(initiative : Initiative) {
+    return t(('initiatives.'+initiative.slug+'.short_description'))
+}
+export function getDescription(initiative : Initiative) {
+    return t(('initiatives.'+initiative.slug+'.description'))
+}
 
 export default i18next;

@@ -46,9 +46,6 @@ export class GeoBoundingBox {
    * @returns {Object} GeoBoundingBox instance
    */
   static fromCoordinates(coordinates: GeoCoordinate[]) : GeoBoundingBox {
-    if (coordinates.length < 2) {
-      throw new RangeError('Not enough arguments passed to fromCoordinates');
-    }
     const instance = new GeoBoundingBox();
     for (let i = 0; i < coordinates.length; i++) {
       instance.pushCoordinate(coordinates[i]);

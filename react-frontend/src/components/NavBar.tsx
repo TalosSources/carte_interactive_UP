@@ -1,11 +1,11 @@
-import React from 'react';
-import RegionSelector from './RegionSelector';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SMALL_SCREEN_WIDTH } from '../constants';
 import useWindowSize from '../hooks/useWindowSize';
 import { Language, Region } from '../KesApi';
 import LanguageSelector from './LanguageSelector';
 import i18next from 'i18next';
+import { Link } from 'react-router-dom';
 
 const NavRight = styled.div`
     display: flex;
@@ -34,35 +34,16 @@ const NavItems = styled.ul`
 `;
 
 type PropTypes = {
-    handleRegionChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    activeRegionSlug: string;
-    regionList: Region[];
     languages:Language[];
 }
 
-const NavBar = ( { handleRegionChange, activeRegionSlug, regionList, languages }: PropTypes) => {
-
+const NavBar = ( { languages }: PropTypes) => {
+    const [language, setLanguage] = useState(i18next.language);
     const windowSize = useWindowSize();
     return ( 
-    <nav className="border-bottom border-bottom-5 border-primary d-flex flex-row align-items-center bg-white">
-        <img id="logo" src="/sk-logotype-topbar.png"/>
+    <nav className="navbar border-primary d-flex flex-row align-items-center bg-white">
+        <Link to="/"><img id="logo" src="/sk-logotype-topbar.png"/></Link>
         <div id="sk-title">Smartakartan <a href="/gitver">4.0</a> /
-        </div>
-        { windowSize.width > SMALL_SCREEN_WIDTH && 
-        <div id="regionSelector">
-            <RegionSelector
-                handleSelectChange={handleRegionChange}
-                value={activeRegionSlug}
-                regionList={regionList}
-                />
-        </div>
-        }
-        <div id="languageSelector">
-            <LanguageSelector
-                handleSelectChange={(e) => i18next.changeLanguage(e.target.value)}
-                value={i18next.language}
-                languages={languages}
-                />
         </div>
         <NavRight>
 
@@ -81,6 +62,13 @@ const NavBar = ( { handleRegionChange, activeRegionSlug, regionList, languages }
             }
             <NavItem><button className="btn">==</button></NavItem>
         </NavItems>
+        <div id="languageSelector">
+            <LanguageSelector
+                handleSelectChange={(e) => {i18next.changeLanguage(e.target.value); setLanguage(e.target.value);}}
+                value={language}
+                languages={languages}
+                />
+        </div>
         </NavRight>
     </nav>)
     
