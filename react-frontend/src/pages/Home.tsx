@@ -413,6 +413,11 @@ export default function Home(
             setActiveTags([...activeTags, tagSlug]);
         }
     } 
+    registerNow('Pre card render')
+    const renderedCards = renderCardCollection(
+                            initiatives,
+                            tagsByInitiatives,
+                            (clickedSlug) => {toggleActiveTag(clickedSlug)}, tagEntropy)
 
     registerNow('Pre final render')
 
@@ -494,10 +499,7 @@ export default function Home(
 
                     <LeftSide>
                         <div id="cards-canvas">
-                        {renderCardCollection(
-                            initiatives,
-                            tagsByInitiatives,
-                            (clickedSlug) => {toggleActiveTag(clickedSlug)}, tagEntropy)}
+                        {renderedCards}
                         </div>
                     </LeftSide>
                     <RightSide>
