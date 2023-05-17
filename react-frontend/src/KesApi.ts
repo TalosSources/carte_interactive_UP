@@ -60,6 +60,19 @@ export function initiativeLocationFeatureToGeoCoordinate(feature: Feature) {
     return new GeoCoordinate({'longitude': feature.geometry.coordinates[0], 'latitude': feature['geometry']['coordinates'][1]})
 }
 
+export function getSmallestImage(i: Initiative) {
+    let result=''
+    let resultSize = Number.MAX_VALUE
+    for (const image of i.initiative_images) {
+        const imageSize = image.height*image.width
+        if (imageSize < resultSize) {
+            result = image.url;
+            resultSize = imageSize;
+        }
+    }
+    return result;
+}
+
 function fetchFromDB(path : string) {
     const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/${path}/`;
     return fetch(tag_api_url, {credentials:'omit'});
