@@ -460,12 +460,6 @@ export default function Home() {
 
     const result = (
         <>
-            <NavBar
-                handleRegionChange={handleRegionChange}
-                activeRegionSlug={activeRegionSlug}
-                regionList={regionList}
-                languages={languages}
-            />
             <Header>
                     {(() => {
                         return (
