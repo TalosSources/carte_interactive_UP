@@ -57,6 +57,8 @@ class Initiative(models.Model):
     phone = models.CharField(max_length=127, null=True, blank=True)
     published = models.BooleanField(default=False)
     promote = models.BooleanField(default=False)
+    area = models.CharField(max_length=255, blank=True)
+    online_only = models.BooleanField()
 
     def __str__(self):
         return self.slug

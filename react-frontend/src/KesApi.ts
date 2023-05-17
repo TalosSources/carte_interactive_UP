@@ -46,6 +46,8 @@ export interface Initiative {
     phone:string,
     homepage:string,
     mail:string,
+    area:string,
+    online_only:boolean,
 }
 
 export interface InitiativeImage {

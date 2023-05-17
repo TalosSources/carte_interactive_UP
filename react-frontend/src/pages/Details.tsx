@@ -177,6 +177,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
                  }
                 }
                 )()}
+                <h4>{initiative.area}</h4>
                 <ul>
                 {initiative.locations.features.map((feature) => <li>{feature.properties.title}</li>)}
                 </ul>
