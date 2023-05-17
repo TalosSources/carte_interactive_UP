@@ -511,8 +511,8 @@ export default function Home(
                         </div>}
                         <MapContainer 
                             id="map" 
-                            center={[57.70, 11.97]} 
-                            zoom={10} 
+                            center={[59, 15]} 
+                            zoom={6} 
                             scrollWheelZoom={false} 
                         >
                             <TileLayer
