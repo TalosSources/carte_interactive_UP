@@ -424,6 +424,8 @@ export default function Home(
 
     registerNow('Pre final render')
 
+    const promotedInitiatives = [...localizedInitiatives,...globalInitiatives].filter((initiative) => initiative.promote)
+
     const result = (
         <>
             <Header>
@@ -435,7 +437,7 @@ export default function Home(
                     }
             </Header>
             {windowSize.width > SMALL_SCREEN_WIDTH && <FloatingTop>
-                <InitiativeCarousel promotedInitiatives={localizedInitiatives.slice(0,10)} />
+                <InitiativeCarousel promotedInitiatives={promotedInitiatives} />
                 { windowSize.width > MEDIUM_SCREEN_WIDTH ? <GetInvolved /> : <></>}
             </FloatingTop>}
 

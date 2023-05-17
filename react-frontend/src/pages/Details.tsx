@@ -39,18 +39,11 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
         locations:{features:[]},
         main_image_url: "",
         initiative_translations: [],
+        published: true,
     });
     const [tags, setTags] = useState<Tag[]>([]);
 
     useEffect(() => {
-        const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives?slug=` + initiativeSlug;
-        fetch(initiative_api_url)
-            .then(response => response.json())
-            .then(response_json => {
-                setInitiative(response_json[0]);
-            })
-            .catch(err => console.error(err));
-        // fetch tags
         fetchTags()
         .then(response_json => {
             console.log("tags", response_json);
@@ -61,6 +54,17 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
             setTags(tags);
             // remove invalid strings in activeTags
         });
+        window.scrollTo(0, 0)
+    }, []);
+    useEffect(() => {
+        const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiativeDetails?slug=` + initiativeSlug;
+        fetch(initiative_api_url)
+            .then(response => response.json())
+            .then(response_json => {
+                setInitiative(response_json[0]);
+                console.log(response_json)
+            })
+            .catch(err => console.error(err));
         window.scrollTo(0, 0)
     }, [initiativeSlug]);
 
@@ -82,9 +86,13 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
     const mapMarkers = renderMapMarkers(initiative)
     return (
         <>
-        <div className="alert alert-danger" role="alert">
-            Warning! You are accessing unpublished content. Information might be inaccurate.
-        </div>
+        {(()=>{
+            if (!initiative.published) {
+                return <div className="alert alert-danger" role="alert">
+                    Warning! You are accessing unpublished content. Information might be inaccurate.
+                </div>
+            }
+        })()}
         <div className="row business-page">
             <div className="col-md-8">
                 <article>

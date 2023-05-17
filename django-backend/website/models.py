@@ -55,6 +55,8 @@ class Initiative(models.Model):
     homepage = models.CharField(max_length=1023, null=True, blank=True)
     mail = models.CharField(max_length=127, null=True, blank=True)
     phone = models.CharField(max_length=127, null=True, blank=True)
+    published = models.BooleanField(default=False)
+    promote = models.BooleanField(default=False)
 
     def __str__(self):
         return self.slug
