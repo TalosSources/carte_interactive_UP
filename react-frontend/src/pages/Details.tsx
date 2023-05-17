@@ -8,6 +8,7 @@ import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import { GeoBoundingBox } from "../BoundingBox";
 import { initiativeLocationFeatureToGeoCoordinate } from "../KesApi";
 import styled from "styled-components";
+import { getDescription, getTitle } from "../i18n";
 
 const DetailsMainImage = styled.img`
     height: 20em;
@@ -40,6 +41,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
         main_image_url: "",
         initiative_translations: [],
         published: true,
+        promote:false,
     });
     const [tags, setTags] = useState<Tag[]>([]);
 
@@ -98,10 +100,10 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
                 <article>
                     <DetailsMainImage className="col-md-8 img img-fluid" src={initiative.main_image_url}/>
                     <div className="business-header">
-                        <h1>{t('initiatives.'+initiative.slug+'.title')}</h1>
+                        <h1>{getTitle(initiative)}</h1>
                         <a title="Edit initiative" id="edit-button" href={'/admin/website/initiative/'+initiative.id+'/change/'}><div id="pen">✎</div></a><br/>
                     </div>
-                    <p dangerouslySetInnerHTML={{__html: t('initiatives.'+initiative.slug+'.description')}}></p>
+                    <p dangerouslySetInnerHTML={{__html: getDescription(initiative)}}></p>
                 </article>
             </div>
             <div className="col-md-4">
