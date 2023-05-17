@@ -160,3 +160,7 @@ article h1 {
 .promotedInitiatives div {
   height: 100%;
 }
+
+.pr-3 {
+  padding-right: 1rem !important;
+}

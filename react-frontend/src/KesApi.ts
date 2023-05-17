@@ -41,6 +41,11 @@ export interface Initiative {
         short_description : string,
         description : string,
     }[];
+    facebook:string,
+    instagram:string,
+    phone:string,
+    homepage:string,
+    mail:string,
 }
 
 export interface InitiativeImage {
