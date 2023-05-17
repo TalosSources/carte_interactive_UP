@@ -81,9 +81,28 @@ class InitiativeImage(models.Model):
             models.UniqueConstraint(fields=['initiative', 'width', 'height'], name='max one image per size and initiative')
         ]
 
+class RegionPage(models.Model):
+    region = models.ForeignKey(Region, related_name='rp_region', on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=127)
+    order = models.IntegerField()
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['region', 'order'], name='order for region clear'),
+            models.UniqueConstraint(fields=['region', 'slug'], name='slug for region unique'),
+        ]
+
+class RegionPageTranslation(models.Model):
+    language = models.ForeignKey(Language, related_name='rp_language', on_delete=models.PROTECT)
+    description = CKEditor5Field(max_length=32767, config_name='defaultWithoutImages')
+    region_page = models.ForeignKey(RegionPage, on_delete=models.CASCADE)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['language', 'region_page'], name='only one translation per page'),
+        ]
+
 class InitiativeTranslation(models.Model):
     sk3_id = models.IntegerField(null=True, blank=True, unique=True)
-    language = models.ForeignKey(Language, related_name='language', on_delete=models.PROTECT)
+    language = models.ForeignKey(Language, related_name='it_language', on_delete=models.PROTECT)
     title = models.CharField(max_length=127)
     initiative = models.ForeignKey(Initiative, related_name='initiative_translations', on_delete=models.CASCADE)
     description = CKEditor5Field(max_length=32767, config_name='defaultWithoutImages')
