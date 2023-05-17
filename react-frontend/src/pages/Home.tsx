@@ -20,14 +20,11 @@ import { GeoBoundingBox } from "../BoundingBox";
 
 
 import {renderCardCollection} from "../Cards";
-import NavBar from "../components/NavBar";
 import FloatingTop from "../components/FloatingTop";
 import TopTagButton from "../components/TopTagButton";
 import OutlineButton from "../components/OutlineButton";
-import RegionSelectorDropdown from "../components/RegionSelectorDropdown";
 import SelectFromObject from "../components/SelectFromObject";
 import GetInvolved from "../components/GetInvolved";
-import HighlightInitiative from "../components/HighlightInitiative";
 
 import { buildUrl } from 'build-url-ts';
 import useWindowSize from "../hooks/useWindowSize";
@@ -36,8 +33,7 @@ import { useTranslation } from 'react-i18next';
 
 // Constants
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
-import { Feature, fetchInitiatives, fetchLanguages, fetchRegions, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, Language, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
-import { registerInitiativeTranslations } from "../i18n";
+import { Feature, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
 import { InitiativeCarousel } from "../components/Carousel";
 
 

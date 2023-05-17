@@ -18,7 +18,7 @@ export function Layout({regions} : {regions:Region[]}) {
 
             <Outlet />
 
-            <div id="footer" class="row">
+            <div id="footer" className="row">
                 <div id="footer-sk-kes" className='col-md-3'>
                     Smartakartan
                     by
