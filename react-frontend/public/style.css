@@ -17,16 +17,13 @@
   height: 100vh;
 }
 #details-map {
-  height: 100vh;
+  height: 100%;
 }
 
 @media (max-width: 800px) {
   #map {
     height: 30vh;
   }
-#details-map {
-  height: 80vh;
-}
 }
 
 
@@ -41,10 +38,6 @@ a:visited { text-decoration: none; }
 a:hover { text-decoration: none; }
 
 a:active { text-decoration: none; }
-.card-image {
-  width: 100%;
-  border-radius: 0.3em 0.3em 0 0;
-}
 ul {
   margin: 0pt;
   padding: 0pt;
@@ -138,7 +131,6 @@ article h1 {
   color: black;
 }
 #similarInitiativesCanvas  {
-  white-space: nowrap;
   overflow: auto;
 }
 #suggestions {

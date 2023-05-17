@@ -1,14 +1,21 @@
 import React, {useState, useEffect} from "react";
 import {Link, useParams} from "react-router-dom";
 import {renderCardCollection, renderCards} from "../Cards";
-import { Feature, fetchInitiatives, fetchTags, Initiative, matchTagsWithInitiatives, Tag } from "../KesApi";
+import { Feature, fetchTags, Initiative, matchTagsWithInitiatives, Tag } from "../KesApi";
 import { useTranslation } from "react-i18next";
-import { registerInitiativeTranslations } from "../i18n";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import { GeoBoundingBox } from "../BoundingBox";
 import { initiativeLocationFeatureToGeoCoordinate } from "../KesApi";
-import { features } from "process";
+import styled from "styled-components";
+
+const DetailsMainImage = styled.img`
+    height: 20em;
+    object-fit: cover;
+`;
+const DetailsMapView = styled.div`
+    height: 20em;
+`;
 
 function renderTags(initiative : Initiative, tagsByInitiatives : Map<string, Tag[]>) {
     return <div id="tagPanel">
@@ -81,7 +88,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
         <div className="row business-page">
             <div className="col-md-8">
                 <article>
-                    <img className="col-md-8 img img-fluid" src={initiative.main_image_url}/>
+                    <DetailsMainImage className="col-md-8 img img-fluid" src={initiative.main_image_url}/>
                     <div className="business-header">
                         <h1>{t('initiatives.'+initiative.slug+'.title')}</h1>
                         <a title="Edit initiative" id="edit-button" href={'/admin/website/initiative/'+initiative.id+'/change/'}><div id="pen">✎</div></a><br/>
@@ -90,19 +97,26 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
                 </article>
             </div>
             <div className="col-md-4">
-                <MapContainer 
-                    id="details-map" 
-                    center={[59, 15]} 
-                    zoom={6} 
-                    scrollWheelZoom={false} 
-                >
-                    <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                    <ZoomToPoints initiative={initiative}/>
-                    {mapMarkers}
-                </MapContainer>
+                {(() => {
+                 if (initiative.locations.features.length > 0) {
+                    return <DetailsMapView>
+                    <MapContainer 
+                        id="details-map" 
+                        center={[59, 15]} 
+                        zoom={6} 
+                        scrollWheelZoom={false} 
+                    >
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                        <ZoomToPoints initiative={initiative}/>
+                        {mapMarkers}
+                    </MapContainer>
+                    </DetailsMapView>
+                 }
+                }
+                )()}
                 <ul>
                 {initiative.locations.features.map((feature) => <li>{feature.properties.title}</li>)}
                 </ul>
@@ -132,7 +146,6 @@ function ZoomToPoints({initiative } : {initiative : Initiative}) {
         [bb.getTopLeft().getLatitude(), bb.getTopLeft().getLongitude()],
         [bb.getBottomRight().getLatitude(), bb.getBottomRight().getLongitude()],
     ])
-    //map.setZoom(Math.max(0, map.getZoom() - 1));
     return null;
 }
 
