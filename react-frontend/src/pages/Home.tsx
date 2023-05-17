@@ -33,7 +33,6 @@ import { buildUrl } from 'build-url-ts';
 import useWindowSize from "../hooks/useWindowSize";
 
 import { useTranslation } from 'react-i18next';
-import '../i18n';
 
 // Constants
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
@@ -134,7 +133,8 @@ class EnabledGestureHandling extends GestureHandling {
 }
 L.Map.addInitHook("addHandler", "gestureHandling", EnabledGestureHandling);
 
-export default function Home() {
+export default function Home(
+    {regionList, localizedInitiatives, globalInitiatives}:{regionList : Region[], localizedInitiatives:Initiative[], globalInitiatives:Initiative[]}) {
     const timings : [string, number][]= []
     function registerNow(label : string) {
         timings.push([label, performance.now()])
@@ -184,22 +184,15 @@ export default function Home() {
     }
     //console.log("UrlActiveTags")
     //console.log(urlActiveTags)
-    console.log(regionSlug);
-    const [localizedInitiatives, setLocalizedInitiatives] = useState<Initiative[]>([]);
-    const [globalInitiatives, setGlobalInitiatives] = useState<Initiative[]>([]);
     const [searchString, setSearchString] = useState(urlSearchString);
-    const [activeRegionSlug, setActiveRegionSlug] = useState(regionSlug);
     // const [activeRegion, setActiveRegion] = useState({properties: { welcome_message_html: ""}});
     const [activeTags, setActiveTags] = useState<string[]>(urlActiveTags);
-    const [regionList, setRegionList] = useState<Region[]>([]);
     const [mapCenter, setMapCenter] = useState(new GeoCoordinate({latitude: 50, longitude: 12}));
     const [mapBounds, setMapBounds] = useState(new GeoBoundingBox());
     const [sorting, setSorting] = useState(Sorting.Distance.value);
     const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value);
     const [tags, setTags] = useState<Tag[]>([]);
     const [tagsByInitiatives, setTagsByInitiatives] = useState<Map<string, Tag[]>>(new Map());
-    const [languages, setLanguages] = useState<Language[]>([]);
-
 
     const windowSize = useWindowSize();
     useEffect(() => {
@@ -218,10 +211,10 @@ export default function Home() {
         if (activeTags.length > 0) {
             queryParams.t = activeTags
         }
-        const newUrl = buildUrl({path:'/r/' + activeRegionSlug,
+        const newUrl = buildUrl({path:'/r/' + regionSlug,
                   queryParams: queryParams})
         history.replace(newUrl);
-    }, [activeRegionSlug, activeTags, searchString]);
+    }, [activeTags, searchString]);
 
     
     useEffect(() => {
@@ -236,41 +229,12 @@ export default function Home() {
             setTags(tags);
             // remove invalid strings in activeTags
         });
-        // fetch initial initiatives
-        fetchInitiatives()
-            .then(initiatives => {
-                const [global, local] = initiatives
-                    .reduce((result: Initiative[][], initiative: Initiative) => {
-                        result[initiative.locations.features.length > 0 ? 1 : 0].push(initiative);
-                        return result;
-                    },
-                    [[], []]);
-
-                setLocalizedInitiatives(local);
-                setGlobalInitiatives(global);
-                for (const i of initiatives) {
-                    registerInitiativeTranslations(i);
-                }
-            })
-            .catch(err => console.error(err));
-
-        // Fetch regions
-        fetchRegions()
-            .then(regions => {
-                console.log("regionList", regions);
-                setRegionList(regions);
-            }
-            )
-            .catch(err => console.error(err));
-        
-        fetchLanguages().then(l => setLanguages(l));
     }, []);
 
     const {t} = useTranslation();
 
     // refresh region
-    const region_slug = activeRegionSlug;
-    const region = regionList.filter((r: Region) => r['properties']['slug'] === region_slug);
+    const region = regionList.filter((r: Region) => r['properties']['slug'] === regionSlug);
     let activeReg;
     if (region.length == 0) {
         activeReg = { properties:{
@@ -438,12 +402,6 @@ export default function Home() {
         return null;
     }
 
-    const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const new_region_slug: string = e.target.value;
-        navigate('/r/' + new_region_slug);
-        setActiveRegionSlug(new_region_slug);
-    }
-
     const toggleActiveTag = (tagSlug: string) => {
         console.log(tagSlug)
         if (activeTags.find((ts: string) => tagSlug == ts)) {
@@ -592,7 +550,7 @@ function renderMapMarkers(initiatives: Initiative[]) {
                 icon={icon}
                 >
                 <Popup>
-                    <a href={'/details/' + initiative.slug}>{title}</a>
+                    <Link to={'/details/' + initiative.slug}>{title}</Link>
                 </Popup>
             </Marker>
         );

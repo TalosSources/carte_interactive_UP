@@ -18,7 +18,7 @@ function renderTags(initiative : Initiative, tagsByInitiatives : Map<string, Tag
     }</div>
 }
 
-export default function Details() {
+export default function Details({initiatives}:{initiatives : Initiative[]}) {
     const {initiativeSlug} = useParams();
 
     const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives?slug=` + initiativeSlug;
@@ -30,7 +30,6 @@ export default function Details() {
         main_image_url: "",
         initiative_translations: [],
     });
-    const [initiatives, setInitiatives] = useState<Initiative[]>([]);
     const [tags, setTags] = useState<Tag[]>([]);
 
     useEffect(() => {
@@ -38,16 +37,6 @@ export default function Details() {
             .then(response => response.json())
             .then(response_json => {
                 setInitiative(response_json[0]);
-            })
-            .catch(err => console.error(err));
-    }, []);
-    useEffect(() => {
-        fetchInitiatives()
-            .then(initiatives => {
-                setInitiatives(initiatives);
-                for (const i of initiatives) {
-                    registerInitiativeTranslations(i);
-                }
             })
             .catch(err => console.error(err));
         // fetch tags
