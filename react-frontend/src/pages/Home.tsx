@@ -38,6 +38,7 @@ import { useTranslation } from 'react-i18next';
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
 import { Feature, fetchInitiatives, fetchLanguages, fetchRegions, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, Language, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
 import { registerInitiativeTranslations } from "../i18n";
+import { InitiativeCarousel } from "../components/Carousel";
 
 
 const Header = styled.header`
@@ -434,7 +435,7 @@ export default function Home(
                     }
             </Header>
             {windowSize.width > SMALL_SCREEN_WIDTH && <FloatingTop>
-                <HighlightInitiative />
+                <InitiativeCarousel promotedInitiatives={localizedInitiatives.slice(0,10)} />
                 { windowSize.width > MEDIUM_SCREEN_WIDTH ? <GetInvolved /> : <></>}
             </FloatingTop>}
 

@@ -153,3 +153,10 @@ article h1 {
   text-align: center;
   padding:1em;
 }
+
+.promotedInitiatives {
+  flex:2;
+}
+.promotedInitiatives div {
+  height: 100%;
+}
