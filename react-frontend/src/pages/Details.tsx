@@ -25,7 +25,6 @@ function renderTags(initiative : Initiative, tagsByInitiatives : Map<string, Tag
 export default function Details({initiatives}:{initiatives : Initiative[]}) {
     const {initiativeSlug} = useParams();
 
-    const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives?slug=` + initiativeSlug;
     const [initiative, setInitiative] = useState<Initiative>({tags: [],
         id:0,
         initiative_images: [],
@@ -37,6 +36,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
     const [tags, setTags] = useState<Tag[]>([]);
 
     useEffect(() => {
+        const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiatives?slug=` + initiativeSlug;
         fetch(initiative_api_url)
             .then(response => response.json())
             .then(response_json => {
@@ -54,7 +54,8 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
             setTags(tags);
             // remove invalid strings in activeTags
         });
-    }, []);
+        window.scrollTo(0, 0)
+    }, [initiativeSlug]);
 
     const similarInitiatives = initiatives
     .map(function(initiativeB) : [number, Initiative] { 
