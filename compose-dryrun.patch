@@ -34,6 +34,8 @@
        - db
 -    volumes:
 -      - ./django-backend:/code
++    volumes:
++      - /var/lib/smartakartan/smartakartan-cd/cache:/code/cache
    web:
      build: ./react-frontend
      depends_on:
