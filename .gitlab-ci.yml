@@ -56,7 +56,7 @@ dryrun:
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun up --build -d
     # needs to have some temporal difference to the start, so the db is prepared
-    - sleep 20
+    - sleep 40
     - sudo docker-compose -p dryrun run api /code/manage.py import_sk3_data
     - sudo docker-compose -p dryrun run api /code/manage.py setup_user --su -u admin -p admin_pass
     - sudo docker-compose -p dryrun run api /code/manage.py setup_user --ca -u curator -p curator_pass
@@ -82,7 +82,7 @@ deploy:
     - sudo docker image prune -f
     - sudo docker container prune -f
     # needs to have some temporal difference to the start, so the db is prepared
-    - sleep 20
+    - sleep 40
     - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py setup_user --su -u admin -p "$ADMIN_PASS"
     - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py setup_user --ca -u curator -p "$CURATOR_PASS"
     - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py import_sk3_data
