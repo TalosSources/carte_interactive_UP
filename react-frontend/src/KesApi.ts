@@ -28,6 +28,7 @@ export interface Feature {
 export interface Initiative {
     id : number;
     slug : string;
+    region : string,
     tags : string[];
     locations : {features : Feature[]};
     main_image_url : string;
@@ -40,6 +41,13 @@ export interface Initiative {
         short_description : string,
         description : string,
     }[];
+    facebook:string,
+    instagram:string,
+    phone:string,
+    homepage:string,
+    mail:string,
+    area:string,
+    online_only:boolean,
 }
 
 export interface InitiativeImage {
@@ -50,6 +58,19 @@ export interface InitiativeImage {
 
 export function initiativeLocationFeatureToGeoCoordinate(feature: Feature) {
     return new GeoCoordinate({'longitude': feature.geometry.coordinates[0], 'latitude': feature['geometry']['coordinates'][1]})
+}
+
+export function getSmallestImage(i: Initiative) {
+    let result=''
+    let resultSize = Number.MAX_VALUE
+    for (const image of i.initiative_images) {
+        const imageSize = image.height*image.width
+        if (imageSize < resultSize) {
+            result = image.url;
+            resultSize = imageSize;
+        }
+    }
+    return result;
 }
 
 function fetchFromDB(path : string) {

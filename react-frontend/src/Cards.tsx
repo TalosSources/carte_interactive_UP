@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import styled from "styled-components";
 import sanitizeHtml from "sanitize-html";
-import {Initiative, Tag } from './KesApi';
+import {Initiative, Tag, getSmallestImage } from './KesApi';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import './constants';
@@ -135,7 +135,7 @@ export function renderCards(initiatives: Initiative[], tagsByInitiatives : Map<s
                             title={t('initiatives.'+initiativeElement.slug+'.title')}
                             id={initiativeElement.slug}
                             description={t('initiatives.'+initiativeElement.slug+'.short_description')}
-                            image_url={initiativeElement.main_image_url}
+                            image_url={getSmallestImage(initiativeElement)}
                             tags={top_tags}
                             tagClick={tagClick}
                         /></Suspense>

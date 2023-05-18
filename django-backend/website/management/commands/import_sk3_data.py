@@ -1,6 +1,7 @@
 import dataclasses
 import logging
 import sys
+import random
 import os
 from datetime import datetime
 from slugify import slugify
@@ -639,6 +640,15 @@ def process_business_rows(businessRows):
         title = row[RJK_TITLE][RJSK_RENDERED]
         phone = getPhone()
         mail = row['acf']['email']
+        area = row['acf']['area']
+        if area is None:
+            area = ''
+        if len(area)>64:
+            logging.warn(f"Area for {title} is very long ({len(area)}>64 characters): {area}")
+        online_only = row['acf']['online_only']
+        if online_only is None:
+            logging.critical(f"Online-only for {title} is undefined. Defaulting to not online only.")
+            online_only = False
         if not mail is None:
             if len(mail)>127:
                 logging.warn(f"Mail for {title} seems unreasonably long: '{mail}'")
@@ -657,6 +667,10 @@ def process_business_rows(businessRows):
             if len(instagram)>127:
                 print(f"Instagram for {title} seems unreasonably long: '{instagram}'")
         slug = generateNewSlug(title, website.models.Initiative) # TODO: Ideally, we want to have the english version
+        if random.random() < 0.95:
+            promote=False
+        else:
+            promote=True
         new_initiative_obj = website.models.Initiative(
             region=region_obj,
             main_image_url=main_image_url,
@@ -667,7 +681,9 @@ def process_business_rows(businessRows):
             instagram=instagram,
             facebook=facebook,
             published=isPublished(row),
-            promote=False,
+            promote=promote,
+            online_only=online_only,
+            area=area,
         )
         new_initiative_obj.save()
 

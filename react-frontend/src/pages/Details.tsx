@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, Suspense} from "react";
 import {Link, useParams} from "react-router-dom";
 import {renderCardCollection, renderCards} from "../Cards";
 import { Feature, fetchTags, Initiative, matchTagsWithInitiatives, Tag } from "../KesApi";
@@ -42,6 +42,14 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
         initiative_translations: [],
         published: true,
         promote:false,
+        region:'global',
+        facebook:"",
+        instagram: "",
+        phone: "",
+        homepage: "",
+        mail: "",
+        area: "",
+        online_only: false,
     });
     const [tags, setTags] = useState<Tag[]>([]);
 
@@ -96,12 +104,57 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
             }
         })()}
         <div className="row business-page">
+            <Suspense>
             <div className="col-md-8">
                 <article>
                     <DetailsMainImage className="col-md-8 img img-fluid" src={initiative.main_image_url}/>
                     <div className="business-header">
                         <h1>{getTitle(initiative)}</h1>
                         <a title="Edit initiative" id="edit-button" href={'/admin/website/initiative/'+initiative.id+'/change/'}><div id="pen">✎</div></a><br/>
+                    </div>
+                    <div className="btn-group mb-1 mt-2" role="group" aria-label="Link list">
+                        <ul className="list-group list-group-horizontal-sm">
+                            {(()=>{
+                                if (initiative.instagram) {
+                                    return <li className="list-group-item p-0 border-0">
+                                        <a href={"https://www.instagram.com/"+initiative.instagram} target="_blank" className="pr-3" aria-label="instagram link">
+                                            <i className="fa fa-instagram" aria-hidden="true"></i> Instagram
+                                        </a>
+                                    </li>
+                            }})()}
+                            {(()=>{
+                                if (initiative.facebook) {
+                                    return <li className="list-group-item p-0 border-0">
+                                        <a href={initiative.facebook} target="_blank" className="pr-3" aria-label="facebook link">
+                                            <i className="fa fa-facebook" aria-hidden="true"></i> Facebook
+                                        </a>
+                                    </li>
+                            }})()}
+                            {(()=>{
+                                if (initiative.homepage) {
+                                    return <li className="list-group-item p-0 border-0">
+                                        <a href={initiative.homepage} target="_blank" className="pr-3" aria-label="website link">
+                                            <i className="fa fa-link" aria-hidden="true"></i> Webbplats
+                                        </a>
+                                    </li>
+                            }})()}
+                            {(()=>{
+                                if (initiative.mail) {
+                                    return <li className="list-group-item p-0 border-0">
+                                        <a href={"mailto:"+initiative.mail} className="pr-3" aria-label="email">
+                                            <i className="fa fa-envelope" aria-hidden="true"></i> E-postadress
+                                        </a>
+                                    </li>
+                            }})()}
+                            {(()=>{
+                                if (initiative.phone) {
+                                    return <li className="list-group-item p-0 border-0">
+                                        <a href={"tel:"+initiative.phone} className="pr-3" aria-label="phone">
+                                            <i className="fa fa-phone" aria-hidden="true"></i> Phone
+                                        </a>
+                                    </li>
+                            }})()}
+                        </ul>
                     </div>
                     <p dangerouslySetInnerHTML={{__html: getDescription(initiative)}}></p>
                 </article>
@@ -127,11 +180,12 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
                  }
                 }
                 )()}
+                <h4>{initiative.area}</h4>
                 <ul>
                 {initiative.locations.features.map((feature) => <li>{feature.properties.title}</li>)}
                 </ul>
                 {renderTags(initiative, taggedInitiativMatching)}
-            </div>
+            </div></Suspense>
             {(()=>{
                 if (similarInitiatives.length > 0) {
                     return <div id="suggestions">

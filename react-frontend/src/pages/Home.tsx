@@ -124,6 +124,14 @@ const WhatToShow = {
     WithoutGlobal: {value: "3", text:"ui.hideGlobal"}
 }
 
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function shuffleArray<T>(array:T[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
 class EnabledGestureHandling extends GestureHandling {
     constructor(arg: L.Map) {
         super(arg)
@@ -420,7 +428,13 @@ export default function Home(
 
     registerNow('Pre final render')
 
-    const promotedInitiatives = [...localizedInitiatives,...globalInitiatives].filter((initiative) => initiative.promote)
+    let promotedInitiatives = [...localizedInitiatives,...globalInitiatives]
+        .filter((initiative) => initiative.promote)
+    if (regionSlug != 'global') {
+        promotedInitiatives = promotedInitiatives.filter((initiative)=>initiative.region === regionSlug)
+    }
+    shuffleArray(promotedInitiatives)
+    promotedInitiatives = promotedInitiatives.splice(0,10)
 
     const result = (
         <>
