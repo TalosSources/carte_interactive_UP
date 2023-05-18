@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import styled from "styled-components";
 import sanitizeHtml from "sanitize-html";
-import {Initiative, Tag } from './KesApi';
+import {Initiative, Tag, getSmallestImage } from './KesApi';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import './constants';
