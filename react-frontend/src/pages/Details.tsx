@@ -8,7 +8,7 @@ import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import { GeoBoundingBox } from "../BoundingBox";
 import { initiativeLocationFeatureToGeoCoordinate } from "../KesApi";
 import styled from "styled-components";
-import { getDescription, getTitle } from "../i18n";
+import { getDescription, getTitle, registerInitiativeTranslations } from "../i18n";
 
 const DetailsMainImage = styled.img`
     height: 20em;
@@ -72,7 +72,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
             .then(response => response.json())
             .then(response_json => {
                 setInitiative(response_json[0]);
-                console.log(response_json)
+                registerInitiativeTranslations(response_json[0])
             })
             .catch(err => console.error(err));
         window.scrollTo(0, 0)
