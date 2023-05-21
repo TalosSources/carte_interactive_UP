@@ -20,6 +20,7 @@ const translations : {[code:string] : {translation :
                 body : string,
                 button : string,
             },
+            unpublishedWarning: string,
         }
     }}} = 
 {
@@ -34,6 +35,7 @@ const translations : {[code:string] : {translation :
                         hideGlobal: "Hide global initiatives",
                         sortByDist: "Sort by distance",
                         sortAlpha: "Sort by alphabetically",
+                        unpublishedWarning: "Warning! You are viewing unpublished content. Information might be inaccurate.",
                         supportTheMap : {
                             headline : "Support the map!",
                             firstSentence : "Become a backer today!",
@@ -54,6 +56,7 @@ const translations : {[code:string] : {translation :
                         hideGlobal: "Dölj globala verksamheter",
                         sortByDist: "Sortera efter avstånd",
                         sortAlpha: "Sortera i alfabetisk ordning",
+                        unpublishedWarning: "Obs! Du tittar på icke-publicerat innehåll. Information might be inaccurate.",
                         supportTheMap : {
                             headline : "Supporta kartan!",
                             firstSentence : "Bli månadsgivare idag!",

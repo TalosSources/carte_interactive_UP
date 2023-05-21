@@ -99,7 +99,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
         {(()=>{
             if (!initiative.published) {
                 return <div className="alert alert-danger" role="alert">
-                    Warning! You are accessing unpublished content. Information might be inaccurate.
+                    t('ui.unpublishedWarning')
                 </div>
             }
         })()}
