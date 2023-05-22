@@ -99,7 +99,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
         {(()=>{
             if (!initiative.published) {
                 return <div className="alert alert-danger" role="alert">
-                    t('ui.unpublishedWarning')
+                    {t('ui.unpublishedWarning')}
                 </div>
             }
         })()}
