@@ -51,7 +51,7 @@ export function Layout({regions} : {regions:Region[]}) {
                 <div className="col-lg-2 col-md-2 col-xs-6 col-sm-3">
                     <ul className="list-unstyled">
                     <li><strong>Smartakartan</strong></li>
-                    <li><a href="https://forum.smartakartan.se" target="_blank" className="ng-scope">Forum</a></li>
+                    <li><a href="http://forum.smartakartan.se" target="_blank" className="ng-scope">Forum</a></li>
                     <li><a href="https://kollaborativekonomi.se" target="_blank" className="ng-scope">KES</a></li>
                     <li><a href="https://www.smartakartan.se/om-smarta-kartan" target="_blank" className="ng-scope">About the map</a></li>
                     <li><a href="https://www.smartakartan.se/vardegrund" target="_blank" className="ng-scope">Our values</a></li>
