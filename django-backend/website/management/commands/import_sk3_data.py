@@ -501,6 +501,7 @@ def process_business_rows(businessRows):
           'cultivating with länsmuseet gävleborg',
           'dospace drottningen',
           'biståndsgruppen second hand gävle city',
+          'reningsborg frölunda',
          ])
         if not r is None:
             return r
