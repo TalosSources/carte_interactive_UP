@@ -509,6 +509,7 @@ def process_business_rows(businessRows):
          ['allmänna',
           'the red cross solidarity cabinet',
           'dospace drottningen',
+          'reningsborg frölunda',
          ])
         if not r is None:
             return r
