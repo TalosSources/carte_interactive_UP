@@ -502,6 +502,7 @@ def process_business_rows(businessRows):
           'dospace drottningen',
           'biståndsgruppen second hand gävle city',
           'reningsborg frölunda',
+          'beyond retro',
          ])
         if not r is None:
             return r
@@ -510,6 +511,7 @@ def process_business_rows(businessRows):
           'the red cross solidarity cabinet',
           'dospace drottningen',
           'reningsborg frölunda',
+          'beyond retro',
          ])
         if not r is None:
             return r
