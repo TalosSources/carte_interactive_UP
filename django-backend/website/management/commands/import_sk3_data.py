@@ -493,16 +493,23 @@ def process_business_rows(businessRows):
           'valbo library',
           'forsbacka library',
           'hedesunda bibliotek',
+          'alelyckan',
          ])
         if not r is None:
             return r
         r = searchInDict(initiativeBasesByInstagram, getInstagram(thisTranslationSK3), 'instagram',
-         ['allmänna', 'solidarity fridge @ kulturhuset cyklopen',
+         ['allmänna',
+          'solidarity fridge @ kulturhuset cyklopen',
           'cultivating with länsmuseet gävleborg',
           'dospace drottningen',
           'biståndsgruppen second hand gävle city',
-          'reningsborg frölunda',
+          'reningsborg',
           'beyond retro',
+          'stadsmissionen',
+          'hos oss',
+          'frihet linn',
+          'alelyckan',
+          'mamas retro',
          ])
         if not r is None:
             return r
@@ -510,8 +517,11 @@ def process_business_rows(businessRows):
          ['allmänna',
           'the red cross solidarity cabinet',
           'dospace drottningen',
-          'reningsborg frölunda',
+          'reningsborg',
           'beyond retro',
+          'stadsmissionen',
+          'alelyckan',
+          'hos oss',
          ])
         if not r is None:
             return r
@@ -521,6 +531,10 @@ def process_business_rows(businessRows):
           'red cross city centre',
           'the red cross solidarity cabinet',
           'biståndsgruppen second hand gävle city',
+          'stadsmissionen',
+          'lindra second hand',
+          'alelyckan',
+          'hos oss',
           ])
         if not r is None:
             return r
@@ -593,8 +607,12 @@ def process_business_rows(businessRows):
         try:
             new_title_obj.save()
         except:
-            otherTitle = website.models.InitiativeTranslation.objects.get(sk3_id=wp_post_id)
-            logging.info(f"Translation for initiative {title} {wp_post_id} in lang {lang_code} was already present. Bound to initiative {otherTitle.sk3_id}")
+            try:
+                otherTitle = website.models.InitiativeTranslation.objects.get(sk3_id=wp_post_id)
+                logging.info(f"Exakt translation for initiative {title} {wp_post_id} in lang {lang_code} was already present")
+            except:
+                otherTitle = website.models.InitiativeTranslation.objects.get(initiative=initiativeBase, language=lang_obj)
+                logging.critical(f"Translation for initiative {title} {wp_post_id} in lang {lang_code} was already present. Bound to initiative {otherTitle.title} {otherTitle.sk3_id}")
         if lang_code == 'sv':
             missingSvTranslation.discard(initiativeBase.slug)
         elif lang_code == 'en':
