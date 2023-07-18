@@ -59,8 +59,8 @@ class InitiativeAdmin(admin.ModelAdmin):
         return representation
 
     filter_horizontal = ("tags",)
-    list_display = ["title_func", "slug"]
-    list_filter = ["region", "promote", "published"]
+    list_display = ["title_func", "slug", "short_comment"]
+    list_filter = ["region", "promote", "state", "needs_attention"]
     search_fields = ["slug"]
     # TODO: Adding title_func for details view
     readonly_fields = ["slug"]

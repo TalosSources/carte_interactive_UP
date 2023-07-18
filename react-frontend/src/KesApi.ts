@@ -32,7 +32,7 @@ export interface Initiative {
     tags : string[];
     locations : {features : Feature[]};
     main_image_url : string;
-    published : boolean;
+    state : string;
     promote : boolean;
     initiative_images : InitiativeImage[];
     initiative_translations : {

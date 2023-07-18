@@ -23,7 +23,7 @@ from website import views
 
 router = rest_framework.routers.DefaultRouter()
 router.register(r"initiatives", views.InitiativeViewSet, basename="initiative")
-router.register(r"initiativeDetails", views.InitiativeDetailsViewSet, basename="initiative")
+router.register(r"initiativeDetails", views.InitiativeDetailsViewSet, basename="initiativeDetails")
 router.register(r"regions", views.RegionViewSet, basename="region")
 router.register(r"tags", views.TagViewSet, basename="tag")
 router.register(r"languages", views.LanguageViewSet, basename="language")

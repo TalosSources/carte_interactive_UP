@@ -33,17 +33,21 @@ class LocationViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
 class InitiativeDetailsViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.InitiativeSerializer
     def get_queryset(self):
-        queryset = models.Initiative.objects.all()
         slug = self.request.query_params.get('slug')
         if slug is not None:
-            queryset = queryset.filter(slug=slug)
+            review_initiatives = models.Initiative.objects.filter(state="r", slug=slug)
+            published_initiatives = models.Initiative.objects.filter(state="p", slug=slug)
+        else:
+            review_initiatives = models.Initiative.objects.filter(state="r")
+            published_initiatives = models.Initiative.objects.filter(state="p")
+        queryset = review_initiatives.union(published_initiatives)
         return queryset
 
 
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.InitiativeSerializer
     def get_queryset(self):
-        queryset = models.Initiative.objects.filter(published=True)
+        queryset = models.Initiative.objects.filter(state="p")
         slug = self.request.query_params.get('slug')
         if slug is not None:
             queryset = queryset.filter(slug=slug)

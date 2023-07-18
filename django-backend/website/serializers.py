@@ -115,7 +115,7 @@ class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
             'initiative_images',
             'main_image_url',
             'facebook', 'instagram', 'phone', 'homepage', 'mail',
-            'published', 'promote',
+            'state', 'promote',
             'online_only', 'area',
         ]
 

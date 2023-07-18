@@ -40,7 +40,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
         locations:{features:[]},
         main_image_url: "",
         initiative_translations: [],
-        published: true,
+        state: 'p',
         promote:false,
         region:'global',
         facebook:"",
@@ -97,7 +97,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
     return (
         <>
         {(()=>{
-            if (!initiative.published) {
+            if (!(initiative.state === 'p')) {
                 return <div className="alert alert-danger" role="alert">
                     {t('ui.unpublishedWarning')}
                 </div>

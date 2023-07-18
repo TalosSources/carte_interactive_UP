@@ -55,10 +55,13 @@ class Initiative(models.Model):
     homepage = models.CharField(max_length=1023, null=True, blank=True)
     mail = models.CharField(max_length=127, null=True, blank=True)
     phone = models.CharField(max_length=127, null=True, blank=True)
-    published = models.BooleanField(default=False)
     promote = models.BooleanField(default=False)
     area = models.CharField(max_length=255, blank=True)
     online_only = models.BooleanField()
+    needs_attention = models.BooleanField()
+    state = models.CharField(max_length=1, choices=[("h", "hidden"), ("r", "only via permalink"), ("p", "published")])
+    short_comment = models.CharField(max_length=100, blank=True)
+    history = models.TextField(max_length=10000, blank=True)
 
     def __str__(self):
         return self.slug
