@@ -96,8 +96,10 @@ class RegionPage(models.Model):
 
 class RegionPageTranslation(models.Model):
     language = models.ForeignKey(Language, related_name='rp_language', on_delete=models.PROTECT)
+    title = models.CharField(max_length=127)
     description = CKEditor5Field(max_length=32767, config_name='defaultWithoutImages')
     region_page = models.ForeignKey(RegionPage, on_delete=models.CASCADE)
+    sk3_id = models.IntegerField(unique=True)
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['language', 'region_page'], name='only one translation per page'),
@@ -129,15 +131,3 @@ class Location(gis_models.Model):
 
     def __str__(self):
         return self.title
-
-
-"""
-class Page(models.Model):
-    title = models.CharField(max_length=127)
-    slug = models.SlugField(max_length=127)
-    html_ = models.CharField()
-    region = gis_models.ForeignKey(Region, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.title
-"""

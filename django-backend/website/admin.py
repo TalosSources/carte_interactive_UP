@@ -73,6 +73,18 @@ class RegionAdmin(gis_admin.GISModelAdmin):
     list_display = ("slug", "title")
     readonly_fields = ("sk3_id",)
 
+class RegionPageTranslationInline(admin.StackedInline):
+    # show_change_link = True
+    model = models.RegionPageTranslation
+    fields = ("language", "title", "description")
+    extra = 0  # -adds an extra row that is always visible
+    min_num = 1
+
+@gis_admin.register(models.RegionPage)
+class RegionPageAdmin(admin.ModelAdmin):
+    list_display = ("slug", "region", "order")
+    inlines = [RegionPageTranslationInline,]
+
 @gis_admin.register(models.Language)
 class LanguageAdmin(admin.ModelAdmin):
     @admin.display(description="English name")

@@ -276,64 +276,6 @@ def importRegions():
     regions = getAllDataOf(REGION_DT)
     regions = filter(lambda row: isPublished(row), regions)
     for resp_row in regions:
-
-        """
-        {'id': 19,
-         'date': '2020-01-09T12:05:16',
-         'date_gmt': '2020-01-09T12:05:16',
-         'guid': {
-            'rendered': 'http://sk-wp.azurewebsites.net/?post_type=region&#038;p=19'},
-            'modified': '2023-03-16T12:20:05',
-            'modified_gmt': '2023-03-16T12:20:05',
-            'slug': 'gothenburg',
-            'status': 'publish',
-            'type': 'region',
-            'link': 'https://sk-wp.azurewebsites.net/index.php/en/region/gothenburg/',
-            'title': {'rendered': 'Gothenburg'
-         },
-         'template': '',
-         'url_path': 'gothenburg',
-         'pages_api_path': 'goteborg_page',
-         'businesses_api_path': 'goteborg_business',
-         'language_code': 'en',
-         'welcome_message': '<h2>Explore the Gothenburg sharing initiatives that make it easy to rent, share, borrow, give and take!</h2>',
-         'region_menu_order': '30',
-         'hide': '0',
-         'acf': [],
-         'lang': 'en',
-         'translations': {
-           'en': 19,
-           'sv': 20
-         },
-         'pll_sync_post': [],
-         '_links': {
-           'self': [
-            {
-                'href': 'https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/region/19'}],
-                'collection': [{'href': 'https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/region'
-            }
-           ],
-           'about': [
-            {
-                'href': 'https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/types/region'
-            }
-           ],
-           'wp:attachment': [
-            {
-                'href': 'https://sk-wp.azurewebsites.net/index.php/wp-json/wp/v2/media?parent=19'
-            }
-           ],
-           'curies': [
-            {
-                'name': 'wp',
-                'href': 'https://api.w.org/{rel}',
-                'templated': True
-            }
-           ]
-         }
-        }
-        """
-
         logging.debug(resp_row)
         wp_post_id = resp_row[RJK_ID]
         try:
@@ -360,9 +302,63 @@ def importRegions():
 
 def importPages(region):
     data_type_full_name = f"{region}_{PAGE_DT}"
+    region_obj = website.models.Region.objects.get(slug=region)
     pages = getAllDataOf(data_type_full_name)
     pages = filter(lambda row: isPublished(row), pages)
-    logging.warning(f"INFO: Case (data type) not covered: {data_type_full_name=}. Continuing")
+    logging.warning(f"WIP: Case (data type) not covered: {data_type_full_name=}. Continuing")
+    order = 0
+
+    region_page_bases = {}
+
+    for page in pages:
+        if isinstance(page['page_type'], bool):
+            continue
+        if page['page_type'][0]['typename'] != 'MenuFullPage':
+            continue
+        wp_post_id = page['id']
+        order += 1
+        # try to find this translation
+        try:
+            website.models.RegionPageTranslation.objects.get(sk3_id=wp_post_id)
+            continue
+        except:
+            pass
+        regionPageBase = None
+        # try to find other translation
+        translations = page['translations']
+        for lang in translations:
+            try:
+                otherTranslation = website.models.RegionPageTranslation.objects.get(sk3_id=translations[lang])
+                regionPageBase = otherTranslation.region_page
+                break
+            except:
+                pass
+        # try to find hint from other translation
+        if wp_post_id in region_page_bases:
+            regionPageBase = wp_post_id
+        # maybe create new base
+        if regionPageBase is None:
+            slug = page['slug']
+            regionPageBase = website.models.RegionPage(
+                slug=slug,
+                order=order,
+                region=region_obj,
+            )
+            regionPageBase.save()
+
+        # add translation
+        lang = page['lang']
+        lang_obj = website.models.Language.objects.get(code=lang)
+        title = page['title']['rendered']
+        description = page['content']['rendered']
+        translation = website.models.RegionPageTranslation(
+            sk3_id=wp_post_id,
+            region_page=regionPageBase,
+            language=lang_obj,
+            title=title,
+            description=description,
+        )
+        translation.save()
 
 def importInitiatives(region : str):
     data_type_full_name = f"{region}_{BUSINESS_DT}"
