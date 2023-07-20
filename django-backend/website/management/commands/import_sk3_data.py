@@ -305,7 +305,6 @@ def importPages(region):
     region_obj = website.models.Region.objects.get(slug=region)
     pages = getAllDataOf(data_type_full_name)
     pages = filter(lambda row: isPublished(row), pages)
-    logging.warning(f"WIP: Case (data type) not covered: {data_type_full_name=}. Continuing")
     order = 0
 
     region_page_bases = {}
@@ -348,7 +347,7 @@ def importPages(region):
 
         # add translation
         lang = page['lang']
-        lang_obj = website.models.Language.objects.get(code=lang)
+        lang_obj = create_languages(lang)
         title = page['title']['rendered']
         description = page['content']['rendered']
         translation = website.models.RegionPageTranslation(
@@ -411,6 +410,40 @@ def clear_unused_tags_from_db() -> None:
                 break
         else:
             tag_obj.delete()
+
+def create_languages(code):
+    Languages = {
+        'en' : {
+            'english' : 'english',
+            'native' : 'english',
+            'flag' : '🇬🇧',
+        },
+        'sv' : {
+            'english' : 'swedish',
+            'native' : 'svenska',
+            'flag' : '🇸🇪',
+        },
+        'de' : {
+            'english' : 'german',
+            'native' : 'deutsch',
+            'flag' : '🇩🇪',
+        },
+    }
+    Default_Lang = 'en'
+    langs = website.models.Language
+    try:
+        return langs.objects.get(code=code)
+    except langs.DoesNotExist:
+        language = langs.objects.create(
+            code=code,
+            englishName=Languages[code]['english'],
+            nativeName=Languages[code]['native'],
+            flag=Languages[code]['flag'],
+            )
+        if code == Default_Lang:
+            language.default = 'd'
+        language.save()
+        return language
 
 def process_business_rows(businessRows):
     """
@@ -538,40 +571,6 @@ def process_business_rows(businessRows):
         registerInitiativeBase(initiativeBase, thisTranslationSK3)
         importLocations(thisTranslationSK3, initiativeBase)
         return initiativeBase
-
-    Languages = {
-        'en' : {
-            'english' : 'english',
-            'native' : 'english',
-            'flag' : '🇬🇧',
-        },
-        'sv' : {
-            'english' : 'swedish',
-            'native' : 'svenska',
-            'flag' : '🇸🇪',
-        },
-        'de' : {
-            'english' : 'german',
-            'native' : 'deutsch',
-            'flag' : '🇩🇪',
-        },
-    }
-    def create_languages(code):
-        Default_Lang = 'en'
-        langs = website.models.Language
-        try:
-            return langs.objects.get(code=code)
-        except langs.DoesNotExist:
-            language = langs.objects.create(
-                code=code,
-                englishName=Languages[code]['english'],
-                nativeName=Languages[code]['native'],
-                flag=Languages[code]['flag'],
-                )
-            if code == Default_Lang:
-                language.default = 'd'
-            language.save()
-            return language
 
 
     def addTranslationToInitiativeBase(row, initiativeBase):
