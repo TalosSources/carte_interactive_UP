@@ -1,3 +1,4 @@
+import internal from "stream";
 import { GeoCoordinate } from "./Coordinate";
 
 export interface Region {
@@ -5,6 +6,14 @@ export interface Region {
         slug : string;
         title : string;
         welcome_message_html: string;
+        rp_region: {
+            slug: string;
+            order: number;
+            rp_translations: {
+                language: string;
+                title: string;
+            }[]
+        }[]
     }
 }
 

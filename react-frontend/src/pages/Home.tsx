@@ -141,7 +141,7 @@ class EnabledGestureHandling extends GestureHandling {
 L.Map.addInitHook("addHandler", "gestureHandling", EnabledGestureHandling);
 
 export default function Home(
-    {regionList, localizedInitiatives, globalInitiatives}:{regionList : Region[], localizedInitiatives:Initiative[], globalInitiatives:Initiative[]}) {
+    {regionList, localizedInitiatives, globalInitiatives, setRegionSlug, regionSlug}:{regionList : Region[], localizedInitiatives:Initiative[], globalInitiatives:Initiative[], setRegionSlug:any, regionSlug:string}) {
     const timings : [string, number][]= []
     function registerNow(label : string) {
         timings.push([label, performance.now()])
@@ -168,10 +168,10 @@ export default function Home(
 
     const navigate = useNavigate();
 
-    let {regionSlug} = useParams();
     const [queryParameters] = useSearchParams()
-    if (typeof regionSlug == 'undefined') {
-        regionSlug = 'global';
+    const {regionSlugP} = useParams();
+    if (typeof regionSlugP !== 'undefined') {
+        setRegionSlug(regionSlugP)
     }
     let urlSearchString;
     if (queryParameters.has("s")) {

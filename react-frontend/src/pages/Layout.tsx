@@ -8,17 +8,27 @@ const Footer = styled.div`
     padding-top: 2rem;
 `
 
-export function Layout({regions} : {regions:Region[]}) {
+export function Layout({regions, regionSlug} : {regions:Region[], regionSlug:string}) {
     const [languages, setLanguages] = useState<Language[]>([]);
     useEffect(() => {
         fetchLanguages().then(l => setLanguages(l));
     }, []);
+    let activeRegion = regions.filter(r => r.properties.slug==regionSlug)[0]
+    if (regions.length === 0) {
+        activeRegion = {properties: {
+            slug:"",
+            title:"",
+            welcome_message_html: '',
+            rp_region: [ ],
+        },}
+    }
     return (
         <>
         <div className="container">
             <nav>
             <NavBar
                 languages={languages}
+                activeRegion={activeRegion}
             />
             </nav>
 

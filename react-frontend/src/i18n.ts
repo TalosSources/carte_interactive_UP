@@ -1,7 +1,7 @@
 import i18next, { t } from "i18next";
 import I18nextBrowserLanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import { Initiative } from "./KesApi";
+import { Initiative, Region } from "./KesApi";
 
 const translations : {[code:string] : {translation :
     {
@@ -97,6 +97,18 @@ export function registerInitiativeTranslations(i : Initiative) {
             registerTranslation(i.initiative_translations[code].language, i.initiative_translations[code]);
         }
     }
+
+export function registerRegionPageTitles(r : Region) {
+    for (const page of r.properties.rp_region) {
+        for (const translation of page.rp_translations) {
+            i18next.addResource(
+                translation.language,
+                'translation',
+                'region.'+r.properties.slug+'.'+page.slug+'.title',
+                translation.title)
+        }
+    }
+}
 
 export function getTitle(initiative : Initiative) {
     return t(('initiatives.'+initiative.slug+'.title'))

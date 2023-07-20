@@ -4,7 +4,7 @@ import { SMALL_SCREEN_WIDTH } from '../constants';
 import useWindowSize from '../hooks/useWindowSize';
 import { Language, Region } from '../KesApi';
 import LanguageSelector from './LanguageSelector';
-import i18next from 'i18next';
+import i18next, { t } from 'i18next';
 import { Link } from 'react-router-dom';
 
 const NavRight = styled.div`
@@ -35,9 +35,10 @@ const NavItems = styled.ul`
 
 type PropTypes = {
     languages:Language[];
+    activeRegion:Region,
 }
 
-const NavBar = ( { languages }: PropTypes) => {
+const NavBar = ( { languages, activeRegion }: PropTypes) => {
     const [language, setLanguage] = useState(i18next.language);
     const windowSize = useWindowSize();
     return ( 
@@ -49,18 +50,9 @@ const NavBar = ( { languages }: PropTypes) => {
 
         <NavItems className="nav-links">
             {windowSize.width > SMALL_SCREEN_WIDTH ? 
-            <>
-            <NavItem><a href="#"><span>AAAAAA</span></a></NavItem>
-            <NavItem>
-                <a href="#"><span>BBBBBB</span></a>
-            </NavItem>
-            <NavItem>
-                <a href="#"><span>Om oss (i)</span></a>
-            </NavItem>
-            </>
-            : null
+            activeRegion.properties.rp_region.map(rp => <NavItem><a href="#"><span>{t('region.'+activeRegion.properties.slug+'.'+rp.slug+'.title')}</span></a></NavItem>)
+            : <NavItem><button className="btn">==</button></NavItem>
             }
-            <NavItem><button className="btn">==</button></NavItem>
         </NavItems>
         <div id="languageSelector">
             <LanguageSelector
