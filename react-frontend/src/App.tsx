@@ -11,6 +11,7 @@ import { Initiative, Region, fetchInitiatives, fetchRegions } from './KesApi';
 import { registerInitiativeTranslations, registerRegionPageTitles } from './i18n';
 
 import './i18n'
+import RegionPage from './pages/RegionPage';
 
 
 export default function App() {
@@ -71,6 +72,7 @@ export default function App() {
                                                             setRegionSlug={setRegionSlug}
                                                             regionSlug={regionSlug}
                                                           />}/>
+                    <Route path="/r/:regionSlugP/:page" element={<RegionPage/>}/>
                     <Route path="*" element={<PageNotFound/>}/>
                 </Route>
             </Routes>

@@ -1,7 +1,7 @@
 import i18next, { t } from "i18next";
 import I18nextBrowserLanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import { Initiative, Region } from "./KesApi";
+import { Initiative, Region, RegionPage } from "./KesApi";
 
 const translations : {[code:string] : {translation :
     {
@@ -97,6 +97,16 @@ export function registerInitiativeTranslations(i : Initiative) {
             registerTranslation(i.initiative_translations[code].language, i.initiative_translations[code]);
         }
     }
+
+export function registerRegionPageDescription(rp : RegionPage, region:string, page:string) {
+    for (const translation of rp.rp_translations) {
+        i18next.addResource(
+            translation.language,
+            'translation',
+            'region.'+region+'.'+page+'.description',
+            translation.description)
+    }
+}
 
 export function registerRegionPageTitles(r : Region) {
     for (const page of r.properties.rp_region) {

@@ -84,6 +84,15 @@ class InitiativeImagesSerializer(serializers.ModelSerializer):
         model = models.InitiativeImage
         fields = ['width', 'height', 'url']
 
+class RegionPageSerializer(serializers.ModelSerializer):
+    rp_translations = serializers.SerializerMethodField()
+    def get_rp_translations(self, obj):
+        translations = models.RegionPageTranslation.objects.filter(region_page=obj)
+        return RegionPageTranslationSerializer(translations, many=True).data
+    class Meta:
+        model = models.RegionPage
+        fields = ['rp_translations']
+
 class RegionPageTitleSerializer(serializers.ModelSerializer):
     rp_translations = serializers.SerializerMethodField()
     def get_rp_translations(self, obj):
@@ -99,6 +108,11 @@ class RegionPageTranslationTitleSerializer(serializers.ModelSerializer):
         model = models.RegionPageTranslation
         fields = ['title', 'language']
 
+class RegionPageTranslationSerializer(serializers.ModelSerializer):
+    language = serializers.SlugRelatedField(read_only=True, slug_field='code')
+    class Meta:
+        model = models.RegionPageTranslation
+        fields = ['title', 'language', 'description']
 
 class RegionSerializer(gis_serializers.GeoFeatureModelSerializer):
     def get_rp_region(self, obj):

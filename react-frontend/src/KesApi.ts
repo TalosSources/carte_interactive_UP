@@ -65,8 +65,23 @@ export interface InitiativeImage {
     url : string;
 }
 
+export interface RegionPage {
+    rp_translations : {
+        language:string;
+        title:string;
+        description:string;
+    }[]
+}
+
 export function initiativeLocationFeatureToGeoCoordinate(feature: Feature) {
     return new GeoCoordinate({'longitude': feature.geometry.coordinates[0], 'latitude': feature['geometry']['coordinates'][1]})
+}
+
+export async function fetchRegionPage(region:string, page:string) : Promise<RegionPage[]> {
+    const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/regionPage?region=${region}&page=${page}`;
+    const response = await fetch(tag_api_url, {credentials:'omit'})
+    return response.json();
+
 }
 
 export function getSmallestImage(i: Initiative) {

@@ -50,7 +50,11 @@ const NavBar = ( { languages, activeRegion }: PropTypes) => {
 
         <NavItems className="nav-links">
             {windowSize.width > SMALL_SCREEN_WIDTH ? 
-            activeRegion.properties.rp_region.map(rp => <NavItem><a href="#"><span>{t('region.'+activeRegion.properties.slug+'.'+rp.slug+'.title')}</span></a></NavItem>)
+            activeRegion.properties.rp_region.map(rp => <NavItem>
+                <Link to={'/r/'+activeRegion.properties.slug+'/'+rp.slug}>
+                    {t('region.'+activeRegion.properties.slug+'.'+rp.slug+'.title')}
+                </Link>
+            </NavItem>)
             : <NavItem><button className="btn">==</button></NavItem>
             }
         </NavItems>

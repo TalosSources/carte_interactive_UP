@@ -43,6 +43,18 @@ class InitiativeDetailsViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
         queryset = review_initiatives.union(published_initiatives)
         return queryset
 
+class RegionPageViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.RegionPageSerializer
+    def get_queryset(self):
+        region_slug = self.request.query_params.get('region')
+        page_slug = self.request.query_params.get('page')
+        if region_slug is not None and page_slug is not None:
+            region_obj = models.Region.objects.filter(slug=region_slug)[0]
+            page = models.RegionPage.objects.filter(region=region_obj, slug=page_slug)
+            return page
+        else:
+            return None
+
 
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.InitiativeSerializer
