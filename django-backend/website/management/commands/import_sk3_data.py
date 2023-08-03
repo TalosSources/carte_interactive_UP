@@ -495,9 +495,9 @@ def process_business_rows(businessRows):
                 initiativeBase = dict[key]
                 for falsePositive in falsePositives:
                     if falsePositive in title.lower():
-                        logging.warn(f"Not connecting {title} with {initiativeBase.slug} based on equal {fieldName} {key} because it's a hardcoded false positive.")
+                        annotateToHistory(initiativeBase, f"Not connecting {title} to this initiatives. Both have equal {fieldName} {key}. But it's a hardcoded false positive.")
                         return None
-                logging.warn(f"Connecting {title} with {initiativeBase.slug} based on equal {fieldName} {key}.")
+                annotateToHistory(initiativeBase, f"Connecting {title} with this initiative based on equal {fieldName} {key}.")
                 return initiativeBase
 
         thisTranslationSK3Id = thisTranslationSK3[RJK_ID]
@@ -585,11 +585,11 @@ def process_business_rows(businessRows):
         afc = row[RJK_ACF]
         description = afc[RJSK_ACF_DESCRIPTION_ID]
         if description is None:
-            logging.critical(f"Description for {title} is None. Fixing it for now.")
+            annotateToHistory(initiativeBase, f"Description for {title} is None. Fixing it for now.")
             description = ''
         short_description = afc['short_description']
         if short_description is None:
-            logging.critical(f"Short description for {title} is None. Fixing it for now.")
+            annotateToHistory(initiativeBase, f"Short description for {title} is None. Fixing it for now.")
             short_description = ''
         new_title_obj = website.models.InitiativeTranslation(
             sk3_id=wp_post_id,
@@ -782,10 +782,17 @@ def process_business_rows(businessRows):
                 tags = linkTags(row, initiativeBase)
         else:
             tags = linkTags(row, initiativeBase)
-            logging.critical(f"Initiative {initiativeBase.slug} does not have a language annotation.")
+            annotateToHistory(initiativeBase, "[Critical Import] language annotation missing")
+            
         addTranslationToInitiativeBase(row, initiativeBase)
     logging.warn(f"En translations missing for {missingEnTranslation}")
     logging.warn(f"Sv translations missing for {missingSvTranslation}")
+
+def annotateToHistory(initiativeBase, message):
+    initiativeBase.needs_attention = True
+    prevHistory = initiativeBase.history
+    initiativeBase.history = message + "\n" + prevHistory
+    initiativeBase.save()
 
 def process_tagg_rows(tags):
 
