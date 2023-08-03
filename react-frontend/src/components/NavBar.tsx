@@ -44,8 +44,7 @@ const NavBar = ( { languages, activeRegion }: PropTypes) => {
     return ( 
     <nav className="navbar border-primary d-flex flex-row align-items-center bg-white">
         <Link to="/"><img id="logo" src="/sk-logotype-topbar.png"/></Link>
-        <div id="sk-title">Smartakartan <a href="/gitver">4.0</a> /
-        </div>
+        <div id="sk-title">Smartakartan</div>
         <NavRight>
 
         <NavItems className="nav-links">

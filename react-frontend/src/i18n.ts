@@ -21,6 +21,8 @@ const translations : {[code:string] : {translation :
                 button : string,
             },
             unpublishedWarning: string,
+            searchPlaceholder: string,
+            loadMoreCards: string,
         }
     }}} = 
 {
@@ -42,6 +44,8 @@ const translations : {[code:string] : {translation :
                             body : "We are an idealistic community that develops Smartakartan all over Sweden; and needs your help!",
                             button : "Help us grow",
                         },
+                        searchPlaceholder: "Search something you want to rent, swap, borrow, share, give or receive ...",
+                        loadMoreCards: "Load more cards",
                     },
                 },
             },
@@ -63,6 +67,8 @@ const translations : {[code:string] : {translation :
                             body : "Vi är en ideell förening som utvecklar Smarta Kartan över hela Sverige, och vi behöver din hjälp!",
                             button : "Hjälp oss att växa",
                         },
+                        searchPlaceholder: "Sök på något du vill hyra, byta, låna, dela, ge eller få...",
+                        loadMoreCards: "Ladda fler kort",
                     },
                 }
             },

@@ -14,7 +14,7 @@ const TopTagButton = ({ title, onClick, active}: { title: string, onClick: ((e: 
     return (
         <StyledButton 
         type="button" 
-        className={`btn mr-2 mt-2 ${active ? "btn-success": "bg-light"}`}
+        className={`btn mr-2 mt-2 ${active ? "btn-success": "bg-secondary text-light"}`}
         style={{minWidth: title && title.length > 15 ? "230px" : "150px"}} // Not really a great solution
         onClick={onClick}>
         <span></span>{title}

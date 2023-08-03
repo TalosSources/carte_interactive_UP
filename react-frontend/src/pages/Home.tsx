@@ -19,7 +19,7 @@ import { GeoCoordinate } from "../Coordinate";
 import { GeoBoundingBox } from "../BoundingBox";
 
 
-import {renderCardCollection} from "../Cards";
+import {RenderCardCollection} from "../Cards";
 import FloatingTop from "../components/FloatingTop";
 import TopTagButton from "../components/TopTagButton";
 import OutlineButton from "../components/OutlineButton";
@@ -35,6 +35,7 @@ import { useTranslation } from 'react-i18next';
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
 import { Feature, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
 import { InitiativeCarousel } from "../components/Carousel";
+import { Button } from "react-bootstrap";
 
 
 const Header = styled.header`
@@ -52,14 +53,10 @@ const Header = styled.header`
 `
 
 const MainContainer = styled.div`
-    background-color: indigo;
-    padding: 2rem;
-    padding-top: 50px;
+    padding-top: 10px;
     border-radius: 20px;
     display: flex: 
     flex-directon: column;
-    margin-left: 2rem;
-    margin-right: 2rem;
     @media (max-width: ${SMALL_SCREEN_WIDTH}px) {
         margin-left: 0;
         margin-right: 0;
@@ -200,6 +197,7 @@ export default function Home(
     const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value);
     const [tags, setTags] = useState<Tag[]>([]);
     const [tagsByInitiatives, setTagsByInitiatives] = useState<Map<string, Tag[]>>(new Map());
+    const [numberOfCards, setNumberOfCards] = useState<number>(16)
 
     const windowSize = useWindowSize();
     useEffect(() => {
@@ -379,13 +377,13 @@ export default function Home(
         return tagEntropy[tag_b.slug] - tagEntropy[tag_a.slug]
     }
 
-    const TOP_TAGS_LIMIT = 10;
-    const top_tags = tags
+    const TOP_TAGS_LIMIT = 6;
+    let top_available_tags = tags
         .filter((tag: Tag) => tagEntropy[tag.slug] > 0)
-    top_tags.sort(sortTagsByEntropy);
+    top_available_tags.sort(sortTagsByEntropy);
     registerNow('postSort')
-    // top_tags = top_tags.slice(0, TOP_TAGS_LIMIT) // Limit top tags
-    console.log("top_tags", top_tags)
+    top_available_tags = top_available_tags.slice(0, TOP_TAGS_LIMIT) // Limit top tags
+    console.log("top_tags", top_available_tags)
 
     //markers
     const mapMarkers = renderMapMarkers(initiatives);
@@ -436,20 +434,38 @@ export default function Home(
     shuffleArray(promotedInitiatives)
     promotedInitiatives = promotedInitiatives.splice(0,10)
 
+    let searchPlaceholder = t('ui.searchPlaceholder')
+    if (typeof searchPlaceholder === 'undefined') {
+        searchPlaceholder = 'Search something'
+    }
     const result = (
         <>
+            <MapContainer 
+                id="map" 
+                center={[59, 15]} 
+                zoom={6} 
+                scrollWheelZoom={false} 
+            >
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                <RegisterMapCenter/>
+                <MarkerClusterGroup
+                    chunkedLoading
+                >
+                {mapMarkers}
+                </MarkerClusterGroup>
+            </MapContainer>
+
             <Header>
                     {(() => {
                         return (
-                            <div dangerouslySetInnerHTML={{__html: activeReg.properties.welcome_message_html}} />
+                            <div id="welcomeMessage" dangerouslySetInnerHTML={{__html: activeReg.properties.welcome_message_html}} />
                         )
                     })()
                     }
             </Header>
-            {windowSize.width > SMALL_SCREEN_WIDTH && <FloatingTop>
-                <InitiativeCarousel promotedInitiatives={promotedInitiatives} />
-                { windowSize.width > MEDIUM_SCREEN_WIDTH ? <GetInvolved /> : <></>}
-            </FloatingTop>}
 
             <MainContainer>
                 <div>
@@ -458,6 +474,7 @@ export default function Home(
                         <input
                             className="form-control" 
                             name="search" 
+                            placeholder={searchPlaceholder}
                             value={searchString}
                             onChange={event => setSearchString(event.target.value)}/>
                     </SearchRow>
@@ -475,7 +492,7 @@ export default function Home(
                         })
                     }
                     {
-                        top_tags.map((tagElement: Tag) => (
+                        top_available_tags.map((tagElement: Tag) => (
                             <TopTagButton
                                 key={tagElement.title}
                                 title={tagElement.title}
@@ -490,51 +507,34 @@ export default function Home(
 
                 </TagContainer>
               
-
-                {/* This should be its own component, probably */}
-                <Sides>
-
-                    <LeftSide>
-                        <SelectFromObject 
-                            obj={WhatToShow}
-                            defaultValue={WhatToShow.Everything.value}
-                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
-                        />
-                        <SelectFromObject 
-                            obj={Sorting}
-                            defaultValue={Sorting.Distance.value}
-                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
-                        />
-                        <div id="cards-canvas">
-                        {renderedCards}
+                <div id="filters">
+                    <SelectFromObject 
+                        obj={WhatToShow}
+                        defaultValue={WhatToShow.Everything.value}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
+                    />
+                    <SelectFromObject 
+                        obj={Sorting}
+                        defaultValue={Sorting.Distance.value}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
+                    />
+                </div>
+                <div id="cards-canvas">
+                {renderedCards}
+                </div>
+                {(initiatives.length > numberOfCards) &&
+                     <div id="centerContainer">
+                        <Button
+                         id="loadMoreCardsButton"
+                         onClick={() => setNumberOfCards(numberOfCards + 16)}>
+                            {t('ui.loadMoreCards')}
+                        </Button>
                         </div>
-                    </LeftSide>
-                    <RightSide>
-
-                        {windowSize?.width > SMALL_SCREEN_WIDTH && <div className="d-flex flex-row">
-                            <OutlineButton onClick={() => console.log("Proposing new feature not implemented.")}>{t('ui.proposeInitiative')}</OutlineButton>
-                            <OutlineButton onClick={() => console.log("Becoming a volunteer not implemented.")}>{t('ui.becomeVolunteer')}</OutlineButton>
-                            <OutlineButton onClick={() => console.log("Starting something not implemented.")}>{t('ui.startAThing')}</OutlineButton>
-                        </div>}
-                        <MapContainer 
-                            id="map" 
-                            center={[59, 15]} 
-                            zoom={6} 
-                            scrollWheelZoom={false} 
-                        >
-                            <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                />
-                            <RegisterMapCenter/>
-                            <MarkerClusterGroup
-                                chunkedLoading
-                            >
-                            {mapMarkers}
-                            </MarkerClusterGroup>
-                        </MapContainer>
-                    </RightSide>
-                </Sides>
+                }
+                <div id="helpUsBox">
+                <a href="https://smartakartan.se/starta-verksamhet">
+                    <img src='/hjälpaOss.jpg' />
+                </a></div>
             </MainContainer>
         </>
     );

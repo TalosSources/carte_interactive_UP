@@ -50,7 +50,7 @@ ul {
 }
 #sk-title {
   float: left;
-  padding: 1.2em;
+  padding-left: 1.2em;
   font-size: larger;
   font-weight: bold;
 }
@@ -82,7 +82,7 @@ div::-webkit-scrollbar {
   cursor: pointer;
   /*float: left;*/
   display: inline-block;
-  background-color: lightgrey;
+  background-color: rgb(128, 128, 128);
   margin: 0.2em;
   padding: 0.2em;
   border-radius: 1em;
@@ -163,4 +163,35 @@ article h1 {
 
 .pr-3 {
   padding-right: 1rem !important;
+}
+
+#sk-root {
+  background-color: #fff;
+}
+
+#welcomeMessage h1 {
+  font-size: 1.5rem;
+}
+
+#loadMoreCardsButton {
+  margin: auto;
+  margin-top: 1rem;
+}
+
+#centerContainer {
+  width: 100%;
+  text-align: center;
+}
+
+#filters {
+  text-align: right;
+  margin-bottom: 0.6rem;
+}
+
+#helpUsBox {
+  width:100%;
+}
+#helpUsBox img {
+  width:100%;
+  margin-top: 1rem;
 }
