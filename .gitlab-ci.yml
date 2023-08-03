@@ -35,6 +35,8 @@ variables:
 dryrun:
   stage: test
   script:
+    - sudo docker-compose -p dryrun down
+    - sudo docker-compose -p dryrun rm
     - git describe --long --all --dirty > gitver
     - patch docker-compose.yml < compose-dryrun.patch
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
