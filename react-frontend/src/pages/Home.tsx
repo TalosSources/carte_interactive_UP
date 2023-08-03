@@ -19,7 +19,7 @@ import { GeoCoordinate } from "../Coordinate";
 import { GeoBoundingBox } from "../BoundingBox";
 
 
-import {RenderCardCollection} from "../Cards";
+import {renderCardCollection} from "../Cards";
 import FloatingTop from "../components/FloatingTop";
 import TopTagButton from "../components/TopTagButton";
 import OutlineButton from "../components/OutlineButton";
