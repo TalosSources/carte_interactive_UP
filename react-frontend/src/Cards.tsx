@@ -90,19 +90,6 @@ function SkCard(props: {key?: string; id: string; image_url: string; title: stri
                     <CardDescription className="card-text card-description">{cleanDescription}</CardDescription>
                 </CardTextContainer>
             </Link>
-            <CardTagPanel className="cardTagPanel card-footer">
-            {
-                tags.map((tagElement: Tag) => (
-                    <div 
-                        key={tagElement.slug}
-                        className="proposedTag" 
-                        onClick={() => tagClick(tagElement.slug)
-                        }>
-                        
-                        <div>{tagElement.title}</div>
-                    </div>
-                ))
-            }</CardTagPanel>
         </Card>
     );
 }

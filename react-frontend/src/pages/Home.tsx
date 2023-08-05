@@ -420,9 +420,9 @@ export default function Home(
     } 
     registerNow('Pre card render')
     const renderedCards = renderCardCollection(
-                            initiatives,
+                            initiatives.slice(0, numberOfCards),
                             tagsByInitiatives,
-                            (clickedSlug) => {toggleActiveTag(clickedSlug)}, tagEntropy)
+                            (clickedSlug:string) => {toggleActiveTag(clickedSlug)}, tagEntropy)
 
     registerNow('Pre final render')
 
