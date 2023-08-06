@@ -7,11 +7,9 @@ import { Link } from 'react-router-dom';
 import './constants';
 
 const CardContainer = styled.div`
-    //gap: 0.5em;
-    //display: flex;
-    //flex-direction: row;
-    //max-width: 100%;
-    //flex-wrap: wrap;
+    gap: 0.5em;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
 `;
 
 const Card = styled.div`
