@@ -4,3 +4,5 @@ cache/**
 *.code-workspace
 react-frontend/src/BoundingBox.js
 react-frontend/src/Coordinate.js
+cache/**
+django-backend/cache/**
