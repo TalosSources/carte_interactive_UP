@@ -7,37 +7,18 @@ import Details from "./pages/Details";
 import TagPage from "./pages/TagPage";
 import PageNotFound from "./pages/PageNotFound";
 import Sitemap from "./pages/Sitemap";
-import { Initiative, Region, fetchInitiatives, fetchRegions } from './KesApi';
-import { registerInitiativeTranslations, registerRegionPageTitles } from './i18n';
+import { Region, fetchRegions } from './KesApi';
+import { registerRegionPageTitles } from './i18n';
 
 import './i18n'
 import RegionPage from './pages/RegionPage';
+import { QueryBoundaries } from './QueryBoundary';
 
 
 export default function App() {
-    const [localizedInitiatives, setLocalizedInitiatives] = useState<Initiative[]>([]);
-    const [globalInitiatives, setGlobalInitiatives] = useState<Initiative[]>([]);
     const [regionList, setRegionList] = useState<Region[]>([]);
     const [regionSlug, setRegionSlug] = useState<string>('global');
     useEffect(() => {
-        // fetch initial initiatives
-        fetchInitiatives()
-            .then(initiatives => {
-                const [global, local] = initiatives
-                    .reduce((result: Initiative[][], initiative: Initiative) => {
-                        result[initiative.locations.features.length > 0 ? 1 : 0].push(initiative);
-                        return result;
-                    },
-                    [[], []]);
-
-                setLocalizedInitiatives(local);
-                setGlobalInitiatives(global);
-                for (const i of initiatives) {
-                    registerInitiativeTranslations(i);
-                }
-            })
-            .catch(err => console.error(err));
-
         // Fetch regions
         fetchRegions()
             .then(regions => {
@@ -57,18 +38,14 @@ export default function App() {
                 <Route path="/" element={<Layout regions={regionList} regionSlug={regionSlug}/>}>
                     <Route index element={<Home
                                              regionList={regionList}
-                                             localizedInitiatives={localizedInitiatives}
-                                             globalInitiatives={globalInitiatives}
                                              setRegionSlug={setRegionSlug}
                                              regionSlug={regionSlug}
                                            />}/>
-                    <Route path="/details/:initiativeSlug" element={<Details initiatives={[...localizedInitiatives, ...globalInitiatives]}/>}/>
+                    <Route path="/details/:initiativeSlug" element={<QueryBoundaries><Details/></QueryBoundaries>}/>
                     <Route path="/sitemap" element={<Sitemap/>}/>
                     <Route path="/tag/:tagId" element={<TagPage/>}/>
                     <Route path="/r/:regionSlugP" element={<Home
                                                              regionList={regionList}
-                                                             localizedInitiatives={localizedInitiatives}
-                                                             globalInitiatives={globalInitiatives}
                                                             setRegionSlug={setRegionSlug}
                                                             regionSlug={regionSlug}
                                                           />}/>

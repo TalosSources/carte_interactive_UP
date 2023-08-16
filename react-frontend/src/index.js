@@ -5,11 +5,16 @@ import App from './App';
 import GlobalStyles from './GlobalStyles';
 import reportWebVitals from './reportWebVitals';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 const root = ReactDOM.createRoot(document.getElementById('sk-root'));
+const queryClient = new QueryClient();
 root.render(
   <React.StrictMode>
     <GlobalStyles />
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </React.StrictMode>
 );
 

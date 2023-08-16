@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React  from 'react';
 import { Outlet, Link } from "react-router-dom";
-import { Language, Region, fetchLanguages } from '../KesApi';
+import { Region } from '../KesApi';
 import NavBar from '../components/NavBar';
 import styled from 'styled-components';
 
@@ -9,10 +9,6 @@ const Footer = styled.div`
 `
 
 export function Layout({regions, regionSlug} : {regions:Region[], regionSlug:string}) {
-    const [languages, setLanguages] = useState<Language[]>([]);
-    useEffect(() => {
-        fetchLanguages().then(l => setLanguages(l));
-    }, []);
     let activeRegion = regions.filter(r => r.properties.slug==regionSlug)[0]
     if (regions.length === 0) {
         activeRegion = {properties: {
@@ -27,7 +23,6 @@ export function Layout({regions, regionSlug} : {regions:Region[], regionSlug:str
         <div className="container">
             <nav>
             <NavBar
-                languages={languages}
                 activeRegion={activeRegion}
             />
             </nav>

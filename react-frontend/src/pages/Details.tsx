@@ -1,14 +1,14 @@
 import React, {useState, useEffect, Suspense} from "react";
 import {Link, useParams} from "react-router-dom";
-import {renderCardCollection, renderCards} from "../Cards";
-import { Feature, fetchTags, Initiative, matchTagsWithInitiatives, Tag } from "../KesApi";
+import {renderCards} from "../Cards";
+import { Feature, fetchTags, Initiative, matchTagsWithInitiatives, Tag, useInitiative, useInitiatives, useTags } from "../KesApi";
 import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import { GeoBoundingBox } from "../BoundingBox";
 import { initiativeLocationFeatureToGeoCoordinate } from "../KesApi";
 import styled from "styled-components";
-import { getDescription, getTitle, registerInitiativeTranslations } from "../i18n";
+import { getDescription, getTitle } from "../i18n";
 
 const DetailsMainImage = styled.img`
     height: 20em;
@@ -18,6 +18,7 @@ const DetailsMapView = styled.div`
     height: 20em;
 `;
 
+L.Icon.Default.imagePath="/"
 function renderTags(initiative : Initiative, tagsByInitiatives : Map<string, Tag[]>) {
     return <div id="tagPanel">
     {
@@ -30,67 +31,33 @@ function renderTags(initiative : Initiative, tagsByInitiatives : Map<string, Tag
     }</div>
 }
 
-export default function Details({initiatives}:{initiatives : Initiative[]}) {
+export default function Details() {
     const {initiativeSlug} = useParams();
+    if (typeof initiativeSlug === 'undefined') {
+        throw 'Unknown initiative'
+    }
 
-    const [initiative, setInitiative] = useState<Initiative>({tags: [],
-        id:0,
-        initiative_images: [],
-        slug:"",
-        locations:{features:[]},
-        main_image_url: "",
-        initiative_translations: [],
-        state: 'p',
-        promote:false,
-        region:'global',
-        facebook:"",
-        instagram: "",
-        phone: "",
-        homepage: "",
-        mail: "",
-        area: "",
-        online_only: false,
-    });
-    const [tags, setTags] = useState<Tag[]>([]);
+    const initiatives = useInitiatives();
+    const tags = useTags();
+    const initiative = useInitiative(initiativeSlug);
 
     useEffect(() => {
-        fetchTags()
-        .then(response_json => {
-            console.log("tags", response_json);
-            const tags = response_json.map((tag: Tag) => {
-                tag.title = tag.title.replace("&amp;", "&")
-                return tag
-            }) 
-            setTags(tags);
-            // remove invalid strings in activeTags
-        });
-        window.scrollTo(0, 0)
-    }, []);
-    useEffect(() => {
-        const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiativeDetails?slug=` + initiativeSlug;
-        fetch(initiative_api_url)
-            .then(response => response.json())
-            .then(response_json => {
-                setInitiative(response_json[0]);
-                registerInitiativeTranslations(response_json[0])
-            })
-            .catch(err => console.error(err));
         window.scrollTo(0, 0)
     }, [initiativeSlug]);
 
     const similarInitiatives = initiatives
-    .map(function(initiativeB) : [number, Initiative] { 
-        return [
-            initiative.tags.filter(tagA => initiativeB.tags.some(tagB => tagA === tagB)).length,
-            initiativeB
-        ]
-    })
-    .filter(([c,i]) => c>0)
-    .sort(([ca,ia], [cb, ib]) => cb - ca)
-    .slice(1,6)
-    .map(([c,i]) => i);
+        .map(function(initiativeB) : [number, Initiative] { 
+            return [
+                initiative.tags.filter(tagA => initiativeB.tags.some(tagB => tagA === tagB)).length,
+                initiativeB
+            ]
+        })
+        .filter(([c,i]) => c>0)
+        .sort(([ca,ia], [cb, ib]) => cb - ca)
+        .slice(1,6)
+        .map(([c,i]) => i);
     const taggedInitiativMatching = matchTagsWithInitiatives(initiatives, tags)
-    const renderedCards = renderCards(similarInitiatives, new Map(), ()=>null, undefined);
+    const renderedCards = renderCards(similarInitiatives);
 
     const {t}=useTranslation();
     const mapMarkers = renderMapMarkers(initiative)
@@ -168,6 +135,7 @@ export default function Details({initiatives}:{initiatives : Initiative[]}) {
                         center={[59, 15]} 
                         zoom={6} 
                         scrollWheelZoom={false} 
+                        key={initiative.slug}
                     >
                         <TileLayer
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -214,11 +182,9 @@ function ZoomToPoints({initiative } : {initiative : Initiative}) {
 }
 
 function renderMapMarkers(initiative: Initiative) {
-    const {t} = useTranslation();
     const icon : L.Icon<L.Icon.DefaultIconOptions> = new L.Icon.Default({iconUrl:'/marker-icon.png'})
     function feature2Marker(feature: Feature, index: number) {
         const title = feature.properties.title;
-        L.Icon.Default.imagePath="/"
         return (
             <Marker 
                 key={`m_${index}`}

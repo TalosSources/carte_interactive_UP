@@ -1,5 +1,7 @@
-import internal from "stream";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { GeoCoordinate } from "./Coordinate";
+import { registerInitiativeTranslations, registerRegionPageDescription } from "./i18n";
+import { GeoBoundingBox } from "./BoundingBox";
 
 export interface Region {
     properties : {
@@ -77,12 +79,23 @@ export function initiativeLocationFeatureToGeoCoordinate(feature: Feature) {
     return new GeoCoordinate({'longitude': feature.geometry.coordinates[0], 'latitude': feature['geometry']['coordinates'][1]})
 }
 
-export async function fetchRegionPage(region:string, page:string) : Promise<RegionPage[]> {
+export async function fetchRegionPage(region:string, page:string) : Promise<RegionPage> {
     const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/regionPage?region=${region}&page=${page}`;
     const response = await fetch(tag_api_url, {credentials:'omit'})
-    return response.json();
-
+    const rp : RegionPage = (await response.json())[0]
+    registerRegionPageDescription(rp, region, page)
+    return rp;
 }
+export function useRegionPage(regionSlugP:string, page:string) {
+    useQueryClient();
+    const {data}= useQuery({queryKey:['regionPage', regionSlugP, page],
+                            queryFn: () => fetchRegionPage(regionSlugP, page), suspense: true})
+    if (typeof data === 'undefined') {
+        throw "Some error should already have kicked"
+    }
+    return data;
+}
+
 
 export function getSmallestImage(i: Initiative) {
     let result=''
@@ -102,9 +115,43 @@ function fetchFromDB(path : string) {
     return fetch(tag_api_url, {credentials:'omit'});
 }
 
+async function fetchInitiative(initiativeSlug:string) {
+    const initiative_api_url = `${process.env.REACT_APP_BACKEND_URL}/initiativeDetails?slug=` + initiativeSlug;
+    const initiative = await fetch(initiative_api_url, {credentials:'omit'})
+        .then(response => response.json())
+        .then(response_json => response_json[0])
+        .catch(err => console.error(err));
+    registerInitiativeTranslations(initiative);
+    return initiative;
+}
+
+export function useInitiative(initiativeSlug: string) : Initiative {
+    useQueryClient();
+    const {data}= useQuery({queryKey:['initiative', initiativeSlug],
+                            queryFn: ()=>fetchInitiative(initiativeSlug), suspense: true})
+    if (typeof data === 'undefined') {
+        throw "Some error should already have kicked"
+    }
+    return data;
+}
+
 export async function fetchTags() : Promise<Tag[]> {
     const response = await fetchFromDB('tags')
-    return await response.json();
+    let tags = await response.json();
+    tags = tags.map((tag: Tag) => {
+        tag.title = tag.title.replace("&amp;", "&")
+        return tag
+    }) 
+    return tags;
+}
+
+export function useTags() : Tag[] {
+    useQueryClient();
+    const {data}= useQuery({queryKey:['allTags'], queryFn: fetchTags, suspense: true})
+    if (typeof data === 'undefined') {
+        throw "Some error should already have kicked"
+    }
+    return data;
 }
 
 export async function fetchLanguages() : Promise<Language[]> {
@@ -112,10 +159,93 @@ export async function fetchLanguages() : Promise<Language[]> {
 }
 
 export async function fetchInitiatives() : Promise<Initiative[]> {
-    const response = await fetchFromDB('initiatives');
-    const json = await response.json()
-    return json;
+    const r = await fetchFromDB('initiatives');
+    const initiatives : Initiative[] = await r.json();
+    for (const i of initiatives) {
+        registerInitiativeTranslations(i);
+    }
+    return initiatives;
 }
+export function useInitiatives() : Initiative[] {
+    useQueryClient();
+    const {data}= useQuery({queryKey:['allInitiatives'], queryFn: fetchInitiatives, suspense: true})
+    if (typeof data === 'undefined') {
+        throw "Some error should already have kicked"
+    }
+    return data;
+    /*
+    const [global, local] = initiatives
+        .reduce((result: Initiative[][], initiative: Initiative) => {
+            result[initiative.locations.features.length > 0 ? 1 : 0].push(initiative);
+            return result;
+        },
+        [[], []]);
+    */
+}
+
+export function useTagsByInitiative() : Map<string, Tag[]> {
+    useQueryClient();
+    const {data : initiatives}= useQuery({queryKey:['allInitiatives'], queryFn: fetchInitiatives, suspense: true})
+    const {data: tags}= useQuery({queryKey:['allTags'], queryFn: fetchTags, suspense: true})
+    if (typeof initiatives === 'undefined') {
+        throw "Some error should already have kicked"
+    }
+    if (typeof tags === 'undefined') {
+        throw "Some error should already have kicked"
+    }
+    return matchTagsWithInitiatives(initiatives, tags);
+}
+
+function initiativeInsideMap(initiative: Initiative, mapBounds: GeoBoundingBox) {
+    return initiative.locations.features.some(
+        feature => mapBounds.contains(initiativeLocationFeatureToGeoCoordinate(feature))
+    );
+}
+
+export function useFilteredInitiatives(tags: string[], searchQuery: string, bb: GeoBoundingBox | "Hide global" | "Show all") : Initiative[] {
+    function initiativeMatchesCurrentSearch(initiative: Initiative) {
+        return initiativeMatchesSearch(initiative, searchQuery)
+    }
+
+    function initiativeMatchCurrentTags(initiative: Initiative) {
+        return tags.every((tagSlug: string) => initiative.tags.some(iTag => iTag == tagSlug))
+
+    }
+    function initiativeMatchesSearch(initiative: Initiative, searchString: string) {
+        const keywords = searchString.split(' ');
+        return keywords
+            .map(keyword => keyword.toLowerCase())
+            .every(keyword =>
+                initiative.initiative_translations.some((trans) =>
+                    trans['title'].toLowerCase().includes(keyword)
+                ) ||
+                tagsByInitiatives.get(initiative.slug)?.some(tag =>
+                    tag.title.toLowerCase().includes(keyword)
+                ) ||
+                initiative.initiative_translations.some((trans) =>
+                    trans['short_description'].toLowerCase().includes(keyword)
+                ) ||
+                initiative.initiative_translations.some((trans) =>
+                    trans['description'].toLowerCase().includes(keyword)
+                ) ||
+                false
+            );
+    }
+
+    let initiatives: Initiative[] = useInitiatives();
+    const tagsByInitiatives = useTagsByInitiative();
+
+    if (bb === 'Hide global') {
+        initiatives = initiatives.filter(i => i.locations.features.length > 0)
+    } else if (bb !== 'Show all') {
+        initiatives = initiatives.filter(i => initiativeInsideMap(i, bb));
+    }
+    initiatives = initiatives
+        .filter(initiativeMatchesCurrentSearch)
+        .filter(initiativeMatchCurrentTags);
+    return initiatives;
+}
+
 
 export async function fetchRegions() : Promise<Region[]> {
     const r = await fetchFromDB('regions');
@@ -124,7 +254,7 @@ export async function fetchRegions() : Promise<Region[]> {
 }
 
 export function matchTagsWithInitiatives(initiatives: Initiative[], tags: Tag[]) {
-    const resultMap = new Map();
+    const resultMap = new Map<string, Tag[]>();
     for (const i of initiatives) {
         const tagsOfThisInitiative : Tag[] = []
         for (const tagSlug of i.tags) {

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { SMALL_SCREEN_WIDTH } from '../constants';
 import useWindowSize from '../hooks/useWindowSize';
-import { Language, Region } from '../KesApi';
+import { Language, Region, fetchLanguages } from '../KesApi';
 import LanguageSelector from './LanguageSelector';
 import i18next, { t } from 'i18next';
 import { Link } from 'react-router-dom';
@@ -34,12 +34,15 @@ const NavItems = styled.ul`
 `;
 
 type PropTypes = {
-    languages:Language[];
     activeRegion:Region,
 }
 
-const NavBar = ( { languages, activeRegion }: PropTypes) => {
+const NavBar = ( { activeRegion }: PropTypes) => {
     const [language, setLanguage] = useState(i18next.language);
+    const [languages, setLanguages] = useState<Language[]>([]);
+    useEffect(() => {
+        fetchLanguages().then(l => setLanguages(l));
+    }, []);
     const windowSize = useWindowSize();
     return ( 
     <nav className="navbar border-primary d-flex flex-row align-items-center bg-white">

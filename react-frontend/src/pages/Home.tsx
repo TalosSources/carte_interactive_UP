@@ -1,9 +1,7 @@
 // React
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, startTransition} from "react";
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
-// import { GeoCoordinate, BoundingBox } from "geocoordinate";
 import styled from "styled-components";
-// import {useParams, useSearchParams} from "react-router-dom";
 import { createBrowserHistory } from "@remix-run/router";
 
 // Map
@@ -20,11 +18,8 @@ import { GeoBoundingBox } from "../BoundingBox";
 
 
 import {renderCardCollection} from "../Cards";
-import FloatingTop from "../components/FloatingTop";
 import TopTagButton from "../components/TopTagButton";
-import OutlineButton from "../components/OutlineButton";
 import SelectFromObject from "../components/SelectFromObject";
-import GetInvolved from "../components/GetInvolved";
 
 import { buildUrl } from 'build-url-ts';
 import useWindowSize from "../hooks/useWindowSize";
@@ -33,9 +28,9 @@ import { useTranslation } from 'react-i18next';
 
 // Constants
 import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
-import { Feature, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, matchTagsWithInitiatives, Region, Tag } from "../KesApi";
-import { InitiativeCarousel } from "../components/Carousel";
+import { Feature, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, matchTagsWithInitiatives, Region, Tag, useFilteredInitiatives, useInitiatives } from "../KesApi";
 import { Button } from "react-bootstrap";
+import { QueryBoundaries } from "../QueryBoundary";
 
 
 const Header = styled.header`
@@ -65,37 +60,6 @@ const MainContainer = styled.div`
     }
 
     `
-const Sides = styled.div`
-    display: flex;
-    flex-direction: row;
-    @media (max-width: ${SMALL_SCREEN_WIDTH}px) {
-        flex-direction: column;
-    }
-`
-
-const LeftSide = styled.div`
-    flex: 1;
-    @media (min-width: ${SMALL_SCREEN_WIDTH}px) {
-        max-height: 100vh;
-    }
-    @media (max-width: ${SMALL_SCREEN_WIDTH}px) {
-        order: 2;
-        width: 100%;
-        height: 100vh;
-        overflow-y: scroll;
-    }
-`
-const RightSide = styled.div`
-    flex: 1;
-    @media( max-width: 800px) {
-        order: 1;
-        width: 100%;
-        height: 30vh;
-        margin-bottom: 1rem;
-    }
-`
-
-
 const SearchRow = styled.div`
     display: flex;
     flex-direction: row;
@@ -109,7 +73,6 @@ const TagContainer = styled.div`
 
 `;
 
-
 const Sorting = {
   Alphabetical: { value: "1", text: "ui.sortAlpha"},
   Distance: { value: "2", text: "ui.sortByDist" }
@@ -121,55 +84,26 @@ const WhatToShow = {
     WithoutGlobal: {value: "3", text:"ui.hideGlobal"}
 }
 
-// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-function shuffleArray<T>(array:T[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
-
 class EnabledGestureHandling extends GestureHandling {
     constructor(arg: L.Map) {
         super(arg)
         this.enable()
     }
 }
+
 L.Map.addInitHook("addHandler", "gestureHandling", EnabledGestureHandling);
+L.Icon.Default.imagePath="/"
 
 export default function Home(
-    {regionList, localizedInitiatives, globalInitiatives, setRegionSlug, regionSlug}:{regionList : Region[], localizedInitiatives:Initiative[], globalInitiatives:Initiative[], setRegionSlug:any, regionSlug:string}) {
-    const timings : [string, number][]= []
-    function registerNow(label : string) {
-        timings.push([label, performance.now()])
-    }
-    function printTimings() {
-        let maxLength = 0;
-        for (const lt of timings) {
-            maxLength = Math.max(maxLength, lt[0].length)
-        }
-        console.log(`### Home-Timings ###`)
-        let lastTime = timings[0][1];
-        const startTime = timings[0][1];
-        for (const lt of timings) {
-            let label = lt[0];
-            const thisTime = lt[1]
-            for (let i=label.length; i<maxLength; i=i+1) {
-                label += ' '
-            }
-            console.log(`${label}: +${thisTime - lastTime}ms = ${thisTime - startTime}ms`)
-            lastTime = lt[1]
-        }
-    }
-    registerNow('Start')
-
-    const navigate = useNavigate();
+    {regionList, setRegionSlug, regionSlug}:{regionList : Region[], setRegionSlug:any, regionSlug:string}) {
 
     const [queryParameters] = useSearchParams()
     const {regionSlugP} = useParams();
-    if (typeof regionSlugP !== 'undefined') {
-        setRegionSlug(regionSlugP)
-    }
+    useEffect(() =>{
+        if (typeof regionSlugP !== 'undefined') {
+            setRegionSlug(regionSlugP)
+        }
+    }, [regionSlugP])
     let urlSearchString;
     if (queryParameters.has("s")) {
         urlSearchString = queryParameters.get("s");
@@ -196,18 +130,8 @@ export default function Home(
     const [sorting, setSorting] = useState(Sorting.Distance.value);
     const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value);
     const [tags, setTags] = useState<Tag[]>([]);
-    const [tagsByInitiatives, setTagsByInitiatives] = useState<Map<string, Tag[]>>(new Map());
-    const [numberOfCards, setNumberOfCards] = useState<number>(16)
-
-    const windowSize = useWindowSize();
-    useEffect(() => {
-        const localizedIMap = matchTagsWithInitiatives(localizedInitiatives, tags);
-        const globalizedIMap = matchTagsWithInitiatives(globalInitiatives, tags);
-        setTagsByInitiatives(new Map([...localizedIMap, ...globalizedIMap]));
-    }, [tags, localizedInitiatives, globalInitiatives]);
 
     useEffect(() => {
-        //navigate('/r/' + activeRegionSlug);
         const history = createBrowserHistory();
         const queryParams : {[param:string] : string | string[]} = {}
         if (searchString !== "") {
@@ -236,8 +160,6 @@ export default function Home(
         });
     }, []);
 
-    const {t} = useTranslation();
-
     // refresh region
     const region = regionList.filter((r: Region) => r['properties']['slug'] === regionSlug);
     let activeReg;
@@ -250,42 +172,54 @@ export default function Home(
         activeReg = region[0];
     }
 
-    // refresh cards
-
-    function initiativeMatchesCurrentSearch(initiative: Initiative) {
-        return initiativeMatchesSearch(initiative, searchString)
+    let bb : GeoBoundingBox | "Show all" | "Hide global" = mapBounds;
+    if (initiativesToShow === WhatToShow.Everything.value) {
+        bb = "Show all"
+    } else if (initiativesToShow === WhatToShow.WithoutGlobal.value) {
+        bb = "Hide global"
     }
 
-    function initiativeMatchCurrentTags(initiative: Initiative) {
-        return activeTags.every((tagSlug: string) => initiative.tags.some(iTag => iTag == tagSlug))
+    return <QueryBoundaries>
+            <SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={activeTags}/>
 
-    }
-    function initiativeMatchesSearch(initiative: Initiative, searchString: string) {
-        const keywords = searchString.split(' ');
-        return keywords
-            .map(keyword => keyword.toLowerCase())
-            .every(keyword =>
-                initiative.initiative_translations.some((trans) =>
-                    trans['title'].toLowerCase().includes(keyword)
-                ) ||
-                tagsByInitiatives.get(initiative.slug)?.some(tag =>
-                    tag.title.toLowerCase().includes(keyword)
-                ) ||
-                initiative.initiative_translations.some((trans) =>
-                    trans['short_description'].toLowerCase().includes(keyword)
-                ) ||
-                initiative.initiative_translations.some((trans) =>
-                    trans['description'].toLowerCase().includes(keyword)
-                ) ||
-                false
-            );
-    }
-    function initiativeInsideMap(initiative: Initiative) {
-        return initiative.locations.features.some(
-            feature => mapBounds.contains(initiativeLocationFeatureToGeoCoordinate(feature))
-        );
-    }
+            <Header>
+                    {(() => {
+                        return (
+                            <div id="welcomeMessage" dangerouslySetInnerHTML={{__html: activeReg.properties.welcome_message_html}} />
+                        )
+                    })()
+                    }
+            </Header>
 
+            <MainContainer>
+                <SearchBox setQuery={setSearchString} initialSearch={urlSearchString}/>
+
+                <TagBar tags={tags} urlActiveTags={urlActiveTags} setHomeTags={setActiveTags} searchQuery={searchString} bb={bb}/>
+
+                <div id="filters">
+                    <SelectFromObject 
+                        obj={WhatToShow}
+                        defaultValue={WhatToShow.Everything.value}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
+                    />
+                    <SelectFromObject 
+                        obj={Sorting}
+                        defaultValue={Sorting.Distance.value}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
+                    />
+                </div>
+                <MainCardList tags={activeTags} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
+                <div id="helpUsBox">
+                <a href="https://smartakartan.se/starta-verksamhet">
+                    <img src='/hjälpaOss.jpg' />
+                </a></div>
+            </MainContainer>
+        </QueryBoundaries>
+}
+
+// Home Components
+
+function MainCardList({tags, searchQuery, bb, sorting, mapCenter} : {tags : string[], searchQuery: string, bb: GeoBoundingBox | "Hide global" | "Show all", sorting: string, mapCenter: GeoCoordinate}) {
     function sortInitiativesByName(initiatives : Initiative[]) {
         const names : [number, string][] = [];
         for (let i = 0; i < initiatives.length; i++) {
@@ -300,9 +234,11 @@ export default function Home(
         }
         return sortedInitiatives;
     }
-
     function sortInitiativesByDistanceToCenter(initiatives: Initiative[]) {
         function initiativeDistanceFromMapCenter(initiative: Initiative) {
+            if (initiative.locations.features.length === 0) {
+                return 0;
+            }
             return Math.min(...initiative.locations.features.map(
                 feature => mapCenter.quickDistanceTo(initiativeLocationFeatureToGeoCoordinate(feature))
             ))
@@ -321,33 +257,34 @@ export default function Home(
         }
         return sortedInitiatives;
     }
+    const {t} = useTranslation();
 
-    registerNow('preInitiatives')
-    let initiatives: Initiative[] = localizedInitiatives;
-    if (initiativesToShow === WhatToShow.OnlyOnMap.value) {
-        initiatives = initiatives.filter(initiativeInsideMap);
-    }
+    const [numberOfCards, setNumberOfCards] = useState<number>(16)
+
+    let initiatives = useFilteredInitiatives(tags, searchQuery, bb)
     if (sorting === Sorting.Distance.value) {
         initiatives = sortInitiativesByDistanceToCenter(initiatives);
-    }
-    if (initiativesToShow === WhatToShow.Everything.value) {
-        initiatives = globalInitiatives.concat(initiatives);
-    }
-    if (sorting === Sorting.Alphabetical.value) {
+    } else if (sorting === Sorting.Alphabetical.value) {
         initiatives = sortInitiativesByName(initiatives);
     }
-    registerNow('preSearch')
-    initiatives = initiatives
-        .filter(initiativeMatchesCurrentSearch)
-        .filter(initiativeMatchCurrentTags);
-    registerNow('postInitiatives')
+    const renderedCards = renderCardCollection(
+                            initiatives.slice(0, numberOfCards))
+    return <><div id="cards-canvas">
+                {renderedCards}
+                </div>
+                {(initiatives.length > numberOfCards) &&
+                     <div id="centerContainer">
+                        <Button
+                         id="loadMoreCardsButton"
+                         onClick={() => setNumberOfCards(numberOfCards + 16)}>
+                            {t('ui.loadMoreCards')}
+                        </Button>
+                        </div>
+                }</>
 
-    // Prepare tags
-    /*
-    function sortTagsByTotalInitiatives(tag_a, tag_b) {
-        return tag_b.initiatives.length - tag_a.initiatives.length
-    }
-    */
+}
+
+function TagBar({tags, urlActiveTags, setHomeTags, searchQuery, bb} : {tags:Tag[], urlActiveTags: string[], setHomeTags : (tags: string[])=>void, searchQuery: string, bb: GeoBoundingBox | "Show all" | "Hide global"}) {
     function calculateTagEntropy(initiatives: Initiative[]) {
         const tag_count = initiatives.reduce((map, initiative) =>
             initiative.tags.reduce((map, tag) => {
@@ -370,24 +307,87 @@ export default function Home(
             }
         }));
     }
-    registerNow('preTags')
-    const tagEntropy = calculateTagEntropy(initiatives);
-    registerNow('postEntropy')
     function sortTagsByEntropy(tag_a: Tag, tag_b: Tag) {
         return tagEntropy[tag_b.slug] - tagEntropy[tag_a.slug]
     }
+    function toggleActiveTag(tagSlug: string) {
+        console.log(tagSlug)
+        if (barActiveTags.find((ts: string) => tagSlug == ts)) {
+            const newTagList = barActiveTags.filter((ts: string) => ts !== tagSlug)
+            setBarTags(newTagList);
+        } else {
+            setBarTags([...barActiveTags, tagSlug]);
+        }
+    } 
+
+    const [barActiveTags, setBarTags] = useState<string[]>(urlActiveTags);
+    useEffect(() => {
+        startTransition(() => {
+            setHomeTags(barActiveTags);
+        })
+    }, [barActiveTags])
+
+    const initiatives = useFilteredInitiatives(barActiveTags, searchQuery, bb);
+    const tagEntropy = calculateTagEntropy(initiatives);
 
     const TOP_TAGS_LIMIT = 6;
     let top_available_tags = tags
         .filter((tag: Tag) => tagEntropy[tag.slug] > 0)
     top_available_tags.sort(sortTagsByEntropy);
-    registerNow('postSort')
     top_available_tags = top_available_tags.slice(0, TOP_TAGS_LIMIT) // Limit top tags
     console.log("top_tags", top_available_tags)
 
-    //markers
-    const mapMarkers = renderMapMarkers(initiatives);
-    registerNow('postRenderMarkers')
+    return <TagContainer className="d-flex flex-row mb-2 mt-3 overflowX-scroll">
+                {
+                    barActiveTags.map((tagSlug) => <TopTagButton
+                            key={tagSlug}
+                            title={tags.find(tag => tag.slug === tagSlug)?.title || ""}
+                            onClick={() => toggleActiveTag(tagSlug)}
+                            active={true}
+                        />
+                    )
+                }
+                {
+                    top_available_tags.map((tagElement: Tag) => 
+                        <TopTagButton
+                            key={tagElement.title}
+                            title={tagElement.title}
+                            onClick={() => toggleActiveTag(tagElement.slug)}
+                            active={(() => 
+                                barActiveTags.some((ts: string) => tagElement.slug == ts)
+                                )()
+                            }
+                            />
+                    )
+                }
+
+            </TagContainer>
+              
+
+}
+function MapMarker({initiative, feature, index}:{initiative: Initiative, feature: Feature, index: number}) {
+    const {t} = useTranslation();
+    const title = t('initiatives.'+initiative.slug+'.title')
+    const icon : L.Icon<L.Icon.DefaultIconOptions> = new L.Icon.Default({iconUrl:'/marker-icon.png'})
+    return <Marker 
+            key={`m_${initiative.id}_${index}`}
+            position={[feature['geometry']['coordinates'][1], feature['geometry']['coordinates'][0]]}
+            title={title}
+            icon={icon}
+            >
+            <Popup>
+                <Link to={'/details/' + initiative.slug}>{title}</Link>
+            </Popup>
+        </Marker>;
+}
+
+function MapMarkers({initiatives}:{initiatives: Initiative[]}) {
+    return initiatives.map((initiative) =>
+        initiative.locations.features.map((feature, index) => {return <MapMarker initiative={initiative} feature={feature} index={index}/>})
+    ).flat(1);
+}
+
+function SKMapContainer({setMapCenter, setMapBounds, tags, searchQuery, bb}:{setMapCenter: (newCenter: GeoCoordinate) => void, setMapBounds: (newBounds: GeoBoundingBox) => void, tags:string[], searchQuery: string, bb:GeoBoundingBox | "Hide global" | "Show all"}) {
 
     function leafletToGeoCoordinate(leafletCoordinate: { lng:number; lat:number; }) {
         return new GeoCoordinate({'longitude' : leafletCoordinate['lng'], 'latitude': leafletCoordinate['lat']});
@@ -406,166 +406,52 @@ export default function Home(
         })
         return null;
     }
+    const initiatives = useFilteredInitiatives(tags, searchQuery, bb);
+    return <MapContainer 
+            id="map" 
+            center={[59, 15]} 
+            zoom={6} 
+            scrollWheelZoom={false} 
+        >
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+            <RegisterMapCenter/>
+            <MarkerClusterGroup
+                chunkedLoading
+            >
+            <MapMarkers initiatives={initiatives}/>
+            </MarkerClusterGroup>
+        </MapContainer>
 
-    const toggleActiveTag = (tagSlug: string) => {
-        console.log(tagSlug)
-        if (activeTags.find((ts: string) => tagSlug == ts)) {
-            console.log("Remove from activeTags:", tagSlug)
-            const newTagList = activeTags.filter((ts: string) => ts !== tagSlug)
-            setActiveTags(newTagList);
-        } else {
-            console.log("Add to activeTags:", tagSlug)
-            setActiveTags([...activeTags, tagSlug]);
-        }
-    } 
-    registerNow('Pre card render')
-    const renderedCards = renderCardCollection(
-                            initiatives.slice(0, numberOfCards),
-                            tagsByInitiatives,
-                            (clickedSlug:string) => {toggleActiveTag(clickedSlug)}, tagEntropy)
+}
 
-    registerNow('Pre final render')
+function SearchBox({setQuery, initialSearch} : {setQuery : (query : string) => void, initialSearch: string}) {
+    const {t} = useTranslation();
 
-    let promotedInitiatives = [...localizedInitiatives,...globalInitiatives]
-        .filter((initiative) => initiative.promote)
-    if (regionSlug != 'global') {
-        promotedInitiatives = promotedInitiatives.filter((initiative)=>initiative.region === regionSlug)
-    }
-    shuffleArray(promotedInitiatives)
-    promotedInitiatives = promotedInitiatives.splice(0,10)
+    const [searchString, setSearchString] = useState(initialSearch);
+
+    useEffect(() => {
+        startTransition(() => {
+            setQuery(searchString);
+        })
+    },[searchString])
 
     let searchPlaceholder = t('ui.searchPlaceholder')
     if (typeof searchPlaceholder === 'undefined') {
         searchPlaceholder = 'Search something'
     }
-    const result = (
-        <>
-            <MapContainer 
-                id="map" 
-                center={[59, 15]} 
-                zoom={6} 
-                scrollWheelZoom={false} 
-            >
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                <RegisterMapCenter/>
-                <MarkerClusterGroup
-                    chunkedLoading
-                >
-                {mapMarkers}
-                </MarkerClusterGroup>
-            </MapContainer>
 
-            <Header>
-                    {(() => {
-                        return (
-                            <div id="welcomeMessage" dangerouslySetInnerHTML={{__html: activeReg.properties.welcome_message_html}} />
-                        )
-                    })()
-                    }
-            </Header>
-
-            <MainContainer>
-                <div>
-                    <SearchRow className="d-flex flex-row w-100"
-                    > 
-                        <input
-                            className="form-control" 
-                            name="search" 
-                            placeholder={searchPlaceholder}
-                            value={searchString}
-                            onChange={event => setSearchString(event.target.value)}/>
-                    </SearchRow>
-                 </div>
-
-                <TagContainer className="d-flex flex-row mb-2 mt-3 overflowX-scroll">
-                    {
-                        activeTags.map((tagSlug) => {
-                            return (<TopTagButton
-                                key={tagSlug}
-                                title={tags.find(tag => tag.slug === tagSlug)?.title || ""}
-                                onClick={() => toggleActiveTag(tagSlug)}
-                                active={true}
-                            />)
-                        })
-                    }
-                    {
-                        top_available_tags.map((tagElement: Tag) => (
-                            <TopTagButton
-                                key={tagElement.title}
-                                title={tagElement.title}
-                                onClick={() => toggleActiveTag(tagElement.slug)}
-                                active={(() => 
-                                    activeTags.some((ts: string) => tagElement.slug == ts)
-                                    )()
-                                }
-                                />
-                        ))
-                    }
-
-                </TagContainer>
-              
-                <div id="filters">
-                    <SelectFromObject 
-                        obj={WhatToShow}
-                        defaultValue={WhatToShow.Everything.value}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
-                    />
-                    <SelectFromObject 
-                        obj={Sorting}
-                        defaultValue={Sorting.Distance.value}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
-                    />
-                </div>
-                <div id="cards-canvas">
-                {renderedCards}
-                </div>
-                {(initiatives.length > numberOfCards) &&
-                     <div id="centerContainer">
-                        <Button
-                         id="loadMoreCardsButton"
-                         onClick={() => setNumberOfCards(numberOfCards + 16)}>
-                            {t('ui.loadMoreCards')}
-                        </Button>
-                        </div>
-                }
-                <div id="helpUsBox">
-                <a href="https://smartakartan.se/starta-verksamhet">
-                    <img src='/hjälpaOss.jpg' />
-                </a></div>
-            </MainContainer>
-        </>
-    );
-    registerNow('End')
-    printTimings()
-    return result;
-}
-
-// Helpers
-
-function renderMapMarkers(initiatives: Initiative[]) {
-    const {t} = useTranslation();
-    const icon : L.Icon<L.Icon.DefaultIconOptions> = new L.Icon.Default({iconUrl:'/marker-icon.png'})
-    function feature2Marker(initiative: Initiative, feature: Feature, index: number) {
-        const title = t('initiatives.'+initiative.slug+'.title')
-        L.Icon.Default.imagePath="/"
-        return (
-            <Marker 
-                key={`m_${initiative.id}_${index}`}
-                position={[feature['geometry']['coordinates'][1], feature['geometry']['coordinates'][0]]}
-                title={title}
-                icon={icon}
-                >
-                <Popup>
-                    <Link to={'/details/' + initiative.slug}>{title}</Link>
-                </Popup>
-            </Marker>
-        );
-    }
-
-    return initiatives.map((initiative) =>
-        initiative.locations.features.map((feature, index) => feature2Marker(initiative, feature, index))
-    ).flat(1);
+    return <div>
+            <SearchRow className="d-flex flex-row w-100"
+            > 
+                <input
+                    className="form-control" 
+                    name="search" 
+                    placeholder={searchPlaceholder}
+                    value={searchString}
+                    onChange={event => setSearchString(event.target.value)}/>
+            </SearchRow>
+        </div>
 }

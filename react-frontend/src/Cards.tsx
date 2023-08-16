@@ -72,9 +72,8 @@ const CardTagPanel = styled.div`
     width:100%;
 `;
 
-function SkCard(props: {key?: string; id: string; image_url: string; title: string; description: string; tags: Tag[], tagClick: ((clickedSlug: string) => void)}) {
-    // CSS in React: https://www.w3schools.com/react/react_css.asp
-    const { id, image_url, title, description, tags, tagClick} = props
+function SkCard(props: {key?: string; id: string; image_url: string; title: string; description: string; }) {
+    const { id, image_url, title, description} = props
     
     const cleanDescription = sanitizeHtml(description, { allowedTags: []})
     return (
@@ -92,47 +91,24 @@ function SkCard(props: {key?: string; id: string; image_url: string; title: stri
     );
 }
 
-function sortTagsByValue(tags : Tag[], values:{ [x: string]: number; }) {
-    function sortTagsByValue(tag_a: Tag, tag_b: Tag) {
-        return values[tag_b.slug] - values[tag_a.slug]
-    }
-    tags.sort(sortTagsByValue);
-    return tags
-
-}
-
-export function renderCards(initiatives: Initiative[], tagsByInitiatives : Map<string, Tag[]>, tagClick: ((clickedSlug: string) => void), tagSorting: { [x: string]: number; } | undefined) {
+export function renderCards(initiatives: Initiative[]) {
     const {t} = useTranslation();
     return (initiatives.map(
               (initiativeElement) => {
-                let top_tags = tagsByInitiatives.get(initiativeElement.slug)
-                if (typeof top_tags === 'undefined') {
-                    // tags not yet propagated
-                    top_tags = []
-                }
-                if (!(typeof tagSorting == "undefined")) {
-                    sortTagsByValue(top_tags, tagSorting)
-                }
-                return (
-                    <Suspense>
-                        <SkCard
+                return <SkCard
                             key={initiativeElement.slug}
                             title={t('initiatives.'+initiativeElement.slug+'.title')}
                             id={initiativeElement.slug}
                             description={t('initiatives.'+initiativeElement.slug+'.short_description')}
                             image_url={getSmallestImage(initiativeElement)}
-                            tags={top_tags}
-                            tagClick={tagClick}
-                        /></Suspense>
-                );
+                        />;
               }
              )
     )
 }
 
-export function renderCardCollection(initiatives: Initiative[], tagsByInitiatives : Map<string, Tag[]>, tagClick: ((clickedSlug: string) => void), tagSorting: { [x: string]: number; } | undefined) {
-    const {t} = useTranslation();
+export function renderCardCollection(initiatives: Initiative[]) {
     return (<CardContainer className='card-group'>
-            {renderCards(initiatives, tagsByInitiatives, tagClick, tagSorting)}
+            {renderCards(initiatives)}
             </CardContainer>)
 }
