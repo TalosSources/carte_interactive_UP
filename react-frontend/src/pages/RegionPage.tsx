@@ -1,10 +1,9 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {useParams} from "react-router-dom";
-import { fetchRegionPage, useRegionPage} from "../KesApi";
-import {registerRegionPageDescription } from "../i18n";
+import { useRegionPage} from "../KesApi";
 import PageNotFound from "./PageNotFound";
-import { t } from "i18next";
 import { QueryBoundaries } from "../QueryBoundary";
+import { useTranslation } from "react-i18next";
 
 export default function RegionPage() {
     return <QueryBoundaries>
@@ -13,6 +12,7 @@ export default function RegionPage() {
 }
 
 function RegionPageBody() {
+    const {t} = useTranslation();
     const {regionSlugP, page} = useParams();
 
     if (typeof regionSlugP === 'undefined') {
