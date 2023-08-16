@@ -720,10 +720,17 @@ def process_business_rows(businessRows):
             if address_and_coordinate_list_or_bool:
                 for aac_dict in address_and_coordinate_list_or_bool:
                     location_id = aac_dict[RJSK_ADDRESS_AND_COORDINATE_ID]
+
                     latitude: str = aac_dict['latitude']
+                    if latitude[-1] == ',':
+                        latitude = latitude[:-1]
                     latitude = latitude.replace(',', '.')
+
                     longitude: str = aac_dict['longitude']
+                    if longitude[-1] == '.' or latitude[-1] == '.':
+                        longitude = longitude[:-1]
                     longitude = longitude.replace(',', '.')
+
                     # -please note order of lat and lng
                     geo_point = django.contrib.gis.geos.Point(float(longitude), float(latitude))
                     title = aac_dict['post_title']
