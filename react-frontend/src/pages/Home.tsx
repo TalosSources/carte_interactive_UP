@@ -382,9 +382,11 @@ function MapMarker({initiative, feature, index}:{initiative: Initiative, feature
 }
 
 function MapMarkers({initiatives}:{initiatives: Initiative[]}) {
-    return initiatives.map((initiative) =>
-        initiative.locations.features.map((feature, index) => {return <MapMarker initiative={initiative} feature={feature} index={index}/>})
-    ).flat(1);
+    return <>{
+            initiatives.map((initiative) =>
+                initiative.locations.features.map((feature, index) => <MapMarker initiative={initiative} feature={feature} index={index}/>)
+            ).flat(1)
+    }</>;
 }
 
 function SKMapContainer({setMapCenter, setMapBounds, tags, searchQuery, bb}:{setMapCenter: (newCenter: GeoCoordinate) => void, setMapBounds: (newBounds: GeoBoundingBox) => void, tags:string[], searchQuery: string, bb:GeoBoundingBox | "Hide global" | "Show all"}) {
