@@ -172,6 +172,13 @@ class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
 class OptimizedInitiativeSerializer():
     # TODO
     # Annotate each fields contribution
+    # only the objects                       22.8ms ±  8.5ms
+    # without any related tables +  3.1ms =  25.9ms ±  4.7ms
+    # tags                       + 18.8ms =  44.7ms ±  9.0ms
+    # translations               + 29.6ms =  74.3ms ± 11.6ms
+    # region                     +  9.4ms =  83.7ms ± 11.5ms
+    # images                     + 39.2ms = 122.9ms ± 16.9ms
+    # locations                  + 53.8ms = 176.7ms ± 16.7ms
     def __init__(self, i, context=None, many=False):
         tags_view = models.Tag.objects.all()
         tag_slugs = {}
