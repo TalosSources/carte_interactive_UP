@@ -56,20 +56,10 @@ class RegionPageViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
         else:
             return None
 
-@method_decorator(cache_page(60 * 5), name='dispatch')
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
-    serializer_class = serializers.InitiativeSerializer
+    serializer_class = serializers.OptimizedInitiativeSerializer
     def get_queryset(self):
-        queryset = models.Initiative.objects.filter(state="p") \
-            .prefetch_related("tags") \
-            .prefetch_related("region") \
-            .prefetch_related("locations") \
-            .prefetch_related("initiative_images") \
-            .prefetch_related("initiative_translations") \
-            .prefetch_related("initiative_translations__language")
-        slug = self.request.query_params.get('slug')
-        if slug is not None:
-            queryset = queryset.filter(slug=slug)
+        queryset = models.Initiative.objects.filter(state="p")
         return queryset
 
 
