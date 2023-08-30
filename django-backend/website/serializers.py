@@ -61,12 +61,20 @@ from rest_framework_gis import serializers as gis_serializers
 from . import models
 
 
-class LocationSerializer(gis_serializers.GeoFeatureModelSerializer):
-    class Meta:
-        fields = ("title",)  # -shown under "Properties" in the API JSON
-        geo_field = "coordinates"  # this string value must match the PointField field name in models.py
-        model = models.Location
+class FastSerializer():
+    def __init__(self, data=[], context=None, many=False):
+        if many:
+            self.data = [self.serialize(item) for item in data]
+        else:
+            self.data = self.serialize(data)
 
+
+class LocationSerializer(FastSerializer):
+    def serialize(self, loc):
+        return {
+                'properties':{'title':        loc.title},
+                'geometry':{'coordinates':  loc.coordinates.coords},
+            }
 
 class InitiativeTranslationSerializer(serializers.ModelSerializer):
     language = serializers.SlugRelatedField(read_only=True, slug_field='code')
@@ -79,10 +87,13 @@ class LanguageSerializer(serializers.ModelSerializer):
         model = models.Language
         fields = ['code', 'flag', 'englishName', 'nativeName']
 
-class InitiativeImagesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.InitiativeImage
-        fields = ['width', 'height', 'url']
+class InitiativeImagesSerializer(FastSerializer):
+    def serialize(self, image):
+        return {
+            'width': image.width,
+            'height': image.height,
+            'url': image.url,
+        }
 
 class RegionPageSerializer(serializers.ModelSerializer):
     rp_translations = serializers.SerializerMethodField()
@@ -130,20 +141,26 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         model = models.Tag
         fields = ['title', 'slug']
 
+class OptimizedTagSerializer(FastSerializer):
+    def serialize(self, tag):
+        return tag.slug
+
 class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
     # Object name (and below field name) "locations" must match `related_name` in model. DRF docs:
     # https://www.django-rest-framework.org/api-guide/relations/#reverse-relations
-    locations = LocationSerializer(many=True, read_only=True)
+    locations = LocationSerializer(many=True)
     tags = serializers.SlugRelatedField(slug_field='slug', many=True, read_only=True)
     region = serializers.SlugRelatedField(slug_field='slug', read_only=True)
     initiative_translations = InitiativeTranslationSerializer(many=True, read_only=True)
-    initiative_images = InitiativeImagesSerializer(many=True, read_only=True)
+    initiative_images = InitiativeImagesSerializer(many=True)
 
     class Meta:
         model = models.Initiative
         fields = [
             'slug', 'id',
-            'locations', 'initiative_translations', 'tags',
+            'locations',
+            'initiative_translations',
+            'tags',
             'region',
             'initiative_images',
             'main_image_url',
@@ -151,6 +168,83 @@ class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
             'state', 'promote',
             'online_only', 'area',
         ]
+
+class OptimizedInitiativeSerializer():
+    # TODO
+    # Annotate each fields contribution
+    def __init__(self, i, context=None, many=False):
+        tags_view = models.Tag.objects.all()
+        tag_slugs = {}
+        for tag in tags_view:
+            tag_slugs[tag.id] = tag.slug
+
+        region_view = models.Region.objects.all()
+        region_slugs = {}
+        for region in region_view:
+            region_slugs[region.id] = region.slug
+
+        language_view = models.Language.objects.all()
+        language_slugs = {}
+        for language in language_view:
+            language_slugs[language.id] = language.code
+
+        initiative_tags_view = models.Initiative.tags.through.objects.values()
+        it = {}
+        for itv in initiative_tags_view:
+            iid = itv['initiative_id']
+            if iid not in it:
+                it[iid] = []
+            it[iid].append(tag_slugs[itv['tag_id']])
+
+        # takes 120ms. at least 60ms Geo-Related by Point.__init__
+        all_locations_view = models.Location.objects.all() # 90ms
+        initiative_locations = {}
+        for location in all_locations_view:
+            iid = location.initiative_id
+            if iid not in initiative_locations:
+                initiative_locations[iid] = []
+            initiative_locations[iid].append(LocationSerializer(location).data)
+
+        all_images = models.InitiativeImage.objects.all()
+        initiative_images = {}
+        for image in all_images:
+            iid = image.initiative_id
+            if iid not in initiative_images:
+                initiative_images[iid] = []
+            initiative_images[iid].append(InitiativeImagesSerializer(image).data)
+
+        all_translations = models.InitiativeTranslation.objects.all()
+        initiative_translations = {}
+        for translation in all_translations:
+            iid = translation.initiative_id
+            if iid not in initiative_translations:
+                initiative_translations[iid] = []
+            initiative_translations[iid].append({
+                'language': language_slugs[translation.language_id],
+                'title': translation.title,
+                'short_description': translation.short_description,
+                'description': translation.description,
+            })
+
+        self.data = [{
+            'locations': {'features': initiative_locations.get(ini.id, [])},
+            'id': ini.id,
+            'slug' : ini.slug,
+            'region' : region_slugs[ini.region_id],
+            'main_image_url' : ini.main_image_url,
+            'facebook' : ini.facebook,
+            'instagram' : ini.instagram,
+            'phone' : ini.phone,
+            'initiative_images': initiative_images.get(ini.id, []),
+            'initiative_translations': initiative_translations.get(ini.id, []),
+            'homepage' : ini.homepage,
+            'mail' : ini.mail,
+            'area' : ini.area,
+            'online_only': ini.online_only,
+            'promote': ini.promote,
+            'state': ini.state,
+            'tags' : it.get(ini.id, [])
+        } for ini in i]
 
 
 class TagDetailSerializer(serializers.ModelSerializer):

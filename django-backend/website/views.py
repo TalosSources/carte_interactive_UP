@@ -9,7 +9,8 @@ import rest_framework.viewsets
 
 from . import models
 from . import serializers
-
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 class LocationViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     queryset = models.Location.objects.all()
@@ -55,14 +56,10 @@ class RegionPageViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
         else:
             return None
 
-
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
-    serializer_class = serializers.InitiativeSerializer
+    serializer_class = serializers.OptimizedInitiativeSerializer
     def get_queryset(self):
         queryset = models.Initiative.objects.filter(state="p")
-        slug = self.request.query_params.get('slug')
-        if slug is not None:
-            queryset = queryset.filter(slug=slug)
         return queryset
 
 
@@ -76,9 +73,20 @@ class TagViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
         data = serializer.data
         return rest_framework.response.Response(data)
 
-
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class RegionViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
-    queryset = models.Region.objects.all()
+    queryset = models.Region.objects.all() \
+        .prefetch_related("initiatives") \
+        .prefetch_related("initiatives__tags") \
+        .prefetch_related("initiatives__region") \
+        .prefetch_related("initiatives__locations") \
+        .prefetch_related("initiatives__initiative_images") \
+        .prefetch_related("initiatives__initiative_translations") \
+        .prefetch_related("initiatives__initiative_translations__language") \
+        .prefetch_related("rp_region") \
+        .prefetch_related("rp_region__rp_translations") \
+        .prefetch_related("rp_region__rp_translations__language")
+
     serializer_class = serializers.RegionSerializer
 
 class LanguageViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
