@@ -1,5 +1,5 @@
-import { t } from "i18next";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 const StyledInvolved = styled.div`
@@ -21,7 +21,8 @@ const StyledInvolved = styled.div`
     }
 `;
 
-const GetInvolved = () => {
+function GetInvolved() {
+    const {t} = useTranslation();
     return <StyledInvolved>
         <h3>{t('ui.supportTheMap.headline')}</h3>
         <p>

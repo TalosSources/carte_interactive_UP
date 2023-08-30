@@ -132,6 +132,11 @@ export default function Home(
     const [tags, setTags] = useState<Tag[]>([]);
 
     useEffect(() => {
+        console.log("Scroll up");
+        window.scrollTo(0, 0)
+    }, [regionSlug]);
+
+    useEffect(() => {
         const history = createBrowserHistory();
         const queryParams : {[param:string] : string | string[]} = {}
         if (searchString !== "") {
@@ -143,7 +148,7 @@ export default function Home(
         const newUrl = buildUrl({path:'/r/' + regionSlug,
                   queryParams: queryParams})
         history.replace(newUrl);
-    }, [activeTags, searchString]);
+    }, [activeTags, searchString, regionSlugP, regionSlug]);
 
     
     useEffect(() => {
