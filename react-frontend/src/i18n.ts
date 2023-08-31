@@ -94,13 +94,21 @@ export function registerInitiativeTranslations(i : Initiative) {
                                         short_description: string;
                                         description: string;
                                      }) {
-            const key =  'initiatives.'+i.slug+'.'
-            i18next.addResource(code,'translation', key + 'title', trans.title);
-            i18next.addResource(code,'translation', key + 'short_description', trans.short_description);
-            i18next.addResource(code,'translation', key + 'description', trans.description);
+            const key =  `initiatives.${i.slug}.`;
+            i18next.addResource(code, 'translation', `${key}title`, trans.title);
+            i18next.addResource(code, 'translation', `${key}short_description`, trans.short_description);
+            i18next.addResource(code, 'translation', `${key}description`, trans.description);
         }
         for (const code in i.initiative_translations) {
             registerTranslation(i.initiative_translations[code].language, i.initiative_translations[code]);
+            
+            const current = i.initiative_translations[code];
+
+            current.query_tokens = {
+                title: current.title.toLowerCase(),
+                short_description: current.short_description.toLowerCase(),
+                description: current.description.toLowerCase(),
+            }
         }
     }
 

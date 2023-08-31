@@ -27,38 +27,43 @@ export interface Language {
 }
 
 export interface Tag {
-    title : string;
-    slug : string;
+    title: string;
+    slug: string;
 }
 
 export interface Feature {
-    geometry:{coordinates: number[]};
-    properties:{title:string};
+    geometry: { coordinates: number[] };
+    properties: { title: string };
 }
 
 export interface Initiative {
-    id : number;
-    slug : string;
-    region : string,
-    tags : string[];
-    locations : {features : Feature[]};
-    main_image_url : string;
-    state : string;
-    promote : boolean;
-    initiative_images : InitiativeImage[];
-    initiative_translations : {
-        language : string,
-        title : string,
-        short_description : string,
-        description : string,
+    id: number;
+    slug: string;
+    region: string,
+    tags: string[];
+    locations: { features: Feature[] };
+    main_image_url: string;
+    state: string;
+    promote: boolean;
+    initiative_images: InitiativeImage[];
+    initiative_translations: {
+        language: string,
+        title: string,
+        short_description: string,
+        description: string,
+        query_tokens: {
+            title: string,
+            short_description: string,
+            description: string,
+        }
     }[];
-    facebook:string,
-    instagram:string,
-    phone:string,
-    homepage:string,
-    mail:string,
-    area:string,
-    online_only:boolean,
+    facebook: string,
+    instagram: string,
+    phone: string,
+    homepage: string,
+    mail: string,
+    area: string,
+    online_only: boolean,
 }
 
 export interface InitiativeImage {
@@ -164,36 +169,16 @@ export async function fetchInitiatives() : Promise<Initiative[]> {
     for (const i of initiatives) {
         registerInitiativeTranslations(i);
     }
+
     return initiatives;
 }
 export function useInitiatives() : Initiative[] {
     useQueryClient();
-    const {data}= useQuery({queryKey:['allInitiatives'], queryFn: fetchInitiatives, suspense: true})
+    const {data} = useQuery({queryKey:['allInitiatives'], queryFn: fetchInitiatives, suspense: true})
     if (typeof data === 'undefined') {
         throw "Some error should already have kicked"
     }
     return data;
-    /*
-    const [global, local] = initiatives
-        .reduce((result: Initiative[][], initiative: Initiative) => {
-            result[initiative.locations.features.length > 0 ? 1 : 0].push(initiative);
-            return result;
-        },
-        [[], []]);
-    */
-}
-
-export function useTagsByInitiative() : Map<string, Tag[]> {
-    useQueryClient();
-    const {data : initiatives}= useQuery({queryKey:['allInitiatives'], queryFn: fetchInitiatives, suspense: true})
-    const {data: tags}= useQuery({queryKey:['allTags'], queryFn: fetchTags, suspense: true})
-    if (typeof initiatives === 'undefined') {
-        throw "Some error should already have kicked"
-    }
-    if (typeof tags === 'undefined') {
-        throw "Some error should already have kicked"
-    }
-    return matchTagsWithInitiatives(initiatives, tags);
 }
 
 function initiativeInsideMap(initiative: Initiative, mapBounds: GeoBoundingBox) {
@@ -209,31 +194,23 @@ export function useFilteredInitiatives(tags: string[], searchQuery: string, bb: 
 
     function initiativeMatchCurrentTags(initiative: Initiative) {
         return tags.every((tagSlug: string) => initiative.tags.some(iTag => iTag == tagSlug))
-
     }
+    
     function initiativeMatchesSearch(initiative: Initiative, searchString: string) {
-        const keywords = searchString.split(' ');
-        return keywords
+        const translations = initiative.initiative_translations;
+        return searchString
+            .split(' ')
             .map(keyword => keyword.toLowerCase())
             .every(keyword =>
-                initiative.initiative_translations.some((trans) =>
-                    trans['title'].toLowerCase().includes(keyword)
-                ) ||
-                tagsByInitiatives.get(initiative.slug)?.some(tag =>
-                    tag.title.toLowerCase().includes(keyword)
-                ) ||
-                initiative.initiative_translations.some((trans) =>
-                    trans['short_description'].toLowerCase().includes(keyword)
-                ) ||
-                initiative.initiative_translations.some((trans) =>
-                    trans['description'].toLowerCase().includes(keyword)
-                ) ||
+                translations.some((translation) => translation.query_tokens.title.includes(keyword)) ||
+                initiative.tags.some(tag => tag.includes(keyword)) ||
+                translations.some((translation) => translation.query_tokens.short_description.includes(keyword)) ||
+                translations.some((translation) => translation.query_tokens.description.includes(keyword)) ||
                 false
             );
     }
 
     let initiatives: Initiative[] = useInitiatives();
-    const tagsByInitiatives = useTagsByInitiative();
 
     if (bb === 'Hide global') {
         initiatives = initiatives.filter(i => i.locations.features.length > 0)
@@ -241,8 +218,8 @@ export function useFilteredInitiatives(tags: string[], searchQuery: string, bb: 
         initiatives = initiatives.filter(i => initiativeInsideMap(i, bb));
     }
     initiatives = initiatives
-        .filter(initiativeMatchesCurrentSearch)
-        .filter(initiativeMatchCurrentTags);
+        .filter(initiativeMatchCurrentTags)
+        .filter(initiativeMatchesCurrentSearch);
     return initiatives;
 }
 

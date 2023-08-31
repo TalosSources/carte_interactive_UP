@@ -46,27 +46,30 @@ const NavBar = ( { activeRegion }: PropTypes) => {
     const windowSize = useWindowSize();
     return ( 
     <nav className="navbar border-primary d-flex flex-row align-items-center bg-white">
-        <Link to="/"><img id="logo" src="/sk-logotype-topbar.png"/></Link>
+        <Link to="/">
+            <img id="logo" src="/sk-logotype-topbar.png"/>
+        </Link>
+        
         <div id="sk-title">Smartakartan</div>
-        <NavRight>
 
-        <NavItems className="nav-links">
-            {windowSize.width > SMALL_SCREEN_WIDTH ? 
-            activeRegion.properties.rp_region.map(rp => <NavItem>
-                <Link to={'/r/'+activeRegion.properties.slug+'/'+rp.slug}>
-                    {t('region.'+activeRegion.properties.slug+'.'+rp.slug+'.title')}
-                </Link>
-            </NavItem>)
-            : <NavItem><button className="btn">==</button></NavItem>
-            }
-        </NavItems>
-        <div id="languageSelector">
-            <LanguageSelector
-                handleSelectChange={(e) => {i18next.changeLanguage(e.target.value); setLanguage(e.target.value);}}
-                value={language}
-                languages={languages}
-                />
-        </div>
+        <NavRight>
+            <NavItems className="nav-links">
+                {windowSize.width > SMALL_SCREEN_WIDTH ? 
+                activeRegion.properties.rp_region.map(rp =>
+                    <NavItem key={rp.slug}>
+                        <Link to={'/r/'+activeRegion.properties.slug+'/'+rp.slug}>
+                            {t('region.'+activeRegion.properties.slug+'.'+rp.slug+'.title')}
+                        </Link>
+                    </NavItem>)
+                : <NavItem><button className="btn">==</button></NavItem>}
+            </NavItems>
+            <div id="languageSelector">
+                <LanguageSelector
+                    handleSelectChange={(e) => {i18next.changeLanguage(e.target.value); setLanguage(e.target.value);}}
+                    value={language}
+                    languages={languages}
+                    />
+            </div>
         </NavRight>
     </nav>)
     
