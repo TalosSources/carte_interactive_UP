@@ -76,6 +76,12 @@ class LocationSerializer(FastSerializer):
                 'geometry':{'coordinates':  loc.coordinates.coords},
             }
 
+class SlowLocationSerializer(gis_serializers.GeoFeatureModelSerializer):
+    class Meta:
+        fields = ("title",)  # -shown under "Properties" in the API JSON
+        geo_field = "coordinates"  # this string value must match the PointField field name in models.py
+        model = models.Location
+
 class InitiativeTranslationSerializer(serializers.ModelSerializer):
     language = serializers.SlugRelatedField(read_only=True, slug_field='code')
     class Meta:
@@ -145,10 +151,10 @@ class OptimizedTagSerializer(FastSerializer):
     def serialize(self, tag):
         return tag.slug
 
-class InitiativeSerializer(serializers.HyperlinkedModelSerializer):
+class InitiativeSerializer(serializers.ModelSerializer):
     # Object name (and below field name) "locations" must match `related_name` in model. DRF docs:
     # https://www.django-rest-framework.org/api-guide/relations/#reverse-relations
-    locations = LocationSerializer(many=True)
+    locations = SlowLocationSerializer(many=True)
     tags = serializers.SlugRelatedField(slug_field='slug', many=True, read_only=True)
     region = serializers.SlugRelatedField(slug_field='slug', read_only=True)
     initiative_translations = InitiativeTranslationSerializer(many=True, read_only=True)
