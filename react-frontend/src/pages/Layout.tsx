@@ -58,7 +58,7 @@ export function Layout({regions, regionSlug} : {regions:Region[], regionSlug:str
                     <li key="links-home"><a href="https://kollaborativekonomi.se" target="_blank" className="ng-scope">KES</a></li>
                     <li key="links-about"><a href="https://www.smartakartan.se/om-smarta-kartan" target="_blank" className="ng-scope">About the map</a></li>
                     <li key="links-values"><a href="https://www.smartakartan.se/vardegrund" target="_blank" className="ng-scope">Our values</a></li>
-                    <li key="links-gitlab"><a href="https://gitlab.com/kollaborativ-ekonomi/smartakartan4" className="ng-scope">Open source</a></li>
+                    <li key="links-gitlab"><a href="https://gitlab.com/kollaborativ-ekonomi-sverige/smartakartan" className="ng-scope">Open source</a></li>
                     </ul>
                 </div>
                 <div className="col-lg-2 col-md-2 col-xs-6 col-sm-3">
