@@ -56,6 +56,7 @@ class RegionPageViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
         else:
             return None
 
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class InitiativeViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.OptimizedInitiativeSerializer
     def get_queryset(self):
