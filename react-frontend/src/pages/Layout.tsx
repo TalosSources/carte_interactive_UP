@@ -65,7 +65,7 @@ export function Layout({regions, regionSlug} : {regions:Region[], regionSlug:str
                     <ul className="list-unstyled">
                     <li key="regions-title"><strong>Regions</strong></li>
                     {regions.map((region) => 
-                    <li key={'regions-' + region.properties.slug}><Link to={'/r/' + region.properties.slug}>
+                    <li key={'regions-list-' + region.properties.slug}><Link to={'/r/' + region.properties.slug}>
                         {region.properties.title}
                     </Link></li>
                     )}
