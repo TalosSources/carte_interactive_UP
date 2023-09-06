@@ -110,7 +110,7 @@ class InitiativeTranslation(models.Model):
     language = models.ForeignKey(Language, related_name='it_language', on_delete=models.PROTECT)
     title = models.CharField(max_length=127)
     initiative = models.ForeignKey(Initiative, related_name='initiative_translations', on_delete=models.CASCADE)
-    description = CKEditor5Field(max_length=32767, config_name='defaultWithoutImages')
+    description = CKEditor5Field(max_length=32767, config_name='default')
     short_description = models.TextField(max_length=1000)
 
     def __str__(self):

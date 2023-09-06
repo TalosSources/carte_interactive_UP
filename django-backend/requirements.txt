@@ -5,6 +5,7 @@ djangorestframework
 djangorestframework-gis
 django-cors-headers
 psycopg2-binary
+Pillow
 python-slugify
 django-ckeditor-5
 # TODO: Using source distribution of psycopg2?
