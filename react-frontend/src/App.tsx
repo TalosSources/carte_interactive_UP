@@ -38,7 +38,6 @@ export default function App() {
             <CookieConsent
                 expires={2}
                 overlay
-                debug
             >
                 <h2>Welcome to SK4 beta.</h2>
                 <div>
