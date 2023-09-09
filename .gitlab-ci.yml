@@ -37,7 +37,7 @@ dryrun:
   script:
     - sudo docker-compose -p dryrun down
     - sudo docker-compose -p dryrun rm
-    - git describe --long --all --dirty > gitver
+	  - echo export const version = \"$(git describe --long --all --dirty)\" > src/version.tsx
     - patch docker-compose.yml < compose-dryrun.patch
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun up --build -d
@@ -60,7 +60,7 @@ deploy:
     - cd /var/lib/smartakartan/smartakartan-cd
     - git reset --hard
     - git pull
-    - git describe --long --all --dirty > gitver
+	  - echo export const version = \"$(git describe --long --all --dirty)\" > src/version.tsx
     - sudo docker-compose -f docker-compose.prod.yml down
     - sudo docker-compose -f docker-compose.prod.yml rm
     - sudo docker-compose -f docker-compose.prod.yml up --build -d

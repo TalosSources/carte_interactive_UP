@@ -3,6 +3,7 @@ import { Outlet, Link } from "react-router-dom";
 import { Region } from '../KesApi';
 import NavBar from '../components/NavBar';
 import styled from 'styled-components';
+import { version } from '../version';
 
 const Footer = styled.div`
     padding-top: 2rem;
@@ -51,6 +52,7 @@ export function Layout({regions, regionSlug} : {regions:Region[], regionSlug:str
                         </span>
                     </a>
                     </p>
+                    <p className="text-muted">Version: {version}</p>
                     <p className="text-muted ng-binding">© 2023 All rights reserved</p>
                 </div>
                 <div className="col-lg-2 col-md-2 col-xs-6 col-sm-3">
