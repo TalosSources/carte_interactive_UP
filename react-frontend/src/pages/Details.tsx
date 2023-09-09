@@ -9,6 +9,7 @@ import { GeoBoundingBox } from "../BoundingBox";
 import { initiativeLocationFeatureToGeoCoordinate } from "../KesApi";
 import styled from "styled-components";
 import { getDescription, getTitle } from "../i18n";
+import { useMatomo } from "@datapunt/matomo-tracker-react";
 
 const DetailsMainImage = styled.img`
     height: 20em;
@@ -40,6 +41,12 @@ export default function Details() {
     const initiatives = useInitiatives();
     const tags = useTags();
     const initiative = useInitiative(initiativeSlug);
+    const { trackPageView, trackEvent } = useMatomo()
+
+    // Track page view
+    React.useEffect(() => {
+        trackPageView({})
+    }, [])
 
     useEffect(() => {
         window.scrollTo(0, 0)
