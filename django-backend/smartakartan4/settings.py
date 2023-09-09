@@ -37,7 +37,7 @@ if "SCHEME" in os.environ:
     PUBLIC_URL = os.environ["SCHEME"]
 PUBLIC_URL += "://" + HOST
 
-ALLOWED_HOSTS = [HOST]
+ALLOWED_HOSTS = [HOST, "beta.smartakartan.se"]
 
 # Application definition
 
@@ -153,8 +153,7 @@ CSP_SCRIPT_SRC = [
     "https://cdnjs.cloudflare.com",
     "https://cdn.jsdelivr.net",
     "'unsafe-inline'",
-    HOST
-]
+] + ALLOWED_HOSTS
 CSP_DEFAULT_SRC = [
     "https://unpkg.com",
     "https://cdn.jsdelivr.net",
