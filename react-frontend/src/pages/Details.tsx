@@ -83,7 +83,7 @@ export default function Details() {
                         <ul className="list-group list-group-horizontal-sm">
                             {(()=>{
                                 if (initiative.instagram) {
-                                    return <li className="list-group-item p-0 border-0">
+                                    return <li key="details-instagram" className="list-group-item p-0 border-0">
                                         <a href={"https://www.instagram.com/"+initiative.instagram} target="_blank" className="pr-3" aria-label="instagram link">
                                             <i className="fa fa-instagram" aria-hidden="true"></i> Instagram
                                         </a>
@@ -91,7 +91,7 @@ export default function Details() {
                             }})()}
                             {(()=>{
                                 if (initiative.facebook) {
-                                    return <li className="list-group-item p-0 border-0">
+                                    return <li key="details-facebook" className="list-group-item p-0 border-0">
                                         <a href={initiative.facebook} target="_blank" className="pr-3" aria-label="facebook link">
                                             <i className="fa fa-facebook" aria-hidden="true"></i> Facebook
                                         </a>
@@ -99,7 +99,7 @@ export default function Details() {
                             }})()}
                             {(()=>{
                                 if (initiative.homepage) {
-                                    return <li className="list-group-item p-0 border-0">
+                                    return <li key="details-homepage" className="list-group-item p-0 border-0">
                                         <a href={initiative.homepage} target="_blank" className="pr-3" aria-label="website link">
                                             <i className="fa fa-link" aria-hidden="true"></i> Webbplats
                                         </a>
@@ -107,16 +107,16 @@ export default function Details() {
                             }})()}
                             {(()=>{
                                 if (initiative.mail) {
-                                    return <li className="list-group-item p-0 border-0">
-                                        <a href={"mailto:"+initiative.mail} className="pr-3" aria-label="email">
+                                    return <li key="details-mail" className="list-group-item p-0 border-0">
+                                        <a href={"mailto:" + initiative.mail} className="pr-3" aria-label="email">
                                             <i className="fa fa-envelope" aria-hidden="true"></i> E-postadress
                                         </a>
                                     </li>
                             }})()}
                             {(()=>{
                                 if (initiative.phone) {
-                                    return <li className="list-group-item p-0 border-0">
-                                        <a href={"tel:"+initiative.phone} className="pr-3" aria-label="phone">
+                                    return <li key="details-phone" className="list-group-item p-0 border-0">
+                                        <a href={"tel:" + initiative.phone} className="pr-3" aria-label="phone">
                                             <i className="fa fa-phone" aria-hidden="true"></i> Phone
                                         </a>
                                     </li>
