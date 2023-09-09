@@ -4,9 +4,10 @@ import CookieConsent from "react-cookie-consent";
 export function Banner() {
     return <CookieConsent
                 expires={2}
-                debug
                 overlay
                 overlayStyle={{ zIndex:1001 }}
+                buttonText="Sure. Take me to the map!"
+                style={{ background: "#FFFFFF", color: "#000000" }}
             >
                 <AboutBeta/>
             </CookieConsent>
