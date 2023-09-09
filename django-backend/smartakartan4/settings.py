@@ -37,7 +37,10 @@ if "SCHEME" in os.environ:
     PUBLIC_URL = os.environ["SCHEME"]
 PUBLIC_URL += "://" + HOST
 
-ALLOWED_HOSTS = [HOST, "beta.smartakartan.se"]
+ALLOWED_HOSTS = [HOST,
+ "beta.smartakartan.se",
+ "www.beta.smartakartan.se",
+ ]
 
 # Application definition
 
