@@ -13,7 +13,8 @@ import { registerRegionPageTitles } from './i18n';
 import './i18n'
 import RegionPage from './pages/RegionPage';
 import { QueryBoundaries } from './QueryBoundary';
-import CookieConsent from 'react-cookie-consent';
+import { ModerationPanelHelp } from './pages/ModerationPanelHelp';
+import { AboutBeta, Banner } from './components/Banner';
 
 
 export default function App() {
@@ -35,56 +36,7 @@ export default function App() {
     }, []);
     return (
         <BrowserRouter>
-            <CookieConsent
-                expires={2}
-                overlay
-            >
-                <h2>Welcome to SK4 beta.</h2>
-                <div>
-                    This is a preview for the next version of smartakartan. Feel free to play around and test this new version.
-                    Please note that changes made here will be overwritten at some point.
-                </div>
-                Notable changes:
-                <ul>
-                    <li>Reworked admin UI</li>
-                    <li>Real-time search</li>
-                </ul>
-
-                To the <a href="/admin">admin UI.</a><br/>
-                Credentials
-                <ul>
-                    <li>
-                        test site maintainer
-                        <ul>
-                            <li>
-                                username: admin
-                            </li>
-                            <li>
-                                password: admin
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        test curator / moderator
-                        <ul>
-                            <li>
-                                username: curator
-                            </li>
-                            <li>
-                                password: curator
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <div>
-                We're happy about any feedback. Please reach out to us.
-                </div>
-
-                <div>
-                    We're tracking all kind of behavior and browser information.
-                </div>
-            </CookieConsent>
+            <Banner/>
             <Routes>
                 <Route path="/" element={<Layout regions={regionList} regionSlug={regionSlug}/>}>
                     <Route index element={<Home
@@ -101,6 +53,8 @@ export default function App() {
                                                             regionSlug={regionSlug}
                                                           />}/>
                     <Route path="/r/:regionSlugP/:page" element={<RegionPage/>}/>
+                    <Route path="/help/moderationPanel" element={<ModerationPanelHelp/>}/>
+                    <Route path="/help/aboutBeta" element={<AboutBeta/>}/>
                     <Route path="*" element={<PageNotFound/>}/>
                 </Route>
             </Routes>
