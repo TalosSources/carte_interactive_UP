@@ -105,7 +105,16 @@ export default function Home(
     // Track page view
     React.useEffect(() => {
         console.log("track view")
-        trackPageView({})
+        trackPageView({
+            documentTitle: 'Page title', // optional
+            href: 'https://LINK.TO.PAGE', // optional
+            customDimensions: [
+                {
+                id: 1,
+                value: 'loggedIn',
+                },
+            ], // optional
+        })
     }, [])
     useEffect(() =>{
         if (typeof regionSlugP !== 'undefined') {
