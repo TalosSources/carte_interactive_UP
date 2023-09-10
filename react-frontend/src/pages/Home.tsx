@@ -211,16 +211,16 @@ export default function Home(
 			<TagBar tags={tags} urlActiveTags={urlActiveTags} setHomeTags={setActiveTags} searchQuery={searchString} bb={bb}/>
 
 			<div id="filters">
-			    <SelectFromObject 
+                            <SelectFromObject 
 				obj={WhatToShow}
 				defaultValue={WhatToShow.Everything.value}
 				onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
-			    />
-			    <SelectFromObject 
+                            />
+                            <SelectFromObject 
 				obj={Sorting}
 				defaultValue={Sorting.Distance.value}
 				onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
-			    />
+                            />
 			</div>
 			<MainCardList tags={activeTags} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
 		</QueryBoundaries>
