@@ -1,5 +1,6 @@
 // React
 import React, {useState, useEffect, startTransition} from "react";
+import { Suspense } from "react";
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
 import { createBrowserHistory } from "@remix-run/router";
@@ -199,31 +200,33 @@ export default function Home(
 
     return <><SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={activeTags}/>
 
+            <Suspense fallback={<></>}>
             <Header>
                 {(() => (
                     <div id="welcomeMessage" dangerouslySetInnerHTML={{__html: activeReg.properties.welcome_message_html}} />
                 ))()}
             </Header>
+            </Suspense>
 
             <MainContainer>
                 <SearchBox setQuery={setSearchString} initialSearch={urlSearchString}/>
-		<QueryBoundaries>
-			<TagBar tags={tags} urlActiveTags={urlActiveTags} setHomeTags={setActiveTags} searchQuery={searchString} bb={bb}/>
+                <QueryBoundaries>
+                    <TagBar tags={tags} urlActiveTags={urlActiveTags} setHomeTags={setActiveTags} searchQuery={searchString} bb={bb}/>
 
-			<div id="filters">
-                            <SelectFromObject 
-				obj={WhatToShow}
-				defaultValue={WhatToShow.Everything.value}
-				onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
-                            />
-                            <SelectFromObject 
-				obj={Sorting}
-				defaultValue={Sorting.Distance.value}
-				onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
-                            />
-			</div>
-			<MainCardList tags={activeTags} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
-		</QueryBoundaries>
+                    <div id="filters">
+                                    <SelectFromObject 
+                        obj={WhatToShow}
+                        defaultValue={WhatToShow.Everything.value}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
+                                    />
+                                    <SelectFromObject 
+                        obj={Sorting}
+                        defaultValue={Sorting.Distance.value}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
+                                    />
+                    </div>
+                    <MainCardList tags={activeTags} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
+                </QueryBoundaries>
                 <div id="helpUsBox">
                 <a href="https://smartakartan.se/starta-verksamhet">
                     <img src='/hjälpaOss.jpg' />
@@ -400,7 +403,8 @@ function MapMarker({initiative, feature, index}:{initiative: Initiative, feature
         </Marker>;
 }
 
-function MapMarkers({initiatives}:{initiatives: Initiative[]}) {
+function MapMarkers({tags, searchQuery, bb}:{tags:string[], searchQuery: string, bb:GeoBoundingBox | "Hide global" | "Show all"}) {
+    const initiatives = useFilteredInitiatives(tags, searchQuery, bb);
     return <>
         { initiatives.map((initiative) =>
             initiative.locations.features.map((feature, index) =>
@@ -429,7 +433,6 @@ function SKMapContainer({setMapCenter, setMapBounds, tags, searchQuery, bb}:{set
         })
         return null;
     }
-    const initiatives = useFilteredInitiatives(tags, searchQuery, bb);
     return <MapContainer 
             id="map" 
             center={[59, 15]} 
@@ -442,7 +445,9 @@ function SKMapContainer({setMapCenter, setMapBounds, tags, searchQuery, bb}:{set
                 />
             <RegisterMapCenter/>
             <MarkerClusterGroup chunkedLoading>
-                <MapMarkers initiatives={initiatives}/>
+                <Suspense fallback={<></>}>
+                    <MapMarkers tags={tags} searchQuery={searchQuery} bb={bb}/>
+                </Suspense>
             </MarkerClusterGroup>
         </MapContainer>
 
