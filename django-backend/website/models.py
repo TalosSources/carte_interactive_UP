@@ -97,7 +97,7 @@ class RegionPage(models.Model):
 class RegionPageTranslation(models.Model):
     language = models.ForeignKey(Language, related_name='rp_language', on_delete=models.PROTECT)
     title = models.CharField(max_length=127)
-    description = CKEditor5Field(max_length=32767, config_name='defaultWithoutImages')
+    description = CKEditor5Field(max_length=32767, config_name='extends')
     region_page = models.ForeignKey(RegionPage, on_delete=models.CASCADE, related_name="rp_translations")
     sk3_id = models.IntegerField(unique=True)
     class Meta:
