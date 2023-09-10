@@ -151,7 +151,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = [PUBLIC_URL, "https://smartakartan.entrop.mywire.org"]
 CORS_ALLOWED_ORIGINS = [PUBLIC_URL, "https://smartakartan.entrop.mywire.org", "http://localhost", "https://smartakartan.se", "https://beta.smartakartan.se", "https://www.beta.smartakartan.se"]
-CSRF_TRUSTED_ORIGINS = [PUBLIC_URL]
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 CSP_SCRIPT_SRC = [
     "https://unpkg.com",
     "https://cdnjs.cloudflare.com",
