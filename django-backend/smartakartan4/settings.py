@@ -219,7 +219,7 @@ CKEDITOR_5_CONFIGS = {
 },
 'default': {
     'toolbar': ['heading', '|', 'bold', 'italic', 'link',
-                'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', 'fontSize', 'fontFamily', 'fontColor',],
+                'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', 'fontSize', 'fontFamily', 'fontColor','mediaEmbed', 'sourceEditing', ],
 
 },
 'extends': {
