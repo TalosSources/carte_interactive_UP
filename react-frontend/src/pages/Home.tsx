@@ -197,8 +197,7 @@ export default function Home(
         bb = "Hide global"
     }
 
-    return <QueryBoundaries>
-            <SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={activeTags}/>
+    return <><SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={activeTags}/>
 
             <Header>
                 {(() => (
@@ -208,28 +207,28 @@ export default function Home(
 
             <MainContainer>
                 <SearchBox setQuery={setSearchString} initialSearch={urlSearchString}/>
+		<QueryBoundaries>
+			<TagBar tags={tags} urlActiveTags={urlActiveTags} setHomeTags={setActiveTags} searchQuery={searchString} bb={bb}/>
 
-                <TagBar tags={tags} urlActiveTags={urlActiveTags} setHomeTags={setActiveTags} searchQuery={searchString} bb={bb}/>
-
-                <div id="filters">
-                    <SelectFromObject 
-                        obj={WhatToShow}
-                        defaultValue={WhatToShow.Everything.value}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
-                    />
-                    <SelectFromObject 
-                        obj={Sorting}
-                        defaultValue={Sorting.Distance.value}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
-                    />
-                </div>
-                <MainCardList tags={activeTags} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
+			<div id="filters">
+			    <SelectFromObject 
+				obj={WhatToShow}
+				defaultValue={WhatToShow.Everything.value}
+				onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setInitiativesToShow(e.target.value)} 
+			    />
+			    <SelectFromObject 
+				obj={Sorting}
+				defaultValue={Sorting.Distance.value}
+				onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSorting(e.target.value)}
+			    />
+			</div>
+			<MainCardList tags={activeTags} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
+		</QueryBoundaries>
                 <div id="helpUsBox">
                 <a href="https://smartakartan.se/starta-verksamhet">
                     <img src='/hjälpaOss.jpg' />
                 </a></div>
-            </MainContainer>
-        </QueryBoundaries>
+            </MainContainer></>
 }
 
 // Home Components
