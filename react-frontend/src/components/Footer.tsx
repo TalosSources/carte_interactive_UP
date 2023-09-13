@@ -37,7 +37,7 @@ export function SKFooter({regions} : {regions:Region[]}) {
             <div className="col-lg-2 col-md-2 col-xs-6 col-sm-3">
                 <ul className="list-unstyled">
                 <li key="links-title"><strong>Smartakartan</strong></li>
-                <li key="links-forum"><a href="/admin" target="_blank" className="ng-scope">Curation panel</a></li>
+                <li key="links-admin"><a href="/admin" target="_blank" className="ng-scope">Curation panel</a></li>
                 <li key="links-forum"><a href="/help/aboutBeta" target="_blank" className="ng-scope">About the beta</a></li>
                 <li key="links-home"><a href="https://kollaborativekonomi.se" target="_blank" className="ng-scope">KES</a></li>
                 <li key="links-about"><a href="https://www.smartakartan.se/om-smarta-kartan" target="_blank" className="ng-scope">About the map</a></li>
