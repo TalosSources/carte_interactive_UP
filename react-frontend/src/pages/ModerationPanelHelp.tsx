@@ -2,7 +2,7 @@ import React from 'react';
 
 export function ModerationPanelHelp() {
     return <div>
-                To the <a href="/admin">moderation panel</a>.<br/>
+                To the <a href="/admin">curation panel</a>.<br/>
                 Credentials
                 <ul>
                     <li>
