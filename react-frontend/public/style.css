@@ -14,7 +14,7 @@
   }
 }
 #map {
-  height: 100vh;
+  height: 80vh;
 }
 #details-map {
   height: 100%;
@@ -22,7 +22,7 @@
 
 @media (max-width: 800px) {
   #map {
-    height: 30vh;
+    height: 60vh;
   }
 }
 
