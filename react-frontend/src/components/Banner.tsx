@@ -22,12 +22,12 @@ export function AboutBeta() {
                 </div><div>
                     Feel free to play around and test this new version.
                     For testing purposes the initiatives from the current version 3 have been imported.
-                    Initiatives can be edited in the <a href="/admin">moderation panel</a>.
+                    Initiatives can be edited in the <a href="/admin">curation panel</a>(<a href="/help/moderationPanel">credentials</a>).
                     Please note that changes made in this panel here will be overwritten at some point.
                 </div>
                 Noteworthy changes:
                 <ul>
-                    <li><a href="/help/moderationPanel">Reworked moderation panel</a></li>
+                    <li>Reworked curation panel</li>
                     <li>Real-time search</li>
                 </ul>
 
