@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { SMALL_SCREEN_WIDTH } from '../constants';
-import useWindowSize from '../hooks/useWindowSize';
 import { Language, Region, fetchLanguages } from '../KesApi';
 import LanguageSelector from './LanguageSelector';
 import i18next, { t } from 'i18next';
 import { Link } from 'react-router-dom';
+import { RegionPageNav } from './RegionPageNav';
 
 const NavRight = styled.div`
     display: flex;
@@ -15,35 +14,12 @@ const NavRight = styled.div`
     align-items: center;
 `;
 
-const NavItem = styled.li`
-    display: inline;
-    padding: 1rem;
-    // border-left: 1px solid grey;
-    height: 100%;
-    line-height: 100%;
-`;
-
-const NavItems = styled.ul`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    list-style: none;
-    height: 100%;
-    margin: 0;
-
-`;
-
-type PropTypes = {
-    activeRegion:Region,
-}
-
-const NavBar = ( { activeRegion }: PropTypes) => {
+const NavBar = ( { activeRegion }: {activeRegion : Region}) => {
     const [language, setLanguage] = useState(i18next.language);
     const [languages, setLanguages] = useState<Language[]>([]);
     useEffect(() => {
         fetchLanguages().then(l => setLanguages(l));
     }, []);
-    const windowSize = useWindowSize();
     return ( 
     <nav className="navbar border-primary d-flex flex-row align-items-center bg-white">
         <Link to="/">
@@ -53,23 +29,12 @@ const NavBar = ( { activeRegion }: PropTypes) => {
         <div id="sk-title">Smartakartan</div>
 
         <NavRight>
-            <NavItems className="nav-links">
-                {windowSize.width > SMALL_SCREEN_WIDTH ? 
-                activeRegion.properties.rp_region.map(rp =>
-                    <NavItem key={rp.slug}>
-                        <Link to={'/r/'+activeRegion.properties.slug+'/'+rp.slug}>
-                            {t('region.'+activeRegion.properties.slug+'.'+rp.slug+'.title')}
-                        </Link>
-                    </NavItem>)
-                : <NavItem><button className="btn">==</button></NavItem>}
-            </NavItems>
-            <div id="languageSelector">
-                <LanguageSelector
-                    handleSelectChange={(e) => {i18next.changeLanguage(e.target.value); setLanguage(e.target.value);}}
-                    value={language}
-                    languages={languages}
-                    />
-            </div>
+            <RegionPageNav activeRegion={activeRegion}/>
+            <LanguageSelector
+                handleSelectChange={(e) => {i18next.changeLanguage(e.target.value); setLanguage(e.target.value);}}
+                value={language}
+                languages={languages}
+                />
         </NavRight>
     </nav>)
     

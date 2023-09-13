@@ -7,7 +7,7 @@ function LanguageSelector(prop : {value : string,
     }) {
     // Inspiration: https://reactjs.org/docs/forms.html#the-select-tag
     console.log(prop);
-    return (
+    return <div id="languageSelector">
         <select value={prop.value} onChange={(event) => prop.handleSelectChange(event)}>
             {
                 prop.languages.map(
@@ -19,7 +19,7 @@ function LanguageSelector(prop : {value : string,
                 )
             }
         </select>
-    );
+        </div>
 }
 
 export default LanguageSelector
