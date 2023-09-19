@@ -62,6 +62,12 @@ class InitiativeAdmin(admin.ModelAdmin):
     #list_max_show_all = 1000
     inlines = [InitiativeDescriptionTextInline, LocationInline]
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ["slug",]
+        else:
+            return []
+
 
 @gis_admin.register(models.Region)
 class RegionAdmin(gis_admin.GISModelAdmin):
