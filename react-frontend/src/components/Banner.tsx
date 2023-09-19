@@ -6,7 +6,7 @@ export function Banner() {
                 expires={2}
                 overlay
                 overlayStyle={{ zIndex:1001 }}
-                buttonText="Sure. Take me to the map!"
+                buttonText="Got it. Take me to the map!"
                 style={{ background: "#FFFFFF", color: "#000000" }}
             >
                 <AboutBeta/>
