@@ -45,7 +45,6 @@ export interface Initiative {
     main_image_url: string;
     state: string;
     promote: boolean;
-    initiative_images: InitiativeImage[];
     initiative_translations: {
         language: string,
         title: string,
@@ -64,12 +63,6 @@ export interface Initiative {
     mail: string,
     area: string,
     online_only: boolean,
-}
-
-export interface InitiativeImage {
-    width : number;
-    height : number;
-    url : string;
 }
 
 export interface RegionPage {
@@ -103,16 +96,7 @@ export function useRegionPage(regionSlugP:string, page:string) {
 
 
 export function getSmallestImage(i: Initiative) {
-    let result=''
-    let resultSize = Number.MAX_VALUE
-    for (const image of i.initiative_images) {
-        const imageSize = image.height*image.width
-        if (imageSize < resultSize) {
-            result = image.url;
-            resultSize = imageSize;
-        }
-    }
-    return result;
+    return i.main_image_url
 }
 
 function fetchFromDB(path : string) {

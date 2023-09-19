@@ -93,14 +93,6 @@ class LanguageSerializer(serializers.ModelSerializer):
         model = models.Language
         fields = ['code', 'flag', 'englishName', 'nativeName']
 
-class InitiativeImagesSerializer(FastSerializer):
-    def serialize(self, image):
-        return {
-            'width': image.width,
-            'height': image.height,
-            'url': image.url,
-        }
-
 class RegionPageSerializer(serializers.ModelSerializer):
     rp_translations = serializers.SerializerMethodField()
     def get_rp_translations(self, obj):
@@ -158,7 +150,13 @@ class InitiativeSerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(slug_field='slug', many=True, read_only=True)
     region = serializers.SlugRelatedField(slug_field='slug', read_only=True)
     initiative_translations = InitiativeTranslationSerializer(many=True, read_only=True)
-    initiative_images = InitiativeImagesSerializer(many=True)
+    main_image_url = serializers.SerializerMethodField()
+
+    def get_main_image_url(self, initiative):
+        request = self.context.get('request')
+        photo_url = initiative.main_image.url
+        return request.build_absolute_uri(photo_url)
+
 
     class Meta:
         model = models.Initiative
@@ -168,7 +166,6 @@ class InitiativeSerializer(serializers.ModelSerializer):
             'initiative_translations',
             'tags',
             'region',
-            'initiative_images',
             'main_image_url',
             'facebook', 'instagram', 'phone', 'homepage', 'mail',
             'state', 'promote',
@@ -176,7 +173,6 @@ class InitiativeSerializer(serializers.ModelSerializer):
         ]
 
 class OptimizedInitiativeSerializer():
-    # TODO
     # Annotate each fields contribution
     # only the objects                       22.8ms ±  8.5ms
     # without any related tables +  3.1ms =  25.9ms ±  4.7ms
@@ -218,14 +214,6 @@ class OptimizedInitiativeSerializer():
                 initiative_locations[iid] = []
             initiative_locations[iid].append(LocationSerializer(location).data)
 
-        all_images = models.InitiativeImage.objects.all()
-        initiative_images = {}
-        for image in all_images:
-            iid = image.initiative_id
-            if iid not in initiative_images:
-                initiative_images[iid] = []
-            initiative_images[iid].append(InitiativeImagesSerializer(image).data)
-
         all_translations = models.InitiativeTranslation.objects.all()
         initiative_translations = {}
         for translation in all_translations:
@@ -244,11 +232,10 @@ class OptimizedInitiativeSerializer():
             'id': ini.id,
             'slug' : ini.slug,
             'region' : region_slugs[ini.region_id],
-            'main_image_url' : ini.main_image_url,
+            'main_image_url' : None if not ini.main_image else ini.main_image.url,
             'facebook' : ini.facebook,
             'instagram' : ini.instagram,
             'phone' : ini.phone,
-            'initiative_images': initiative_images.get(ini.id, []),
             'initiative_translations': initiative_translations.get(ini.id, []),
             'homepage' : ini.homepage,
             'mail' : ini.mail,

@@ -42,11 +42,6 @@ class InitiativeDescriptionTextInline(admin.StackedInline):
     extra = 0  # -adds an extra row that is always visible
     min_num = 1
 
-class InitiativeImagesInline(admin.TabularInline):
-    model = models.InitiativeImage
-    extra = 0  # -adds an extra row that is always visible
-
-
 @admin.register(models.Initiative)
 class InitiativeAdmin(admin.ModelAdmin):
     @admin.display(description="Title in all languages")
@@ -65,7 +60,7 @@ class InitiativeAdmin(admin.ModelAdmin):
     # TODO: Adding title_func for details view
     readonly_fields = ["slug"]
     #list_max_show_all = 1000
-    inlines = [InitiativeImagesInline, InitiativeDescriptionTextInline, LocationInline]
+    inlines = [InitiativeDescriptionTextInline, LocationInline]
 
 
 @gis_admin.register(models.Region)

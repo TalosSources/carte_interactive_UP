@@ -1,6 +1,8 @@
 import dataclasses
 import logging
 import sys
+from pathlib import Path
+import subprocess
 import random
 import os
 from datetime import datetime
@@ -10,6 +12,7 @@ import json
 import django.contrib.gis.geos
 import django.core.management.base
 import django.db
+from django.core.files import File
 import requests
 
 import website.models
@@ -464,20 +467,6 @@ def process_business_rows(businessRows):
         else:
             return ""
 
-    def getImageDict(row):
-        result = {}
-        if RJSK_ACF_MAIN_IMAGE in row[RJK_ACF] and row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]: # : false | Dict
-            sizes = row[RJK_ACF][RJSK_ACF_MAIN_IMAGE]['sizes']
-            for key in sizes:
-                if 'height' in key:
-                    continue
-                if 'width' in key:
-                    continue
-                width = sizes[key+'-width']
-                height = sizes[key+'-height']
-                result[(width, height)] = sizes[key]
-        return result
-
     def getInstagram(row):
         return row['acf']['instagram_username']
 
@@ -572,7 +561,6 @@ def process_business_rows(businessRows):
         importLocations(thisTranslationSK3, initiativeBase)
         return initiativeBase
 
-
     def addTranslationToInitiativeBase(row, initiativeBase):
         wp_post_id = row[RJK_ID]
         if RJK_LANG in row:
@@ -636,6 +624,9 @@ def process_business_rows(businessRows):
         return row['acf']['facebook_url']
 
     def addNewBaseInitiative(row):
+        title = row[RJK_TITLE][RJSK_RENDERED]
+        slug = generateNewSlug(title, website.models.Initiative) # TODO: Ideally, we want to have the english version
+
         def getPhone():
             if 'phone_number' in row['acf']:
                 if 'phone' in row['acf'] and row['acf']['phone'] != '':
@@ -647,14 +638,24 @@ def process_business_rows(businessRows):
             if 'phone' in row['acf']:
                 return row['acf']['phone']
             return None
+
+        def getImage():
+            main_image_url = getImageUrl(row)
+            if main_image_url == "":
+                return None
+            image_parts = main_image_url.split(".")
+            file_extension = image_parts[-1]
+            file_name = f"{slug}.{file_extension}"
+            file_path = f"../media/{file_name}"
+            if not os.path.exists(file_path):
+                subprocess.run(["curl", main_image_url, "-o", file_path], check=True)
+            return Path(file_path)
+
         data_type_full_name = row[RJK_TYPE]
-        main_image_url = getImageUrl(row)
         region_name = data_type_full_name.split("_")[0]
         assert region_name in REGION_DATA_DICT.keys()
 
-        logging.debug(f"{main_image_url=}")
         region_obj = website.models.Region.objects.get(slug=region_name)
-        title = row[RJK_TITLE][RJSK_RENDERED]
         phone = getPhone()
         mail = row['acf']['email']
         area = row['acf']['area']
@@ -683,14 +684,18 @@ def process_business_rows(businessRows):
         if not instagram is None:
             if len(instagram)>127:
                 print(f"Instagram for {title} seems unreasonably long: '{instagram}'")
-        slug = generateNewSlug(title, website.models.Initiative) # TODO: Ideally, we want to have the english version
         if random.random() < 0.95:
             promote=False
         else:
             promote=True
+        image_path = getImage()
+        if image_path is not None:
+            f = File(image_path.open(mode="rb"), name=image_path.name)
+        else:
+            f = None
         new_initiative_obj = website.models.Initiative(
             region=region_obj,
-            main_image_url=main_image_url,
+            main_image = f,
             slug=slug,
             mail=mail,
             phone=phone,
@@ -704,13 +709,11 @@ def process_business_rows(businessRows):
             area=area,
         )
         new_initiative_obj.save()
+        if image_path is not None:
+            os.remove(image_path)
 
         missingSvTranslation.add(new_initiative_obj.slug)
         missingEnTranslation.add(new_initiative_obj.slug)
-        for (imageSize, url) in getImageDict(row).items():
-            width, height = imageSize
-            website.models.InitiativeImage(width=width,height=height,
-                                           url=url, initiative=new_initiative_obj).save()
         return new_initiative_obj
     
     def importLocations(row, initiativeObj):

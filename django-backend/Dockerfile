@@ -6,7 +6,7 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /code
 RUN apt-get update -y
-RUN apt-get install -y gdal-bin netcat
+RUN apt-get install -y gdal-bin netcat curl
 
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt

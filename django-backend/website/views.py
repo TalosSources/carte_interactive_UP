@@ -81,7 +81,6 @@ class RegionViewSet(rest_framework.viewsets.ReadOnlyModelViewSet):
         .prefetch_related("initiatives__tags") \
         .prefetch_related("initiatives__region") \
         .prefetch_related("initiatives__locations") \
-        .prefetch_related("initiatives__initiative_images") \
         .prefetch_related("initiatives__initiative_translations") \
         .prefetch_related("initiatives__initiative_translations__language") \
         .prefetch_related("rp_region") \

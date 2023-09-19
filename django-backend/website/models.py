@@ -47,7 +47,7 @@ class Initiative(models.Model):
     # This means that we can use NULL/None for all new rows/items that we add
     region = models.ForeignKey(Region, related_name='initiatives', on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, related_name='initiatives')
-    main_image_url = models.URLField(null=True, blank=True)
+    main_image = models.ImageField(null=True)
     slug = models.SlugField(max_length=127, unique=True)
 
     instagram = models.CharField(max_length=127, null=True, blank=True)
@@ -72,17 +72,6 @@ class Initiative(models.Model):
         # Example: http://localhost/details/2
         # Having defined this method enables "view on site" in the admin interface
         return f"/details/{self.slug}"
-
-class InitiativeImage(models.Model):
-    initiative = models.ForeignKey(Initiative, related_name='initiative_images', on_delete=models.CASCADE)
-    url = models.URLField()
-    width = models.IntegerField()
-    height = models.IntegerField()
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['initiative', 'width', 'height'], name='max one image per size and initiative')
-        ]
 
 class RegionPage(models.Model):
     region = models.ForeignKey(Region, related_name='rp_region', on_delete=models.CASCADE)
