@@ -82,22 +82,6 @@ export default function Details() {
                     <div className="btn-group mb-1 mt-2" role="group" aria-label="Link list">
                         <ul className="list-group list-group-horizontal-sm">
                             {(()=>{
-                                if (initiative.instagram) {
-                                    return <li key="details-instagram" className="list-group-item p-0 border-0">
-                                        <a href={"https://www.instagram.com/"+initiative.instagram} target="_blank" className="pr-3" aria-label="instagram link">
-                                            <i className="fa fa-instagram" aria-hidden="true"></i> Instagram
-                                        </a>
-                                    </li>
-                            }})()}
-                            {(()=>{
-                                if (initiative.facebook) {
-                                    return <li key="details-facebook" className="list-group-item p-0 border-0">
-                                        <a href={initiative.facebook} target="_blank" className="pr-3" aria-label="facebook link">
-                                            <i className="fa fa-facebook" aria-hidden="true"></i> Facebook
-                                        </a>
-                                    </li>
-                            }})()}
-                            {(()=>{
                                 if (initiative.homepage) {
                                     return <li key="details-homepage" className="list-group-item p-0 border-0">
                                         <a href={initiative.homepage} target="_blank" className="pr-3" aria-label="website link">
@@ -118,6 +102,22 @@ export default function Details() {
                                     return <li key="details-phone" className="list-group-item p-0 border-0">
                                         <a href={"tel:" + initiative.phone} className="pr-3" aria-label="phone">
                                             <i className="fa fa-phone" aria-hidden="true"></i> Phone
+                                        </a>
+                                    </li>
+                            }})()}
+                            {(()=>{
+                                if (initiative.instagram) {
+                                    return <li key="details-instagram" className="list-group-item p-0 border-0">
+                                        <a href={"https://www.instagram.com/"+initiative.instagram} target="_blank" className="pr-3" aria-label="instagram link">
+                                            <i className="fa fa-instagram" aria-hidden="true"></i> Instagram
+                                        </a>
+                                    </li>
+                            }})()}
+                            {(()=>{
+                                if (initiative.facebook) {
+                                    return <li key="details-facebook" className="list-group-item p-0 border-0">
+                                        <a href={initiative.facebook} target="_blank" className="pr-3" aria-label="facebook link">
+                                            <i className="fa fa-facebook" aria-hidden="true"></i> Facebook
                                         </a>
                                     </li>
                             }})()}
