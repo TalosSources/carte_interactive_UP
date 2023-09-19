@@ -72,6 +72,7 @@ deploy:
     - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py setup_user --su -u admin -p "admin"
     - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py setup_user --ca -u curator -p "curator"
     - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py import_sk3_data
+    - ls -R
   environment:
     name: production
-    url: https://smartakartan.entrop.mywire.org
+    url: https://beta.smartakartan.se
