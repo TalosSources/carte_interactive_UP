@@ -78,6 +78,7 @@ class RegionPageTranslationInline(admin.StackedInline):
 @gis_admin.register(models.RegionPage)
 class RegionPageAdmin(admin.ModelAdmin):
     list_display = ("slug", "region", "order")
+    list_filter = ["region"]
     inlines = [RegionPageTranslationInline,]
 
 @gis_admin.register(models.Language)
