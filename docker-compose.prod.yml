@@ -16,6 +16,7 @@ services:
       - db
     volumes:
       - ./cache:/code/django-backend/cache
+      - ./media:/media
 
   web:
     build:
