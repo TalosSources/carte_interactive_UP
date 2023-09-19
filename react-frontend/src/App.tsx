@@ -15,6 +15,7 @@ import RegionPage from './pages/RegionPage';
 import { QueryBoundaries } from './QueryBoundary';
 import { ModerationPanelHelp } from './pages/ModerationPanelHelp';
 import { AboutBeta, Banner } from './components/Banner';
+import {injectMatomo} from './components/MatomoInjection'
 
 
 export default function App() {
@@ -34,6 +35,9 @@ export default function App() {
             .catch(err => console.error(err));
         
     }, []);
+    React.useEffect(() => {
+        injectMatomo()
+    }, [])
     return (
         <BrowserRouter>
             <Banner/>

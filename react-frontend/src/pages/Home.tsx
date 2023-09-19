@@ -32,7 +32,6 @@ import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
 import { Feature, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, matchTagsWithInitiatives, Region, Tag, useFilteredInitiatives, useInitiatives } from "../KesApi";
 import { Button } from "react-bootstrap";
 import { QueryBoundaries } from "../QueryBoundary";
-import { useMatomo } from "@datapunt/matomo-tracker-react";
 
 
 const Header = styled.header`
@@ -101,21 +100,7 @@ export default function Home(
 
     const [queryParameters] = useSearchParams()
     const {regionSlugP} = useParams();
-    const { trackPageView, trackEvent } = useMatomo()
 
-    // Track page view
-    React.useEffect(() => {
-        trackPageView({
-            customDimensions: [
-                { id: 0, value: searchString},
-                { id: 1, value: regionSlug},
-                { id: 2, value: activeTags.join(",")},
-                { id: 3, value: mapCenter.toString()},
-                { id: 4, value: sorting},
-                { id: 5, value: initiativesToShow},
-            ], // optional
-        })
-    })
     useEffect(() =>{
         if (typeof regionSlugP !== 'undefined') {
             setRegionSlug(regionSlugP)
