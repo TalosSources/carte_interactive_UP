@@ -154,8 +154,11 @@ class InitiativeSerializer(serializers.ModelSerializer):
 
     def get_main_image_url(self, initiative):
         request = self.context.get('request')
-        photo_url = initiative.main_image.url
-        return request.build_absolute_uri(photo_url)
+        try:
+            photo_url = initiative.main_image.url
+            return request.build_absolute_uri(photo_url)
+        except:
+            return ""
 
 
     class Meta:
