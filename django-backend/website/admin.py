@@ -6,6 +6,12 @@ from django.contrib.gis.db import models as gis_models
 
 from . import models
 
+class SKAdminSite(admin.AdminSite):
+    site_header = "Smartakartan Curation Panel"
+
+admin_site = SKAdminSite(name="myadmin")
+
+
 # copied from django.contrig.gis.admin.options because it is not exported :\
 class GeoModelAdminMixin:
     gis_widget = OSMWidget
@@ -42,7 +48,7 @@ class InitiativeDescriptionTextInline(admin.StackedInline):
     extra = 0  # -adds an extra row that is always visible
     min_num = 1
 
-@admin.register(models.Initiative)
+@admin.register(models.Initiative, site=admin_site)
 class InitiativeAdmin(admin.ModelAdmin):
     @admin.display(description="Title in all languages")
     def title_func(self, initiative_obj):
@@ -69,7 +75,7 @@ class InitiativeAdmin(admin.ModelAdmin):
             return []
 
 
-@gis_admin.register(models.Region)
+@gis_admin.register(models.Region, site=admin_site)
 class RegionAdmin(gis_admin.GISModelAdmin):
     list_display = ("slug", "title")
     readonly_fields = ("sk3_id",)
@@ -81,13 +87,13 @@ class RegionPageTranslationInline(admin.StackedInline):
     extra = 0  # -adds an extra row that is always visible
     min_num = 1
 
-@gis_admin.register(models.RegionPage)
+@admin.register(models.RegionPage, site=admin_site)
 class RegionPageAdmin(admin.ModelAdmin):
     list_display = ("slug", "region", "order")
     list_filter = ["region"]
     inlines = [RegionPageTranslationInline,]
 
-@gis_admin.register(models.Language)
+@admin.register(models.Language, site=admin_site)
 class LanguageAdmin(admin.ModelAdmin):
     @admin.display(description="English name")
     def title_func(self, lang):
@@ -95,6 +101,6 @@ class LanguageAdmin(admin.ModelAdmin):
     list_display = ["title_func"]
 
 
-@admin.register(models.Tag)
+@admin.register(models.Tag, site=admin_site)
 class TagAdmin(admin.ModelAdmin):
     list_display = ("title", "slug")

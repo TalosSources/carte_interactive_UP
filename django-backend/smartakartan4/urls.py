@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from website import views
+from website.admin import admin_site
 
 router = rest_framework.routers.DefaultRouter()
 router.register(r"initiatives", views.InitiativeViewSet, basename="initiative")
@@ -32,7 +33,7 @@ router.register(r"languages", views.LanguageViewSet, basename="language")
 urlpatterns = [
     path('', include('website.urls')),  # standard website interface
     path('api/', include(router.urls)),  # API interface
-    path('admin/', admin.site.urls),  # Admin interface
+    path('admin/', admin_site.urls),  # Admin interface
 ]
 urlpatterns += [
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
