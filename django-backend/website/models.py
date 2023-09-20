@@ -48,7 +48,7 @@ class Initiative(models.Model):
     region = models.ForeignKey(Region, related_name='initiatives', on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, related_name='initiatives')
     main_image = models.ImageField(null=True)
-    slug = models.SlugField(max_length=127, unique=True)
+    slug = models.SlugField(max_length=127, unique=True, help_text="The URL part of this initiative. Cannot be changed.")
 
     instagram = models.CharField(max_length=127, null=True, blank=True)
     facebook = models.CharField(max_length=1023, null=True, blank=True)
