@@ -1,7 +1,7 @@
 // React
 import React, {useState, useEffect, startTransition} from "react";
 import { Suspense } from "react";
-import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {Link, useParams, useSearchParams} from "react-router-dom";
 import styled from "styled-components";
 import { createBrowserHistory } from "@remix-run/router";
 
@@ -23,13 +23,12 @@ import TopTagButton from "../components/TopTagButton";
 import SelectFromObject from "../components/SelectFromObject";
 
 import { buildUrl } from 'build-url-ts';
-import useWindowSize from "../hooks/useWindowSize";
 
 import { useTranslation } from 'react-i18next';
 
 // Constants
-import { MEDIUM_SCREEN_WIDTH, SMALL_SCREEN_WIDTH } from "../constants";
-import { Feature, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, matchTagsWithInitiatives, Region, Tag, useFilteredInitiatives, useInitiatives } from "../KesApi";
+import { SMALL_SCREEN_WIDTH } from "../constants";
+import { Feature, fetchTags, Initiative, initiativeLocationFeatureToGeoCoordinate, Region, Tag, useFilteredInitiatives } from "../KesApi";
 import { Button } from "react-bootstrap";
 import { QueryBoundaries } from "../QueryBoundary";
 
@@ -96,7 +95,7 @@ L.Map.addInitHook("addHandler", "gestureHandling", EnabledGestureHandling);
 L.Icon.Default.imagePath="/"
 
 export default function Home(
-    {regionList, setRegionSlug, regionSlug}:{regionList: Region[], setRegionSlug: any, regionSlug: string}) {
+    {regionList, setRegionSlug, regionSlug}:{regionList: Region[], setRegionSlug: (slug: string) => void, regionSlug: string}) {
 
     const [queryParameters] = useSearchParams()
     const {regionSlugP} = useParams();
@@ -405,7 +404,8 @@ function SKMapContainer({setMapCenter, setMapBounds, tags, searchQuery, bb}:{set
     }
 
     function RegisterMapCenter() {
-        const _map = useMapEvent('moveend', (e: LeafletEvent) => {
+        //const _map = useMapEvent('moveend', (e: LeafletEvent) => {
+        useMapEvent('moveend', (e: LeafletEvent) => {
             setMapCenter(leafletToGeoCoordinate(e.target.getCenter()));
 
             const newBounds = e.target.getBounds();

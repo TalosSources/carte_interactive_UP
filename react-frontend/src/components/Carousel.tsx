@@ -6,7 +6,8 @@ import Carousel from 'react-bootstrap/Carousel';
 
 export function InitiativeCarousel({promotedInitiatives} : {promotedInitiatives : Initiative[]}) {
     return <Carousel className="promotedInitiatives">
-            {[...promotedInitiatives.entries()].map(([index, initiative]) => {
+            {[...promotedInitiatives.entries()].map(indexed_initiative => {
+                const initiative = indexed_initiative[1]
                 return <Carousel.Item>
                     <img
                     className="d-block w-100"

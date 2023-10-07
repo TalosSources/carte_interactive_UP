@@ -1,7 +1,7 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import styled from "styled-components";
 import sanitizeHtml from "sanitize-html";
-import {Initiative, Tag, getSmallestImage } from './KesApi';
+import {Initiative, getSmallestImage } from './KesApi';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import './constants';
@@ -57,19 +57,6 @@ const CardDescription = styled.p`
     //-webkit-line-clamp: 4;
     //-webkit-box-orient: vertical;
     overflow: hidden;
-`;
-
-
-const CardTagPanel = styled.div`
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    overflow-x: scroll;
-    white-space: nowrap;
-    //height: 2.5em;
-    font-size: small;
-    padding:0pt;
-    width:100%;
 `;
 
 function SkCard(props: {key?: string; id: string; image_url: string; title: string; description: string; }) {

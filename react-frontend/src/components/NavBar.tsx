@@ -5,7 +5,6 @@ import LanguageSelector from './LanguageSelector';
 import i18next, { t } from 'i18next';
 import { Link } from 'react-router-dom';
 import useWindowSize from '../hooks/useWindowSize';
-import { useTranslation } from 'react-i18next';
 import { slide as Menu } from 'react-burger-menu';
 
 const NavRight = styled.div`

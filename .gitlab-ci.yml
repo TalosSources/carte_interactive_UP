@@ -52,6 +52,11 @@ dryrun:
     - sudo docker image prune -f
     - sudo docker container prune -f
 
+eslint:
+  stage: test
+  script:
+    - npx eslint .
+
 deploy:
   stage: deploy
   rules:

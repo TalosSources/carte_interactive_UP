@@ -1,4 +1,4 @@
-import React, { PropsWithoutRef } from 'react';
+import React from 'react';
 
 type PropTypes = { 
     children: string; 

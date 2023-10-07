@@ -1,7 +1,7 @@
-import React, {useState, useEffect, Suspense} from "react";
-import {Link, useParams} from "react-router-dom";
+import React, { useEffect, Suspense} from "react";
+import {useParams} from "react-router-dom";
 import {renderCards} from "../Cards";
-import { Feature, fetchTags, Initiative, matchTagsWithInitiatives, Tag, useInitiative, useInitiatives, useTags } from "../KesApi";
+import { Feature, Initiative, matchTagsWithInitiatives, Tag, useInitiative, useInitiatives, useTags } from "../KesApi";
 import { useTranslation } from "react-i18next";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
@@ -52,10 +52,11 @@ export default function Details() {
                 initiativeB
             ]
         })
-        .filter(([c,i]) => c>0)
-        .sort(([ca,ia], [cb, ib]) => cb - ca)
+        // [number of equal tags, initiative]
+        .filter(initiative_count_of_equal_tags => initiative_count_of_equal_tags[0]>0)
+        .sort((initiative_and_count1, initiative_and_count2) => initiative_and_count2[0] - initiative_and_count1[0])
         .slice(1,6)
-        .map(([c,i]) => i);
+        .map(initiative_and_count => initiative_and_count[1]);
     const taggedInitiativMatching = matchTagsWithInitiatives(initiatives, tags)
     const renderedCards = renderCards(similarInitiatives);
 

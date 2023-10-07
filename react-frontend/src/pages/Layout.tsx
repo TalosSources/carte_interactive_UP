@@ -1,8 +1,7 @@
 import React  from 'react';
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Region } from '../KesApi';
 import NavBar from '../components/NavBar';
-import styled from 'styled-components';
 import { SKFooter } from '../components/Footer';
 
 

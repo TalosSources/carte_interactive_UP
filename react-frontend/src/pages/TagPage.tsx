@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {renderCardCollection} from "../Cards";
-import { fetchTags, matchTagsWithInitiatives, Tag, useInitiatives } from "../KesApi";
+import { fetchTags, Tag, useInitiatives } from "../KesApi";
 
 const TagPage = () => {
     const {tagId: tagSlug} = useParams();
@@ -22,7 +22,6 @@ const TagPage = () => {
                                     Number(tag) === Number(tagSlug)
                                 )
                               );
-    const tagsByInitiatives = matchTagsWithInitiatives(initiatives, tags);
     let tag = undefined;
     for (const t of tags) {
         if (t.slug === tagSlug) {
