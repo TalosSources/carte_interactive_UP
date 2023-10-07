@@ -1,1 +1,1 @@
-export function injectMatomo(): void
+export function injectMatomo (): void

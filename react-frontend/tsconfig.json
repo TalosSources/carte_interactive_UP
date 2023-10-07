@@ -99,6 +99,15 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-  }
+    "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
+  },
+  "include": [
+    ".eslintrc.cjs",
+    "src/*.js",
+    "src/components/*.js",
+    "src/*.ts",
+    "src/*.tsx",
+    "src/components/*.tsx",
+    "src/pages/*.tsx",
+  ],
 }

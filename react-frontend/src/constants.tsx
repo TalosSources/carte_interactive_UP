@@ -1,3 +1,3 @@
-export const TINY_SCREEN_WISTH = 450;
-export const SMALL_SCREEN_WIDTH = 800; 
-export const MEDIUM_SCREEN_WIDTH = 1200; 
+export const TINY_SCREEN_WISTH = 450
+export const SMALL_SCREEN_WIDTH = 800
+export const MEDIUM_SCREEN_WIDTH = 1200

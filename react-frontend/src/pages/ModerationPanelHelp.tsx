@@ -1,7 +1,7 @@
-import React from 'react';
+import type React from 'react'
 
-export function ModerationPanelHelp() {
-    return <div>
+export function ModerationPanelHelp (): React.JSX.Element {
+  return <div>
                 To the <a href="/admin">curation panel</a>.<br/>
                 Credentials
                 <ul>

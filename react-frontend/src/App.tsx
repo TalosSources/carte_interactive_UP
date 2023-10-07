@@ -1,44 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import { Layout } from "./pages/Layout";
-import Home from "./pages/Home";
-import Details from "./pages/Details";
-import TagPage from "./pages/TagPage";
-import PageNotFound from "./pages/PageNotFound";
-import Sitemap from "./pages/Sitemap";
-import { Region, fetchRegions } from './KesApi';
-import { registerRegionPageTitles } from './i18n';
+import { Layout } from './pages/Layout'
+import Home from './pages/Home'
+import Details from './pages/Details'
+import TagPage from './pages/TagPage'
+import PageNotFound from './pages/PageNotFound'
+import Sitemap from './pages/Sitemap'
+import { type Region, fetchRegions } from './KesApi'
+import { registerRegionPageTitles } from './i18n'
 
-import './i18n'
-import RegionPage from './pages/RegionPage';
-import { QueryBoundaries } from './QueryBoundary';
-import { ModerationPanelHelp } from './pages/ModerationPanelHelp';
-import { AboutBeta, Banner } from './components/Banner';
-import {injectMatomo} from './components/MatomoInjection'
+import RegionPage from './pages/RegionPage'
+import { QueryBoundaries } from './QueryBoundary'
+import { ModerationPanelHelp } from './pages/ModerationPanelHelp'
+import { AboutBeta, Banner } from './components/Banner'
+import { injectMatomo } from './components/MatomoInjection'
 
-
-export default function App() {
-    const [regionList, setRegionList] = useState<Region[]>([]);
-    const [regionSlug, setRegionSlug] = useState<string>('global');
-    useEffect(() => {
-        // Fetch regions
-        fetchRegions()
-            .then(regions => {
-                console.log("regionList", regions);
-                setRegionList(regions);
-                for (const r of regions) {
-                    registerRegionPageTitles(r);
-                }
-            }
-            )
-            .catch(err => console.error(err));
-        
-    }, []);
-    React.useEffect(() => {
-        injectMatomo()
-    }, [])
-    return (
+export default function App (): React.JSX.Element {
+  const [regionList, setRegionList] = useState<Region[]>([])
+  const [regionSlug, setRegionSlug] = useState<string>('global')
+  useEffect(() => {
+    // Fetch regions
+    fetchRegions()
+      .then(regions => {
+        console.log('regionList', regions)
+        setRegionList(regions)
+        for (const r of regions) {
+          registerRegionPageTitles(r)
+        }
+      }
+      )
+      .catch(err => { console.error(err) })
+  }, [])
+  React.useEffect(() => {
+    injectMatomo()
+  }, [])
+  return (
         <BrowserRouter>
             <Banner/>
             <Routes>
@@ -63,5 +60,5 @@ export default function App() {
                 </Route>
             </Routes>
         </BrowserRouter>
-    );
+  )
 }

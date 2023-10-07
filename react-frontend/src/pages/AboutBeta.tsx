@@ -1,6 +1,6 @@
-import React from 'react';
-import { AboutBeta } from '../components/Banner';
+import type React from 'react'
+import { AboutBeta } from '../components/Banner'
 
-export function ModerationPanelHelp() {
-    return <AboutBeta/>
+export function ModerationPanelHelp (): React.JSX.Element {
+  return <AboutBeta/>
 }

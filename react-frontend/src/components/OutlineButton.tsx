@@ -1,13 +1,12 @@
-import React from 'react';
+import type React from 'react'
 
-type PropTypes = { 
-    children: string; 
-    onClick: (e: React.MouseEvent<HTMLButtonElement>) => void; 
+interface PropTypes {
+  children: string
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-
-const OutlineButton = ({ children, onClick }: PropTypes) => {
-    return (<button className="btn btn-outline-light ml-2" onClick={onClick} >{children}</button>)
+function OutlineButton ({ children, onClick }: PropTypes): React.JSX.Element {
+  return (<button className="btn btn-outline-light ml-2" onClick={onClick} >{children}</button>)
 }
 
 export default OutlineButton

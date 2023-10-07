@@ -1,37 +1,36 @@
-import React, {useState, useEffect} from "react";
-import { Tag } from "../KesApi";
+import type React from 'react'
+import { useState, useEffect } from 'react'
+import { type Tag } from '../KesApi'
 
-
-function renderTags(tags : Tag[]) {
-    console.log("renderTags")
-    if (typeof tags != 'undefined') {
-        console.log(tags)
-        return tags.map(
-            (tagElement) => (
-                <li key={tagElement.slug}>
-                    <a href={`/tag/${tagElement.slug}`}>{tagElement.title}</a>
-                </li>
-            )
-        );
-    }
+function renderTags (tags: Tag[]): React.JSX.Element[] {
+  return tags.map(
+    (tagElement) => (
+              <li key={tagElement.slug}>
+                  <a href={`/tag/${tagElement.slug}`}>{tagElement.title}</a>
+              </li>
+    )
+  )
 }
 
+function Sitemap (): React.JSX.Element {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL ?? ''
+  const tagApiUrl = `${backendUrl}/tags/`
+  const [tags, setTags] = useState([])
 
-const Sitemap = () => {
-    const tag_api_url = `${process.env.REACT_APP_BACKEND_URL}/tags/`;
-    const [tags, setTags] = useState([]);
+  useEffect(() => {
+    fetch(tagApiUrl)
+      .then(async response => await response.json())
+      .then(responseJson => {
+        console.log('response_json:')
+        console.log(responseJson)
+        setTags(responseJson)
+      })
+      .catch(() => {
+        console.log('Error while fetching tags in sitemap')
+      })
+  }, [])
 
-    useEffect(() => {
-        fetch(tag_api_url)
-            .then(response => response.json())
-            .then(response_json => {
-                console.log("response_json:");
-                console.log(response_json);
-                setTags(response_json);
-            });
-    }, []);
-
-    return (
+  return (
         <div>
             <h2>Sitemap</h2>
             <h3>All tags</h3>
@@ -39,7 +38,7 @@ const Sitemap = () => {
                 {renderTags(tags)}
             </ul>
         </div>
-    );
-};
+  )
+}
 
-export default Sitemap;
+export default Sitemap

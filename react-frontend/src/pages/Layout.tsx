@@ -1,21 +1,22 @@
-import React  from 'react';
-import { Outlet } from "react-router-dom";
-import { Region } from '../KesApi';
-import NavBar from '../components/NavBar';
-import { SKFooter } from '../components/Footer';
+import type React from 'react'
+import { Outlet } from 'react-router-dom'
+import { type Region } from '../KesApi'
+import NavBar from '../components/NavBar'
+import { SKFooter } from '../components/Footer'
 
-
-export function Layout({regions, regionSlug} : {regions:Region[], regionSlug:string}) {
-    let activeRegion = regions.filter(r => r.properties.slug==regionSlug)[0]
-    if (regions.length === 0) {
-        activeRegion = {properties: {
-            slug:"",
-            title:"",
-            welcome_message_html: '',
-            rp_region: [ ],
-        },}
+export function Layout ({ regions, regionSlug }: { regions: Region[], regionSlug: string }): React.JSX.Element {
+  let activeRegion = regions.filter(r => r.properties.slug === regionSlug)[0]
+  if (regions.length === 0) {
+    activeRegion = {
+      properties: {
+        slug: '',
+        title: '',
+        welcome_message_html: '',
+        rp_region: []
+      }
     }
-    return (
+  }
+  return (
         <>
         <div className="container">
             <nav>
@@ -27,6 +28,5 @@ export function Layout({regions, regionSlug} : {regions:Region[], regionSlug:str
             <SKFooter regions={regions}/>
         </div>
         </>
-    );
+  )
 }
-

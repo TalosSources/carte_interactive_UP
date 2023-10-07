@@ -1,24 +1,24 @@
-import React from "react";
-import CookieConsent from "react-cookie-consent";
+import type React from 'react'
+import CookieConsent from 'react-cookie-consent'
 
-export function Banner() {
-    return <CookieConsent
+export function Banner (): React.JSX.Element {
+  return <CookieConsent
                 expires={2}
                 overlay
-                overlayStyle={{ zIndex:1001 }}
+                overlayStyle={{ zIndex: 1001 }}
                 buttonText="Got it. Take me to the map!"
-                style={{ background: "#FFFFFF", color: "#000000" }}
+                style={{ background: '#FFFFFF', color: '#000000' }}
             >
                 <AboutBeta/>
             </CookieConsent>
 }
 
-export function AboutBeta() {
-    return <div>
+export function AboutBeta (): React.JSX.Element {
+  return <div>
         <h2>Welcome to the future of sharing economy!</h2>
                 <div>
-                    We're building the platform for human economy.
-                    This is a beta preview for the next version 4.0 of Smartakartan and we're tracking all kind of behavior and browser information for understanding your experience.
+                    We&apos;re building the platform for human economy.
+                    This is a beta preview for the next version 4.0 of Smartakartan and we&apos;re tracking all kind of behavior and browser information for understanding your experience.
                 </div><div>
                     Feel free to play around and test this new version.
                     For testing purposes the initiatives from the current version 3 have been imported.
@@ -31,9 +31,8 @@ export function AboutBeta() {
                     <li>Real-time search</li>
                 </ul>
 
-
                 <div>
-                We're happy about any feedback. Please reach out to us via our <a href="https://nextcloud.entrop.mywire.org/apps/forms/s/g4sMkHPLKnZcKSRByX884Erc">feedback form</a>.
+                We&apos;re happy about any feedback. Please reach out to us via our <a href="https://nextcloud.entrop.mywire.org/apps/forms/s/g4sMkHPLKnZcKSRByX884Erc">feedback form</a>.
                 </div>
         </div>
 }

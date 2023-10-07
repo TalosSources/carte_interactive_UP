@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import type React from 'react'
+import styled from 'styled-components'
 
 const StyledButton = styled.button`
     min-width: 100px;
@@ -8,18 +8,18 @@ const StyledButton = styled.button`
     max-height: 3rem;
     white-space: nowrap;
     text-overflow: ellipsis;
-`;
+`
 
-const TopTagButton = ({ title, onClick, active}: { title: string, onClick: ((e: React.MouseEvent<HTMLButtonElement>) => void), active: boolean}) => {
-    return (
-        <StyledButton 
-        type="button" 
-        className={`btn mr-2 mt-2 ${active ? "btn-success": "bg-secondary text-light"}`}
-        style={{minWidth: title && title.length > 15 ? "230px" : "150px"}} // Not really a great solution
+function TopTagButton ({ title, onClick, active }: { title: string, onClick: (e: React.MouseEvent<HTMLButtonElement>) => void, active: boolean }): React.JSX.Element {
+  return (
+        <StyledButton
+        type="button"
+        className={`btn mr-2 mt-2 ${active ? 'btn-success' : 'bg-secondary text-light'}`}
+        style={{ minWidth: title.length > 15 ? '230px' : '150px' }} // Not really a great solution
         onClick={onClick}>
         <span></span>{title}
     </StyledButton>
-    )
+  )
 }
 
-export default TopTagButton;
+export default TopTagButton

@@ -1,11 +1,11 @@
-import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import React from "react";
-import { ReactNode, Suspense } from "react";
-import { ErrorBoundary, FallbackProps } from "react-error-boundary";
+import { QueryErrorResetBoundary } from '@tanstack/react-query'
+import type React from 'react'
+import { type ReactNode, Suspense } from 'react'
+import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
 
 // MakeFetchingEasy
-export const QueryBoundaries = ({ children }: { children: ReactNode }) => (
-  <QueryErrorResetBoundary>
+export function QueryBoundaries ({ children }: { children: ReactNode }): React.JSX.Element {
+  return <QueryErrorResetBoundary>
     {({ reset }) => (
       <ErrorBoundary onReset={reset} FallbackComponent={ErrorView}>
         <Suspense fallback={<LoadingView />}>
@@ -14,17 +14,17 @@ export const QueryBoundaries = ({ children }: { children: ReactNode }) => (
       </ErrorBoundary>
     )}
   </QueryErrorResetBoundary>
-);
+}
 
 // Spinner
-const LoadingView = () => <div>Loading...</div>
+function LoadingView (): React.JSX.Element { return <div>Loading...</div> }
 
 // Error + retry
-const ErrorView = ({ error, resetErrorBoundary }: FallbackProps) => {
+function ErrorView ({ error, resetErrorBoundary }: FallbackProps): React.JSX.Element {
   return (
     <div>
       <div>{error.message}</div>
       <button title="Retry" onClick={resetErrorBoundary} />
     </div>
-  );
-};
+  )
+}

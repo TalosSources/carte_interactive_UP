@@ -1,40 +1,40 @@
-'use strict';
+'use strict'
 // from https://www.npmjs.com/package/geocoordinate
-import {GeoCoordinate} from './Coordinate';
+import { GeoCoordinate } from './Coordinate'
 
-type Axis = { range: number; min: number; max: number; }
+interface Axis { range: number, min: number, max: number }
 
 /** returns the signed smallest distance between a and b assuming their
  domain is circular (repeating) each -range/2 and range/2 */
-function smallestCircularDistance(range:number, a:number, b:number) {
-  //categoryA and categoryB are integer in the range of -0.5 to 0.5
-  const halfRange = range / 2;
-  const categoryA = Math.round(a / halfRange) / 2;
-  const categoryB = Math.round(b / halfRange) / 2;
-  const normalizeAmount = Math.floor(categoryA - categoryB);
-  //add -1, 0 or 1 times the range to normalize
-  b += normalizeAmount * range;
-  //return signed distance
-  return b - a;
+function smallestCircularDistance (range: number, a: number, b: number): number {
+  // categoryA and categoryB are integer in the range of -0.5 to 0.5
+  const halfRange = range / 2
+  const categoryA = Math.round(a / halfRange) / 2
+  const categoryB = Math.round(b / halfRange) / 2
+  const normalizeAmount = Math.floor(categoryA - categoryB)
+  // add -1, 0 or 1 times the range to normalize
+  b += normalizeAmount * range
+  // return signed distance
+  return b - a
 }
 
 export class GeoBoundingBox {
-  private _axes: Axis[];
-  private _latitude: Axis;
-  private _longitude: Axis;
-  constructor() {
+  private readonly _axes: Axis[]
+  private readonly _latitude: Axis
+  private readonly _longitude: Axis
+  constructor () {
     this._longitude = {
       range: 360,
       min: NaN,
       max: NaN
-    };
+    }
     this._latitude = {
       range: 180,
       min: NaN,
       max: NaN
-    };
-    this._axes = [this._latitude, this._longitude];
-    //this._settled = false;
+    }
+    this._axes = [this._latitude, this._longitude]
+    // this._settled = false;
   }
 
   /**
@@ -45,95 +45,94 @@ export class GeoBoundingBox {
    * const box = GeoBoundingBox.fromCoordinates([[1,1], 2,2]]);
    * @returns {Object} GeoBoundingBox instance
    */
-  static fromCoordinates(coordinates: GeoCoordinate[]) : GeoBoundingBox {
-    const instance = new GeoBoundingBox();
+  static fromCoordinates (coordinates: GeoCoordinate[]): GeoBoundingBox {
+    const instance = new GeoBoundingBox()
     for (let i = 0; i < coordinates.length; i++) {
-      instance.pushCoordinate(coordinates[i]);
+      instance.pushCoordinate(coordinates[i])
     }
-    return instance;
+    return instance
   }
 
-  pushCoordinate(coord : GeoCoordinate) {
-    function updateAxis(value : number, axis:{ range: number; min: number; max: number;}) {
+  pushCoordinate (coord: GeoCoordinate): void {
+    function updateAxis (value: number, axis: { range: number, min: number, max: number }): void {
       if (isNaN(axis.min) || isNaN(axis.max)) {
-        axis.min = value;
-        axis.max = value;
-        return;
+        axis.min = value
+        axis.max = value
+        return
       }
 
       const distanceFromMin = smallestCircularDistance(
         axis.range,
         axis.min,
         value
-      );
+      )
       const distanceFromMax = smallestCircularDistance(
         axis.range,
         axis.max,
         value
-      );
+      )
 
-      //distance 0 means it lies on one of the boundaries of the box, which we consider to be inside
+      // distance 0 means it lies on one of the boundaries of the box, which we consider to be inside
       if (distanceFromMin === 0 || distanceFromMax === 0) {
-        return;
+        return
       }
-      //lies within min and max since distances from min and max
-      //have a different sign (different direction from the points)
+      // lies within min and max since distances from min and max
+      // have a different sign (different direction from the points)
       if (distanceFromMin / distanceFromMax < 0) {
-        return;
+        return
       }
       if (axis.min < 0 && value < 0) {
-        //value is smaller then min, so decrease min
+        // value is smaller then min, so decrease min
         if (distanceFromMin > 0) {
-          axis.min = value;
+          axis.min = value
         }
-        //value is bigger then max, so increase max
+        // value is bigger then max, so increase max
         if (distanceFromMax < 0) {
-          axis.max = value;
+          axis.max = value
         }
       } else {
-        //value is smaller then min, so decrease min
+        // value is smaller then min, so decrease min
         if (distanceFromMin < 0) {
-          axis.min = value;
+          axis.min = value
         }
-        //value is bigger then max, so increase max
+        // value is bigger then max, so increase max
         if (distanceFromMax > 0) {
-          axis.max = value;
+          axis.max = value
         }
       }
-
     }
 
-    updateAxis(coord.getLatitude(), this._latitude);
-    updateAxis(coord.getLongitude(), this._longitude);
+    updateAxis(coord.getLatitude(), this._latitude)
+    updateAxis(coord.getLongitude(), this._longitude)
   }
 
-  containCircle(centrePoint:GeoCoordinate, radius:number) {
-    this.pushCoordinate(centrePoint.pointAtDistance(radius, 0));
-    this.pushCoordinate(centrePoint.pointAtDistance(radius, 90));
-    this.pushCoordinate(centrePoint.pointAtDistance(radius, 180));
-    this.pushCoordinate(centrePoint.pointAtDistance(radius, 270));
+  containCircle (centrePoint: GeoCoordinate, radius: number): void {
+    this.pushCoordinate(centrePoint.pointAtDistance(radius, 0))
+    this.pushCoordinate(centrePoint.pointAtDistance(radius, 90))
+    this.pushCoordinate(centrePoint.pointAtDistance(radius, 180))
+    this.pushCoordinate(centrePoint.pointAtDistance(radius, 270))
   }
 
-  contains(coord: GeoCoordinate) {
-    function outOfBounds(value: number, axis:Axis) {
+  contains (coord: GeoCoordinate): boolean {
+    function outOfBounds (value: number, axis: Axis): boolean {
       if (isNaN(axis.min) || isNaN(axis.max)) {
-        return true;
+        return true
       }
 
       const distanceFromMin = smallestCircularDistance(
         axis.range,
         axis.min,
         value
-      );
+      )
       const distanceFromMax = smallestCircularDistance(
         axis.range,
         axis.max,
         value
-      );
+      )
 
-      //distance 0 means it lies on one of the boundaries of the box, which we consider to be inside
+      // distance 0 means it lies on one of the boundaries of the box, which we consider to be inside
       if (distanceFromMin === 0 || distanceFromMax === 0) {
-        return false;
+        return false
       }
       // all values are negative
       if (
@@ -142,37 +141,37 @@ export class GeoBoundingBox {
         value < 0 &&
         Math.round(distanceFromMin / distanceFromMax) === 0
       ) {
-        return true;
+        return true
       }
-      //lies not within min and max since distances from min and max
-      //have the same sign (same direction from the points)
-      return distanceFromMin / distanceFromMax >= 0;
+      // lies not within min and max since distances from min and max
+      // have the same sign (same direction from the points)
+      return distanceFromMin / distanceFromMax >= 0
     }
     return !(outOfBounds(coord.getLatitude(), this._latitude) ||
              outOfBounds(coord.getLongitude(), this._longitude))
   }
 
-  getTopLeft() {
-    return new GeoCoordinate({latitude: this._latitude.max, longitude: this._longitude.min});
+  getTopLeft (): GeoCoordinate {
+    return new GeoCoordinate({ latitude: this._latitude.max, longitude: this._longitude.min })
   }
 
-  getBottomRight() {
-    return new GeoCoordinate({latitude: this._latitude.min, longitude: this._longitude.max});
+  getBottomRight (): GeoCoordinate {
+    return new GeoCoordinate({ latitude: this._latitude.min, longitude: this._longitude.max })
   }
 
-  centerLatitude() {
-    return (this._latitude.min + this._latitude.max) / 2;
+  centerLatitude (): number {
+    return (this._latitude.min + this._latitude.max) / 2
   }
 
-  centerLongitude() {
-    return (this._longitude.min + this._longitude.max) / 2;
+  centerLongitude (): number {
+    return (this._longitude.min + this._longitude.max) / 2
   }
 
-  center() {
+  center (): GeoCoordinate {
     return new GeoCoordinate({
       latitude: this.centerLatitude(),
       longitude: this.centerLongitude()
-    });
+    })
   }
 
   /**
@@ -192,9 +191,8 @@ export class GeoBoundingBox {
    *   bottomRightLongitude: -1,
    * })
    */
-  mergeBBox(other:GeoBoundingBox) {
-    this.pushCoordinate(other.getTopLeft());
-    this.pushCoordinate(other.getBottomRight());
+  mergeBBox (other: GeoBoundingBox): void {
+    this.pushCoordinate(other.getTopLeft())
+    this.pushCoordinate(other.getBottomRight())
   }
-
 }

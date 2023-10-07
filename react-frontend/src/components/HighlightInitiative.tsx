@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import type React from 'react'
+import styled from 'styled-components'
 
 const StyledExample = styled.div`
     flex: 2; 
@@ -56,11 +56,10 @@ const StyledExample = styled.div`
             flex: 1;
         }
     }
-`;
+`
 
-
-const HighlightInitiative = () => {
-    return <StyledExample>
+function HighlightInitiative (): React.JSX.Element {
+  return <StyledExample>
         <div className="TextPart">
             <div className="width-100 border-2 d-flex flex-row flex-between align-items-center top-line" >
                 <div className="d-flex h-100 flex-row align-items-center left">
@@ -68,8 +67,8 @@ const HighlightInitiative = () => {
                     <p>Våxnäs, Karlstad</p>
                 </div>
                 <div className="buttons">
-                    <button className="btn btn-light">{"<<"}</button>
-                    <button className="btn btn-light">{">>"}</button>
+                    <button className="btn btn-light">{'<<'}</button>
+                    <button className="btn btn-light">{'>>'}</button>
                 </div>
             </div>
             <div className="content">
@@ -86,5 +85,4 @@ const HighlightInitiative = () => {
     </StyledExample>
 }
 
-
-export default HighlightInitiative;
+export default HighlightInitiative
