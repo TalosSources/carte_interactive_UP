@@ -55,7 +55,7 @@ dryrun:
 eslint:
   stage: test
   script:
-    - npx eslint .
+    - sudo docker-compose run web npx eslint /react-frontend
 
 deploy:
   stage: deploy
