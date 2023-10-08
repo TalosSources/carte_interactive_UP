@@ -32,30 +32,55 @@ variables:
 #  paths:
 #    - .terraform
 
-dryrun:
+eslint:
+  stage: test
+  script:
+    - sudo docker-compose run web npx eslint /react-frontend
+
+
+dryrun_prepare:
   stage: test
   script:
     - sudo docker-compose -p dryrun down
     - sudo docker-compose -p dryrun rm
+
+dryrun_build:
+  stage: test
+  script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
     - patch docker-compose.yml < compose-dryrun.patch
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
-    - sudo docker-compose -p dryrun up --build -d
+    - sudo docker-compose -p dryrun build
+
+dryrun_start:
+  stage: test
+  script:
+    - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
+    - patch docker-compose.yml < compose-dryrun.patch
+    - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
+    - sudo docker-compose -p dryrun up -d
     # needs to have some temporal difference to the start, so the db is prepared
     - sleep 40
+
+dryrun_import:
+  stage: test
+  script:
     - sudo docker-compose -p dryrun run api /code/manage.py import_sk3_data
+
+dryrun_users:
+  stage: test
+  script:
     - sudo docker-compose -p dryrun run api /code/manage.py setup_user --su -u admin -p admin_pass
     - sudo docker-compose -p dryrun run api /code/manage.py setup_user --ca -u curator -p curator_pass
+
+dryrun_cleanup:
+  stage: test
+  script:
     - sudo docker-compose -p dryrun down
     - sudo docker-compose -p dryrun rm
     - sudo docker volume prune -f
     - sudo docker image prune -f
     - sudo docker container prune -f
-
-eslint:
-  stage: test
-  script:
-    - sudo docker-compose run web npx eslint /react-frontend
 
 deploy:
   stage: deploy
