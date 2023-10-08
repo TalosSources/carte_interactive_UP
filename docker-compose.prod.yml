@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./cache:/code/django-backend/cache
+      - ./cache:/code/cache
       - ./media:/media
 
   web:
