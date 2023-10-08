@@ -8,29 +8,17 @@ services:
     depends_on:
       - api
       - web
-    ports:
-      - "80:80"
   db:
     image: postgis/postgis:14-3.3  # This version was recommended "for new users" 2022-11-03
-    volumes:
-      - /var/lib/smartakartan_db:/var/lib/postgresql/data
     environment:
       TZ: Europe/Stockholm
       POSTGRES_PASSWORD: nwKnN7kgftitCpc  # TODO: Security, see "Docker secrets" https://hub.docker.com/_/postgres
       POSTGRES_DB: smarta_kartan_db  # If not given, the db will be named after the admin user (probably "postgres")
   api:
     build: ./django-backend
-    environment:
-      - HOST=localhost
-      - SCHEME=http
     depends_on:
       - db
-    volumes:
-      - ./django-backend:/code
   web:
     build: ./react-frontend
     depends_on:
       - api
-    volumes:
-      - ./react-frontend/src:/react-frontend/src
-      - ./react-frontend/public:/react-frontend/public
