@@ -32,11 +32,6 @@ variables:
 #  paths:
 #    - .terraform
 
-eslint:
-  stage: test
-  script:
-    - sudo docker-compose run web npx eslint /react-frontend
-
 
 dryrun_prepare:
   stage: test
@@ -51,6 +46,11 @@ dryrun_build:
     - patch docker-compose.yml < compose-dryrun.patch
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun build
+
+eslint:
+  stage: test
+  script:
+    - sudo docker-compose run web npx eslint /react-frontend
 
 dryrun_start:
   stage: test
