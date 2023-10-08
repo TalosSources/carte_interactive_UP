@@ -100,13 +100,13 @@ deploy_prepare:
     - git reset --hard
     - git pull
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
+    - mv docker-compose.override.yml.prod docker-compose.override.yml
 
 deploy_build:
   stage: deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
-    - mv docker-compose.override.yml.prod docker-compose.override.yml
     - sudo docker-compose build
 
 deploy_restart:
@@ -114,7 +114,6 @@ deploy_restart:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
-    - mv docker-compose.override.yml.prod docker-compose.override.yml
     - sudo docker-compose down
     - sudo docker-compose rm
     - sudo docker-compose up -d
@@ -135,7 +134,6 @@ deploy_users:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
     # needs to have some temporal difference to the start, so the db is prepared
-    - mv docker-compose.override.yml.prod docker-compose.override.yml
     - sudo docker-compose run api /code/manage.py setup_user --su -u admin -p "admin"
     - sudo docker-compose run api /code/manage.py setup_user --ca -u curator -p "curator"
 
@@ -144,7 +142,6 @@ deploy_import:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
-    - mv docker-compose.override.yml.prod docker-compose.override.yml
     - sudo docker-compose run api /code/manage.py import_sk3_data
   environment:
     name: production
