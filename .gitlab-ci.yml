@@ -43,7 +43,7 @@ dryrun_build:
   stage: test
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
-    - patch docker-compose.yml < compose-dryrun.patch
+    - mv docker-compose.override.yml.dryrun docker-compose.override.yml
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun build
 
@@ -56,7 +56,7 @@ dryrun_start:
   stage: test
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
-    - patch docker-compose.yml < compose-dryrun.patch
+    - mv docker-compose.override.yml.dryrun docker-compose.override.yml
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun up -d
     # needs to have some temporal difference to the start, so the db is prepared
@@ -66,7 +66,7 @@ dryrun_import:
   stage: test
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
-    - patch docker-compose.yml < compose-dryrun.patch
+    - mv docker-compose.override.yml.dryrun docker-compose.override.yml
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun run api /code/manage.py import_sk3_data
 
@@ -74,7 +74,7 @@ dryrun_users:
   stage: test
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
-    - patch docker-compose.yml < compose-dryrun.patch
+    - mv docker-compose.override.yml.dryrun docker-compose.override.yml
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun run api /code/manage.py setup_user --su -u admin -p admin_pass
     - sudo docker-compose -p dryrun run api /code/manage.py setup_user --ca -u curator -p curator_pass
@@ -83,7 +83,7 @@ dryrun_cleanup:
   stage: test
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
-    - patch docker-compose.yml < compose-dryrun.patch
+    - mv docker-compose.override.yml.dryrun docker-compose.override.yml
     - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun down
     - sudo docker-compose -p dryrun rm
@@ -106,16 +106,19 @@ deploy_build:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
-    - sudo docker-compose -f docker-compose.prod.yml build
+    - mv docker-compose.override.yml.prod docker-compose.override.yml
+    - sudo docker-compose build
 
 deploy_restart:
   stage: deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
-    - sudo docker-compose -f docker-compose.prod.yml down
-    - sudo docker-compose -f docker-compose.prod.yml rm
-    - sudo docker-compose -f docker-compose.prod.yml up -d
+    - mv docker-compose.override.yml.prod docker-compose.override.yml
+    - sudo docker-compose down
+    - sudo docker-compose rm
+    - sudo docker-compose up -d
+    - sleep 40
 
 deploy_cleanup:
   stage: deploy
@@ -132,16 +135,17 @@ deploy_users:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
     # needs to have some temporal difference to the start, so the db is prepared
-    - sleep 40
-    - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py setup_user --su -u admin -p "admin"
-    - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py setup_user --ca -u curator -p "curator"
+    - mv docker-compose.override.yml.prod docker-compose.override.yml
+    - sudo docker-compose run api /code/manage.py setup_user --su -u admin -p "admin"
+    - sudo docker-compose run api /code/manage.py setup_user --ca -u curator -p "curator"
 
 deploy_import:
   stage: deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
-    - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py import_sk3_data
+    - mv docker-compose.override.yml.prod docker-compose.override.yml
+    - sudo docker-compose run api /code/manage.py import_sk3_data
   environment:
     name: production
     url: https://beta.smartakartan.se

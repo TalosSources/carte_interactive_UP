@@ -1,0 +1,21 @@
+services:
+  db:
+    volumes: []
+
+  api:
+    environment:
+      - HOST=smartakartan.entrop.mywire.org
+      - SCHEME=https
+    volumes:
+      - ./cache:/code/cache
+  
+  web:
+    build:
+      context: ./react-frontend
+      dockerfile: Dockerfile.reactprod
+    depends_on:
+      - api
+    ports:
+      - 80:80
+    volumes:
+      - ./gitver:/usr/share/index/html
