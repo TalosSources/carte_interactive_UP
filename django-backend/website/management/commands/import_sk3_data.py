@@ -640,13 +640,15 @@ def process_business_rows(businessRows):
             return None
 
         def getImage():
+            TMP_IMAGE_FOLDER = TMP_FOLDER + "/images"
+            os.makedirs(TMP_IMAGE_FOLDER, exist_ok=True)
             main_image_url = getImageUrl(row)
             if main_image_url == "":
                 return None
             image_parts = main_image_url.split(".")
             file_extension = image_parts[-1]
             file_name = f"{slug}.{file_extension}"
-            file_path = f"../media/{file_name}"
+            file_path = os.path.join(TMP_IMAGE_FOLDER, file_name)
             if not os.path.exists(file_path):
                 subprocess.run(["curl", main_image_url, "-o", file_path], check=True)
             return Path(file_path)
@@ -709,8 +711,6 @@ def process_business_rows(businessRows):
             area=area,
         )
         new_initiative_obj.save()
-        if image_path is not None:
-            os.remove(image_path)
 
         missingSvTranslation.add(new_initiative_obj.slug)
         missingEnTranslation.add(new_initiative_obj.slug)
