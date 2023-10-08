@@ -82,7 +82,7 @@ dryrun_cleanup:
     - sudo docker image prune -f
     - sudo docker container prune -f
 
-deploy:
+deploy_prepare:
   stage: deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
@@ -91,16 +91,47 @@ deploy:
     - git reset --hard
     - git pull
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
+
+deploy_build:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
+    - sudo docker-compose -f docker-compose.prod.yml build
+
+deploy_restart:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
     - sudo docker-compose -f docker-compose.prod.yml down
     - sudo docker-compose -f docker-compose.prod.yml rm
-    - sudo docker-compose -f docker-compose.prod.yml up --build -d
+    - sudo docker-compose -f docker-compose.prod.yml up -d
+
+deploy_cleanup:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
     - sudo docker volume prune -f
     - sudo docker image prune -f
     - sudo docker container prune -f
+
+deploy_users:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
     # needs to have some temporal difference to the start, so the db is prepared
     - sleep 40
     - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py setup_user --su -u admin -p "admin"
     - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py setup_user --ca -u curator -p "curator"
+
+deploy_import:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
     - sudo docker-compose -f docker-compose.prod.yml run api /code/manage.py import_sk3_data
   environment:
     name: production
