@@ -145,3 +145,9 @@ deploy_import:
   environment:
     name: production
     url: https://beta.smartakartan.se
+
+cleanup_cache:
+  stage: deploy
+  when: manual
+  script:
+    - rm -r /var/lib/smartakartan/smartakartan-cd/cache/* 
