@@ -1,4 +1,4 @@
-import type React from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface Alternative { value: string, text: string }
@@ -12,7 +12,7 @@ function SelectFromObject ({ obj, defaultValue, onChange }: Props): React.JSX.El
   const { t } = useTranslation()
   return (
         <select
-            defaultValue={defaultValue.length > 0 || Object.values(obj)[0]?.value}
+            defaultValue={defaultValue}
             onChange={onChange}
         >
             {options.map((opt, i) => {

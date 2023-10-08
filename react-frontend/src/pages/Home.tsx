@@ -1,6 +1,5 @@
 // React
-import type React from 'react'
-import { useState, useEffect, startTransition, Suspense } from 'react'
+import React, { useState, useEffect, startTransition, Suspense } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { createBrowserHistory } from '@remix-run/router'

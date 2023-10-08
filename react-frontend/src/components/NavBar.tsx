@@ -1,5 +1,4 @@
-import type React from 'react'
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { type Language, type Region, fetchLanguages } from '../KesApi'
 import LanguageSelector from './LanguageSelector'

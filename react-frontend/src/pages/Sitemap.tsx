@@ -1,5 +1,4 @@
-import type React from 'react'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { type Tag } from '../KesApi'
 
 function renderTags (tags: Tag[]): React.JSX.Element[] {

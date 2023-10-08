@@ -1,5 +1,4 @@
-import type React from 'react'
-import { useEffect, Suspense } from 'react'
+import React, { useEffect, Suspense } from 'react'
 import { useParams } from 'react-router-dom'
 import { renderCards } from '../Cards'
 import { type Feature, type Initiative, matchTagsWithInitiatives, type Tag, useInitiative, useInitiatives, useTags, initiativeLocationFeatureToGeoCoordinate } from '../KesApi'

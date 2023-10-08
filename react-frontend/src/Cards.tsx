@@ -1,4 +1,4 @@
-import type React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import sanitizeHtml from 'sanitize-html'
 import { type Initiative, getSmallestImage } from './KesApi'

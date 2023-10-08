@@ -1,4 +1,4 @@
-import type React from 'react'
+import React from 'react'
 import { type Region } from '../KesApi'
 
 // probably better to work with "active region"

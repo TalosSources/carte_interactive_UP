@@ -1,4 +1,4 @@
-import type React from 'react'
+import React from 'react'
 import CookieConsent from 'react-cookie-consent'
 
 export function Banner (): React.JSX.Element {

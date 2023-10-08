@@ -1,4 +1,4 @@
-import type React from 'react'
+import React from 'react'
 import { type Language } from '../KesApi'
 
 function LanguageSelector (prop: { value: string

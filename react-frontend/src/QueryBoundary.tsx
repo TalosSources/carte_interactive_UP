@@ -1,5 +1,5 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query'
-import type React from 'react'
+import React from 'react'
 import { type ReactNode, Suspense } from 'react'
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
 

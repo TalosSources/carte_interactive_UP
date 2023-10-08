@@ -26,6 +26,12 @@ module.exports = {
       rules: {
         '@typescript-eslint/explicit-function-return-type': 'error'
       }
+    },
+    {
+      files: ['*.tsx'],
+      rules: {
+        '@typescript-eslint/consistent-type-imports': 'off'
+      }
     }
   ],
   parserOptions: {

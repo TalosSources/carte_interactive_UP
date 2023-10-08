@@ -1,4 +1,4 @@
-import type React from 'react'
+import React from 'react'
 import { type Initiative } from '../KesApi'
 import { getShortDescription, getTitle } from '../i18n'
 
