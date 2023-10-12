@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { renderCardCollection } from '../Cards'
-import { fetchTags, type Tag, useInitiatives } from '../KesApi'
+import { renderCardCollection } from '../components/Cards'
+import { fetchTags, type Tag, useInitiatives } from '../lib/KesApi'
 
 function TagPage (): React.JSX.Element {
   const { tagId: tagSlug } = useParams()

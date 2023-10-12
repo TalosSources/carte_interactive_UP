@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { type Language, type Region, fetchLanguages } from '../KesApi'
+import { type Language, type Region, fetchLanguages } from '../lib/KesApi'
 import LanguageSelector from './LanguageSelector'
 import i18next, { t } from 'i18next'
 import { Link } from 'react-router-dom'

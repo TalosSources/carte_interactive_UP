@@ -1,13 +1,14 @@
 import React, { useEffect, Suspense } from 'react'
 import { useParams } from 'react-router-dom'
-import { renderCards } from '../Cards'
-import { type Feature, type Initiative, matchTagsWithInitiatives, type Tag, useInitiative, useInitiatives, useTags, initiativeLocationFeatureToGeoCoordinate } from '../KesApi'
+import { renderCards } from '../../components/Cards'
+import { type Initiative, matchTagsWithInitiatives, type Tag, useInitiative, useInitiatives, useTags } from '../../lib/KesApi'
 import { useTranslation } from 'react-i18next'
 import L from 'leaflet'
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
-import { GeoBoundingBox } from '../BoundingBox'
+import { MapContainer, TileLayer } from 'react-leaflet'
 import styled from 'styled-components'
-import { getDescription, getTitle } from '../i18n'
+import { getDescription, getTitle } from '../../lib/i18n'
+import { renderMapMarkers } from './renderMapMarkers'
+import { ZoomToPoints } from './ZoomToPoints'
 
 const DetailsMainImage = styled.img`
     height: 20em;
@@ -173,36 +174,4 @@ export default function Details (): React.JSX.Element {
   )
 }
 
-function ZoomToPoints ({ initiative }: { initiative: Initiative }): null {
-  if (initiative.locations.features.length === 0) {
-    return null
-  }
-  const bb = GeoBoundingBox.fromCoordinates(initiative.locations.features.map((feature) => initiativeLocationFeatureToGeoCoordinate(feature)))
-  const map = useMap()
-  map.fitBounds([
-    [bb.getTopLeft().getLatitude(), bb.getTopLeft().getLongitude()],
-    [bb.getBottomRight().getLatitude(), bb.getBottomRight().getLongitude()]
-  ])
-  return null
-}
 
-function renderMapMarkers (initiative: Initiative): React.JSX.Element[] {
-  const icon: L.Icon<L.Icon.DefaultIconOptions> = new L.Icon.Default({ iconUrl: '/marker-icon.png' })
-  function feature2Marker (feature: Feature, index: number): React.JSX.Element {
-    const title = feature.properties.title
-    return (
-            <Marker
-                key={`m_${index}`}
-                position={[feature.geometry.coordinates[1], feature.geometry.coordinates[0]]}
-                title={title}
-                icon={icon}
-                >
-                <Popup>
-                    {feature.properties.title}
-                </Popup>
-            </Marker>
-    )
-  }
-
-  return initiative.locations.features.map((feature, index) => feature2Marker(feature, index))
-}

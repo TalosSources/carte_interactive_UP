@@ -1,5 +1,5 @@
 import React from 'react'
-import { type Language } from '../KesApi'
+import { type Language } from '../lib/KesApi'
 
 function LanguageSelector (prop: { value: string
   handleSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void

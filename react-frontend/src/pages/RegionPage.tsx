@@ -1,8 +1,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { useRegionPage } from '../KesApi'
+import { useRegionPage } from '../lib/KesApi'
 import PageNotFound from './PageNotFound'
-import { QueryBoundaries } from '../QueryBoundary'
+import { QueryBoundaries } from '../lib/QueryBoundary'
 import { useTranslation } from 'react-i18next'
 
 export default function RegionPage (): React.JSX.Element {

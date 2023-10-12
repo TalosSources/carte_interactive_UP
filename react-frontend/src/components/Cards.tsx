@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import sanitizeHtml from 'sanitize-html'
-import { type Initiative, getSmallestImage } from './KesApi'
+import { type Initiative, getSmallestImage } from '../lib/KesApi'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import './constants'
+import '../lib/constants'
 
 const CardContainer = styled.div`
     gap: 0.5em;

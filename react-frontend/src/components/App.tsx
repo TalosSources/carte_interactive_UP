@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import { Layout } from './pages/Layout'
-import Home from './pages/Home'
-import Details from './pages/Details'
-import TagPage from './pages/TagPage'
-import PageNotFound from './pages/PageNotFound'
-import Sitemap from './pages/Sitemap'
-import { type Region, fetchRegions } from './KesApi'
-import { registerRegionPageTitles } from './i18n'
+import { Layout } from './Layout'
+import Home from '../pages/home/Home'
+import Details from '../pages/details/Details'
+import TagPage from '../pages/TagPage'
+import PageNotFound from '../pages/PageNotFound'
+import Sitemap from '../pages/Sitemap'
+import { type Region, fetchRegions } from '../lib/KesApi'
+import { registerRegionPageTitles } from '../lib/i18n'
 
-import RegionPage from './pages/RegionPage'
-import { QueryBoundaries } from './QueryBoundary'
-import { ModerationPanelHelp } from './pages/ModerationPanelHelp'
-import { AboutBeta, Banner } from './components/Banner'
-import { injectMatomo } from './components/MatomoInjection'
+import RegionPage from '../pages/RegionPage'
+import { QueryBoundaries } from '../lib/QueryBoundary'
+import { ModerationPanelHelp } from './ModerationPanelHelp'
+import { AboutBeta, Banner } from './Banner'
+import { injectMatomo } from './MatomoInjection'
 
 export default function App (): React.JSX.Element {
   const [regionList, setRegionList] = useState<Region[]>([])

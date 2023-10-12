@@ -1,6 +1,6 @@
 import React from 'react'
-import { type Initiative } from '../KesApi'
-import { getShortDescription, getTitle } from '../i18n'
+import { type Initiative } from '../lib/KesApi'
+import { getShortDescription, getTitle } from '../lib/i18n'
 
 import Carousel from 'react-bootstrap/Carousel'
 

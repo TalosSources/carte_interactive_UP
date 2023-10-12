@@ -2,7 +2,7 @@ import { version } from '../version'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { type Region } from '../KesApi'
+import { type Region } from '../lib/KesApi'
 
 const Footer = styled.div`
     padding-top: 2rem;
