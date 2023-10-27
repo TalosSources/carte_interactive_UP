@@ -1,5 +1,5 @@
 export function injectMatomo () {
-  const _mtm = window._mtm = Boolean(window._mtm) || []
+  const _mtm = window._mtm = window._mtm ?? []
   _mtm.push({ 'mtm.startTime': (new Date().getTime()), event: 'mtm.Start' });
   (function () {
     const d = document; const g = d.createElement('script'); const s = d.getElementsByTagName('script')[0]

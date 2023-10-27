@@ -6,9 +6,9 @@ import { createBrowserHistory } from '@remix-run/router'
 
 // Map
 import 'leaflet/dist/leaflet.css'
-import GestureHandling from 'leaflet-gesture-handling'
 import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css'
 import L from 'leaflet'
+import GestureHandling from 'leaflet-gesture-handling'
 
 import { GeoCoordinate } from '../../lib/Coordinate'
 import { GeoBoundingBox } from '../../lib/BoundingBox'
