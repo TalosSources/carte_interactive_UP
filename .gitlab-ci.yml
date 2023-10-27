@@ -54,6 +54,9 @@ eslint:
 
 dryrun_start:
   stage: test
+  needs:
+    - dryrun_build
+    - dryrun_prepare
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
     - mv docker-compose.override.yml.dryrun docker-compose.override.yml
@@ -64,6 +67,8 @@ dryrun_start:
 
 dryrun_import:
   stage: test
+  needs:
+    - dryrun_start
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
     - mv docker-compose.override.yml.dryrun docker-compose.override.yml
@@ -72,6 +77,8 @@ dryrun_import:
 
 dryrun_users:
   stage: test
+  needs:
+    - dryrun_start
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
     - mv docker-compose.override.yml.dryrun docker-compose.override.yml
@@ -81,6 +88,9 @@ dryrun_users:
 
 dryrun_cleanup:
   stage: test
+  needs:
+    - dryrun_users
+    - dryrun_import
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
     - mv docker-compose.override.yml.dryrun docker-compose.override.yml
@@ -93,6 +103,9 @@ dryrun_cleanup:
 
 deploy_prepare:
   stage: deploy
+  needs:
+    - dryrun_users
+    - dryrun_import
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
@@ -104,6 +117,8 @@ deploy_prepare:
 
 deploy_build:
   stage: deploy
+  needs:
+    - deploy_prepare
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
@@ -112,6 +127,8 @@ deploy_build:
 
 deploy_restart:
   stage: deploy
+  needs:
+    - deploy_build
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
@@ -123,6 +140,8 @@ deploy_restart:
 
 deploy_cleanup:
   stage: deploy
+  needs:
+    - deploy_restart
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
@@ -132,6 +151,8 @@ deploy_cleanup:
 
 deploy_users:
   stage: deploy
+  needs:
+    - deploy_restart
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
@@ -142,6 +163,8 @@ deploy_users:
 
 deploy_import:
   stage: deploy
+  needs:
+    - deploy_restart
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
