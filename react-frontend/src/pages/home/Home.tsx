@@ -17,7 +17,6 @@ import SelectFromObject from './SelectFromObject'
 
 import { buildUrl } from 'build-url-ts'
 
-
 // Constants
 import { SMALL_SCREEN_WIDTH } from '../../lib/constants'
 import { fetchTags, type Region, type Tag } from '../../lib/KesApi'

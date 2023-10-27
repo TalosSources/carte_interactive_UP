@@ -1,29 +1,29 @@
-import React, { Suspense } from 'react';
-import { MapContainer, TileLayer, useMapEvent } from 'react-leaflet';
-import { type LeafletEvent } from 'leaflet';
-import MarkerClusterGroup from 'react-leaflet-cluster';
-import { GeoCoordinate } from '../../lib/Coordinate';
-import { GeoBoundingBox } from '../../lib/BoundingBox';
-import { MapMarkers } from './MapMarkers';
+import React, { Suspense } from 'react'
+import { MapContainer, TileLayer, useMapEvent } from 'react-leaflet'
+import { type LeafletEvent } from 'leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
+import { GeoCoordinate } from '../../lib/Coordinate'
+import { GeoBoundingBox } from '../../lib/BoundingBox'
+import { MapMarkers } from './MapMarkers'
 
-export function SKMapContainer({ setMapCenter, setMapBounds, tags, searchQuery, bb }: { setMapCenter: (newCenter: GeoCoordinate) => void; setMapBounds: (newBounds: GeoBoundingBox) => void; tags: string[]; searchQuery: string; bb: GeoBoundingBox | 'Hide global' | 'Show all'; }): React.JSX.Element {
-  function leafletToGeoCoordinate(leafletCoordinate: { lng: number; lat: number; }): GeoCoordinate {
-    return new GeoCoordinate({ longitude: leafletCoordinate.lng, latitude: leafletCoordinate.lat });
+export function SKMapContainer ({ setMapCenter, setMapBounds, tags, searchQuery, bb }: { setMapCenter: (newCenter: GeoCoordinate) => void, setMapBounds: (newBounds: GeoBoundingBox) => void, tags: string[], searchQuery: string, bb: GeoBoundingBox | 'Hide global' | 'Show all' }): React.JSX.Element {
+  function leafletToGeoCoordinate (leafletCoordinate: { lng: number, lat: number }): GeoCoordinate {
+    return new GeoCoordinate({ longitude: leafletCoordinate.lng, latitude: leafletCoordinate.lat })
   }
 
-  function RegisterMapCenter(): null {
+  function RegisterMapCenter (): null {
     // const _map = useMapEvent('moveend', (e: LeafletEvent) => {
     useMapEvent('moveend', (e: LeafletEvent) => {
-      setMapCenter(leafletToGeoCoordinate(e.target.getCenter()));
+      setMapCenter(leafletToGeoCoordinate(e.target.getCenter()))
 
-      const newBounds = e.target.getBounds();
+      const newBounds = e.target.getBounds()
       setMapBounds(GeoBoundingBox.fromCoordinates([
         leafletToGeoCoordinate(newBounds._northEast),
         leafletToGeoCoordinate(newBounds._southWest)
       ]
-      ));
-    });
-    return null;
+      ))
+    })
+    return null
   }
   return <MapContainer
     id="map"
@@ -40,5 +40,5 @@ export function SKMapContainer({ setMapCenter, setMapBounds, tags, searchQuery, 
         <MapMarkers tags={tags} searchQuery={searchQuery} bb={bb} />
       </Suspense>
     </MarkerClusterGroup>
-  </MapContainer>;
+  </MapContainer>
 }

@@ -173,5 +173,3 @@ export default function Details (): React.JSX.Element {
         </div></>
   )
 }
-
-

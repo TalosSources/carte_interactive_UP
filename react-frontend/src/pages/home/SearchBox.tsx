@@ -1,21 +1,21 @@
-import React, { useState, useEffect, startTransition } from 'react';
-import { useTranslation } from 'react-i18next';
-import { SearchRow } from './Home';
+import React, { useState, useEffect, startTransition } from 'react'
+import { useTranslation } from 'react-i18next'
+import { SearchRow } from './Home'
 
-export function SearchBox({ setQuery, initialSearch }: { setQuery: (query: string) => void; initialSearch: string; }): React.JSX.Element {
-  const { t } = useTranslation();
+export function SearchBox ({ setQuery, initialSearch }: { setQuery: (query: string) => void, initialSearch: string }): React.JSX.Element {
+  const { t } = useTranslation()
 
-  const [searchString, setSearchString] = useState(initialSearch);
+  const [searchString, setSearchString] = useState(initialSearch)
 
   useEffect(() => {
     startTransition(() => {
-      setQuery(searchString);
-    });
-  }, [searchString]);
+      setQuery(searchString)
+    })
+  }, [searchString])
 
-  let searchPlaceholder = t('ui.searchPlaceholder');
+  let searchPlaceholder = t('ui.searchPlaceholder')
   if (typeof searchPlaceholder === 'undefined') {
-    searchPlaceholder = 'Search something';
+    searchPlaceholder = 'Search something'
   }
 
   return <div>
@@ -25,7 +25,7 @@ export function SearchBox({ setQuery, initialSearch }: { setQuery: (query: strin
         name="search"
         placeholder={searchPlaceholder}
         value={searchString}
-        onChange={event => { setSearchString(event.target.value); }} />
+        onChange={event => { setSearchString(event.target.value) }} />
     </SearchRow>
-  </div>;
+  </div>
 }
