@@ -8,6 +8,7 @@ services:
       - SCHEME=https
     volumes:
       - ./cache:/code/cache
+      - ./media:/media
   
   web:
     build:
