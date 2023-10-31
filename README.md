@@ -12,20 +12,39 @@ https://github.com/GoteborgsStad/smartakartan3.0
 $ git clone https://gitlab.com/kollaborativ-ekonomi-sverige/smartakartan.git
 $ cd smartakartan
 # Update docker-compose.yml to your liking. Especially the db-volume and URL.
-# Define an administrator (to access /admin)
 ```
 
 ## Start
 ```
-$ cd smartakartan
-$ docker compose up -d --build
+$ docker compose up --build
 # Smartakartan now listens on port 80.
-$ docker compose down
+# Ctrl-C quits the server
+```
+The main webpage is available at port 80.
+The UI for entering or editing data is located in the subdir `/admin`.
+The API can be queried at `/api`.
+
+## Creating users for data entry
+For entering or editing data, users are required.
+Those can be created an user with admin privileges or via django commands.
+```
+# Define an administrator
+docker compose run api /code/manage.py setup_user --super_user --username <username> --password <pass>
+# define a curator
+docker compose run api /code/manage.py setup_user --content_admin --username <username> --password <pass>
+```
+
+## Data import
+Importing data from the current version 3 of Smartakartan.
+This queries the API endpoints and downloads the images.
+The first run typically takes around 20min.
+The data is cached in `/cache` for subsequent runs.
+```
+$ docker compose run api /code/manage.py import_sk3_data
 ```
 
 ## Upgrade
 ```
-$ cd smartakartan
 $ docker compose down
 $ git pull
 $ docker compose up -d --build

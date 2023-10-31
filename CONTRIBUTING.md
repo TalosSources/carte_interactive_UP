@@ -1,3 +1,7 @@
+This file is outdated and kept because some information is still valid.
+
+---
+
 # Getting started for developers
 
 ## Setup (with docker)
