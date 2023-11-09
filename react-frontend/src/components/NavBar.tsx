@@ -157,7 +157,7 @@ function NavBar ({ activeRegion }: { activeRegion: Region }): React.JSX.Element 
     <div ref={navbarRef}>
     <nav className="navbar border-primary d-flex flex-row align-items-center bg-white">
         <div ref={logoTitleRefContainer}>
-        <Link to="/">
+        <Link to={'/r/' + activeRegion.properties.slug}>
             <img id="logo" src="/sk-logotype-topbar.png"/>
         </Link>
 
