@@ -2,20 +2,15 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { createBrowserHistory } from '@remix-run/router'
 
 // Map
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css'
 import L from 'leaflet'
 import GestureHandling from 'leaflet-gesture-handling'
-
 import { GeoCoordinate } from '../../lib/Coordinate'
 import { GeoBoundingBox } from '../../lib/BoundingBox'
-
 import SelectFromObject from './SelectFromObject'
-
-import { buildUrl } from 'build-url-ts'
 
 // Constants
 import { SMALL_SCREEN_WIDTH } from '../../lib/constants'
@@ -89,33 +84,17 @@ L.Icon.Default.imagePath = '/'
 
 export default function Home (
   { regionList, setRegionSlug, regionSlug }: { regionList: Region[], setRegionSlug: (slug: string) => void, regionSlug: string }): React.JSX.Element {
-  const [queryParameters] = useSearchParams()
   const { regionSlugP } = useParams()
+  const [params, setParams] = useSearchParams()
 
   useEffect(() => {
     if (typeof regionSlugP !== 'undefined') {
       setRegionSlug(regionSlugP)
     }
   }, [regionSlugP])
-  let urlSearchString
-  if (queryParameters.has('s')) {
-    urlSearchString = queryParameters.get('s')
-    if (urlSearchString == null) {
-      urlSearchString = ''
-    }
-  } else {
-    urlSearchString = ''
-  }
-  let urlActiveTags: string[]
-  const activeTagsPart = queryParameters.get('t')
-  if (!(activeTagsPart == null) && !(activeTagsPart === '')) {
-    urlActiveTags = activeTagsPart.split(',')
-  } else {
-    urlActiveTags = []
-  }
-  const [searchString, setSearchString] = useState(urlSearchString)
-  // const [activeRegion, setActiveRegion] = useState({properties: { welcome_message_html: ""}});
-  const [activeTags, setActiveTags] = useState<string[]>(urlActiveTags)
+
+  const [searchString, setSearchString] = useState<string>(params.get('s') ?? '')
+  const [activeTags, setActiveTags] = useState<string[]>(params.get('activeTags')?.split(',') ?? [])
   const [mapCenter, setMapCenter] = useState(new GeoCoordinate({ latitude: 50, longitude: 12 }))
   const [mapBounds, setMapBounds] = useState(new GeoBoundingBox())
   const [sorting, setSorting] = useState(Sorting.Distance.value)
@@ -127,20 +106,25 @@ export default function Home (
   }, [regionSlug])
 
   useEffect(() => {
-    const history = createBrowserHistory()
-    const queryParams: Record<string, string | string[]> = {}
-    if (searchString !== '') {
-      queryParams.s = searchString
-    }
-    if (activeTags.length > 0) {
-      queryParams.t = activeTags
-    }
-    const newUrl = buildUrl({
-      path: '/r/' + regionSlug,
-      queryParams
+    setParams((prev) => {
+      if (searchString !== null && searchString !== '') {
+        prev.set('s', searchString)
+      } else {
+        prev.delete('s')
+      }
+      return prev
     })
-    history.replace(newUrl)
-  }, [activeTags, searchString, regionSlugP, regionSlug])
+  }, [searchString])
+  useEffect(() => {
+    setParams((prev) => {
+      if (activeTags.length > 0) {
+        prev.set('activeTags', activeTags.join(','))
+      } else {
+        prev.delete('activeTags')
+      }
+      return prev
+    })
+  }, [activeTags])
 
   useEffect(() => {
     // fetch tags
@@ -189,9 +173,9 @@ export default function Home (
             </Suspense>
 
             <MainContainer>
-                <SearchBox setQuery={setSearchString} initialSearch={urlSearchString}/>
+                <SearchBox setQuery={setSearchString} initialSearch={searchString}/>
                 <QueryBoundaries>
-                    <TagBar tags={tags} urlActiveTags={urlActiveTags} setHomeTags={setActiveTags} searchQuery={searchString} bb={bb}/>
+                    <TagBar tags={tags} urlActiveTags={activeTags} setHomeTags={setActiveTags} searchQuery={searchString} bb={bb}/>
 
                     <div id="filters">
                                     <SelectFromObject

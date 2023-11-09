@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import { Layout } from './Layout'
 import Home from '../pages/home/Home'
@@ -19,46 +19,39 @@ import { injectMatomo } from './MatomoInjection'
 export default function App (): React.JSX.Element {
   const [regionList, setRegionList] = useState<Region[]>([])
   const [regionSlug, setRegionSlug] = useState<string>('global')
+
   useEffect(() => {
     // Fetch regions
     fetchRegions()
       .then(regions => {
-        console.log('regionList', regions)
         setRegionList(regions)
         for (const r of regions) {
           registerRegionPageTitles(r)
         }
-      }
-      )
+      })
       .catch(err => { console.error(err) })
   }, [])
+
   React.useEffect(() => {
     injectMatomo()
   }, [])
+
   return (
-        <BrowserRouter>
-            <Banner/>
-            <Routes>
-                <Route path="/" element={<Layout regions={regionList} regionSlug={regionSlug}/>}>
-                    <Route index element={<Home
-                                             regionList={regionList}
-                                             setRegionSlug={setRegionSlug}
-                                             regionSlug={regionSlug}
-                                           />}/>
-                    <Route path="/details/:initiativeSlug" element={<QueryBoundaries><Details/></QueryBoundaries>}/>
-                    <Route path="/sitemap" element={<Sitemap/>}/>
-                    <Route path="/tag/:tagId" element={<TagPage/>}/>
-                    <Route path="/r/:regionSlugP" element={<Home
-                                                             regionList={regionList}
-                                                            setRegionSlug={setRegionSlug}
-                                                            regionSlug={regionSlug}
-                                                          />}/>
-                    <Route path="/r/:regionSlugP/:page" element={<RegionPage/>}/>
-                    <Route path="/help/moderationPanel" element={<ModerationPanelHelp/>}/>
-                    <Route path="/help/aboutBeta" element={<AboutBeta/>}/>
-                    <Route path="*" element={<PageNotFound/>}/>
-                </Route>
-            </Routes>
-        </BrowserRouter>
+    <BrowserRouter>
+      <Banner />
+      <Routes>
+        <Route path="/" element={<Layout regions={regionList} regionSlug={regionSlug} />}>
+          <Route index element={<Navigate to="/r/global" />} />
+          <Route path="/details/:initiativeSlug" element={<QueryBoundaries><Details /></QueryBoundaries>} />
+          <Route path="/sitemap" element={<Sitemap />} />
+          <Route path="/tag/:tagId" element={<TagPage />} />
+          <Route path="/r/:regionSlugP" element={<Home regionList={regionList} setRegionSlug={setRegionSlug} regionSlug={regionSlug} />} />
+          <Route path="/r/:regionSlugP/:page" element={<RegionPage />} />
+          <Route path="/help/moderationPanel" element={<ModerationPanelHelp />} />
+          <Route path="/help/aboutBeta" element={<AboutBeta />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
