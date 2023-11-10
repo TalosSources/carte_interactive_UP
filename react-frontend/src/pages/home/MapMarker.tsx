@@ -11,7 +11,7 @@ export function MapMarker ({ initiative, feature, index }: { initiative: Initiat
   const icon: L.Icon<L.Icon.DefaultIconOptions> = new L.Icon.Default({ iconUrl: '/marker-icon.png' })
   return <Marker
     key={`m_${initiative.id}_${index}`}
-    position={[feature.geometry.coordinates[1], feature.geometry.coordinates[0]]}
+    position={{ lat: feature.geometry.coordinates[1], lng: feature.geometry.coordinates[0] }}
     title={title}
     icon={icon}
   >

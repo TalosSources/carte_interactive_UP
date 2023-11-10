@@ -1,5 +1,5 @@
 // React
-import React, { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect, Suspense, useContext } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -14,12 +14,13 @@ import SelectFromObject from './SelectFromObject'
 
 // Constants
 import { SMALL_SCREEN_WIDTH } from '../../lib/constants'
-import { fetchTags, type Region, type Tag } from '../../lib/KesApi'
+import { fetchTags, type Tag } from '../../lib/KesApi'
 import { QueryBoundaries } from '../../lib/QueryBoundary'
 import { TagBar } from './TagBar'
 import { SearchBox } from './SearchBox'
 import { SKMapContainer } from './SKMapContainer'
 import { MainCardList } from './MainCardList'
+import { RegionContext } from '../../components/RegionContext'
 
 const Header = styled.header`
     padding-top: 2rem;
@@ -83,9 +84,10 @@ L.Map.addInitHook('addHandler', 'gestureHandling', EnabledGestureHandling)
 L.Icon.Default.imagePath = '/'
 
 export default function Home (
-  { regionList, setRegionSlug, regionSlug }: { regionList: Region[], setRegionSlug: (slug: string) => void, regionSlug: string }): React.JSX.Element {
+  { setRegionSlug }: { setRegionSlug: (slug: string) => void }): React.JSX.Element {
   const { regionSlugP } = useParams()
   const [params, setParams] = useSearchParams()
+  const region = useContext(RegionContext)
 
   useEffect(() => {
     if (typeof regionSlugP !== 'undefined') {
@@ -103,7 +105,7 @@ export default function Home (
 
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [regionSlug])
+  }, [region])
 
   useEffect(() => {
     setParams((prev) => {
@@ -142,19 +144,6 @@ export default function Home (
       })
   }, [])
 
-  // refresh region
-  const region = regionList.filter((r: Region) => r.properties.slug === regionSlug)
-  let activeReg
-  if (region.length === 0) {
-    activeReg = {
-      properties: {
-        welcome_message_html: ''
-      }
-    }
-  } else {
-    activeReg = region[0]
-  }
-
   let bb: GeoBoundingBox | 'Show all' | 'Hide global' = mapBounds
   if (initiativesToShow === WhatToShow.Everything.value) {
     bb = 'Show all'
@@ -167,7 +156,7 @@ export default function Home (
             <Suspense fallback={<></>}>
             <Header>
                 {(() => (
-                    <div id="welcomeMessage" dangerouslySetInnerHTML={{ __html: activeReg.properties.welcome_message_html }} />
+                    <div id="welcomeMessage" dangerouslySetInnerHTML={{ __html: region?.properties.welcome_message_html ?? '' }} />
                 ))()}
             </Header>
             </Suspense>
