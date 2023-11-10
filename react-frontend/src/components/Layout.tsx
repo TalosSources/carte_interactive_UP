@@ -4,23 +4,12 @@ import { type Region } from '../lib/KesApi'
 import NavBar from '../components/NavBar'
 import { SKFooter } from '../components/Footer'
 
-export function Layout ({ regions, regionSlug }: { regions: Region[], regionSlug: string }): React.JSX.Element {
-  let activeRegion = regions.filter(r => r.properties.slug === regionSlug)[0]
-  if (regions.length === 0) {
-    activeRegion = {
-      properties: {
-        slug: '',
-        title: '',
-        welcome_message_html: '',
-        rp_region: []
-      }
-    }
-  }
+export function Layout ({ regions }: { regions: Region[] }): React.JSX.Element {
   return (
         <>
         <div className="container">
             <nav>
-                <NavBar activeRegion={activeRegion} />
+                <NavBar/>
             </nav>
 
             <Outlet />
