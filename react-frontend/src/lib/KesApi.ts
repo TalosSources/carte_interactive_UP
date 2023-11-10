@@ -17,6 +17,9 @@ export interface Region {
       }>
     }>
   }
+  geometry: {
+    coordinates: number[][][] // 1 x n x 2.
+  }
 }
 
 export interface Language {

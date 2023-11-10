@@ -1,11 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { type Language, type Region, fetchLanguages } from '../lib/KesApi'
+import { type Language, fetchLanguages } from '../lib/KesApi'
 import LanguageSelector from './LanguageSelector'
 import i18next, { t } from 'i18next'
 import { Link } from 'react-router-dom'
 import useWindowSize from '../hooks/useWindowSize'
 import { slide as Menu } from 'react-burger-menu'
+import { RegionContext } from './RegionContext'
 
 const NavRight = styled.div`
     display: flex;
@@ -90,7 +91,7 @@ const styles = {
   }
 }
 
-function NavBar ({ activeRegion }: { activeRegion: Region }): React.JSX.Element {
+function NavBar (): React.JSX.Element {
   const windowSize = useWindowSize()
 
   const logoTitleRefContainer = useRef<HTMLDivElement | null>(null)
@@ -105,6 +106,8 @@ function NavBar ({ activeRegion }: { activeRegion: Region }): React.JSX.Element 
   const [fold, setFold] = useState(false)
   const [availableSpace, setAvailableSpace] = useState(0)
   const [language, setLanguage] = useState(i18next.language)
+
+  const activeRegion = useContext(RegionContext)
 
   useEffect(() => {
     let availableSpaceForPages = windowSize.width
@@ -157,7 +160,7 @@ function NavBar ({ activeRegion }: { activeRegion: Region }): React.JSX.Element 
     <div ref={navbarRef}>
     <nav className="navbar border-primary d-flex flex-row align-items-center bg-white">
         <div ref={logoTitleRefContainer}>
-        <Link to={'/r/' + activeRegion.properties.slug}>
+        <Link to={typeof activeRegion !== 'undefined' ? ('/r/' + activeRegion.properties.slug) : ''}>
             <img id="logo" src="/sk-logotype-topbar.png"/>
         </Link>
 
@@ -166,7 +169,7 @@ function NavBar ({ activeRegion }: { activeRegion: Region }): React.JSX.Element 
         <NavRight>
             <div ref={regionPageContainer}><NavItems className="nav-links">
                     { !fold
-                      ? <> {activeRegion.properties.rp_region.map(rp =>
+                      ? <> {activeRegion?.properties.rp_region.map(rp =>
                             <NavItem key={rp.slug}>
                                 <Link to={'/r/' + activeRegion.properties.slug + '/' + rp.slug}>
                                     {t('region.' + activeRegion.properties.slug + '.' + rp.slug + '.title')}
@@ -187,7 +190,7 @@ function NavBar ({ activeRegion }: { activeRegion: Region }): React.JSX.Element 
                             /></div></>
                       // NOTE: You also need to provide styles, see https://github.com/negomi/react-burger-menu#styling
                       : <Menu id="burger-menu" right styles={ styles }>
-                        {activeRegion.properties.rp_region.map(rp =>
+                        {activeRegion?.properties.rp_region.map(rp =>
                                 <Link key={'/r/' + activeRegion.properties.slug + '/' + rp.slug} className="menu-item" to={'/r/' + activeRegion.properties.slug + '/' + rp.slug}>
                                     {t('region.' + activeRegion.properties.slug + '.' + rp.slug + '.title')}
                                 </Link>)}

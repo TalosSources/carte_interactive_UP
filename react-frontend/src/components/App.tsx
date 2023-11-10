@@ -9,6 +9,7 @@ import PageNotFound from '../pages/PageNotFound'
 import Sitemap from '../pages/Sitemap'
 import { type Region, fetchRegions } from '../lib/KesApi'
 import { registerRegionPageTitles } from '../lib/i18n'
+import { RegionContext } from './RegionContext'
 
 import RegionPage from '../pages/RegionPage'
 import { QueryBoundaries } from '../lib/QueryBoundary'
@@ -35,23 +36,26 @@ export default function App (): React.JSX.Element {
   React.useEffect(() => {
     injectMatomo()
   }, [])
+  const region = regionList.find(r => r.properties.slug === regionSlug)
 
   return (
     <BrowserRouter>
       <Banner />
-      <Routes>
-        <Route path="/" element={<Layout regions={regionList} regionSlug={regionSlug} />}>
-          <Route index element={<Navigate to="/r/global" />} />
-          <Route path="/details/:initiativeSlug" element={<QueryBoundaries><Details /></QueryBoundaries>} />
-          <Route path="/sitemap" element={<Sitemap />} />
-          <Route path="/tag/:tagId" element={<TagPage />} />
-          <Route path="/r/:regionSlugP" element={<Home regionList={regionList} setRegionSlug={setRegionSlug} regionSlug={regionSlug} />} />
-          <Route path="/r/:regionSlugP/:page" element={<RegionPage />} />
-          <Route path="/help/moderationPanel" element={<ModerationPanelHelp />} />
-          <Route path="/help/aboutBeta" element={<AboutBeta />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Route>
-      </Routes>
+      <RegionContext.Provider value={region}>
+        <Routes>
+          <Route path="/" element={<Layout regions={regionList} />}>
+            <Route index element={<Navigate to="/r/global" />} />
+            <Route path="/details/:initiativeSlug" element={<QueryBoundaries><Details /></QueryBoundaries>} />
+            <Route path="/sitemap" element={<Sitemap />} />
+            <Route path="/tag/:tagId" element={<TagPage />} />
+            <Route path="/r/:regionSlugP" element={<Home setRegionSlug={setRegionSlug} />} />
+            <Route path="/r/:regionSlugP/:page" element={<RegionPage />} />
+            <Route path="/help/moderationPanel" element={<ModerationPanelHelp />} />
+            <Route path="/help/aboutBeta" element={<AboutBeta />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Route>
+        </Routes>
+      </RegionContext.Provider>
     </BrowserRouter>
   )
 }
