@@ -125,22 +125,20 @@ REGION_DATA_DICT = {
         )
     )),
     "goteborg": RegionData(name="Göteborg", area=django.contrib.gis.geos.Polygon(
-        django.contrib.gis.geos.LinearRing(
-            ((11.925401093582142, 57.689568545605425),
-            (12.03638016933202, 57.68245690713329),
-            (12.03608040451827, 57.62297997831338),
-            (11.933598563618602, 57.61438419604527),
-            (11.925401093582142, 57.689568545605425))
-        )
+        django.contrib.gis.geos.LinearRing((
+            (11.8875, 57.7358),
+            (12.0572, 57.8081),
+            (12.0587, 57.6430),
+            (11.7837, 57.5668),
+        ))
     )),
     "linkoping": RegionData(name="Linköping", area=django.contrib.gis.geos.Polygon(
-        django.contrib.gis.geos.LinearRing( # = Göteborg TODO
-            ((11.925401093582142, 57.689568545605425),
-            (12.03638016933202, 57.68245690713329),
-            (12.03608040451827, 57.62297997831338),
-            (11.933598563618602, 57.61438419604527),
-            (11.925401093582142, 57.689568545605425))
-        )
+        django.contrib.gis.geos.LinearRing((
+            (15.5178, 58.4357),
+            (15.7474, 58.4293),
+            (15.8464, 58.3371),
+            (15.6326, 58.3462),
+        ))
     )),
     "karlstad": RegionData(name="Karlstad", area=django.contrib.gis.geos.Polygon(
         django.contrib.gis.geos.LinearRing(
