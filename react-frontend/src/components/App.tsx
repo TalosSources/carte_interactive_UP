@@ -48,7 +48,7 @@ export default function App (): React.JSX.Element {
             <Route path="/details/:initiativeSlug" element={<QueryBoundaries><Details /></QueryBoundaries>} />
             <Route path="/sitemap" element={<Sitemap />} />
             <Route path="/tag/:tagId" element={<TagPage />} />
-            <Route path="/r/:regionSlugP" element={<Home setRegionSlug={setRegionSlug} />} />
+            <Route path="/r/:regionSlugP" element={<Home setRegionSlug={setRegionSlug} regionList={regionList} />} />
             <Route path="/r/:regionSlugP/:page" element={<RegionPage />} />
             <Route path="/help/moderationPanel" element={<ModerationPanelHelp />} />
             <Route path="/help/aboutBeta" element={<AboutBeta />} />

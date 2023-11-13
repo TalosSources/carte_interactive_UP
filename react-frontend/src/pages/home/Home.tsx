@@ -1,5 +1,5 @@
 // React
-import React, { useState, useEffect, Suspense, useContext } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -14,7 +14,7 @@ import SelectFromObject from './SelectFromObject'
 
 // Constants
 import { SMALL_SCREEN_WIDTH } from '../../lib/constants'
-import { fetchTags, type Tag } from '../../lib/KesApi'
+import { fetchTags, Region, type Tag } from '../../lib/KesApi'
 import { QueryBoundaries } from '../../lib/QueryBoundary'
 import { TagBar } from './TagBar'
 import { SearchBox } from './SearchBox'
@@ -84,16 +84,16 @@ L.Map.addInitHook('addHandler', 'gestureHandling', EnabledGestureHandling)
 L.Icon.Default.imagePath = '/'
 
 export default function Home (
-  { setRegionSlug }: { setRegionSlug: (slug: string) => void }): React.JSX.Element {
+  { setRegionSlug, regionList }: { setRegionSlug: (slug: string) => void, regionList: Region[] }): React.JSX.Element {
   const { regionSlugP } = useParams()
   const [params, setParams] = useSearchParams()
-  const region = useContext(RegionContext)
 
   useEffect(() => {
     if (typeof regionSlugP !== 'undefined') {
       setRegionSlug(regionSlugP)
     }
   }, [regionSlugP])
+  const region = regionList.find(r => r.properties.slug === regionSlugP)
 
   const [searchString, setSearchString] = useState<string>(params.get('s') ?? '')
   const [activeTags, setActiveTags] = useState<string[]>(params.get('activeTags')?.split(',') ?? [])
@@ -151,7 +151,8 @@ export default function Home (
     bb = 'Hide global'
   }
 
-  return <><SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={activeTags}/>
+  return <RegionContext.Provider value={region}>
+          <SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={activeTags}/>
 
             <Suspense fallback={<></>}>
             <Header>
@@ -184,5 +185,6 @@ export default function Home (
                 <a href="https://smartakartan.se/starta-verksamhet">
                     <img src='/hjälpaOss.jpg' />
                 </a></div>
-            </MainContainer></>
+            </MainContainer>
+          </RegionContext.Provider>
 }
