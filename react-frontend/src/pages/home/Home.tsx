@@ -13,15 +13,12 @@ import GestureHandling from 'leaflet-gesture-handling'
 import { GeoCoordinate } from '../../lib/Coordinate'
 import { GeoBoundingBox } from '../../lib/BoundingBox'
 
-import SelectFromObject from './SelectFromObject'
-
 import { buildUrl } from 'build-url-ts'
 
 // Constants
 import { SMALL_SCREEN_WIDTH } from '../../lib/constants'
 import { fetchTags, type Region, type Tag } from '../../lib/KesApi'
 import { QueryBoundaries } from '../../lib/QueryBoundary'
-import { TagBar } from './TagBar'
 import { SearchBox } from './SearchBox'
 import { SKMapContainer } from './SKMapContainer'
 import { MainCardList } from './MainCardList'
@@ -118,9 +115,10 @@ export default function Home (
   const [activeTags, setActiveTags] = useState<string[]>(urlActiveTags)
   const [mapCenter, setMapCenter] = useState(new GeoCoordinate({ latitude: 50, longitude: 12 }))
   const [mapBounds, setMapBounds] = useState(new GeoBoundingBox())
-  const [sorting, setSorting] = useState(Sorting.Distance.value)
-  const [initiativesToShow, setInitiativesToShow] = useState(WhatToShow.Everything.value)
   const [tags, setTags] = useState<Tag[]>([])
+
+  const sorting = Sorting.Distance.value
+  const initiativesToShow = WhatToShow.OnlyOnMap.value
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -191,20 +189,6 @@ export default function Home (
             <MainContainer>
                 <SearchBox setQuery={setSearchString} initialSearch={urlSearchString}/>
                 <QueryBoundaries>
-                    <TagBar tags={tags} urlActiveTags={urlActiveTags} setHomeTags={setActiveTags} searchQuery={searchString} bb={bb}/>
-
-                    <div id="filters">
-                                    <SelectFromObject
-                        obj={WhatToShow}
-                        defaultValue={WhatToShow.Everything.value}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { setInitiativesToShow(e.target.value) }}
-                                    />
-                                    <SelectFromObject
-                        obj={Sorting}
-                        defaultValue={Sorting.Distance.value}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { setSorting(e.target.value) }}
-                                    />
-                    </div>
                     <MainCardList tags={activeTags} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
                 </QueryBoundaries>
                 <div id="helpUsBox">
