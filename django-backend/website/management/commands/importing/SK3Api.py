@@ -1,8 +1,17 @@
 import os
 import json
 
+from typing import Any, List, Dict
+
+import requests
+import logging
+
+# -max is 100: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
+PER_PAGE = 100
+FIELDS : List[str] = []
+
 TMP_FOLDER = "./cache"
-def requestSK3API(data_type_full_name, per_page=None, fields=None, page_nr=None):
+def requestSK3API(data_type_full_name:str, per_page:int|None=None, fields:List[str]|None=None, page_nr:int|None=None) -> Any:
     CACHE_FILE_NAME = f"{data_type_full_name}_{page_nr}"
     CACHE_FILE_PATH = os.path.join(TMP_FOLDER, CACHE_FILE_NAME)
     if os.path.isfile(CACHE_FILE_PATH):
@@ -33,14 +42,14 @@ def requestSK3API(data_type_full_name, per_page=None, fields=None, page_nr=None)
         json.dump(response_json, f)
     return response_json
 
-def getAllDataOf(dataTypeFullName):
+def getAllDataOf(dataTypeFullName:str) -> List[Any]:
     CACHE_FILE_NAME = f"{dataTypeFullName}"
     CACHE_FILE_PATH = os.path.join(TMP_FOLDER, CACHE_FILE_NAME)
     if os.path.isfile(CACHE_FILE_PATH):
         with open(CACHE_FILE_PATH, 'r') as f:
             return json.load(f)
     page_nr = 1
-    responses = []
+    responses : List[Dict[str, object]]= []
     while True:
         logging.debug(f"Page nr: {page_nr}")
         response_json = requestSK3API(dataTypeFullName, PER_PAGE, FIELDS, page_nr)  # -can be a list or a dict

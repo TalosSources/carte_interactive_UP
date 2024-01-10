@@ -1,16 +1,15 @@
 import logging
-import sys
+
+from typing import Dict, List, TypedDict
 
 import django.core.management.base
 import django.db
-import requests
 
 import website.models
 from website.management.commands.importing.RegionData import REGION_DATA_DICT
 from website.management.commands.importing.SK3Api import getAllDataOf
 from website.management.commands.importing.ImportInitiatives import importInitiatives, create_languages
 
-from typing import Dict, List, Optional
 
 """
 Loglevel:
@@ -59,28 +58,27 @@ RJK_WELCOME_MESSAGE = "welcome_message"
 
 STATUS_PUBLISH = "publish"
 
-PER_PAGE = 100  # -max is 100: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
-FIELDS = []
 ADDRESS_DT = "address"
 PAGE_DT = "page"
 GOTEBORG_R = "goteborg"
 OVERSATTNING_DT = "oversattning"
-GLOBAL_R = "global"
 REGION_DT = "region"
 TAGG_DT = "tagg"
 
-def isPublished(json_row):
+InitiativeJSON = TypedDict('InitiativeJSON', {'status': str})
+
+def isPublished(json_row: InitiativeJSON) -> bool:
     status = json_row[RJK_STATUS]
     return(status == STATUS_PUBLISH)
 
-def importRegions():
+def importRegions() -> None:
     regions = getAllDataOf(REGION_DT)
-    regions = filter(lambda row: isPublished(row), regions)
-    for resp_row in regions:
+    regions2 = filter(isPublished, regions)
+    for resp_row in regions2:
         logging.debug(resp_row)
         wp_post_id = resp_row[RJK_ID]
         try:
-            existing_obj = website.models.Region.objects.get(sk3_id=wp_post_id)
+            website.models.Region.objects.get(sk3_id=wp_post_id)
             continue
         except website.models.Region.DoesNotExist:
             pass
@@ -101,16 +99,14 @@ def importRegions():
         )
         new_obj.save()
 
-def importPages(region):
+def importPages(region: str) -> None:
     data_type_full_name = f"{region}_{PAGE_DT}"
     region_obj = website.models.Region.objects.get(slug=region)
     pages = getAllDataOf(data_type_full_name)
-    pages = filter(lambda row: isPublished(row), pages)
+    pages2 = filter(isPublished, pages)
     order = 0
 
-    region_page_bases = {}
-
-    for page in pages:
+    for page in pages2:
         if isinstance(page['page_type'], bool):
             continue
         if page['page_type'][0]['typename'] != 'MenuFullPage':
@@ -125,7 +121,7 @@ def importPages(region):
             pass
         regionPageBase = None
         # try to find other translation
-        translations = page['translations']
+        translations: Dict[str, int] = page['translations']
         for lang in translations:
             try:
                 otherTranslation = website.models.RegionPageTranslation.objects.get(sk3_id=translations[lang])
@@ -133,9 +129,6 @@ def importPages(region):
                 break
             except:
                 pass
-        # try to find hint from other translation
-        if wp_post_id in region_page_bases:
-            regionPageBase = wp_post_id
         # maybe create new base
         if regionPageBase is None:
             slug = page['slug']
@@ -160,12 +153,12 @@ def importPages(region):
         )
         translation.save()
 
-def importTags():
-    tags = response_json = getAllDataOf(TAGG_DT)
-    tags = filter(lambda row: isPublished(row), tags)
-    return list(tags)
+def importTags() -> List[Dict[str, object]]:
+    tags = getAllDataOf(TAGG_DT)
+    tags2 = filter(isPublished, tags)
+    return list(tags2)
 
-def import_sk3_data(i_args: List[str]):
+def import_sk3_data(_args) -> None:
     importRegions()
     tags = importTags()
     process_tagg_rows(tags)
@@ -175,9 +168,9 @@ def import_sk3_data(i_args: List[str]):
         importPages(region)
         importInitiatives(region)
 
-def process_tagg_rows(tags):
-    def getShortestSlugs(tag_rows):
-        tagg_dict = {}
+def process_tagg_rows(tags) -> None:
+    def getShortestSlugs(tag_rows) -> Dict[str, str]:
+        tagg_dict : Dict[str, str] = {}
         """
         tagg_dict uses this format:
         {
@@ -189,8 +182,7 @@ def process_tagg_rows(tags):
         logging.debug(f"{len(tag_rows)=}")
         for resp_row in tag_rows:
             title = resp_row[RJK_TITLE][RJSK_RENDERED]
-            slug = resp_row[RJK_SLUG]
-            wp_post_id = resp_row[RJK_ID]
+            slug: str = resp_row[RJK_SLUG]
             if title in tagg_dict.keys():
                 logging.warn(f"Found duplicate tag {title}. Slugs: '{slug}' vs. '{tagg_dict[title]}'")
                 nr_of_duplicates += 1
@@ -199,10 +191,6 @@ def process_tagg_rows(tags):
             else:
                 tagg_dict[title] = slug
         return tagg_dict
-
-
-        logging.debug(f"{nr_of_duplicates=}")
-        logging.debug(f"{len(tagg_dict)=}")
 
     tagg_dict = getShortestSlugs(tags)
     for tag_title in tagg_dict.keys():
