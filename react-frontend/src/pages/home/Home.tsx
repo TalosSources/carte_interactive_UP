@@ -2,26 +2,21 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { createBrowserHistory } from '@remix-run/router'
 
 // Map
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css'
 import L from 'leaflet'
 import GestureHandling from 'leaflet-gesture-handling'
-
 import { GeoCoordinate } from '../../lib/Coordinate'
 import { GeoBoundingBox } from '../../lib/BoundingBox'
-
-import { buildUrl } from 'build-url-ts'
-
-// Constants
 import { SMALL_SCREEN_WIDTH } from '../../lib/constants'
-import { type Region } from '../../lib/KesApi'
+import { Region } from '../../lib/KesApi'
 import { QueryBoundaries } from '../../lib/QueryBoundary'
 import { SearchBox } from './SearchBox'
 import { SKMapContainer } from './SKMapContainer'
 import { MainCardList } from './MainCardList'
+import { RegionContext } from '../../components/RegionContext'
 
 const Header = styled.header`
     padding-top: 2rem;
@@ -85,26 +80,18 @@ L.Map.addInitHook('addHandler', 'gestureHandling', EnabledGestureHandling)
 L.Icon.Default.imagePath = '/'
 
 export default function Home (
-  { regionList, setRegionSlug, regionSlug }: { regionList: Region[], setRegionSlug: (slug: string) => void, regionSlug: string }): React.JSX.Element {
-  const [queryParameters] = useSearchParams()
+  { setRegionSlug, regionList }: { setRegionSlug: (slug: string) => void, regionList: Region[] }): React.JSX.Element {
   const { regionSlugP } = useParams()
+  const [params, setParams] = useSearchParams()
 
   useEffect(() => {
     if (typeof regionSlugP !== 'undefined') {
       setRegionSlug(regionSlugP)
     }
   }, [regionSlugP])
-  let urlSearchString
-  if (queryParameters.has('s')) {
-    urlSearchString = queryParameters.get('s')
-    if (urlSearchString == null) {
-      urlSearchString = ''
-    }
-  } else {
-    urlSearchString = ''
-  }
-  const [searchString, setSearchString] = useState(urlSearchString)
-  // const [activeRegion, setActiveRegion] = useState({properties: { welcome_message_html: ""}});
+  const region = regionList.find(r => r.properties.slug === regionSlugP)
+
+  const [searchString, setSearchString] = useState<string>(params.get('s') ?? '')
   const [mapCenter, setMapCenter] = useState(new GeoCoordinate({ latitude: 50, longitude: 12 }))
   const [mapBounds, setMapBounds] = useState(new GeoBoundingBox())
 
@@ -113,33 +100,18 @@ export default function Home (
 
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [regionSlug])
+  }, [region])
 
   useEffect(() => {
-    const history = createBrowserHistory()
-    const queryParams: Record<string, string | string[]> = {}
-    if (searchString !== '') {
-      queryParams.s = searchString
-    }
-    const newUrl = buildUrl({
-      path: '/r/' + regionSlug,
-      queryParams
-    })
-    history.replace(newUrl)
-  }, [searchString, regionSlugP, regionSlug])
-
-  // refresh region
-  const region = regionList.filter((r: Region) => r.properties.slug === regionSlug)
-  let activeReg
-  if (region.length === 0) {
-    activeReg = {
-      properties: {
-        welcome_message_html: ''
+    setParams((prev) => {
+      if (searchString !== null && searchString !== '') {
+        prev.set('s', searchString)
+      } else {
+        prev.delete('s')
       }
-    }
-  } else {
-    activeReg = region[0]
-  }
+      return prev
+    })
+  }, [searchString])
 
   let bb: GeoBoundingBox | 'Show all' | 'Hide global' = mapBounds
   if (initiativesToShow === WhatToShow.Everything.value) {
@@ -148,18 +120,19 @@ export default function Home (
     bb = 'Hide global'
   }
 
-  return <><SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={[]}/>
+  return <RegionContext.Provider value={region}>
+          <SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={[]}/>
 
             <Suspense fallback={<></>}>
             <Header>
                 {(() => (
-                    <div id="welcomeMessage" dangerouslySetInnerHTML={{ __html: activeReg.properties.welcome_message_html }} />
+                    <div id="welcomeMessage" dangerouslySetInnerHTML={{ __html: region?.properties.welcome_message_html ?? '' }} />
                 ))()}
             </Header>
             </Suspense>
 
             <MainContainer>
-                <SearchBox setQuery={setSearchString} initialSearch={urlSearchString}/>
+                <SearchBox setQuery={setSearchString} initialSearch={searchString}/>
                 <QueryBoundaries>
                     <MainCardList tags={[]} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
                 </QueryBoundaries>
@@ -167,5 +140,6 @@ export default function Home (
                 <a href="https://smartakartan.se/starta-verksamhet">
                     <img src='/hjälpaOss.jpg' />
                 </a></div>
-            </MainContainer></>
+            </MainContainer>
+          </RegionContext.Provider>
 }

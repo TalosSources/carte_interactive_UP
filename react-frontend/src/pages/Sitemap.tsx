@@ -4,9 +4,9 @@ import { type Tag } from '../lib/KesApi'
 function renderTags (tags: Tag[]): React.JSX.Element[] {
   return tags.map(
     (tagElement) => (
-              <li key={tagElement.slug}>
-                  <a href={`/tag/${tagElement.slug}`}>{tagElement.title}</a>
-              </li>
+      <li key={tagElement.slug}>
+        <a href={`/tag/${tagElement.slug}`}>{tagElement.title}</a>
+      </li>
     )
   )
 }
@@ -30,13 +30,13 @@ function Sitemap (): React.JSX.Element {
   }, [])
 
   return (
-        <div>
-            <h2>Sitemap</h2>
-            <h3>All tags</h3>
-            <ul>
-                {renderTags(tags)}
-            </ul>
-        </div>
+    <div>
+      <h2>Sitemap</h2>
+      <h3>All tags</h3>
+      <ul>
+        {renderTags(tags)}
+      </ul>
+    </div>
   )
 }
 
