@@ -17,7 +17,7 @@ import { buildUrl } from 'build-url-ts'
 
 // Constants
 import { SMALL_SCREEN_WIDTH } from '../../lib/constants'
-import { fetchTags, type Region, type Tag } from '../../lib/KesApi'
+import { type Region } from '../../lib/KesApi'
 import { QueryBoundaries } from '../../lib/QueryBoundary'
 import { SearchBox } from './SearchBox'
 import { SKMapContainer } from './SKMapContainer'
@@ -103,19 +103,10 @@ export default function Home (
   } else {
     urlSearchString = ''
   }
-  let urlActiveTags: string[]
-  const activeTagsPart = queryParameters.get('t')
-  if (!(activeTagsPart == null) && !(activeTagsPart === '')) {
-    urlActiveTags = activeTagsPart.split(',')
-  } else {
-    urlActiveTags = []
-  }
   const [searchString, setSearchString] = useState(urlSearchString)
   // const [activeRegion, setActiveRegion] = useState({properties: { welcome_message_html: ""}});
-  const [activeTags, setActiveTags] = useState<string[]>(urlActiveTags)
   const [mapCenter, setMapCenter] = useState(new GeoCoordinate({ latitude: 50, longitude: 12 }))
   const [mapBounds, setMapBounds] = useState(new GeoBoundingBox())
-  const [tags, setTags] = useState<Tag[]>([])
 
   const sorting = Sorting.Distance.value
   const initiativesToShow = WhatToShow.OnlyOnMap.value
@@ -130,31 +121,12 @@ export default function Home (
     if (searchString !== '') {
       queryParams.s = searchString
     }
-    if (activeTags.length > 0) {
-      queryParams.t = activeTags
-    }
     const newUrl = buildUrl({
       path: '/r/' + regionSlug,
       queryParams
     })
     history.replace(newUrl)
-  }, [activeTags, searchString, regionSlugP, regionSlug])
-
-  useEffect(() => {
-    // fetch tags
-    fetchTags()
-      .then(responseJson => {
-        const tags = responseJson.map((tag: Tag) => {
-          tag.title = tag.title.replace('&amp;', '&')
-          return tag
-        })
-        setTags(tags)
-        // remove invalid strings in activeTags
-      })
-      .catch(() => {
-        console.log('Error while fetching tags in Home.')
-      })
-  }, [])
+  }, [searchString, regionSlugP, regionSlug])
 
   // refresh region
   const region = regionList.filter((r: Region) => r.properties.slug === regionSlug)
@@ -176,7 +148,7 @@ export default function Home (
     bb = 'Hide global'
   }
 
-  return <><SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={activeTags}/>
+  return <><SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={[]}/>
 
             <Suspense fallback={<></>}>
             <Header>
@@ -189,7 +161,7 @@ export default function Home (
             <MainContainer>
                 <SearchBox setQuery={setSearchString} initialSearch={urlSearchString}/>
                 <QueryBoundaries>
-                    <MainCardList tags={activeTags} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
+                    <MainCardList tags={[]} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
                 </QueryBoundaries>
                 <div id="helpUsBox">
                 <a href="https://smartakartan.se/starta-verksamhet">
