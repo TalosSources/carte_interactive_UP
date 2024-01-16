@@ -15,4 +15,4 @@ services:
   web:
     volumes:
       - ./react-frontend/src:/react-frontend/src:z
-      - ./react-frontend/public:/react-frontend/public
+      - ./react-frontend/public:/react-frontend/public:z
