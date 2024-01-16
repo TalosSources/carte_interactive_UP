@@ -8,8 +8,6 @@ import 'leaflet/dist/leaflet.css'
 import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css'
 import L from 'leaflet'
 import GestureHandling from 'leaflet-gesture-handling'
-import { GeoCoordinate } from '../../lib/Coordinate'
-import { GeoBoundingBox } from '../../lib/BoundingBox'
 import { SMALL_SCREEN_WIDTH } from '../../lib/constants'
 import { Region } from '../../lib/KesApi'
 import { QueryBoundaries } from '../../lib/QueryBoundary'
@@ -63,12 +61,6 @@ export const Sorting = {
   Distance: { value: '2', text: 'ui.sortByDist' }
 }
 
-const WhatToShow = {
-  Everything: { value: '1', text: 'ui.allInitiatives' },
-  OnlyOnMap: { value: '2', text: 'ui.onlyOnTheMap' },
-  WithoutGlobal: { value: '3', text: 'ui.hideGlobal' }
-}
-
 class EnabledGestureHandling extends GestureHandling {
   constructor (arg: L.Map) {
     super(arg)
@@ -92,11 +84,10 @@ export default function Home (
   const region = regionList.find(r => r.properties.slug === regionSlugP)
 
   const [searchString, setSearchString] = useState<string>(params.get('s') ?? '')
-  const [mapCenter, setMapCenter] = useState(new GeoCoordinate({ latitude: 50, longitude: 12 }))
-  const [mapBounds, setMapBounds] = useState(new GeoBoundingBox())
+  const [mapCenter, setMapCenter] = useState(L.latLng({ lat: 50, lng: 12 }))
+  const [mapBounds, setMapBounds] = useState(L.latLngBounds([]))
 
   const sorting = Sorting.Distance.value
-  const initiativesToShow = WhatToShow.OnlyOnMap.value
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -113,15 +104,8 @@ export default function Home (
     })
   }, [searchString])
 
-  let bb: GeoBoundingBox | 'Show all' | 'Hide global' = mapBounds
-  if (initiativesToShow === WhatToShow.Everything.value) {
-    bb = 'Show all'
-  } else if (initiativesToShow === WhatToShow.WithoutGlobal.value) {
-    bb = 'Hide global'
-  }
-
   return <RegionContext.Provider value={region}>
-          <SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={bb} tags={[]}/>
+          <SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={mapBounds} tags={[]}/>
 
             <Suspense fallback={<></>}>
             <Header>
@@ -134,7 +118,7 @@ export default function Home (
             <MainContainer>
                 <SearchBox setQuery={setSearchString} initialSearch={searchString}/>
                 <QueryBoundaries>
-                    <MainCardList tags={[]} searchQuery={searchString} bb={bb} sorting={sorting} mapCenter={mapCenter}/>
+                    <MainCardList tags={[]} searchQuery={searchString} bb={mapBounds} sorting={sorting} mapCenter={mapCenter}/>
                 </QueryBoundaries>
                 <div id="helpUsBox">
                 <a href="https://smartakartan.se/starta-verksamhet">

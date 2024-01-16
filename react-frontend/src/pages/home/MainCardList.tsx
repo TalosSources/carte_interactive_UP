@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
-import { GeoCoordinate } from '../../lib/Coordinate'
-import { GeoBoundingBox } from '../../lib/BoundingBox'
 import { renderCardCollection } from '../../components/Cards'
 import { useTranslation } from 'react-i18next'
 import { type Initiative, initiativeLocationFeatureToGeoCoordinate, useFilteredInitiatives } from '../../lib/KesApi'
 import { Button } from 'react-bootstrap'
 import { Sorting } from './Home'
+import { LatLng, LatLngBounds } from 'leaflet'
 
 // Home Components
-export function MainCardList ({ tags, searchQuery, bb, sorting, mapCenter }: { tags: string[], searchQuery: string, bb: GeoBoundingBox | 'Hide global' | 'Show all', sorting: string, mapCenter: GeoCoordinate }): React.JSX.Element {
+export function MainCardList ({ tags, searchQuery, bb, sorting, mapCenter }: { tags: string[], searchQuery: string, bb: LatLngBounds, sorting: string, mapCenter: LatLng }): React.JSX.Element {
   function sortInitiativesByName (initiatives: Initiative[]): Initiative[] {
     const names: Array<[number, string]> = []
     for (let i = 0; i < initiatives.length; i++) {
@@ -32,7 +31,7 @@ export function MainCardList ({ tags, searchQuery, bb, sorting, mapCenter }: { t
         return 0
       }
       return Math.min(...initiative.locations.features.map(
-        feature => mapCenter.quickDistanceTo(initiativeLocationFeatureToGeoCoordinate(feature))
+        feature => mapCenter.distanceTo(initiativeLocationFeatureToGeoCoordinate(feature))
       ))
     }
 

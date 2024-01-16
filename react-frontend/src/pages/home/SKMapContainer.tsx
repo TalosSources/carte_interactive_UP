@@ -1,9 +1,7 @@
 import React, { Suspense, useContext } from 'react'
 import { MapContainer, TileLayer, useMap, useMapEvent } from 'react-leaflet'
-import L, { type LeafletEvent } from 'leaflet'
+import L, { LatLng, LatLngBounds, type LeafletEvent } from 'leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { GeoCoordinate } from '../../lib/Coordinate'
-import { GeoBoundingBox } from '../../lib/BoundingBox'
 import { MapMarkers } from './MapMarkers'
 import { useSearchParams } from 'react-router-dom'
 import { RegionContext } from '../../components/RegionContext'
@@ -32,10 +30,7 @@ function useMapStateParam (): Maybe<{ lat: number, lng: number, zoom: number }> 
       })))
 }
 
-export function SKMapContainer ({ setMapCenter, setMapBounds, tags, searchQuery, bb }: { setMapCenter: (newCenter: GeoCoordinate) => void, setMapBounds: (newBounds: GeoBoundingBox) => void, tags: string[], searchQuery: string, bb: GeoBoundingBox | 'Hide global' | 'Show all' }): React.JSX.Element {
-  function leafletToGeoCoordinate (leafletCoordinate: { lng: number, lat: number }): GeoCoordinate {
-    return new GeoCoordinate({ longitude: leafletCoordinate.lng, latitude: leafletCoordinate.lat })
-  }
+export function SKMapContainer ({ setMapCenter, setMapBounds, tags, searchQuery, bb }: { setMapCenter: (newCenter: LatLng) => void, setMapBounds: (newBounds: LatLngBounds) => void, tags: string[], searchQuery: string, bb: LatLngBounds }): React.JSX.Element {
   const [, setParams] = useSearchParams()
 
   function RegisterMapCenter (): null {
@@ -52,12 +47,8 @@ export function SKMapContainer ({ setMapCenter, setMapBounds, tags, searchQuery,
         return prev
       })
 
-      setMapCenter(leafletToGeoCoordinate(center))
-      setMapBounds(GeoBoundingBox.fromCoordinates([
-        leafletToGeoCoordinate(newBounds._northEast),
-        leafletToGeoCoordinate(newBounds._southWest)
-      ]
-      ))
+      setMapCenter(center)
+      setMapBounds(L.latLngBounds([newBounds._northEast, newBounds._southWest]))
     })
     return null
   }

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, startTransition } from 'react'
-import { GeoBoundingBox } from '../../lib/BoundingBox'
 import TopTagButton from './TopTagButton'
 import { type Initiative, type Tag, useFilteredInitiatives } from '../../lib/KesApi'
 import { TagContainer } from './Home'
+import { LatLngBounds } from 'leaflet'
 
-export function TagBar ({ tags, urlActiveTags, setHomeTags, searchQuery, bb }: { tags: Tag[], urlActiveTags: string[], setHomeTags: (tags: string[]) => void, searchQuery: string, bb: GeoBoundingBox | 'Show all' | 'Hide global' }): React.JSX.Element {
+export function TagBar ({ tags, urlActiveTags, setHomeTags, searchQuery, bb }: { tags: Tag[], urlActiveTags: string[], setHomeTags: (tags: string[]) => void, searchQuery: string, bb: LatLngBounds }): React.JSX.Element {
   function calculateTagEntropy (initiatives: Initiative[]): Record<string, number> {
     const tagCount = initiatives.reduce((map, initiative) => initiative.tags.reduce((map, tag) => {
       const n = map.get(tag)

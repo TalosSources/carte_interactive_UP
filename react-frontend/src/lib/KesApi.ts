@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { GeoCoordinate } from './Coordinate'
 import { registerInitiativeTranslations, registerRegionPageDescription } from './i18n'
-import { type GeoBoundingBox } from './BoundingBox'
+import L, { type LatLngBounds, type LatLng } from 'leaflet'
 
 export interface Region {
   properties: {
@@ -76,8 +75,8 @@ export interface RegionPage {
   }>
 }
 
-export function initiativeLocationFeatureToGeoCoordinate (feature: Feature): GeoCoordinate {
-  return new GeoCoordinate({ longitude: feature.geometry.coordinates[0], latitude: feature.geometry.coordinates[1] })
+export function initiativeLocationFeatureToGeoCoordinate (feature: Feature): LatLng {
+  return L.latLng({ lng: feature.geometry.coordinates[0], lat: feature.geometry.coordinates[1] })
 }
 
 export async function fetchRegionPage (region: string, page: string): Promise<RegionPage> {
@@ -176,13 +175,16 @@ export function useInitiatives (): Initiative[] {
   return data
 }
 
-function initiativeInsideMap (initiative: Initiative, mapBounds: GeoBoundingBox): boolean {
+function initiativeInsideMap (initiative: Initiative, mapBounds: LatLngBounds): boolean {
+  if (!mapBounds.isValid()) {
+    return false
+  }
   return initiative.locations.features.some(
     feature => mapBounds.contains(initiativeLocationFeatureToGeoCoordinate(feature))
   )
 }
 
-export function useFilteredInitiatives (tags: string[], searchQuery: string, bb: GeoBoundingBox | 'Hide global' | 'Show all'): Initiative[] {
+export function useFilteredInitiatives (tags: string[], searchQuery: string, bb: LatLngBounds): Initiative[] {
   function initiativeMatchesCurrentSearch (initiative: Initiative): boolean {
     return initiativeMatchesSearch(initiative, searchQuery)
   }
@@ -207,11 +209,7 @@ export function useFilteredInitiatives (tags: string[], searchQuery: string, bb:
 
   let initiatives: Initiative[] = useInitiatives()
 
-  if (bb === 'Hide global') {
-    initiatives = initiatives.filter(i => i.locations.features.length > 0)
-  } else if (bb !== 'Show all') {
-    initiatives = initiatives.filter(i => initiativeInsideMap(i, bb))
-  }
+  initiatives = initiatives.filter(i => initiativeInsideMap(i, bb))
   initiatives = initiatives
     .filter(initiativeMatchCurrentTags)
     .filter(initiativeMatchesCurrentSearch)
