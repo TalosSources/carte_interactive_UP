@@ -39,7 +39,7 @@ def create_or_update_content_admin_group() -> auth_models.Group:
     return content_admin_group
 
 
-def create_or_update_user(username, passw):
+def create_or_update_user(username, passw) -> auth_models.User:
     user_model = django.contrib.auth.get_user_model()
     # user_model: auth_models.User
     # -https://docs.djangoproject.com/en/4.1/topics/auth/customizing/#django.contrib.auth.get_user_model

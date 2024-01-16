@@ -4,6 +4,9 @@ django-csp
 djangorestframework
 djangorestframework-gis
 django-cors-headers
+django-stubs
+djangorestframework-stubs
+mypy
 psycopg2-binary
 Pillow
 python-slugify
