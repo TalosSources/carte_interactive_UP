@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { type Initiative, initiativeLocationFeatureToGeoCoordinate, useFilteredInitiatives } from '../../lib/KesApi'
 import { Button } from 'react-bootstrap'
 import { Sorting } from './Home'
-import { LatLng, LatLngBounds } from 'leaflet'
+import { LatLngBounds } from 'leaflet'
 
 // Home Components
-export function MainCardList ({ tags, searchQuery, bb, sorting, mapCenter }: { tags: string[], searchQuery: string, bb: LatLngBounds, sorting: string, mapCenter: LatLng }): React.JSX.Element {
+export function MainCardList ({ tags, searchQuery, bb, sorting }: { tags: string[], searchQuery: string, bb: LatLngBounds, sorting: string }): React.JSX.Element {
   function sortInitiativesByName (initiatives: Initiative[]): Initiative[] {
     const names: Array<[number, string]> = []
     for (let i = 0; i < initiatives.length; i++) {
@@ -31,7 +31,7 @@ export function MainCardList ({ tags, searchQuery, bb, sorting, mapCenter }: { t
         return 0
       }
       return Math.min(...initiative.locations.features.map(
-        feature => mapCenter.distanceTo(initiativeLocationFeatureToGeoCoordinate(feature))
+        feature => bb.getCenter().distanceTo(initiativeLocationFeatureToGeoCoordinate(feature))
       ))
     }
 

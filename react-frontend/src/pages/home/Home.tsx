@@ -84,7 +84,6 @@ export default function Home (
   const region = regionList.find(r => r.properties.slug === regionSlugP)
 
   const [searchString, setSearchString] = useState<string>(params.get('s') ?? '')
-  const [mapCenter, setMapCenter] = useState(L.latLng({ lat: 50, lng: 12 }))
   const [mapBounds, setMapBounds] = useState(L.latLngBounds([]))
 
   const sorting = Sorting.Distance.value
@@ -105,7 +104,7 @@ export default function Home (
   }, [searchString])
 
   return <RegionContext.Provider value={region}>
-          <SKMapContainer setMapBounds={setMapBounds} setMapCenter={setMapCenter} searchQuery={searchString} bb={mapBounds} tags={[]}/>
+          <SKMapContainer setMapBounds={setMapBounds} searchQuery={searchString} tags={[]}/>
 
             <Suspense fallback={<></>}>
             <Header>
@@ -118,7 +117,7 @@ export default function Home (
             <MainContainer>
                 <SearchBox setQuery={setSearchString} initialSearch={searchString}/>
                 <QueryBoundaries>
-                    <MainCardList tags={[]} searchQuery={searchString} bb={mapBounds} sorting={sorting} mapCenter={mapCenter}/>
+                    <MainCardList tags={[]} searchQuery={searchString} bb={mapBounds} sorting={sorting} />
                 </QueryBoundaries>
                 <div id="helpUsBox">
                 <a href="https://smartakartan.se/starta-verksamhet">
