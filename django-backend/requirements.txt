@@ -7,6 +7,8 @@ django-cors-headers
 django-stubs
 djangorestframework-stubs
 mypy
+beautifulsoup4
+types-beautifulsoup4
 psycopg2-binary
 Pillow
 python-slugify
