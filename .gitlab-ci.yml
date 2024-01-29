@@ -180,3 +180,15 @@ cleanup_cache:
   when: manual
   script:
     - rm -r /var/lib/smartakartan/smartakartan-cd/cache/* 
+
+show_orphan_images:
+  stage: deploy
+  when: manual
+  script:
+    - sudo docker-compose run api /code/manage.py delete_orphan_images --dryrun
+
+delete_orphan_images:
+  stage: deploy
+  when: manual
+  script:
+    - sudo docker-compose run api /code/manage.py delete_orphan_images --delete
