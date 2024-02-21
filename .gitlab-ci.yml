@@ -44,7 +44,6 @@ dryrun_build:
   script:
     - echo export const version = \'$(git describe --long --all --dirty)\' > react-frontend/src/version.tsx
     - mv docker-compose.override.yml.dryrun docker-compose.override.yml
-    - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun build
 
 eslint:
@@ -72,7 +71,6 @@ dryrun_import:
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
     - mv docker-compose.override.yml.dryrun docker-compose.override.yml
-    - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun run api /code/manage.py import_sk3_data
 
 dryrun_users:
@@ -82,7 +80,6 @@ dryrun_users:
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
     - mv docker-compose.override.yml.dryrun docker-compose.override.yml
-    - echo REACT_APP_BACKEND_URL=https://beta.smartakartan.se/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun run api /code/manage.py setup_user --su -u admin -p admin_pass
     - sudo docker-compose -p dryrun run api /code/manage.py setup_user --ca -u curator -p curator_pass
 
@@ -94,7 +91,6 @@ dryrun_cleanup:
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
     - mv docker-compose.override.yml.dryrun docker-compose.override.yml
-    - echo REACT_APP_BACKEND_URL=https://smartakartan.entrop.mywire.org/api > react-frontend/.env.development
     - sudo docker-compose -p dryrun down
     - sudo docker-compose -p dryrun rm
     - sudo docker volume prune -f
