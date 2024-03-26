@@ -1,9 +1,20 @@
-from typing import Type
+import logging
+from typing import NotRequired, Type, TypedDict
 from slugify import slugify
 
 from django.db.models import Model
 
 import website.models
+from website.management.commands.importing.SK3Api import InitiativeJSON
+
+TranslationsT = TypedDict('TranslationsT', {
+    'en': NotRequired[InitiativeJSON],
+    'sv': NotRequired[InitiativeJSON],
+})
+TranslationGroup = TypedDict('TranslationGroup', {
+    'translations': TranslationsT,
+    'history': str,
+})
 
 def create_languages(code: str) -> website.models.Language:
     Languages = {
@@ -51,8 +62,43 @@ def generateNewSlug(beginning:str, model: Type[Model]) -> str:
         except model.DoesNotExist:
             return possible_slug
 
-def annotateToHistory(initiativeBase: website.models.Initiative, message: str) -> None:
+def _annotateToHistoryInI(initiativeBase: website.models.Initiative, message: str) -> None:
+    if message == "":
+        return
     initiativeBase.needs_attention = True
     prevHistory = initiativeBase.history
     initiativeBase.history = message + "\n" + prevHistory
     initiativeBase.save()
+
+def _annotateToHistoryInTG(initiativeBase: TranslationGroup, message: str) -> None:
+    prevHistory = initiativeBase['history']
+    initiativeBase['history'] = message + "\n" + prevHistory #TODO Add timestamp
+
+
+class ImportLogger:
+    context: TranslationGroup | website.models.Initiative | None = None
+
+    def logToCurator(self, msg: str):
+        if isinstance(self.context, website.models.Initiative):
+            _annotateToHistoryInI(self.context, msg)
+        elif self.context is None:
+            logging.critical(f"This message should have reached some curator, but context was None.\n"+msg)
+        else:
+            _annotateToHistoryInTG(self.context, msg)
+
+    def infoToDeveloper(self, msg: str):
+        logging.info(msg)
+    def warnToDeveloper(self, msg: str):
+        logging.warn(msg)
+    def criticalToDeveloper(self, msg: str):
+        logging.critical(msg)
+    
+    def setContext(self, c: TranslationGroup | website.models.Initiative):
+        if self.context == c:
+            return
+        if self.context is not None:
+            raise Exception("Log context should have been None.")
+        self.context = c
+
+    def removeContext(self):
+        self.context = None

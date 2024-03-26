@@ -11,7 +11,7 @@ def findShortestSlugsByTitle(tag_rows: Iterable[TagRow]) -> Dict[str, str]:
         title = resp_row['title']['rendered']
         slug: str = resp_row['slug']
         if title in tagg_dict.keys():
-            logging.warn(f"Found duplicate tag {title}. Slugs: '{slug}' vs. '{tagg_dict[title]}'")
+            #logging.warn(f"Found duplicate tag {title}. Slugs: '{slug}' vs. '{tagg_dict[title]}'")
             if len(slug) < len(tagg_dict[title]):
                 tagg_dict[title] = slug
         else:
@@ -28,4 +28,5 @@ def importTags():
         try:
             new_obj.save()
         except:
-            logging.info(f"Tag with slug {slug} was already present")
+            pass
+            #logging.info(f"Tag with slug {slug} was already present")
