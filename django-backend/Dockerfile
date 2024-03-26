@@ -5,7 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 WORKDIR /code
-#RUN apt-get update -y
+RUN apt-get update -y
 RUN apt-get install -y gdal-bin netcat curl
 
 COPY ./requirements.txt .
