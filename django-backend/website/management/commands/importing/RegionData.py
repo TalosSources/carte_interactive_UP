@@ -78,6 +78,15 @@ REGION_DATA_DICT = {
             (20.272687805012996, 63.86819938869472))
         )
     )),
+    "mumbai": RegionData(name="Mumbai", area=django.contrib.gis.geos.Polygon(
+        django.contrib.gis.geos.LinearRing(
+            ((72.74871846470255, 18.871590070456893),
+             (72.79451411616176, 19.15405306503565),
+             (73.02567311876552, 19.09224093500711),
+             (73.05620355307167, 18.97679656251531),
+             (72.74871846470255, 18.871590070456893),
+        ))
+    )),
     "global": RegionData(name="Hela Sverige", area=django.contrib.gis.geos.Polygon(
         django.contrib.gis.geos.LinearRing(
             ((20.352595005064796, 69.02952599870233),

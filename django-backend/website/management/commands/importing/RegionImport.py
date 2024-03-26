@@ -159,6 +159,16 @@ def createRegionTranslations():
     #TODO
     pass
 
+def createMumbai():
+    mR : OfferedRegionType = {
+        'slug': 'mumbai',
+        'lang': 'en',
+        'id': 37,
+        'translations': {},
+        'welcome_message': "This is the Mumbai secton of SK"
+    }
+    createRegion({'sv': mR})
+
 def importRegions(regions_to_be_imported: List[str]) -> None:
     offered_regions: List[OfferedRegionType] = getAllDataOf("region")
     grouped_regions: list[dict[str, OfferedRegionType]] = group_region_translations(offered_regions)
@@ -169,3 +179,4 @@ def importRegions(regions_to_be_imported: List[str]) -> None:
         region_base = createRegion(region)
         createRegionTranslations()
         importPages(region_base.slug)
+    createMumbai()
