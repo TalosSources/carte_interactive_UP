@@ -3,6 +3,7 @@ import logging
 #from typing import Dict, List
 
 import django.core.management.base
+from django.core.management.base import CommandParser
 import django.db
 
 import website.models
@@ -66,16 +67,13 @@ def import_sk3_data(*_args: None) -> None:
     for region in regions_to_be_imported:
         importInitiatives(region)
 
-class Command(django.core.management.base.BaseCommand): # type: ignore
+class Command(django.core.management.base.BaseCommand):
     help = "Migrate data from sk3"
 
-    def add_arguments(self, parser): # type: ignore
-        parser.add_argument("--clear-before-import", action="store_true")  # type: ignore # -available under "options" in help
+    def add_arguments(self, parser: CommandParser):
+        parser.add_argument("--clear-before-import", action="store_true")
 
-    def handle(self, *args: None, **options): # type: ignore
-        logging.debug(f"{args=}")
-        logging.debug(f"{options=}")
-
+    def handle(self, *args: None, **options: None):
         if "clear-before-import" in options:
             result_text = input("Are you sure you want to delete the whole database? (y/n) ")
 
