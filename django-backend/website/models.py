@@ -46,7 +46,7 @@ class Initiative(models.Model):
     # Multiple values can be NULL and not violate uniqueness. See: https://stackoverflow.com/a/1400046/2525237
     # This means that we can use NULL/None for all new rows/items that we add
     region = models.ForeignKey(Region, related_name='initiatives', on_delete=models.CASCADE)
-    tags = models.ManyToManyField(Tag, related_name='initiatives')
+    tags = models.ManyToManyField(Tag, related_name='initiatives') # type: ignore
     main_image = models.ImageField(null=True)
     slug = models.SlugField(max_length=127, unique=True, help_text="The URL part of this initiative. Cannot be changed.")
 
