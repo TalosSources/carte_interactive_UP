@@ -15,24 +15,6 @@ from website.management.commands.importing.SK3Api import TMP_FOLDER
 from website.management.commands.importing.common import annotateToHistory, create_languages, generateNewSlug
 from website.management.commands.importing.InitiativeTranslationMatching import InitiativeTranslationMatching
 
-
-#BUSINESS_DT = "business"
-#RJK_ID = "id"  # -the WP post id
-#RJK_TITLE = "title"
-#RJSK_RENDERED = "rendered"
-#RJK_TRANSLATIONS = "translations"
-#RJK_TYPE = "type"
-#RJK_LANG = "lang"
-
-#RJK_HUVUDTAGGAR = "huvudtaggar"
-#RJK_SUBTAGGAR = "subtaggar"
-#RJK_TRANSAKTIONSFORM = "transaktionsform"
-#RJK_TAGGAR = "taggar"
-
-#RJK_ADDRESS_AND_COORDINATE = "address_and_coordinate"
-#RJSK_ADDRESS_AND_COORDINATE_ID = "id"  # -another field called "ID" is also available, which has the same value AFAIK
-#GLOBAL_R = "global"
-
 def createOrGetInitiativeBase(thisTranslationSK3: InitiativeJSON, initiativeTranslationMatching: InitiativeTranslationMatching) -> website.models.Initiative:
     initiativeBase = initiativeTranslationMatching.findInitiativeBaseFor(thisTranslationSK3)
     if initiativeBase is None:

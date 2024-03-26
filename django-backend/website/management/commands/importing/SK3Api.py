@@ -8,8 +8,6 @@ import logging
 
 # -max is 100: https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/
 PER_PAGE = 100
-#STATUS_PUBLISH = "publish"
-#RJK_STATUS = "status"
 
 FIELDS : List[str] = []
 
@@ -118,12 +116,6 @@ def getAllDataOf(dataTypeFullName:str) -> List[Any]:
 def isPublished(json_row: PublishableT) -> bool:
     status: str = json_row["status"]
     return(status == "publish")
-
-#RJK_ACF = "acf"  # -advanced custom fields (WP)
-#RJSK_ACF_SHORT_DESCRIPTION = "short_description"  # unused
-#RJSK_ACF_DESCRIPTION_ID = "description"
-#RJSK_ACF_MAIN_IMAGE = "main_image"
-#RJSK_ACF_MAIN_IMAGE_URL = "url"
 
 def getImageUrl(row: InitiativeJSON):
     if 'main_image' in row['acf']:

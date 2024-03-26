@@ -6,10 +6,6 @@ from website.management.commands.importing.RegionData import REGION_DATA_DICT
 from website.management.commands.importing.SK3Api import isPublished, getAllDataOf
 from website.management.commands.importing.common import create_languages
 
-PAGE_DT = "page"
-REGION_DT = "region"
-RJK_ID = "id"  # -the WP post id
-
 RegionDataType = TypedDict('RegionDataType', {
     'slug': str,
     'email': str | None,
@@ -89,7 +85,7 @@ def createOrUpdatePageTranslation(base: website.models.RegionPage, page: JsonPag
 
 
 def importPages(region: str) -> None:
-    data_type_full_name = f"{region}_{PAGE_DT}"
+    data_type_full_name = f"{region}_page"
     pages = getAllDataOf(data_type_full_name)
     pages2 = filter(isPublished, pages)
     order = 0
@@ -108,7 +104,7 @@ def importPages(region: str) -> None:
 
 
 def exists_already_in_db(region: OfferedRegionType):
-        wp_post_id = region[RJK_ID]
+        wp_post_id = region["id"]
         try:
             return website.models.Region.objects.get(sk3_id=wp_post_id)
         except website.models.Region.DoesNotExist:
@@ -147,7 +143,7 @@ def createRegion(region: dict[str, OfferedRegionType]):
     if region_base is None:
         slug = resp_row['slug']
         region_data = REGION_DATA_DICT[slug]
-        wp_post_id = resp_row[RJK_ID]
+        wp_post_id = resp_row["id"]
         region_base = website.models.Region(
             sk3_id=wp_post_id,
             slug=slug,
@@ -164,7 +160,7 @@ def createRegionTranslations():
     pass
 
 def importRegions(regions_to_be_imported: List[str]) -> None:
-    offered_regions: List[OfferedRegionType] = getAllDataOf(REGION_DT)
+    offered_regions: List[OfferedRegionType] = getAllDataOf("region")
     grouped_regions: list[dict[str, OfferedRegionType]] = group_region_translations(offered_regions)
     pivoted_regions = pivot_by_swedish_slug(grouped_regions)
     regions = [pivoted_regions[rslug] for rslug in regions_to_be_imported]
