@@ -143,3 +143,6 @@ def getLangCode(row: InitiativeJSON):
     else:
         #for Sjuhärad
         return 'sv'
+
+def getTitle(i: InitiativeJSON):
+    return i["title"]["rendered"]
