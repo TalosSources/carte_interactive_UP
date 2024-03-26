@@ -5,23 +5,14 @@ import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapMarkers } from './MapMarkers'
 import { useSearchParams } from 'react-router-dom'
 import { RegionContext } from '../../components/RegionContext'
-import { IMaybe, Maybe } from 'typescript-monads'
-
-function maybeFromNullable<T> (t: T | null | undefined): IMaybe<T> {
-  if (typeof t === 'undefined') {
-    return Maybe.none()
-  }
-  if (t === null) {
-    return Maybe.none()
-  }
-  return Maybe.some(t)
-}
+import { Maybe } from 'typescript-monads'
+import { intoMaybe } from '../../components/NullableMonad'
 
 function useMapStateParam (): Maybe<{ lat: number, lng: number, zoom: number }> {
   const [params] = useSearchParams()
-  const lat = maybeFromNullable(params.get('lat')).map(parseFloat)
-  const lng = maybeFromNullable(params.get('lng')).map(parseFloat)
-  const zoom = maybeFromNullable(params.get('zoom')).map(parseFloat)
+  const lat = intoMaybe(params.get('lat')).map(parseFloat)
+  const lng = intoMaybe(params.get('lng')).map(parseFloat)
+  const zoom = intoMaybe(params.get('zoom')).map(parseFloat)
 
   return lat.flatMap((lat) =>
     lng.flatMap((lng) =>

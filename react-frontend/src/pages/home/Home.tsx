@@ -15,6 +15,7 @@ import { SearchBox } from './SearchBox'
 import { SKMapContainer } from './SKMapContainer'
 import { MainCardList } from './MainCardList'
 import { RegionContext } from '../../components/RegionContext'
+import { then } from '../../components/NullableMonad'
 
 const Header = styled.header`
     padding-top: 2rem;
@@ -77,9 +78,7 @@ export default function Home (
   const [params, setParams] = useSearchParams()
 
   useEffect(() => {
-    if (typeof regionSlugP !== 'undefined') {
-      setRegionSlug(regionSlugP)
-    }
+    then(regionSlugP, setRegionSlug)
   }, [regionSlugP])
   const region = regionList.find(r => r.properties.slug === regionSlugP)
 
