@@ -181,10 +181,12 @@ show_orphan_images:
   stage: deploy
   when: manual
   script:
+    - cd /var/lib/smartakartan/smartakartan-cd
     - sudo docker-compose run api /code/manage.py delete_orphan_images --dryrun
 
 delete_orphan_images:
   stage: deploy
   when: manual
   script:
+    - cd /var/lib/smartakartan/smartakartan-cd
     - sudo docker-compose run api /code/manage.py delete_orphan_images --delete
