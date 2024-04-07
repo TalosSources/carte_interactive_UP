@@ -103,12 +103,14 @@ def importPages(region: str) -> None:
         createOrUpdatePageTranslation(regionPageBase, page)
 
 
-def exists_already_in_db(region: OfferedRegionType):
-        wp_post_id = region["id"]
+def exists_already_in_db(region: dict[str, OfferedRegionType]):
+    for lang in region:
+        wp_post_id = region[lang]["id"]
         try:
-            return website.models.Region.objects.get(sk3_id=wp_post_id)
-        except website.models.Region.DoesNotExist:
-            return None
+            return website.models.RegionTranslation.objects.get(sk3_id=wp_post_id).region
+        except website.models.RegionTranslation.DoesNotExist:
+            pass
+    return None
 
 def group_region_translations(offered_regions: List[OfferedRegionType]):
     regions: list[dict[str, OfferedRegionType]] = []
@@ -128,36 +130,43 @@ def group_region_translations(offered_regions: List[OfferedRegionType]):
 
     return regions
             
-def pivot_by_swedish_slug(grouped_regions: list[dict[str, OfferedRegionType]]):
+def pivot_by_slug(grouped_regions: list[dict[str, OfferedRegionType]], slug_lang: str):
     pivoted_regions: dict[str, dict[str, OfferedRegionType]] = {}
     for group in grouped_regions:
-        pivoted_regions[group['sv']['slug']] = group
+        pivoted_regions[group[slug_lang]['slug']] = group
     return pivoted_regions
 
-def createRegion(region: dict[str, OfferedRegionType]):
-    # -this is not because we want Swedish, but because we want the minimal slug
-    # -TODO: In the future we want this translated (so not skipping)
-    resp_row = region['sv']
-    region_base = exists_already_in_db(resp_row)
+def createRegion(region: dict[str, OfferedRegionType], slug_lang: str):
+    resp_row = region[slug_lang]
+    region_base = exists_already_in_db(region)
 
     if region_base is None:
         slug = resp_row['slug']
+        if slug == 'global':
+            slug = 'sverige'
         region_data = REGION_DATA_DICT[slug]
-        wp_post_id = resp_row["id"]
         region_base = website.models.Region(
-            sk3_id=wp_post_id,
             slug=slug,
-            welcome_message_html=resp_row["welcome_message"],
-            title=region_data.name, # TODO take this from response
             area=region_data.area
         )
         region_base.save()
     return region_base
 
-def createRegionTranslations():
-    logging.warn("Region translations import not yet implemented.")
-    #TODO
-    pass
+def createRegionTranslations(region: dict[str, OfferedRegionType], region_base: website.models.Region):
+    region_data = REGION_DATA_DICT[region_base.slug]
+    for lang in region:
+        translation = region[lang]
+        try:
+            website.models.RegionTranslation.objects.get(sk3_id=translation['id'])
+        except website.models.RegionTranslation.DoesNotExist:
+            region_translation = website.models.RegionTranslation(
+                sk3_id=translation['id'],
+                language=create_languages(translation['lang']),
+                welcome_message=translation['welcome_message'],
+                region=region_base,
+                title=region_data.name,
+            )
+            region_translation.save()
 
 def createMumbai():
     mR : OfferedRegionType = {
@@ -165,18 +174,22 @@ def createMumbai():
         'lang': 'en',
         'id': 37,
         'translations': {},
-        'welcome_message': "This is the Mumbai secton of SK"
+        'welcome_message': "This is the Mumbai section of SK."
     }
-    createRegion({'sv': mR})
+    region = {'en': mR}
+    base = createRegion(region, 'en')
+    createRegionTranslations(region, base)
 
 def importRegions(regions_to_be_imported: List[str]) -> None:
+    slug_lang = 'sv'
     offered_regions: List[OfferedRegionType] = getAllDataOf("region")
     grouped_regions: list[dict[str, OfferedRegionType]] = group_region_translations(offered_regions)
-    pivoted_regions = pivot_by_swedish_slug(grouped_regions)
+    pivoted_regions = pivot_by_slug(grouped_regions, slug_lang)
+    pivoted_regions['sverige'] = pivoted_regions['global']
     regions = [pivoted_regions[rslug] for rslug in regions_to_be_imported]
 
     for region in regions:
-        region_base = createRegion(region)
-        createRegionTranslations()
+        region_base = createRegion(region, slug_lang)
+        createRegionTranslations(region, region_base)
         importPages(region_base.slug)
     createMumbai()

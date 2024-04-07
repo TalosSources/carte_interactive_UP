@@ -5,8 +5,6 @@ import L, { type LatLngBounds, type LatLng } from 'leaflet'
 export interface Region {
   properties: {
     slug: string
-    title: string
-    welcome_message_html: string
     rp_region: Array<{
       slug: string
       order: number
@@ -14,6 +12,11 @@ export interface Region {
         language: string
         title: string
       }>
+    }>
+    r_translations: Array<{
+      title: string
+      language: string
+      welcome_message: string
     }>
   }
   geometry: {
@@ -136,12 +139,7 @@ export function useInitiative (initiativeSlug: string): Initiative {
 
 export async function fetchTags (): Promise<Tag[]> {
   const response = await fetchFromDB('tags')
-  let tags = await response.json()
-  tags = tags.map((tag: Tag) => {
-    tag.title = tag.title.replace('&amp;', '&')
-    return tag
-  })
-  return tags
+  return await response.json()
 }
 
 export function useTags (): Tag[] {

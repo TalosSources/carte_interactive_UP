@@ -87,7 +87,7 @@ REGION_DATA_DICT = {
              (72.74871846470255, 18.871590070456893),
         ))
     )),
-    "global": RegionData(name="Hela Sverige", area=django.contrib.gis.geos.Polygon(
+    "sverige": RegionData(name="Hela Sverige", area=django.contrib.gis.geos.Polygon(
         django.contrib.gis.geos.LinearRing(
             ((20.352595005064796, 69.02952599870233),
             (24.351618219128373, 65.86602404663931),

@@ -123,13 +123,23 @@ class RegionPageTranslationSerializer(serializers.ModelSerializer):
         model = models.RegionPageTranslation
         fields = ['title', 'language', 'description']
 
+class RegionTranslationSerializer(serializers.ModelSerializer):
+    language = serializers.SlugRelatedField(read_only=True, slug_field='code')
+    class Meta:
+        model = models.RegionTranslation
+        fields = ['title', 'language', 'welcome_message']
+
 class RegionSerializer(gis_serializers.GeoFeatureModelSerializer):
     def get_rp_region(self, obj):
         pages = models.RegionPage.objects.filter(region=obj)
         return RegionPageTitleSerializer(pages, many=True).data
+    def get_r_translations(self, obj):
+        translations = models.RegionTranslation.objects.filter(region=obj)
+        return RegionTranslationSerializer(translations, many=True).data
     rp_region = serializers.SerializerMethodField()
+    r_translations = serializers.SerializerMethodField()
     class Meta:
-        fields = ('slug', 'welcome_message_html', 'title', 'rp_region')
+        fields = ('slug', 'rp_region', 'r_translations')
         geo_field = 'area'
         model = models.Region
 

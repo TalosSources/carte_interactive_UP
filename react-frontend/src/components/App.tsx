@@ -8,7 +8,7 @@ import TagPage from '../pages/TagPage'
 import PageNotFound from '../pages/PageNotFound'
 import Sitemap from '../pages/Sitemap'
 import { type Region, fetchRegions } from '../lib/KesApi'
-import { registerRegionPageTitles } from '../lib/i18n'
+import { registerRegionPageTitles, registerRegionTranslations } from '../lib/i18n'
 import { RegionContext } from './RegionContext'
 
 import RegionPage from '../pages/RegionPage'
@@ -28,6 +28,7 @@ export default function App (): React.JSX.Element {
         setRegionList(regions)
         for (const r of regions) {
           registerRegionPageTitles(r)
+          registerRegionTranslations(r)
         }
       })
       .catch(err => { console.error(err) })
@@ -44,7 +45,7 @@ export default function App (): React.JSX.Element {
       <RegionContext.Provider value={region}>
         <Routes>
           <Route path="/" element={<Layout regions={regionList} />}>
-            <Route index element={<Navigate to="/r/global" />} />
+            <Route index element={<Navigate to="/r/sverige" />} />
             <Route path="/details/:initiativeSlug" element={<QueryBoundaries><Details /></QueryBoundaries>} />
             <Route path="/sitemap" element={<Sitemap />} />
             <Route path="/tag/:tagId" element={<TagPage />} />

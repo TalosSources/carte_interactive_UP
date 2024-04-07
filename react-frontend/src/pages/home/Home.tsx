@@ -16,6 +16,7 @@ import { SKMapContainer } from './SKMapContainer'
 import { MainCardList } from './MainCardList'
 import { RegionContext } from '../../components/RegionContext'
 import { then } from '../../components/NullableMonad'
+import { RegionMessage } from '../../lib/i18n'
 
 const Header = styled.header`
     padding-top: 2rem;
@@ -108,7 +109,9 @@ export default function Home (
             <Suspense fallback={<></>}>
             <Header>
                 {(() => (
-                    <div id="welcomeMessage" dangerouslySetInnerHTML={{ __html: region?.properties.welcome_message_html ?? '' }} />
+                    <div id="welcomeMessage">
+                      <RegionMessage region={region}/>
+                    </div>
                 ))()}
             </Header>
             </Suspense>

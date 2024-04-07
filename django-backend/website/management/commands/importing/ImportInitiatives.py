@@ -205,6 +205,7 @@ def addTranslationToInitiativeBase(row:InitiativeJSON, initiativeBase:website.mo
     if short_description is None:
         logger.logToCurator(f"Short description for {title} is None. Fixing it for now.")
         short_description = ''
+    title = title.replace('&amp;', '&')
     new_title_obj = website.models.InitiativeTranslation(
         sk3_id=wp_post_id,
         language=lang_obj,
