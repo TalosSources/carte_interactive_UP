@@ -76,7 +76,6 @@ dryrun_import:
 dryrun_cleanup:
   stage: test
   needs:
-    - dryrun_users
     - dryrun_import
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
@@ -90,7 +89,6 @@ dryrun_cleanup:
 deploy_prepare:
   stage: deploy
   needs:
-    - dryrun_users
     - dryrun_import
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
