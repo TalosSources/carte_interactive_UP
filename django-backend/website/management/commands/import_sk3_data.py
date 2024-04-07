@@ -11,6 +11,7 @@ import website.models
 from website.management.commands.importing.ImportInitiatives import importInitiatives
 from website.management.commands.importing.RegionImport import importRegions
 from website.management.commands.importing.ImportTags import importTags
+from website.management.commands.importing.common import create_languages
 
 """
 Loglevel:
@@ -86,3 +87,5 @@ class Command(django.core.management.base.BaseCommand):
                 website.models.Initiative.objects.all().delete()
 
         import_sk3_data(*args)
+
+        create_languages('de')

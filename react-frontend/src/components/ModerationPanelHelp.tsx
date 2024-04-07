@@ -6,17 +6,6 @@ export function ModerationPanelHelp (): React.JSX.Element {
                 Credentials
                 <ul>
                     <li>
-                        test site maintainer
-                        <ul>
-                            <li>
-                                username: admin
-                            </li>
-                            <li>
-                                password: admin
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
                         test curator / moderator
                         <ul>
                             <li>

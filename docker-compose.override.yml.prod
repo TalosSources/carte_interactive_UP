@@ -1,7 +1,4 @@
 services:
-  db:
-    volumes: []
-
   api:
     environment:
       - HOST=smartakartan.entrop.mywire.org
