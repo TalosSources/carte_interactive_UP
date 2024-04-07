@@ -58,7 +58,7 @@ https://sk-wp.azurewebsites.net/wp-admin/admin.php?page=pods
 
 def import_sk3_data(*_args: None) -> None:
     # TODO regions_to_be_imported = REGION_DATA_DICT.keys()
-    regions_to_be_imported = ["goteborg", "malmo", "stockholm", "global", "sjuharad", "gavle", "linkoping", 'umea', 'karlstad']
+    regions_to_be_imported = ["goteborg", "malmo", "stockholm", "sverige", "sjuharad", "gavle", "linkoping", 'umea', 'karlstad']
 
     importRegions(regions_to_be_imported)
 

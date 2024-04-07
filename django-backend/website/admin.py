@@ -75,10 +75,18 @@ class InitiativeAdmin(admin.ModelAdmin):
             return []
 
 
+class RegionTranslationInline(admin.StackedInline):
+    # show_change_link = True
+    model = models.RegionTranslation
+    fields = ("language", "title", "welcome_message")
+    readonly_fields = ("sk3_id",)
+    extra = 0  # -adds an extra row that is always visible
+    min_num = 1
+
 @gis_admin.register(models.Region, site=admin_site)
 class RegionAdmin(gis_admin.GISModelAdmin):
-    list_display = ("slug", "title")
-    readonly_fields = ("sk3_id",)
+    list_display = ("slug", )
+    inlines = [RegionTranslationInline,]
 
 class RegionPageTranslationInline(admin.StackedInline):
     # show_change_link = True

@@ -1,7 +1,8 @@
 import i18next, { t } from 'i18next'
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
-import { initReactI18next } from 'react-i18next'
+import { initReactI18next, useTranslation } from 'react-i18next'
 import { type Initiative, type Region, type RegionPage } from './KesApi'
+import React from 'react'
 
 const translations: Record<string, { translation:
 {
@@ -145,6 +146,36 @@ export function getShortDescription (initiative: Initiative): string {
 }
 export function getDescription (initiative: Initiative): string {
   return t(('initiatives.' + initiative.slug + '.description'))
+}
+
+export function registerRegionTranslations (r: Region): void {
+  for (const translation of r.properties.r_translations) {
+    i18next.addResource(
+      translation.language,
+      'translation',
+      'regions.' + r.properties.slug + '.title',
+      translation.title
+    )
+    i18next.addResource(
+      translation.language,
+      'translation',
+      'regions.' + r.properties.slug + '.message',
+      translation.welcome_message
+    )
+  }
+}
+
+export function getRegionTitle (r: Region): string {
+  return t(('regions.' + r.properties.slug + '.title'))
+}
+export function RegionMessage (prop: { region: Region | undefined }): React.JSX.Element {
+  const { t } = useTranslation()
+  const r = prop.region
+  if (typeof (r) === 'undefined') {
+    return <></>
+  }
+  const translation: string = t(('regions.' + r.properties.slug + '.message'))
+  return <div dangerouslySetInnerHTML={{ __html: translation }} />
 }
 
 export default i18next

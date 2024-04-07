@@ -3,6 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { type Region } from '../lib/KesApi'
+import { getRegionTitle } from '../lib/i18n'
 
 const Footer = styled.div`
     padding-top: 2rem;
@@ -49,7 +50,7 @@ export function SKFooter ({ regions }: { regions: Region[] }): React.JSX.Element
                 <li key="regions-title"><strong>Regions</strong></li>
                 {regions.map((region) =>
                 <li key={'regions-list-' + region.properties.slug}><Link to={'/r/' + region.properties.slug}>
-                    {region.properties.title}
+                    {getRegionTitle(region)}
                 </Link></li>
                 )}
                 </ul>

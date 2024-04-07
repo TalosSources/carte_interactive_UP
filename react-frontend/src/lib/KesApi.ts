@@ -5,8 +5,6 @@ import L, { type LatLngBounds, type LatLng } from 'leaflet'
 export interface Region {
   properties: {
     slug: string
-    title: string
-    welcome_message_html: string
     rp_region: Array<{
       slug: string
       order: number
@@ -14,6 +12,11 @@ export interface Region {
         language: string
         title: string
       }>
+    }>
+    r_translations: Array<{
+      title: string
+      language: string
+      welcome_message: string
     }>
   }
   geometry: {
