@@ -139,12 +139,7 @@ export function useInitiative (initiativeSlug: string): Initiative {
 
 export async function fetchTags (): Promise<Tag[]> {
   const response = await fetchFromDB('tags')
-  let tags = await response.json()
-  tags = tags.map((tag: Tag) => {
-    tag.title = tag.title.replace('&amp;', '&')
-    return tag
-  })
-  return tags
+  return await response.json()
 }
 
 export function useTags (): Tag[] {

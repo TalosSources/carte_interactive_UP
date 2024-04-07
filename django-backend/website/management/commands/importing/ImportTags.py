@@ -24,6 +24,7 @@ def importTags():
 
     tagg_dict = findShortestSlugsByTitle(publihed_tag_rows)
     for title, slug in tagg_dict.items():
+        title = title.replace('&amp;', '&')
         new_obj = website.models.Tag(slug=slug, title=title)
         try:
             new_obj.save()
