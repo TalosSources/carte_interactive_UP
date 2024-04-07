@@ -6,7 +6,9 @@ services:
     volumes:
       - ./cache:/code/cache
       - ./media:/media
-  
+  db:
+    volumes:
+      - /var/lib/smartakartan_db:/var/lib/postgresql/data:z
   web:
     build:
       context: ./react-frontend

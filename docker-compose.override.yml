@@ -1,4 +1,7 @@
 services:
+  db:
+    volumes:
+      - /var/lib/smartakartan_db:/var/lib/postgresql/data:z
   nginx:
     ports:
       - "80:80"

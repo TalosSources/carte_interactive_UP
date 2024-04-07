@@ -9,8 +9,6 @@ services:
       - api
       - web
   db:
-    volumes:
-      - /var/lib/smartakartan_db:/var/lib/postgresql/data:z
     image: postgis/postgis:14-3.3  # This version was recommended "for new users" 2022-11-03
     environment:
       TZ: Europe/Stockholm
