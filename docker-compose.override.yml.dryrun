@@ -11,3 +11,6 @@ services:
       - SCHEME=https
     volumes:
       - /var/lib/smartakartan/smartakartan-cd/cache:/code/cache
+  db:
+    volumes:
+      []
