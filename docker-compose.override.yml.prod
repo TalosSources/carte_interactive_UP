@@ -6,6 +6,7 @@ services:
     environment:
       - HOST=smartakartan.entrop.mywire.org
       - SCHEME=https
+      - MEDIA_ROOT=/var/lib/smartakartan/media
     volumes:
       - ./cache:/code/cache
       - ./media:/media
