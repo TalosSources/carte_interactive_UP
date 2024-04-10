@@ -171,7 +171,7 @@ CSP_DEFAULT_SRC = [
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.environ["MEDIA_ROOT"] if "MEDIA_ROOT" in os.environ else "/media"
+MEDIA_ROOT = '/media'
 
 STORAGES = {
     "default": {
