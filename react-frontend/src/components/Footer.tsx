@@ -33,7 +33,7 @@ export function SKFooter ({ regions }: { regions: Region[] }): React.JSX.Element
                 </a>
                 </p>
                 <p className="text-muted">Version: {version}</p>
-                <p className="text-muted ng-binding">© 2023 All rights reserved</p>
+                <p className="text-muted ng-binding">© 2024 All rights reserved</p>
             </div>
             <div className="col-lg-2 col-md-2 col-xs-6 col-sm-3">
                 <ul className="list-unstyled">

@@ -5,7 +5,8 @@ services:
       - SCHEME=https
     volumes:
       - ./cache:/code/cache
-      - ./media:/media
+      - /var/lib/smartakartan/media:/media
+  
   db:
     volumes:
       - /var/lib/smartakartan_db:/var/lib/postgresql/data:z
