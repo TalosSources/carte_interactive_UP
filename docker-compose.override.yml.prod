@@ -9,7 +9,7 @@ services:
   
   db:
     volumes:
-      - /var/lib/smartakartan_db:/var/lib/postgresql/data:z
+      - /var/lib/smartakartan/db:/var/lib/postgresql/data:z
   web:
     build:
       context: ./react-frontend
