@@ -141,7 +141,7 @@ deploy_import:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
-    - rm -r /var/lib/smartakartan/smartakartan-cd/cache/* 
+    - sudo rm -r /var/lib/smartakartan/smartakartan-cd/cache/* 
     - cd /var/lib/smartakartan/smartakartan-cd
     - sudo docker-compose run api /code/manage.py delete_all_initiatives
     - sudo rm -rf media/*
