@@ -51,7 +51,7 @@ eslint:
   stage: test
   script:
     - mv docker-compose.override.yml.dryrun docker-compose.override.yml
-    - sudo docker-compose -p dryrun run web npx eslint /react-frontend
+    - sudo docker-compose -p dryrun run web sh -c "cd /react-frontend-plain && npx eslint ."
 
 dryrun_start:
   stage: test
