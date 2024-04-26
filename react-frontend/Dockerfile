@@ -3,8 +3,9 @@ FROM node:16.18.1
 WORKDIR /react-frontend
 
 COPY package.json .
+COPY package-lock.json .
 
-RUN npm install
+RUN npm ci
 
 COPY . .
 
