@@ -92,6 +92,7 @@ deploy_prepare:
   stage: deploy
   needs:
     - dryrun_import
+    - eslint
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
