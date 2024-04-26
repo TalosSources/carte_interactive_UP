@@ -31,6 +31,17 @@ function renderTags (initiative: Initiative, tagsByInitiatives: Map<string, Tag[
     }</div>
 }
 
+function SocialLink({url, fa_symbol, key_, aria_label}:{url: string | null, fa_symbol: string, key_:string, aria_label: string}) : React.JSX.Element {
+  if (url) {
+    return <li key={key_} className="list-group-item p-0 border-0">
+            <a href={url} target="_blank" className="pr-3" aria-label={aria_label} rel="noreferrer">
+              <i className={"fa " + fa_symbol} aria-hidden="true" /> Webbplats
+            </a>
+        </li>
+  }
+  return <></>;
+}
+
 export default function Details (): React.JSX.Element {
   const { initiativeSlug } = useParams()
   if (typeof initiativeSlug === 'undefined') {
@@ -65,7 +76,7 @@ export default function Details (): React.JSX.Element {
   return (
         <>
         {(() => {
-          if (!(initiative.state === 'p')) {
+          if (initiative.state !== 'p') {
             return <div className="alert alert-danger" role="alert">
                     {t('ui.unpublishedWarning')}
                 </div>
@@ -82,51 +93,11 @@ export default function Details (): React.JSX.Element {
                     </div>
                     <div className="btn-group mb-1 mt-2" role="group" aria-label="Link list">
                         <ul className="list-group list-group-horizontal-sm">
-                            {(() => {
-                              if (initiative.homepage !== '') {
-                                return <li key="details-homepage" className="list-group-item p-0 border-0">
-                                        <a href={initiative.homepage} target="_blank" className="pr-3" aria-label="website link" rel="noreferrer">
-                                            <i className="fa fa-link" aria-hidden="true"></i> Webbplats
-                                        </a>
-                                    </li>
-                              }
-                            })()}
-                            {(() => {
-                              if (initiative.mail !== '') {
-                                return <li key="details-mail" className="list-group-item p-0 border-0">
-                                        <a href={'mailto:' + initiative.mail} className="pr-3" aria-label="email">
-                                            <i className="fa fa-envelope" aria-hidden="true"></i> E-postadress
-                                        </a>
-                                    </li>
-                              }
-                            })()}
-                            {(() => {
-                              if (initiative.phone !== '') {
-                                return <li key="details-phone" className="list-group-item p-0 border-0">
-                                        <a href={'tel:' + initiative.phone} className="pr-3" aria-label="phone">
-                                            <i className="fa fa-phone" aria-hidden="true"></i> Phone
-                                        </a>
-                                    </li>
-                              }
-                            })()}
-                            {(() => {
-                              if (initiative.instagram !== '') {
-                                return <li key="details-instagram" className="list-group-item p-0 border-0">
-                                        <a href={'https://www.instagram.com/' + initiative.instagram} target="_blank" className="pr-3" aria-label="instagram link" rel="noreferrer">
-                                            <i className="fa fa-instagram" aria-hidden="true"></i> Instagram
-                                        </a>
-                                    </li>
-                              }
-                            })()}
-                            {(() => {
-                              if (initiative.facebook !== '') {
-                                return <li key="details-facebook" className="list-group-item p-0 border-0">
-                                        <a href={initiative.facebook} target="_blank" className="pr-3" aria-label="facebook link" rel="noreferrer">
-                                            <i className="fa fa-facebook" aria-hidden="true"></i> Facebook
-                                        </a>
-                                    </li>
-                              }
-                            })()}
+                          <SocialLink url={initiative.homepage} fa_symbol="fa-link" aria_label='website link' key_='details-homepage'/>
+                          <SocialLink url={initiative.mail} fa_symbol='fa-envelope' aria_label='email' key_='details-mail' />
+                          <SocialLink url={initiative.phone} fa_symbol='fa-phone' aria_label='phone' key_='details-phone' />
+                          <SocialLink url={initiative.instagram} fa_symbol='fa-instagram' aria_label='instagram link' key_='details-instagram' />
+                          <SocialLink url={initiative.facebook} fa_symbol='fa-facebook' aria_label='facebook link' key_='details-facebook' />
                         </ul>
                     </div>
                     <p dangerouslySetInnerHTML={{ __html: getDescription(initiative) }}></p>

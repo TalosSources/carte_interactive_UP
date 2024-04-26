@@ -61,11 +61,11 @@ export interface Initiative {
       description: string
     }
   }>
-  facebook: string
-  instagram: string
-  phone: string
-  homepage: string
-  mail: string
+  facebook: string | null
+  instagram: string | null
+  phone: string | null
+  homepage: string | null
+  mail: string | null
   area: string
   online_only: boolean
 }
