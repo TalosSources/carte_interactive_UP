@@ -73,20 +73,9 @@ dryrun_import:
     - mv docker-compose.override.yml.dryrun docker-compose.override.yml
     - sudo docker-compose -p dryrun run api /code/manage.py import_sk3_data
 
-dryrun_users:
-  stage: test
-  needs:
-    - dryrun_start
-  script:
-    - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
-    - mv docker-compose.override.yml.dryrun docker-compose.override.yml
-    - sudo docker-compose -p dryrun run api /code/manage.py setup_user --su -u admin -p admin_pass
-    - sudo docker-compose -p dryrun run api /code/manage.py setup_user --ca -u curator -p curator_pass
-
 dryrun_cleanup:
   stage: test
   needs:
-    - dryrun_users
     - dryrun_import
   script:
     - echo export const version = \"$(git describe --long --all --dirty)\" > react-frontend/src/version.tsx
@@ -100,7 +89,6 @@ dryrun_cleanup:
 deploy_prepare:
   stage: deploy
   needs:
-    - dryrun_users
     - dryrun_import
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
@@ -132,7 +120,6 @@ deploy_restart:
     - sudo docker-compose down
     - sudo docker-compose rm
     - sudo docker-compose up -d
-    - sudo rm -rf media/*
     - sleep 30
 
 deploy_cleanup:
@@ -146,33 +133,25 @@ deploy_cleanup:
     - sudo docker image prune -f
     - sudo docker container prune -f
 
-deploy_users:
-  stage: deploy
-  needs:
-    - deploy_restart
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-  script:
-    - cd /var/lib/smartakartan/smartakartan-cd
-    # needs to have some temporal difference to the start, so the db is prepared
-    - sudo docker-compose run api /code/manage.py setup_user --su -u admin -p "admin"
-    - sudo docker-compose run api /code/manage.py setup_user --ca -u curator -p "curator"
-
 deploy_import:
   stage: deploy
+  when: manual
   needs:
     - deploy_restart
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
+    - sudo rm -r /var/lib/smartakartan/smartakartan-cd/cache/* 
     - cd /var/lib/smartakartan/smartakartan-cd
+    - sudo docker-compose run api /code/manage.py delete_all_initiatives
+    - sudo rm -rf media/*
     - sudo docker-compose run api /code/manage.py import_sk3_data
   environment:
     name: production
     url: https://beta.smartakartan.se
 
 cleanup_cache:
-  stage: deploy
+  stage: test
   when: manual
   script:
     - rm -r /var/lib/smartakartan/smartakartan-cd/cache/* 

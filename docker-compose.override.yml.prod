@@ -1,7 +1,4 @@
 services:
-  db:
-    volumes: []
-
   api:
     environment:
       - HOST=smartakartan.entrop.mywire.org
@@ -10,6 +7,9 @@ services:
       - ./cache:/code/cache
       - /var/lib/smartakartan/media:/media
   
+  db:
+    volumes:
+      - /var/lib/smartakartan/db:/var/lib/postgresql/data:z
   web:
     build:
       context: ./react-frontend
