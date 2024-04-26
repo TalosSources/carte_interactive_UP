@@ -31,15 +31,18 @@ function renderTags (initiative: Initiative, tagsByInitiatives: Map<string, Tag[
     }</div>
 }
 
-function SocialLink({url, fa_symbol, key_, aria_label}:{url: string | null, fa_symbol: string, key_:string, aria_label: string}) : React.JSX.Element {
-  if (url) {
+function SocialLink ({ url, faSymbol, key_, ariaLabel }: { url: string | null, faSymbol: string, key_: string, ariaLabel: string }): React.JSX.Element {
+  if (url === null) {
+    return <></>
+  }
+  if (url !== '') {
     return <li key={key_} className="list-group-item p-0 border-0">
-            <a href={url} target="_blank" className="pr-3" aria-label={aria_label} rel="noreferrer">
-              <i className={"fa " + fa_symbol} aria-hidden="true" /> Webbplats
+            <a href={url} target="_blank" className="pr-3" aria-label={ariaLabel} rel="noreferrer">
+              <i className={'fa ' + faSymbol} aria-hidden="true" /> Webbplats
             </a>
         </li>
   }
-  return <></>;
+  return <></>
 }
 
 export default function Details (): React.JSX.Element {
@@ -93,11 +96,11 @@ export default function Details (): React.JSX.Element {
                     </div>
                     <div className="btn-group mb-1 mt-2" role="group" aria-label="Link list">
                         <ul className="list-group list-group-horizontal-sm">
-                          <SocialLink url={initiative.homepage} fa_symbol="fa-link" aria_label='website link' key_='details-homepage'/>
-                          <SocialLink url={initiative.mail} fa_symbol='fa-envelope' aria_label='email' key_='details-mail' />
-                          <SocialLink url={initiative.phone} fa_symbol='fa-phone' aria_label='phone' key_='details-phone' />
-                          <SocialLink url={initiative.instagram} fa_symbol='fa-instagram' aria_label='instagram link' key_='details-instagram' />
-                          <SocialLink url={initiative.facebook} fa_symbol='fa-facebook' aria_label='facebook link' key_='details-facebook' />
+                          <SocialLink url={initiative.homepage} faSymbol="fa-link" ariaLabel='website link' key_='details-homepage'/>
+                          <SocialLink url={initiative.mail} faSymbol='fa-envelope' ariaLabel='email' key_='details-mail' />
+                          <SocialLink url={initiative.phone} faSymbol='fa-phone' ariaLabel='phone' key_='details-phone' />
+                          <SocialLink url={initiative.instagram} faSymbol='fa-instagram' ariaLabel='instagram link' key_='details-instagram' />
+                          <SocialLink url={initiative.facebook} faSymbol='fa-facebook' ariaLabel='facebook link' key_='details-facebook' />
                         </ul>
                     </div>
                     <p dangerouslySetInnerHTML={{ __html: getDescription(initiative) }}></p>
