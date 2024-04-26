@@ -4,7 +4,7 @@ services:
       - "80:80"
   db:
     volumes:
-      - /var/lib/smartakartan_db:/var/lib/postgresql/data:z
+      - ./db:/var/lib/postgresql/data:z
   api:
     environment:
       - HOST=localhost
