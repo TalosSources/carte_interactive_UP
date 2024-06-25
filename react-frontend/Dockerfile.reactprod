@@ -3,7 +3,8 @@ FROM node:16.18.1-alpine as build
 WORKDIR /react-frontend
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
-RUN npm install
+COPY package-lock.json .
+RUN npm ci
 COPY . ./
 ARG REACT_APP_BACKEND_URL=https://beta.smartakartan.se/api
 RUN npm run build
