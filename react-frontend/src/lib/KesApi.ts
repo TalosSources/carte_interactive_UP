@@ -173,13 +173,36 @@ export function useInitiatives (): Initiative[] {
   return data
 }
 
-function initiativeInsideMap (initiative: Initiative, mapBounds: LatLngBounds): boolean {
+function createLatLngBoundsFromPolygon (polygonCoordinates: number[][][]): LatLngBounds {
+  const coordinates = polygonCoordinates[0]
+  const latLngPoints = coordinates.map((coord: number[]) => L.latLng(coord[1], coord[0]))
+  return L.latLngBounds(latLngPoints)
+}
+
+// Function to get the visible regions based on the current map bounds
+function getVisibleRegions (mapBounds: LatLngBounds): string[] {
+  const visibleRegions = []
+
+  const regions: Region[] = useRegions()
+  for (const region of regions) {
+    const regionBounds = createLatLngBoundsFromPolygon(region.geometry.coordinates)
+
+    // Check if bounds intersect
+    if (mapBounds.intersects(regionBounds)) {
+      visibleRegions.push(region.properties.slug)
+    }
+  }
+  return visibleRegions
+}
+
+function initiativeInsideMap (initiative: Initiative, mapBounds: LatLngBounds, visibleRegions: string[]): boolean {
   if (!mapBounds.isValid()) {
     return false
   }
+
   return initiative.locations.features.some(
     feature => mapBounds.contains(initiativeLocationFeatureToGeoCoordinate(feature))
-  )
+  ) || (initiative.online_only && visibleRegions.includes(initiative.region))
 }
 
 export function useFilteredInitiatives (tags: string[], searchQuery: string, bb: LatLngBounds): Initiative[] {
@@ -205,9 +228,12 @@ export function useFilteredInitiatives (tags: string[], searchQuery: string, bb:
       )
   }
 
+  // Get the list of visible regions
+  const visibleRegions = getVisibleRegions(bb)
+
   let initiatives: Initiative[] = useInitiatives()
 
-  initiatives = initiatives.filter(i => initiativeInsideMap(i, bb))
+  initiatives = initiatives.filter(i => initiativeInsideMap(i, bb, visibleRegions))
   initiatives = initiatives
     .filter(initiativeMatchCurrentTags)
     .filter(initiativeMatchesCurrentSearch)
@@ -218,6 +244,14 @@ export async function fetchRegions (): Promise<Region[]> {
   const r = await fetchFromDB('regions')
   const json = await r.json()
   return json.features
+}
+export function useRegions (): Region[] {
+  useQueryClient()
+  const { data } = useQuery({ queryKey: ['allRegions'], queryFn: fetchRegions, suspense: true })
+  if (typeof data === 'undefined') {
+    throw Error('Some error should already have kicked')
+  }
+  return data
 }
 
 export function matchTagsWithInitiatives (initiatives: Initiative[], tags: Tag[]): Map<string, Tag[]> {

@@ -1,6 +1,8 @@
 import logging
 from typing import Iterable, List, Dict
 
+from html import unescape
+
 from website.management.commands.importing.SK3Api import TagRow, isPublished, getAllDataOf
 import website.models
 
@@ -24,7 +26,7 @@ def importTags():
 
     tagg_dict = findShortestSlugsByTitle(publihed_tag_rows)
     for title, slug in tagg_dict.items():
-        title = title.replace('&amp;', '&')
+        title = unescape(title)
         new_obj = website.models.Tag(slug=slug, title=title)
         try:
             new_obj.save()

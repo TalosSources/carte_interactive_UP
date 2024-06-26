@@ -15,7 +15,7 @@ export function renderMapMarkers (initiative: Initiative): React.JSX.Element[] {
         icon={icon}
       >
         <Popup>
-          {feature.properties.title}
+          {title}
         </Popup>
       </Marker>
     )
