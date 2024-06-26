@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import sanitizeHtml from 'sanitize-html'
 import { type Initiative, getSmallestImage } from '../lib/KesApi'
-import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import '../lib/constants'
+import { getShortDescription, getTitle } from '../lib/i18n'
 
 const CardContainer = styled.div`
     gap: 0.5em;
@@ -61,7 +61,6 @@ const CardDescription = styled.p`
 
 function SkCard (props: { key?: string, id: string, image_url: string, title: string, description: string }): React.JSX.Element {
   const { id, image_url: imageUrl, title, description } = props
-
   const cleanDescription = sanitizeHtml(description, { allowedTags: [] })
   return (
         <Card className='card'>
@@ -79,14 +78,13 @@ function SkCard (props: { key?: string, id: string, image_url: string, title: st
 }
 
 export function renderCards (initiatives: Initiative[]): React.JSX.Element[] {
-  const { t } = useTranslation()
   return (initiatives.map(
     (initiativeElement) => {
       return <SkCard
                             key={initiativeElement.slug}
-                            title={t('initiatives.' + initiativeElement.slug + '.title')}
+                            title={getTitle(initiativeElement)}
                             id={initiativeElement.slug}
-                            description={t('initiatives.' + initiativeElement.slug + '.short_description')}
+                            description={getShortDescription(initiativeElement)}
                             image_url={getSmallestImage(initiativeElement)}
                         />
     }

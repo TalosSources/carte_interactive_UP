@@ -2,12 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
-import { useTranslation } from 'react-i18next'
 import { type Feature, type Initiative } from '../../lib/KesApi'
+import { getTitle } from '../../lib/i18n'
 
 export function MapMarker ({ initiative, feature, index }: { initiative: Initiative, feature: Feature, index: number }): React.JSX.Element {
-  const { t } = useTranslation()
-  const title = t('initiatives.' + initiative.slug + '.title')
+  const title = getTitle(initiative)
   const icon: L.Icon<L.Icon.DefaultIconOptions> = new L.Icon.Default({ iconUrl: '/marker-icon.png' })
   return <Marker
     key={`m_${initiative.id}_${index}`}

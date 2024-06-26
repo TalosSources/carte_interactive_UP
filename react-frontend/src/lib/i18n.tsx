@@ -141,9 +141,11 @@ export function registerRegionPageTitles (r: Region): void {
 export function getTitle (initiative: Initiative): string {
   return t(('initiatives.' + initiative.slug + '.title'))
 }
+
 export function getShortDescription (initiative: Initiative): string {
   return t(('initiatives.' + initiative.slug + '.short_description'))
 }
+
 export function getDescription (initiative: Initiative): string {
   return t(('initiatives.' + initiative.slug + '.description'))
 }
