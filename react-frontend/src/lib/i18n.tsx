@@ -37,7 +37,7 @@ const translations: Record<string, { translation:
         onlyOnTheMap: 'Only initiatives on the map',
         hideGlobal: 'Hide global initiatives',
         sortByDist: 'Sort by distance',
-        sortAlpha: 'Sort by alphabetically',
+        sortAlpha: 'Sort alphabetically',
         unpublishedWarning: 'Warning! You are viewing unpublished content. Information might be inaccurate.',
         supportTheMap: {
           headline: 'Support the map!',
@@ -70,6 +70,29 @@ const translations: Record<string, { translation:
         },
         searchPlaceholder: 'Sök på något du vill hyra, byta, låna, dela, ge eller få...',
         loadMoreCards: 'Ladda fler kort'
+      }
+    }
+  },
+  fr: {
+    translation: {
+      ui: {
+        allInitiatives: 'Toutes les initiatives',
+        proposeInitiative: 'Proposer une initiative',
+        becomeVolunteer: 'Devenir bénévole',
+        startAThing: 'Lancer un projet',
+        onlyOnTheMap: 'Uniquement les initiatives sur la carte',
+        hideGlobal: 'Masquer les initiatives globales',
+        sortByDist: 'Trier par distance',
+        sortAlpha: 'Trier par ordre alphabétique',
+        unpublishedWarning: 'Attention ! Vous consultez du contenu non publié. Les informations peuvent être inexactes.',
+        supportTheMap: {
+          headline: 'Soutenez la carte !',
+          firstSentence: 'Devenez un contributeur dès aujourd\'hui !',
+          body: 'Nous sommes une communauté idéaliste qui développe Smartakartan partout en Suède et nous avons besoin de votre aide !',
+          button: 'Aidez-nous à grandir'
+        },
+        searchPlaceholder: 'Recherchez quelque chose que vous voulez louer, échanger, emprunter, partager, donner ou recevoir ...',
+        loadMoreCards: 'Charger plus de cartes'
       }
     }
   }

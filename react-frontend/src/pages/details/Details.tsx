@@ -38,7 +38,7 @@ function SocialLink ({ url, faSymbol, key_, ariaLabel }: { url: string | null, f
   if (url !== '') {
     return <li key={key_} className="list-group-item p-0 border-0">
             <a href={url} target="_blank" className="pr-3" aria-label={ariaLabel} rel="noreferrer">
-              <i className={'fa ' + faSymbol} aria-hidden="true" /> Webbplats
+              <i className={'fa ' + faSymbol} aria-hidden="true" /> Website
             </a>
         </li>
   }

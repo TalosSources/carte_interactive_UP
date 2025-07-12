@@ -13,6 +13,7 @@ export function CIFooter ({ regions }: { regions: Region[] }): React.JSX.Element
   return <Footer className="row footer ng-scope pt-10" ng-controller="Footer">
             <div className="col-lg-offset-3 col-xs-6 col-sm-3 col-md-offset-1 col-md-3 col-lg-3 company">
                 {/* <img style={{ width: '6rem', padding: '0.5rem' }} src="/sk-logo.svg"/> */}
+                <img style={{ width: '6rem', padding: '0.5rem' }} src="/UP_logo_standard.png"/>
                 {/* <p><strong style={{ fontFamily: "'Open Sans', sans-serif" }}>smartakartan.se</strong></p> */}
                 {/* <p className="text-muted ng-scope">Crafted with <span className="fa fa-heart animated-hover faa-fast faa-pulse"></span> in GBG, Sverige</p>
                 <p className="text-muted socials">
