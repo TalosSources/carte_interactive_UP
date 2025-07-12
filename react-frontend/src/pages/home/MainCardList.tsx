@@ -10,6 +10,13 @@ import SeedRandom from '../../lib/random'
 
 // Home Components
 export function MainCardList ({ tags, searchQuery, bb, sorting }: { tags: string[], searchQuery: string, bb: LatLngBounds, sorting: string }): React.JSX.Element {
+  if (!bb || !bb.isValid()) {
+    return (
+      <>
+        Loading...
+      </>
+    )
+  }
   function sortInitiativesByName (initiatives: Initiative[]): Initiative[] {
     const names: Array<[number, string]> = []
     for (let i = 0; i < initiatives.length; i++) {
