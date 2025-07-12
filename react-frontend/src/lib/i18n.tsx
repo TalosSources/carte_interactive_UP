@@ -139,15 +139,18 @@ export function registerRegionPageTitles (r: Region): void {
 }
 
 export function getTitle (initiative: Initiative): string {
-  return t(('initiatives.' + initiative.slug + '.title'))
+  // return t(('initiatives.' + initiative.slug + '.title'))
+  return t((initiative.initiative_translations[0].title)) // TODO: Bad
 }
 
 export function getShortDescription (initiative: Initiative): string {
-  return t(('initiatives.' + initiative.slug + '.short_description'))
+  // return t(('initiatives.' + initiative.slug + '.short_description'))
+  return t((initiative.initiative_translations[0].short_description))
 }
 
 export function getDescription (initiative: Initiative): string {
-  return t(('initiatives.' + initiative.slug + '.description'))
+  // return t(('initiatives.' + initiative.slug + '.description'))
+  return t((initiative.initiative_translations[0].description))
 }
 
 export function registerRegionTranslations (r: Region): void {
@@ -168,7 +171,8 @@ export function registerRegionTranslations (r: Region): void {
 }
 
 export function getRegionTitle (r: Region): string {
-  return t(('regions.' + r.properties.slug + '.title'))
+  // return t(('regions.' + r.properties.slug + '.title'))
+  return t((r.properties.r_translations[0].title))
 }
 export function RegionMessage (prop: { region: Region | undefined }): React.JSX.Element {
   const { t } = useTranslation()
@@ -176,7 +180,8 @@ export function RegionMessage (prop: { region: Region | undefined }): React.JSX.
   if (typeof (r) === 'undefined') {
     return <></>
   }
-  const translation: string = t(('regions.' + r.properties.slug + '.message'))
+  // const translation: string = t(('regions.' + r.properties.slug + '.message'))
+  const translation: string = t((r.properties.r_translations[0].welcome_message))
   return <div dangerouslySetInnerHTML={{ __html: translation }} />
 }
 
