@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Place Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .card-content {
+      padding: 20px;
+    }
+
+    .card-content h1 {
+      margin-top: 0;
+    }
+
+    .tags {
+      margin-top: 15px;
+    }
+
+    .tags span {
+      display: inline-block;
+      background: #eee;
+      color: #333;
+      border-radius: 4px;
+      padding: 4px 8px;
+      margin: 0 5px 5px 0;
+      font-size: 0.9em;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img id="image" src="" alt="Place Image">
+    <div class="card-content">
+      <h1 id="title">Loading...</h1>
+      <p id="description"></p>
+      <div class="tags" id="tags"></div>
+      <a href="index.html" class="back-link">&larr; Back to map</a>
+    </div>
+  </div>
+
+  <script>
+    fetch('data/places.json')
+      .then(response => response.json())
+      .then(data => {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+        const place = data.find(p => p.id == id);
+
+        if (place) {
+          document.getElementById("title").textContent = place.name;
+          document.getElementById("description").textContent = place.description || "";
+
+          const img = document.getElementById("image");
+          if (place.image) {
+            img.src = place.image;
+            img.alt = place.name;
+          } else {
+            img.style.display = "none";
+          }
+
+          if (place.tags && place.tags.length) {
+            const tagsDiv = document.getElementById("tags");
+            place.tags.forEach(tag => {
+              const span = document.createElement("span");
+              span.textContent = tag;
+              tagsDiv.appendChild(span);
+            });
+          }
+        } else {
+          document.body.innerHTML = "<h1>Place not found</h1>";
+        }
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+#places {
+    padding: 1rem;
+  }
+  
+  .place-card {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+  }
