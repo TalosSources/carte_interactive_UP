@@ -41,18 +41,18 @@ export default function App (): React.JSX.Element {
 
   return (
     <BrowserRouter>
-      <Banner />
+      {/* <Banner /> */}
       <RegionContext.Provider value={region}>
         <Routes>
           <Route path="/" element={<Layout regions={regionList} />}>
-            <Route index element={<Navigate to="/r/sverige" />} />
+            <Route index element={<Navigate to="/r/Lausanne" />} />
             <Route path="/details/:initiativeSlug" element={<QueryBoundaries><Details /></QueryBoundaries>} />
             <Route path="/sitemap" element={<Sitemap />} />
             <Route path="/tag/:tagId" element={<TagPage />} />
             <Route path="/r/:regionSlugP" element={<Home setRegionSlug={setRegionSlug} regionList={regionList} />} />
             <Route path="/r/:regionSlugP/:page" element={<RegionPage />} />
             <Route path="/help/moderationPanel" element={<ModerationPanelHelp />} />
-            <Route path="/help/aboutBeta" element={<AboutBeta />} />
+            {/* <Route path="/help/aboutBeta" element={<AboutBeta />} /> */}
             <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>

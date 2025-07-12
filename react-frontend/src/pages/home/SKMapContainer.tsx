@@ -46,8 +46,8 @@ function RegisterMapCenter ({ setMapBounds }: { setMapBounds: (newBounds: LatLng
   return null
 }
 
-export function SKMapContainer ({ setMapBounds, tags, searchQuery }: { setMapBounds: (newBounds: LatLngBounds) => void, tags: string[], searchQuery: string }): React.JSX.Element {
-  const { lat, lng, zoom } = useMapStateParam().valueOr({ lat: 59, lng: 15, zoom: 6 })
+export function CIMapContainer ({ setMapBounds, tags, searchQuery }: { setMapBounds: (newBounds: LatLngBounds) => void, tags: string[], searchQuery: string }): React.JSX.Element {
+  const { lat, lng, zoom } = useMapStateParam().valueOr({ lat: 46.523, lng: 6.618, zoom: 12 })
 
   return <MapContainer
     id="map"

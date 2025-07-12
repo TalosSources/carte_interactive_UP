@@ -12,7 +12,7 @@ import { SMALL_SCREEN_WIDTH } from '../../lib/constants'
 import { Region } from '../../lib/KesApi'
 import { QueryBoundaries } from '../../lib/QueryBoundary'
 import { SearchBox } from './SearchBox'
-import { SKMapContainer } from './SKMapContainer'
+import { CIMapContainer } from './SKMapContainer'
 import { MainCardList } from './MainCardList'
 import { RegionContext } from '../../components/RegionContext'
 import { then } from '../../components/NullableMonad'
@@ -104,7 +104,7 @@ export default function Home (
   }, [searchString])
 
   return <RegionContext.Provider value={region}>
-          <SKMapContainer setMapBounds={setMapBounds} searchQuery={searchString} tags={[]}/>
+          <CIMapContainer setMapBounds={setMapBounds} searchQuery={searchString} tags={[]}/>
 
             <Suspense fallback={<></>}>
             <Header>
@@ -121,10 +121,10 @@ export default function Home (
                 <QueryBoundaries>
                     <MainCardList tags={[]} searchQuery={searchString} bb={mapBounds} sorting={sorting} />
                 </QueryBoundaries>
-                <div id="helpUsBox">
+                {/* <div id="helpUsBox">
                 <a href="https://smartakartan.se/starta-verksamhet">
                     <img src='/hjälpaOss.jpg' />
-                </a></div>
+                </a></div> */}
             </MainContainer>
           </RegionContext.Provider>
 }

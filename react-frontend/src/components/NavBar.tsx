@@ -160,11 +160,11 @@ function NavBar (): React.JSX.Element {
     <div ref={navbarRef}>
     <nav className="navbar border-primary d-flex flex-row align-items-center bg-white">
         <div ref={logoTitleRefContainer}>
-        <Link to={typeof activeRegion !== 'undefined' ? ('/r/' + activeRegion.properties.slug) : ''}>
+        {/* <Link to={typeof activeRegion !== 'undefined' ? ('/r/' + activeRegion.properties.slug) : ''}>
             <img id="logo" src="/sk-logotype-topbar.png"/>
-        </Link>
+        </Link> */}
 
-        <div id="sk-title">Smartakartan</div></div>
+        <div id="sk-title">Carte des lieux engagés à Lausanne</div></div>
 
         <NavRight>
             <div ref={regionPageContainer}><NavItems className="nav-links">

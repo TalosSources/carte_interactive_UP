@@ -2,7 +2,7 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 import { type Region } from '../lib/KesApi'
 import NavBar from '../components/NavBar'
-import { SKFooter } from '../components/Footer'
+import { CIFooter } from '../components/Footer'
 
 export function Layout ({ regions }: { regions: Region[] }): React.JSX.Element {
   return (
@@ -14,7 +14,7 @@ export function Layout ({ regions }: { regions: Region[] }): React.JSX.Element {
 
             <Outlet />
 
-            <SKFooter regions={regions}/>
+            <CIFooter regions={regions}/>
         </div>
         </>
   )
