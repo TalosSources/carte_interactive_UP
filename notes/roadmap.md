@@ -1,5 +1,6 @@
 # Features
 * filter by tag -> DONE
+* only places visible on the map appear on cards!
 * english / french
 * short/long descriptions (markdown?)
 * opening hours?
