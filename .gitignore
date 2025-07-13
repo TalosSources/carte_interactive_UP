@@ -12,3 +12,7 @@ _info
 # Editor directories and files
 .idea
 .vscode
+
+.htaccess
+.infomaniak-maintenance.html
+.user.ini
