@@ -1,20 +1,20 @@
 [
     {
-      "name": "Example 1",
-      "description": "ceci est le premier example",
-      "lat": 59.3293,
-      "lng": 18.0686,
-      "tags": ["tag1", "tag2"],
-      "image": "https://fastly.picsum.photos/id/3/536/354.jpg?hmac=UsgKVJNj2lH1bw1HWHOAVqVZI76Fc2X7n9wEK6_DbO4",
-      "id":"0"
+      "name": "Unipoly",
+      "description": "L'association sur les campus Unil+EPFL pour une écologie solidaire",
+      "lat": 46.52048,
+      "lng": 6.567861,
+      "tags": ["association", "écologie", "étudiant"],
+      "image": "https://unipoly.ch/wp-content/uploads/2021/09/ezh46xcdqry-edited-768x513.jpg",
+      "id":"unipoly"
     },
     {
-      "name": "Example 2",
-      "description": "comme tu t'en doutes c'est le 2ème example",
-      "lat": 59.33,
-      "lng": 18.07,
-      "tags": ["tagagag", "tigigig"],
-      "image": "https://fastly.picsum.photos/id/907/536/354.jpg?hmac=mMEAunbIXsRW5xQSuxphmJaUDurdQGPSPQwA_z7kqOg",
-      "id":"1"
+      "name": "Point Bleu",
+      "description": "Magasin d'objets de seconde main, géré par la croix bleue",
+      "lat": 46.53280,
+      "lng": 6.57793,
+      "tags": ["seconde main", "friperie", "objets"],
+      "image": "https://croix-bleue.ch/fileadmin/_processed_/3/0/csm_Point_Bleu_recolte_6cd1ef5e41.png",
+      "id":"pointbleu"
     }
   ]

@@ -12,7 +12,7 @@ fetch('data/places.json')
     });
 
 function initMap() {
-    map = L.map('map').setView([59.3293, 18.0686], 13);
+    map = L.map('map').setView([46.5300, 6.61011], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
