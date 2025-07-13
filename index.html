@@ -3,96 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Map + Cards</title>
+  <title>Carte Interactive</title>
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
   />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 1rem;
-    }
-    #map {
-      height: 500px;
-      margin-bottom: 1rem;
-    }
-    #search {
-      width: 100%;
-      max-width: 400px;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    #cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1rem;
-    }
-    .card {
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 1rem;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-    }
-    .card:hover {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    .card img {
-      max-width: 100%;
-      height: 150px;
-      object-fit: cover;
-      margin-bottom: 0.5rem;
-      border-radius: 4px;
-    }
-    .card h3 {
-      margin: 0 0 0.5rem;
-      font-size: 1.2rem;
-    }
-    .card p {
-      font-size: 0.9rem;
-      flex-grow: 1;
-      margin-bottom: 0.5rem;
-    }
-    .tags span {
-      font-size: 0.75rem;
-      background: #eee;
-      border-radius: 3px;
-      padding: 2px 6px;
-      margin-right: 4px;
-    }
-    #filter-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    }
-
-    #tagsFilter {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    overflow-y: auto;
-    max-height:100px;
-    }
-
-    #tagsFilter label {
-    display: inline-block;
-    background: #eee;
-    border-radius: 4px;
-    padding: 4px 8px;
-    cursor: pointer;
-    }
-
-    #tagsFilter input {
-    margin-right: 4px;
-    }
-  </style>
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
 </head>
 <body>
   <div id="filter-bar">
@@ -103,115 +22,7 @@
   <div id="cards"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-  <script>
-    let allPlaces = [];
-    let filteredPlaces = [];
-    let map, markers = [];
-    
-    fetch('data/places.json')
-      .then(response => response.json())
-      .then(data => {
-        allPlaces = data;
-        initMap();
-        renderTagFilters();
-        filterPlaces(); // initial render
-      });
-    
-    function initMap() {
-      map = L.map('map').setView([59.3293, 18.0686], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(map);
-    }
-    
-    function renderTagFilters() {
-      const tagsSet = new Set();
-      allPlaces.forEach(p => p.tags && p.tags.forEach(t => tagsSet.add(t)));
-    //   const tags = Array.from(tagsSet).sort().slice(0, 20); // limit to 20
-      const tagsFilter = document.getElementById("tagsFilter");
-      tagsFilter.innerHTML = ""; // Clear if re-rendering
-      tagsSet.forEach(tag => {
-        const label = document.createElement("label");
-        const input = document.createElement("input");
-        input.type = "checkbox";
-        input.value = tag;
-        input.addEventListener("change", filterPlaces);
-        label.appendChild(input);
-        label.append(tag);
-        tagsFilter.appendChild(label);
-      });
-    }
-    
-    document.getElementById("searchInput").addEventListener("input", filterPlaces);
-    
-    function filterPlaces() {
-      const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-      const checkedTags = Array.from(document.querySelectorAll("#tagsFilter input:checked")).map(i => i.value);
-    
-      filteredPlaces = allPlaces.filter(place => {
-        const matchesSearch = place.name.toLowerCase().includes(searchQuery) ||
-                              (place.description && place.description.toLowerCase().includes(searchQuery)) ||
-                              (place.tags && place.tags.join(" ").toLowerCase().includes(searchQuery));
-    
-        const matchesTags = checkedTags.length === 0 || place.tags?.some(t => checkedTags.includes(t));
-        return matchesSearch && matchesTags;
-      });
-    
-      renderCards();
-      renderMarkers();
-    }
-    
-    function renderCards() {
-      const cardsDiv = document.getElementById("cards");
-      cardsDiv.innerHTML = "";
-      filteredPlaces.forEach(place => {
-        const a = document.createElement("a");
-        a.href = `place.html?id=${place.id}`;
-        a.className = "card";
-    
-        if (place.image) {
-          const img = document.createElement("img");
-          img.src = place.image;
-          img.alt = place.name;
-          a.appendChild(img);
-        }
-    
-        const h3 = document.createElement("h3");
-        h3.textContent = place.name;
-        a.appendChild(h3);
-    
-        if (place.description) {
-          const p = document.createElement("p");
-          p.textContent = place.description;
-          a.appendChild(p);
-        }
-    
-        if (place.tags && place.tags.length) {
-          const tagsDiv = document.createElement("div");
-          tagsDiv.className = "tags";
-          place.tags.forEach(tag => {
-            const span = document.createElement("span");
-            span.textContent = tag;
-            tagsDiv.appendChild(span);
-          });
-          a.appendChild(tagsDiv);
-        }
-    
-        cardsDiv.appendChild(a);
-      });
-    }
-    
-    function renderMarkers() {
-      markers.forEach(m => map.removeLayer(m));
-      markers = [];
-    
-      filteredPlaces.forEach(place => {
-        const marker = L.marker([place.lat, place.lng]).addTo(map)
-          .bindPopup(`<b>${place.name}</b><br>${place.description || ""}`);
-        markers.push(marker);
-      });
-    }
-    </script>
+  <script src="main.js"></script>
   
 </body>
 </html>

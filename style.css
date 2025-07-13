@@ -1,10 +1,83 @@
-#places {
-    padding: 1rem;
-  }
-  
-  .place-card {
-    border: 1px solid #ccc;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-  }
+body {
+font-family: Arial, sans-serif;
+margin: 1rem;
+}
+#map {
+height: 500px;
+margin-bottom: 1rem;
+}
+#search {
+width: 100%;
+max-width: 400px;
+padding: 0.5rem;
+margin-bottom: 1rem;
+}
+#cards {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+gap: 1rem;
+}
+.card {
+border: 1px solid #ccc;
+border-radius: 6px;
+padding: 1rem;
+box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+display: flex;
+flex-direction: column;
+cursor: pointer;
+text-decoration: none;
+color: inherit;
+}
+.card:hover {
+box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.card img {
+max-width: 100%;
+height: 150px;
+object-fit: cover;
+margin-bottom: 0.5rem;
+border-radius: 4px;
+}
+.card h3 {
+margin: 0 0 0.5rem;
+font-size: 1.2rem;
+}
+.card p {
+font-size: 0.9rem;
+flex-grow: 1;
+margin-bottom: 0.5rem;
+}
+.tags span {
+font-size: 0.75rem;
+background: #eee;
+border-radius: 3px;
+padding: 2px 6px;
+margin-right: 4px;
+}
+#filter-bar {
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+gap: 10px;
+margin-bottom: 20px;
+}
+
+#tagsFilter {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+overflow-y: auto;
+max-height:100px;
+}
+
+#tagsFilter label {
+display: inline-block;
+background: #eee;
+border-radius: 4px;
+padding: 4px 8px;
+cursor: pointer;
+}
+
+#tagsFilter input {
+margin-right: 4px;
+}
