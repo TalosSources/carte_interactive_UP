@@ -86,18 +86,21 @@ function renderTagFilters() {
 document.getElementById("searchInput").addEventListener("input", filterPlaces);
 
 function filterPlaces() {
-    const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+    const searchQuery = normalizeString(document.getElementById("searchInput").value);
     const checkedTags = Array.from(document.querySelectorAll("#tagsFilter input:checked")).map(i => i.value);
     const currentLang = localStorage.getItem('language') || 'fr';
 
     filteredPlaces = allPlaces.filter(place => {
     const languageDescriptionKey = `description_${currentLang}`;
+    const languageLongDescriptionKey = `long_description_${currentLang}`;
     const languageTagsKey = `tags_${currentLang}`;
     const placeDescription = place[languageDescriptionKey] || place[`description`]
+    const placeLongDescription = place[languageLongDescriptionKey] || place[`long_description`]
     const placeTags = place[languageTagsKey] || place[`tags`]
     const matchesSearch = place.name.toLowerCase().includes(searchQuery) ||
-                            (placeDescription && placeDescription.toLowerCase().includes(searchQuery)) ||
-                            (placeTags && placeTags.join(" ").toLowerCase().includes(searchQuery));
+                            (placeDescription && normalizeString(placeDescription).includes(searchQuery)) ||
+                            (placeLongDescription && normalizeString(placeLongDescription).includes(searchQuery)) ||
+                            (placeTags && normalizeString(placeTags.join(" ")).includes(searchQuery));
 
     const matchesTags = checkedTags.length === 0 || placeTags?.some(t => checkedTags.includes(t));
     return matchesSearch && matchesTags;

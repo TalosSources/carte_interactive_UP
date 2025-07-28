@@ -11,3 +11,7 @@ function getTagColor(tag) {
 
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
+
+function normalizeString(str) {
+    return str.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
+}
