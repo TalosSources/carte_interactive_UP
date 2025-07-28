@@ -1,6 +1,4 @@
 # Features
-* only places visible on the map appear on cards! question: should search bar search only visible places or all? should it then dezoom automatically to make them all visible? possible solution: the map is always linked to the visible cards, and vice-versa. changing one must affect the other.
-* map on the place.html page
 * center on lausanne (or cool trick: position the map as to bound neatly all existing places)
 * detail: also search through long descriptions.
 * opening hours? website, perhaps adress (or descriptive place name, like a neighborhood or street or smtg)? or other contact info, see smartakartan (they also have phone number). perhaps we should ditch lat/long and replace them with addresses, and use some API to fetch the leaflet pos? or maybe leaflet does it?
@@ -9,6 +7,8 @@
 * english / french (see https://medium.com/@nohanabil/building-a-multilingual-static-website-a-step-by-step-guide-7af238cc8505) DONE
 * short/long descriptions (markdown?) DONE
 * for the links: a simple way to allow any number of links, structured in any way is to allow them to be in the description, simply. DONE
+* only places visible on the map appear on cards! question: should search bar search only visible places or all? should it then dezoom automatically to make them all visible? possible solution: the map is always linked to the visible cards, and vice-versa. changing one must affect the other. DONE
+* map on the place.html page DONE
 
 ## quality of life
 * clickable tags: selects only this tag in filters. (or, select it on top of already selected ones). also clickable in the place.html page

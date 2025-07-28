@@ -1,9 +1,21 @@
 /* Navbar fixed to top right */
-#navbar {
+/* #navbar {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
   z-index: 1000;
+} */
+
+#navbar {
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
 }
   
 /* Language toggle button styling */
@@ -38,6 +50,9 @@ width: 100%;
 max-width: 400px;
 padding: 0.5rem;
 margin-bottom: 1rem;
+}
+#searchInput {
+  font-size: 1.1rem;
 }
 #cards {
 display: grid;

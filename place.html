@@ -3,23 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <title data-i18n="place_details"></title>
-  <nav id="navbar">
-    <button id="langToggle"></button>
-  </nav>
   <link rel="stylesheet" href="style.css"/>
   <link rel="stylesheet" href="place.css"/>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+  />
 </head>
 <body>
-  <div class="card">
-    <img id="image" src="" alt="Place Image">
-    <div class="card-content">
-      <h1 id="title">Chargement...</h1>
-      <p id="description"></p>
-      <div class="tags" id="tags"></div>
-      <a href="index.html" class="back-link" data-i18n="back_to_map"></a>
+  <nav id="navbar">
+    <a href="index.html" id="backLink" data-i18n="back_to_map"></a>
+    <button id="langToggle"></button>
+  </nav>
+  <div id="page-wrapper">
+    <div class="card">
+      <img id="image" src="" alt="Place Image">
+      <div class="card-content">
+        <h1 id="title">Chargement...</h1>
+        <p id="description"></p>
+        <div class="tags" id="tags"></div>
+      </div>
     </div>
+    <div id="map"></div>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script src="utils.js"></script>
   <script src="language.js"></script>
   <script src="place.js"></script>
