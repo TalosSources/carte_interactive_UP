@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
+  <title data-i18n="title"></title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Carte Interactive</title>
+
+  <nav id="navbar">
+    <button id="langToggle"></button>
+  </nav>
+   
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
@@ -15,7 +20,7 @@
 </head>
 <body>
   <div id="filter-bar">
-    <input type="text" id="searchInput" placeholder="Search places..." />
+    <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" />
    <div id="tagsFilter"></div>
   </div>
   <div id="map"></div>
@@ -23,6 +28,8 @@
 
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script src="main.js"></script>
+  <script src="language.js"></script>
   
 </body>
+
 </html>

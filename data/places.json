@@ -16,5 +16,41 @@
       "tags": ["seconde main", "friperie", "objets"],
       "image": "https://croix-bleue.ch/fileadmin/_processed_/3/0/csm_Point_Bleu_recolte_6cd1ef5e41.png",
       "id":"pointbleu"
+    },
+    {
+      "name": "Manivelle Lausanne",
+      "description": "Votre bibliothèque d’objets",
+      "lat": 46.524402965148134, 
+      "lng": 6.637653678588062,
+      "tags": ["emprunts"],
+      "image": "https://lausanne.manivelle.ch/wp-content/uploads/2020/12/LOGO-JPG-scaled.jpg",
+      "id":"Manivelle"
+    },
+    {
+      "name": "Théâtre Vidy",
+      "description": "Lieu ouvert à toustes et dédié à la création contemporaine, le Théâtre Vidy-Lausanne se définit comme un lieu de rencontre avec l’art d’aujourd’hui par le plus grand nombre.",
+      "lat": 46.51302817464184, 
+      "lng": 6.610795380460141,
+      "tags": ["Théâtre"],
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Theatre-de-Vidy.jpg/500px-Theatre-de-Vidy.jpg",
+      "id":"Vidy"
+    },
+    {
+      "name": "Point Vélo",
+      "description": "Vente et location de vélos neufs, d’occasions et d’équipements cyclistes, réparations à prix réduit et cours de mécanique gratuits.",
+      "lat": 46.521851322934154, 
+      "lng": 6.567875139990502,
+      "tags": ["Vélo", "Cours de mécanique", "Réparation"],
+      "image": "https://www.epfl.ch/campus/mobility/wp-content/uploads/2023/02/LAST_Point_Velo_c_Olivier_Wavre_D8F_6526-1024x684.jpg",
+      "id":"Point_Vélo"
+    },
+    {
+      "name": "La Luncheonette",
+      "description": "La Luncheonette te propose tes plats préférés avec des ingrédients de qualité, dans une version saine et équilibrée.",
+      "lat": 46.52149044243666, 
+      "lng": 6.6323536435563035,
+      "tags": ["Flexitarien", "Sans Gluten", "Vegan"],
+      "image": "https://www.lausanneatable.ch/wp-content/uploads/2023/07/358123721_1018360792869717_3815462976230020703_n.webp",
+      "id":"Luncheonette"
     }
-  ]
+]
