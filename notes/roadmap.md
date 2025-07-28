@@ -15,11 +15,12 @@
 * perhaps: pop up box on markers has more info (image?<>)
 * system for people to input places in a more intuitive format (csv/excel? something else), which is then automatically converted to json. perhaps a github pipeline can help with doing that automatically
 * other "reactive" elements, everything should be connected (mainly tags<->markers<-popups>)
+* dark mode? with a toggle? not urgent
 
 
 # Deco
 * unipoly branding
-* link to form to submit places (that we'd add by hand), with an explanation on criteria for the places.
+* link to form to submit places (that we'd add by hand), with an explanation on criteria for the places. also include a form for improvement suggestions? and/or github pull requests? say we're very open to them, we want it to be a participative project, we welcome propositions from anywhere
 * perhaps a small explanation of the project, what's the aim, say it's based on smartakartan
 * make it more beautiful (including but not limited to: change the marker icon, leaflet map theme/appareance (copy smartakartan)).
 * different color for each tag? obtained by hashing it or something for reproducibility
