@@ -6,8 +6,17 @@ const id = params.get("id");
 const place = data.find(p => p.id == id);
 
 if (place) {
+    const currentLang = localStorage.getItem('language') || 'fr';
+    const languageDescriptionKey = `description_${currentLang}`;
+    const languageLongDescriptionKey = `long_description_${currentLang}`;
+    const languageTagsKey = `tags_${currentLang}`;
+    const placeDescription = place[languageDescriptionKey] || place[`description`];
+    const placeLongDescription = place[languageLongDescriptionKey] || place[`long_description`];
     document.getElementById("title").textContent = place.name;
-    document.getElementById("description").textContent = place.description || "";
+    
+    // use HTML for descriptions: richer content
+    document.getElementById("description").innerHTML = placeLongDescription || placeDescription || "";
+    // document.getElementById("description").textContent = placeDescription || "";
 
     const img = document.getElementById("image");
     if (place.image) {
@@ -17,9 +26,10 @@ if (place) {
     img.style.display = "none";
     }
 
-    if (place.tags && place.tags.length) {
+    const placeTags = place[languageTagsKey] || place[`tags`]
+    if (placeTags && placeTags.length) {
     const tagsDiv = document.getElementById("tags");
-    place.tags.forEach(tag => {
+    placeTags.forEach(tag => {
         const span = document.createElement("span");
         span.textContent = tag;
         tagsDiv.appendChild(span);

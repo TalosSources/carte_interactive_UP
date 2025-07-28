@@ -13,14 +13,32 @@ fetch('data/places.json')
 
 function initMap() {
     map = L.map('map').setView([46.5300, 6.61011], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    
+    // ok but not very appealing
+    var osm_org = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+    });
+
+    // absolutely unusable but very cool
+    var stadia_stamenWatercolor = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.{ext}', {
+        minZoom: 1,
+        maxZoom: 16,
+        attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'jpg'
+    });
+
+    // osm_org.addTo(map);
+    stadia_stamenWatercolor.addTo(map);
 }
 
 function renderTagFilters() {
     const tagsSet = new Set();
-    allPlaces.forEach(p => p.tags && p.tags.forEach(t => tagsSet.add(t)));
+    allPlaces.forEach(p => {
+        const currentLang = localStorage.getItem('language') || 'fr';
+        const languageTagsKey = `tags_${currentLang}`;
+        placeTags = p[languageTagsKey] || p[`tags`]
+        placeTags && placeTags.forEach(t => tagsSet.add(t))
+    });
 //   const tags = Array.from(tagsSet).sort().slice(0, 20); // limit to 20
     const tagsFilter = document.getElementById("tagsFilter");
     tagsFilter.innerHTML = ""; // Clear if re-rendering
@@ -41,13 +59,18 @@ document.getElementById("searchInput").addEventListener("input", filterPlaces);
 function filterPlaces() {
     const searchQuery = document.getElementById("searchInput").value.toLowerCase();
     const checkedTags = Array.from(document.querySelectorAll("#tagsFilter input:checked")).map(i => i.value);
+    const currentLang = localStorage.getItem('language') || 'fr';
 
     filteredPlaces = allPlaces.filter(place => {
+    const languageDescriptionKey = `description_${currentLang}`;
+    const languageTagsKey = `tags_${currentLang}`;
+    const placeDescription = place[languageDescriptionKey] || place[`description`]
+    const placeTags = place[languageTagsKey] || place[`tags`]
     const matchesSearch = place.name.toLowerCase().includes(searchQuery) ||
-                            (place.description && place.description.toLowerCase().includes(searchQuery)) ||
-                            (place.tags && place.tags.join(" ").toLowerCase().includes(searchQuery));
+                            (placeDescription && placeDescription.toLowerCase().includes(searchQuery)) ||
+                            (placeTags && placeTags.join(" ").toLowerCase().includes(searchQuery));
 
-    const matchesTags = checkedTags.length === 0 || place.tags?.some(t => checkedTags.includes(t));
+    const matchesTags = checkedTags.length === 0 || placeTags?.some(t => checkedTags.includes(t));
     return matchesSearch && matchesTags;
     });
 
@@ -56,6 +79,10 @@ function filterPlaces() {
 }
 
 function renderCards() {
+    const currentLang = localStorage.getItem('language') || 'fr';
+    const languageDescriptionKey = `description_${currentLang}`;
+    const languageTagsKey = `tags_${currentLang}`;
+
     const cardsDiv = document.getElementById("cards");
     cardsDiv.innerHTML = "";
     filteredPlaces.forEach(place => {
@@ -74,16 +101,18 @@ function renderCards() {
     h3.textContent = place.name;
     a.appendChild(h3);
 
-    if (place.description) {
+    const placeDescription = place[languageDescriptionKey] || place[`description`];
+    if (placeDescription) {
         const p = document.createElement("p");
-        p.textContent = place.description;
+        p.textContent = placeDescription;
         a.appendChild(p);
     }
 
-    if (place.tags && place.tags.length) {
+    const placeTags = place[languageTagsKey] || place[`tags`]
+    if (placeTags && placeTags.length) {
         const tagsDiv = document.createElement("div");
         tagsDiv.className = "tags";
-        place.tags.forEach(tag => {
+        placeTags.forEach(tag => {
         const span = document.createElement("span");
         span.textContent = tag;
         tagsDiv.appendChild(span);
@@ -100,8 +129,11 @@ function renderMarkers() {
     markers = [];
 
     filteredPlaces.forEach(place => {
+    const currentLang = localStorage.getItem('language') || 'fr';
+    const languageDescriptionKey = `description_${currentLang}`;
+    const placeDescription = place[languageDescriptionKey] || place[`description`]; // TODO: Factorize that in a method, and perhaps find a cleaner way.
     const marker = L.marker([place.lat, place.lng]).addTo(map)
-        .bindPopup(`<b>${place.name}</b><br>${place.description || ""}`);
+        .bindPopup(`<b>${place.name}</b><br>${placeDescription || ""}`);
     markers.push(marker);
     });
 }

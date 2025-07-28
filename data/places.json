@@ -1,11 +1,16 @@
 [
     {
       "name": "Unipoly",
-      "description": "L'association sur les campus Unil+EPFL pour une écologie solidaire",
+      "description_fr": "L'association sur les campus Unil+EPFL pour une écologie solidaire",
+      "description_en": "The association on Unil+EPFL campuses for a social ecology",
+      "long_description_fr": "L’association Unipoly vise à sensibiliser et amorcer la discussion sur des sujets sociétaux liés à l’écologie avec les étudiant·e·x·s de l’UNIL et de l’EPFL et à porter  les intérêts écologistes auprès des administrations de nos écoles.<br>Nos activités sont diverses, allant d’organiser des repas à base de nourriture invendue, jusqu’à animer une conférence d’une célèbre économiste, en passant par s’occuper de ruches d’abeilles et tenir un journal estudiantin, il y a toujours de quoi faire !<br>A travers les projets du comité de direction de l’association, et la dizaine de pôles menant à bien leurs activités de manière autonome, Unipoly cherche à offrir aux étudiant·e·x·s la meilleure plateforme possible pour mettre en pratique leur intérêt pour l’écologie et les questions sociétales.",
+      "long_description_en": "The Unipoly association aims to raise awareness and initiate discussion on societal issues related to ecology with students at UNIL and EPFL and to bring ecological interests to the administrations of our schools.<br>Our activities are diverse, ranging from organizing meals with unsold food, to hosting a lecture by a famous economist, to taking care of beehives and keeping a student newspaper, there is always something to do!<br>Through the projects of the association’s steering committee, and the ten or so poles carrying out their activities autonomously, Unipoly seeks to offer students the best possible platform to put into practice their interest in ecology and societal issues. <br><br><a href=\"https://unipoly.ch\">unipoly.ch</a>",
       "lat": 46.52048,
       "lng": 6.567861,
-      "tags": ["association", "écologie", "étudiant"],
-      "image": "https://unipoly.ch/wp-content/uploads/2021/09/ezh46xcdqry-edited-768x513.jpg",
+      "tags_fr": ["association", "écologie", "étudiant"],
+      "tags_en": ["association", "ecology", "student"],
+      "website": "https://unipoly.ch",
+      "image": "https://unipoly.ch/wp-content/uploads/2021/09/logo_banniere_vert_alpha-1536x478.png",
       "id":"unipoly"
     },
     {
