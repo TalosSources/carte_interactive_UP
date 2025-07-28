@@ -32,6 +32,7 @@ if (place) {
     placeTags.forEach(tag => {
         const span = document.createElement("span");
         span.textContent = tag;
+        span.style.backgroundColor = getTagColor(tag);
         tagsDiv.appendChild(span);
     });
     }

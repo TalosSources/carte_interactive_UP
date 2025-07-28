@@ -29,6 +29,26 @@ function initMap() {
 
     // osm_org.addTo(map);
     stadia_stamenWatercolor.addTo(map);
+
+    map.on("moveend", () => {
+        console.log("moved!")
+        const bounds = map.getBounds();
+        const visiblePlaces = filteredPlaces.filter(place => {
+            return bounds.contains([place.lat, place.lng]);
+        });
+        console.log("found visiblePlaces: ", visiblePlaces);
+        renderCards(visiblePlaces);
+        // ???
+    });
+}
+
+function fitMapToPlaces(places) {
+  if (places.length === 0) return;
+  const group = new L.featureGroup(
+    places.map(p => L.marker([p.lat, p.lng]))
+  );
+  // TODO: Max zoom, to avoid getting too close? 
+  map.fitBounds(group.getBounds(), { padding: [20, 20] });
 }
 
 function renderTagFilters() {
@@ -43,14 +63,15 @@ function renderTagFilters() {
     const tagsFilter = document.getElementById("tagsFilter");
     tagsFilter.innerHTML = ""; // Clear if re-rendering
     tagsSet.forEach(tag => {
-    const label = document.createElement("label");
-    const input = document.createElement("input");
-    input.type = "checkbox";
-    input.value = tag;
-    input.addEventListener("change", filterPlaces);
-    label.appendChild(input);
-    label.append(tag);
-    tagsFilter.appendChild(label);
+        const label = document.createElement("label");
+        label.style.backgroundColor = getTagColor(tag);
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.value = tag;
+        input.addEventListener("change", filterPlaces);
+        label.appendChild(input);
+        label.append(tag);
+        tagsFilter.appendChild(label);
     });
 }
 
@@ -74,18 +95,19 @@ function filterPlaces() {
     return matchesSearch && matchesTags;
     });
 
-    renderCards();
+    renderCards(filteredPlaces);
     renderMarkers();
+    fitMapToPlaces(filteredPlaces);
 }
 
-function renderCards() {
+function renderCards(visiblePlaces) {
     const currentLang = localStorage.getItem('language') || 'fr';
     const languageDescriptionKey = `description_${currentLang}`;
     const languageTagsKey = `tags_${currentLang}`;
 
     const cardsDiv = document.getElementById("cards");
     cardsDiv.innerHTML = "";
-    filteredPlaces.forEach(place => {
+    visiblePlaces.forEach(place => {
     const a = document.createElement("a");
     a.href = `place.html?id=${place.id}`;
     a.className = "card";
@@ -113,9 +135,10 @@ function renderCards() {
         const tagsDiv = document.createElement("div");
         tagsDiv.className = "tags";
         placeTags.forEach(tag => {
-        const span = document.createElement("span");
-        span.textContent = tag;
-        tagsDiv.appendChild(span);
+            const span = document.createElement("span");
+            span.textContent = tag;
+            span.style.backgroundColor = getTagColor(tag)
+            tagsDiv.appendChild(span);
         });
         a.appendChild(tagsDiv);
     }
