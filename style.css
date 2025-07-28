@@ -24,11 +24,14 @@
 
 body {
 font-family: Arial, sans-serif;
-margin: 1rem;
+margin: 0rem;
 }
 #map {
 height: 500px;
 margin-bottom: 1rem;
+}
+#nonmap {
+  margin: 1rem;
 }
 #search {
 width: 100%;

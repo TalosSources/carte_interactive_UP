@@ -19,12 +19,14 @@
   />
 </head>
 <body>
-  <div id="filter-bar">
-    <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" />
-   <div id="tagsFilter"></div>
-  </div>
   <div id="map"></div>
-  <div id="cards"></div>
+  <div id="nonmap">
+    <div id="filter-bar">
+      <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" />
+    <div id="tagsFilter"></div>
+    </div>
+    <div id="cards"></div>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script src="utils.js"></script>
