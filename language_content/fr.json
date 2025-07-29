@@ -3,5 +3,8 @@
     "search_placeholder": "Rechercher des lieux...",
     "place_details": "Détails du lieu",
     "loading": "Chargement...",
-    "back_to_map": "&larr; Retour à la carte"
+    "back_to_map": "Retour à la carte",
+    "resetButton": "Tout déselectionner",
+    "about": "À propos",
+    "contribute": "Contribuer"
 }

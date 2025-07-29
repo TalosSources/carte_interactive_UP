@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title data-i18n="place_details"></title>
-  <link rel="stylesheet" href="style.css"/>
+
+  <link rel="stylesheet" href="general.css"/>
   <link rel="stylesheet" href="place.css"/>
   <link
     rel="stylesheet"
@@ -15,21 +16,30 @@
     <a href="index.html" id="backLink" data-i18n="back_to_map"></a>
     <button id="langToggle"></button>
   </nav>
-  <div id="page-wrapper">
-    <div class="bigCard">
-      <img id="image" src="" alt="Place Image">
-      <div class="bigCard-content">
-        <h1 id="title">Chargement...</h1>
-        <p id="description"></p>
-        <div class="tags" id="tags"></div>
+
+  <main>
+      <div class="bigCard">
+        <img id="image" src="" alt="Place Image">
+        <div class="bigCard-content">
+          <h1 id="title">Chargement...</h1>
+          <p id="description"></p>
+          <div class="tags" id="tags"></div>
+        </div>
       </div>
-    </div>
-    <div id="map"></div>
-  </div>
+      <div id="map"></div>
+  </main>
 
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script src="utils.js"></script>
   <script src="language.js"></script>
   <script src="place.js"></script>
+
+  <footer>
+    <div id="footer-links">
+        <a href="about.html" class="footer-link" data-i18n="about"></a>
+        <a href="contribute.html" class="footer-link" data-i18n="contribute"></a>
+    </div>
+  </footer>
+
 </body>
 </html>

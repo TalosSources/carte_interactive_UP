@@ -2,6 +2,7 @@
 * structured tags. this could go very far, with type theory stuff. But as a beginning, there can be categories (which are predefined, and adding a new one is a developer's decision), and tags which are multiple. Then categories are selected separately from tags. They could be food, objects, third places, ... also another idea, allow an option "OR" / "AND" (way to combine multiple selected tags)
 * website, perhaps adress (or descriptive place name, like a neighborhood or street or smtg)? perhaps we should ditch lat/long and replace them with addresses, and use some API to fetch the leaflet pos? or maybe leaflet does it?
 * store the filter info somewhere. it could be in local storage. It could also be in the url, which would have the additional advantage of being shareable (can share a link with all thriftstores in lausanne!). also, perhaps there's an UI thing here where people don't understand that clicking on a card will lead to another page. Perhaps having that clicking on the card highlights it, and opens the corresponding popup, while a button "more information" leads to the place page. Need feedback for that, but it would at least make more sense to me, even if it doesn't lead to more efficient interaction. indeed the current hover-highlight-popup-interaction solution is a bit unsatisfying, as highlightling is lost for below cards as the mouse must go over higher cards, triggering their highlighting instead.
+* accessibility
 
 
 * filter by tag -> DONE
@@ -14,7 +15,6 @@
 * detail: also search through long descriptions. DONE
 
 ## quality of life
-* option to select none (all?) of tags
 * perhaps: pop up box on markers has more info (image?<>)
 * system for people to input places in a more intuitive format (csv/excel? something else), which is then automatically converted to json. perhaps a github pipeline can help with doing that automatically
 * dark mode? with a toggle? not urgent
@@ -24,6 +24,7 @@
 * hover on cards shows the corresponding marker on the map DONE
 * clickable tags: selects only this tag in filters. (or, select it on top of already selected ones). also clickable in the place.html page DONE
 * other "reactive" elements, everything should be connected (mainly tags<->markers<-popups>) DONE
+* option to select none (all?) of tags DONE
 
 
 # Deco
@@ -31,9 +32,17 @@
 * link to form to submit places (that we'd add by hand), with an explanation on criteria for the places. also include a form for improvement suggestions? and/or github pull requests? say we're very open to them, we want it to be a participative project, we welcome propositions from anywhere
 * perhaps a small explanation of the project, what's the aim, say it's based on smartakartan
 * make it more beautiful (including but not limited to: change the marker icon, leaflet map theme/appareance (copy smartakartan)).
-* different color for each tag? obtained by hashing it or something for reproducibility
 * careful about the order: maybe strange to have unipoly first? alphabetic instead?
 * logo on the tab
+
+* different color for each tag? obtained by hashing it or something for reproducibility DONE
+
+## Footer
+Information I want to include (either there if very short, or as link to other page):
+* about: what's this map about, who made it (unipoly), but based on smartakartan
+* contribute: perhaps a single contribute page with all ways: add places, feedback on the site, development (pull requests) and github
+* licensing? copyright? I don't know anything about this, see the main unipoly.ch site.
+* cookies??? is local-storage actually cookies? if yes, I guess we remove them
 
 # Data
 * add many more places

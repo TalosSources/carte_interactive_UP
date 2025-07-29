@@ -4,36 +4,44 @@
   <title data-i18n="title"></title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <nav id="navbar">
-    <div></div>
-    <button id="langToggle"></button>
-  </nav>
    
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
   />
-  <link
-    rel="stylesheet"
-    href="style.css"
-  />
+  <link rel="stylesheet" href="general.css"/>
+  <link rel="stylesheet" href="index.css"/>  
 </head>
 <body>
-  <div id="map"></div>
-  <div id="nonmap">
-    <div id="filter-bar">
-      <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" />
-      <button id="filterReset">Reset</button>
-      <div id="tagsFilter"></div>
+
+  <nav id="navbar">
+    <div></div>
+    <button id="langToggle"></button>
+  </nav>
+
+  <main>
+    <div id="map"></div>
+    <div id="nonmap">
+      <div id="filter-bar">
+        <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" />
+        <button id="filterReset" data-i18n="resetButton"></button>
+        <div id="tagsFilter"></div>
+      </div>
+      <div id="cards"></div>
     </div>
-    <div id="cards"></div>
-  </div>
+  </main>
 
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script src="utils.js"></script>
   <script src="main.js"></script>
   <script src="language.js"></script>
+
+  <footer>
+    <div id="footer-links">
+      <a href="about.html" class="footer-link" data-i18n="about"></a>
+      <a href="contribute.html" class="footer-link" data-i18n="contribute"></a>
+    </div>
+  </footer>
   
 </body>
 

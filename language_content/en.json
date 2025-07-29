@@ -3,5 +3,8 @@
     "search_placeholder": "Search places...",
     "place_details": "Place Details",
     "loading": "Loading...",
-    "back_to_map": "&larr; Back to map"
+    "back_to_map": "Back to map",
+    "resetButton": "Unselect all",
+    "about": "About",
+    "contribute": "Contribute"
 }
