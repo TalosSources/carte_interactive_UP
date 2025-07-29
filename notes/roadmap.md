@@ -1,6 +1,8 @@
 # Features
-* structured tags. this could go very far, with type theory stuff. But as a beginning, there can be categories (which are predefined, and adding a new one is a developer's decision), and tags which are multiple. Then categories are selected separately from tags. They could be food, objects, third places, ...
+* structured tags. this could go very far, with type theory stuff. But as a beginning, there can be categories (which are predefined, and adding a new one is a developer's decision), and tags which are multiple. Then categories are selected separately from tags. They could be food, objects, third places, ... also another idea, allow an option "OR" / "AND" (way to combine multiple selected tags)
 * website, perhaps adress (or descriptive place name, like a neighborhood or street or smtg)? perhaps we should ditch lat/long and replace them with addresses, and use some API to fetch the leaflet pos? or maybe leaflet does it?
+* store the filter info somewhere. it could be in local storage. It could also be in the url, which would have the additional advantage of being shareable (can share a link with all thriftstores in lausanne!). also, perhaps there's an UI thing here where people don't understand that clicking on a card will lead to another page. Perhaps having that clicking on the card highlights it, and opens the corresponding popup, while a button "more information" leads to the place page. Need feedback for that, but it would at least make more sense to me, even if it doesn't lead to more efficient interaction. indeed the current hover-highlight-popup-interaction solution is a bit unsatisfying, as highlightling is lost for below cards as the mouse must go over higher cards, triggering their highlighting instead.
+
 
 * filter by tag -> DONE
 * english / french (see https://medium.com/@nohanabil/building-a-multilingual-static-website-a-step-by-step-guide-7af238cc8505) DONE
@@ -12,16 +14,16 @@
 * detail: also search through long descriptions. DONE
 
 ## quality of life
-* clickable tags: selects only this tag in filters. (or, select it on top of already selected ones). also clickable in the place.html page
-* clickable pop-ups? see how smartakartan did it, but basically the user should never be annoyed trying to do something impossible
-* hover on cards shows the corresponding marker on the map
-* other "reactive" elements, everything should be connected (mainly tags<->markers<-popups>)
 * option to select none (all?) of tags
 * perhaps: pop up box on markers has more info (image?<>)
 * system for people to input places in a more intuitive format (csv/excel? something else), which is then automatically converted to json. perhaps a github pipeline can help with doing that automatically
 * dark mode? with a toggle? not urgent
 
 * search up to accents (écologie==ecologie) (not urgent) DONE
+* clickable pop-ups? see how smartakartan did it, but basically the user should never be annoyed trying to do something impossible DONE
+* hover on cards shows the corresponding marker on the map DONE
+* clickable tags: selects only this tag in filters. (or, select it on top of already selected ones). also clickable in the place.html page DONE
+* other "reactive" elements, everything should be connected (mainly tags<->markers<-popups>) DONE
 
 
 # Deco

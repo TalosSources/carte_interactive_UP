@@ -1,6 +1,7 @@
 let allPlaces = [];
 let filteredPlaces = [];
 let map, markers = [];
+let highlightedId = "";
 
 fetch('data/places.json')
     .then(response => response.json())
@@ -12,7 +13,7 @@ fetch('data/places.json')
     });
 
 function initMap() {
-    map = L.map('map').setView([46.5300, 6.61011], 13);
+    map = L.map('map', {maxZoom: 16}).setView([46.5300, 6.61011], 13);
     
     // ok but not very appealing
     var osm_org = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -84,6 +85,19 @@ function renderTagFilters() {
 }
 
 document.getElementById("searchInput").addEventListener("input", filterPlaces);
+const toggleBtn = document.getElementById('filterReset');
+toggleBtn.onclick = () => {
+    searchInput = document.getElementById("searchInput")
+    searchInput.value = "";
+
+    tagInputs = document.querySelectorAll('#tagsFilter input[type="checkbox"]');
+    tagInputs.forEach(input => {
+        if (input.checked) {
+            input.checked = false;
+        }
+    })
+    filterPlaces();
+};
 
 function filterPlaces() {
     const searchQuery = normalizeString(document.getElementById("searchInput").value);
@@ -116,32 +130,57 @@ function renderCards(visiblePlaces) {
     const languageDescriptionKey = `description_${currentLang}`;
     const languageTagsKey = `tags_${currentLang}`;
 
-    const cardsDiv = document.getElementById("cards");
-    cardsDiv.innerHTML = "";
+    const currentCardContainer = document.getElementById("cards");
+    const currentVisibleIds = new Set(
+        [...currentCardContainer.children].map(card => card.dataset.id)
+    );
+    const newVisibleIds = new Set(visiblePlaces.map(p => p.id));
+    [...currentCardContainer.children].forEach(card => {
+        if (!newVisibleIds.has(card.dataset.id)) {
+            currentCardContainer.removeChild(card);
+        }
+    });
     visiblePlaces.forEach(place => {
-    const a = document.createElement("a");
-    a.href = `place.html?id=${place.id}`;
-    a.className = "card";
+        if (!currentVisibleIds.has(place.id)) {
+            const card = createCard(place, languageDescriptionKey, languageTagsKey); // assume this creates and returns the <a> element
+            currentCardContainer.appendChild(card);
+        }
+    });
+
+    if (highlightedId) {
+        const card = currentCardContainer.querySelector(`[data-id="${highlightedId}"]`);
+        if (card) {
+            // card.classList.add("highlighted");
+            highlightCardById(highlightedId, false);
+        }
+    }
+}
+
+function createCard(place, ldk, ltk) {
+    const card = document.createElement("a");
+    card.href = `place.html?id=${place.id}`;
+    card.className = "card";
+    card.dataset.id = place.id;
 
     if (place.image) {
         const img = document.createElement("img");
         img.src = place.image;
         img.alt = place.name;
-        a.appendChild(img);
+        card.appendChild(img);
     }
 
     const h3 = document.createElement("h3");
     h3.textContent = place.name;
-    a.appendChild(h3);
+    card.appendChild(h3);
 
-    const placeDescription = place[languageDescriptionKey] || place[`description`];
+    const placeDescription = place[ldk] || place[`description`];
     if (placeDescription) {
         const p = document.createElement("p");
         p.textContent = placeDescription;
-        a.appendChild(p);
+        card.appendChild(p);
     }
 
-    const placeTags = place[languageTagsKey] || place[`tags`]
+    const placeTags = place[ltk] || place[`tags`]
     if (placeTags && placeTags.length) {
         const tagsDiv = document.createElement("div");
         tagsDiv.className = "tags";
@@ -149,25 +188,103 @@ function renderCards(visiblePlaces) {
             const span = document.createElement("span");
             span.textContent = tag;
             span.style.backgroundColor = getTagColor(tag)
+            span.onclick = (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                const tagFilters = document.querySelectorAll('#tagsFilter input[type="checkbox"]');
+                tagFilters.forEach(input => {
+                    if (input.value === tag) {
+                        input.checked = true;
+                        // Manually dispatch change event to trigger filtering
+                        input.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                });
+            }
             tagsDiv.appendChild(span);
         });
-        a.appendChild(tagsDiv);
+        card.appendChild(tagsDiv);
     }
 
-    cardsDiv.appendChild(a);
-    });
+    card.addEventListener('mouseover', () => {
+        console.log("hovered card ", place.name);
+        markers.forEach(marker => {
+            if (marker[1] === place.id) {
+                console.log("found corresponding marker!")
+                map.options.autoPan = false;
+                marker[0].openPopup();
+                map.options.autoPan = true; 
+                highlightCardById(place.id, false);
+                // marker[0].getPopup().openOn(map);
+            } 
+        })
+    })
+
+    return card;
 }
 
 function renderMarkers() {
-    markers.forEach(m => map.removeLayer(m));
+    markers.forEach(m => map.removeLayer(m[0]));
     markers = [];
 
     filteredPlaces.forEach(place => {
-    const currentLang = localStorage.getItem('language') || 'fr';
-    const languageDescriptionKey = `description_${currentLang}`;
-    const placeDescription = place[languageDescriptionKey] || place[`description`]; // TODO: Factorize that in a method, and perhaps find a cleaner way.
-    const marker = L.marker([place.lat, place.lng]).addTo(map)
-        .bindPopup(`<b>${place.name}</b><br>${placeDescription || ""}`);
-    markers.push(marker);
+        const currentLang = localStorage.getItem('language') || 'fr';
+        const languageDescriptionKey = `description_${currentLang}`;
+        const placeDescription = place[languageDescriptionKey] || place[`description`]; // TODO: Factorize that in a method, and perhaps find a cleaner way.
+        const popupHTML = `
+            <a href="place.html?id=${place.id}" class="popup-link">
+                <div class="popup-card">
+                <strong>${place.name}</strong><br>
+                ${placeDescription || ""}
+                </div>
+            </a>
+        `;
+        const marker = L.marker([place.lat, place.lng]).addTo(map)
+            .bindPopup(popupHTML);
+        // marker.on('popupopen', () => {
+        //     highlightCardById(place.id);
+        // })
+        marker.on('click', () => {
+            highlightCardById(place.id);
+        })
+        marker.on('popupclose', () => {
+            console.log("closed popup: ", place.id);
+            unhighlightCard(place.id);
+        })
+        // marker = marker.bindTooltip(place.name); // optional, I think unneccessary
+            // .bindPopup(`<b><a href="place.html?id=${place.id}">${place.name}</a></b><br>${placeDescription || ""}`);
+        markers.push([marker, place.id]);
     });
+}
+
+function unhighlightCard(id) {
+    if (highlightedId === id) {
+        const target = document.querySelector(`.card[data-id="${id}"]`);
+        if (target) {
+            target.classList.remove('highlighted');
+        }
+        highlightedId = "";
+    }
+}
+
+function highlightCardById(id, moveFirst=true) {
+    // Remove highlight from all
+    document.querySelectorAll('.card').forEach(card => {
+        console.log("card here: ", card)
+        card.classList.remove('highlighted');
+    });
+    highlightedId = "";
+
+    // Add highlight to the matching one
+    const target = document.querySelector(`.card[data-id="${id}"]`);
+    console.log("in highlightCardById, found target=", target)
+    if (target) {
+        target.classList.add('highlighted');
+        const container = document.getElementById("cards"); // adjust to your layout
+        if (moveFirst && target && container) {
+            container.prepend(target);
+        }
+        highlightedId = id;
+        // Optional: scroll to it
+        // target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 }
