@@ -31,6 +31,7 @@
 * make it more beautiful (including but not limited to: change the marker icon, leaflet map theme/appareance (copy smartakartan)).
 * different color for each tag? obtained by hashing it or something for reproducibility
 * careful about the order: maybe strange to have unipoly first? alphabetic instead?
+* logo on the tab
 
 # Data
 * add many more places
@@ -38,3 +39,9 @@
 * should we contact the people we mapped?
 * add english to descriptions and tags
 * add websites, etc.
+
+# Misc from smartakartan
+* several places per "initiative" (they mapped microwaves on KTH campus)
+* their tag/category thing seems complex: they allow filter for "transaction form", but then also seem to have tags, which when clicked, reveal something like nested tags?
+* different ranking options from card (random, last added/updated, alphabetically)
+* management for many places, such as a "load more" button. We'll look into it when we have many places.
