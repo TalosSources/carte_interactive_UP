@@ -1,8 +1,9 @@
 # Features
-* structured tags. this could go very far, with type theory stuff. But as a beginning, there can be categories (which are predefined, and adding a new one is a developer's decision), and tags which are multiple. Then categories are selected separately from tags. They could be food, objects, third places, ... also another idea, allow an option "OR" / "AND" (way to combine multiple selected tags)
 * website, perhaps adress (or descriptive place name, like a neighborhood or street or smtg)? perhaps we should ditch lat/long and replace them with addresses, and use some API to fetch the leaflet pos? or maybe leaflet does it?
+* structured tags. this could go very far, with type theory stuff. But as a beginning, there can be categories (which are predefined, and adding a new one is a developer's decision), and tags which are multiple. Then categories are selected separately from tags. They could be food, objects, third places, ... also another idea, allow an option "OR" / "AND" (way to combine multiple selected tags)
 * store the filter info somewhere. it could be in local storage. It could also be in the url, which would have the additional advantage of being shareable (can share a link with all thriftstores in lausanne!). also, perhaps there's an UI thing here where people don't understand that clicking on a card will lead to another page. Perhaps having that clicking on the card highlights it, and opens the corresponding popup, while a button "more information" leads to the place page. Need feedback for that, but it would at least make more sense to me, even if it doesn't lead to more efficient interaction. indeed the current hover-highlight-popup-interaction solution is a bit unsatisfying, as highlightling is lost for below cards as the mouse must go over higher cards, triggering their highlighting instead.
-* accessibility
+* accessibility (need to look up how to do that properly)
+* better mobile support
 
 
 * filter by tag -> DONE
@@ -15,8 +16,8 @@
 * detail: also search through long descriptions. DONE
 
 ## quality of life
-* perhaps: pop up box on markers has more info (image?<>)
 * system for people to input places in a more intuitive format (csv/excel? something else), which is then automatically converted to json. perhaps a github pipeline can help with doing that automatically
+* perhaps: pop up box on markers has more info (image?<>)
 * dark mode? with a toggle? not urgent
 
 * search up to accents (écologie==ecologie) (not urgent) DONE
@@ -56,3 +57,11 @@ Information I want to include (either there if very short, or as link to other p
 * their tag/category thing seems complex: they allow filter for "transaction form", but then also seem to have tags, which when clicked, reveal something like nested tags?
 * different ranking options from card (random, last added/updated, alphabetically)
 * management for many places, such as a "load more" button. We'll look into it when we have many places.
+
+# TODO Now
+* ensure places are added quickly and correctly
+* write about and contribute
+* website etc.
+* worry licensing, copyright, etc.
+* worry about having a chart: what's accepted as places? what are our core values, rules?
+* a few new features (url data, structured tags, accessibility)
