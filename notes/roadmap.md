@@ -45,6 +45,10 @@ Information I want to include (either there if very short, or as link to other p
 * licensing? copyright? I don't know anything about this, see the main unipoly.ch site.
 * cookies??? is local-storage actually cookies? if yes, I guess we remove them
 
+# other
+* link to other cool initiatives in lausanne that didn't fit on the card? for example, a site compiling water fountains? or if we want to compile them, perhaps they should be hidden by default
+* (ambitious?) have a different icon for each category if we have categories
+
 # Data
 * add many more places
 * be careful about the images. copyright? use good ones
