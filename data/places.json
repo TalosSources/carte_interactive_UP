@@ -57,5 +57,17 @@
       "tags": ["Flexitarien", "Sans Gluten", "Vegan"],
       "image": "https://www.lausanneatable.ch/wp-content/uploads/2023/07/358123721_1018360792869717_3815462976230020703_n.webp",
       "id":"Luncheonette"
-    }
+    },
+     {
+      "name": "La Rustine",
+      "description_fr": "Atelier de réparation de vélo autogéré",
+      "description_en": "Self-managed bicycle repair workshop",
+      "long_description_fr": "Que tu viennes avec le savoir nécessaire ou non pour réparer ton vélo, la Rustine t’ouvre ses portes. Avec ton aide et celle des personnes présentes, ton vélo aura de grandes chances de se retrouver sur ses deux roues. ",
+      "long_description_en": "Whether you come with the knowledge to fix your bike or not, La Rustine opens its doors to you. With your help and that of the people present, your bike will have a great chance of getting back on its two wheels.",
+      "lat": 46.52999960684584,
+      "lng": 6.613650448633379,
+      "tags_fr": ["Vélo", "Cours de mécanique", "Réparation"],
+      "tags_en": [“Bicycles”, ‘Mechanics’, “Repairs”],
+      "image": "https://www.larustine.bike/",
+      "id":"Rustine"
 ]
