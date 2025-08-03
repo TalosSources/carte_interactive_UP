@@ -4,6 +4,7 @@
 * store the filter info somewhere. it could be in local storage. It could also be in the url, which would have the additional advantage of being shareable (can share a link with all thriftstores in lausanne!). also, perhaps there's an UI thing here where people don't understand that clicking on a card will lead to another page. Perhaps having that clicking on the card highlights it, and opens the corresponding popup, while a button "more information" leads to the place page. Need feedback for that, but it would at least make more sense to me, even if it doesn't lead to more efficient interaction. indeed the current hover-highlight-popup-interaction solution is a bit unsatisfying, as highlightling is lost for below cards as the mouse must go over higher cards, triggering their highlighting instead.
 * accessibility (need to look up how to do that properly)
 * better mobile support
+* nice place-holder for missing items, especially image. perhaps a "image-like" css element with the name or initials or smtg else?
 
 
 * filter by tag -> DONE
@@ -44,6 +45,9 @@ Information I want to include (either there if very short, or as link to other p
 * contribute: perhaps a single contribute page with all ways: add places, feedback on the site, development (pull requests) and github
 * licensing? copyright? I don't know anything about this, see the main unipoly.ch site.
 * cookies??? is local-storage actually cookies? if yes, I guess we remove them
+
+# Bugs / Problems
+* places.html doesn't load, error because of 'lat'? happens for "soupe populaire"
 
 # other
 * link to other cool initiatives in lausanne that didn't fit on the card? for example, a site compiling water fountains? or if we want to compile them, perhaps they should be hidden by default
