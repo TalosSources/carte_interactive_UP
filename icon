@@ -1,0 +1,12 @@
+var LeafIcon = L.Icon.extend({
+    options: {
+       iconSize:     [38, 95],
+       shadowSize:   [50, 64],
+       iconAnchor:   [22, 94],
+       shadowAnchor: [4, 62],
+       popupAnchor:  [-3, -76]
+    }
+});
+var greenIcon = new LeafIcon({
+    iconUrl: 'https://raw.githubusercontent.com/TalosSources/carte_interactive_UP/refs/heads/static/NEW%20ICON-01.png',
+})
