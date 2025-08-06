@@ -11,17 +11,25 @@ fetch('data/places.json')
     renderTagFilters();
     filterPlaces(); // initial render
     });
-var LeafIcon = L.Icon.extend({
-    options: {
-        iconSize:     [38, 95],        // taille de l'icône
-        shadowSize:   [50, 64],        // taille de l'ombre
-        iconAnchor:   [22, 94],        // point de l'icône correspondant à la position du marqueur
-        shadowAnchor: [4, 62],         // idem pour l'ombre
-        popupAnchor:  [-3, -76]        // point à partir duquel la popup s'ouvre par rapport à l'icône
-    }
-});
-var greenIcon = new LeafIcon({
-    iconUrl: 'https://raw.githubusercontent.com/TalosSources/carte_interactive_UP/refs/heads/static/NEW%20ICON-01.png',
+// var LeafIcon = L.Icon.extend({
+//     options: {
+//         iconSize:     [38, 95],        // taille de l'icône
+//         shadowSize:   [50, 64],        // taille de l'ombre
+//         iconAnchor:   [22, 94],        // point de l'icône correspondant à la position du marqueur
+//         shadowAnchor: [4, 62],         // idem pour l'ombre
+//         popupAnchor:  [-3, -76]        // point à partir duquel la popup s'ouvre par rapport à l'icône
+//     }
+// });
+// var greenIcon = new LeafIcon({
+//     iconUrl: 'https://raw.githubusercontent.com/TalosSources/carte_interactive_UP/refs/heads/static/NEW%20ICON-01.png',
+// });
+var greenIcon = L.icon({
+    iconUrl: 'res/greenIcon.png',
+    iconSize:     [33.45, 54.225],
+    // shadowSize:   [50, 64],
+    iconAnchor:   [16.5, 54.],
+    // shadowAnchor: [4, 62],
+    popupAnchor:  [0, -55],
 });
 function initMap() {
     map = L.map('map', {maxZoom: 16}).setView([46.5300, 6.61011], 13);
@@ -65,7 +73,7 @@ function initMap() {
 function fitMapToPlaces(places) {
   if (places.length === 0) return;
   const group = new L.featureGroup(
-    places.map(p => L.marker([p.lat, p.lng]{ icon: greenIcon })))
+    places.map(p => L.marker([p.lat, p.lng]))
   );
   // TODO: Max zoom, to avoid getting too close? 
   map.fitBounds(group.getBounds(), { padding: [20, 20] });
@@ -249,7 +257,7 @@ function renderMarkers() {
                 </div>
             </a>
         `;
-        const marker = L.marker([place.lat, place.lng]).addTo(map)
+        const marker = L.marker([place.lat, place.lng], {icon: greenIcon}).addTo(map)
             .bindPopup(popupHTML);
         // marker.on('popupopen', () => {
         //     highlightCardById(place.id);
