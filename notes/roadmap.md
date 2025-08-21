@@ -7,26 +7,26 @@
 * nice place-holder for missing items, especially image. perhaps a "image-like" css element with the name or initials or smtg else?
 
 
-* filter by tag -> DONE
-* english / french (see https://medium.com/@nohanabil/building-a-multilingual-static-website-a-step-by-step-guide-7af238cc8505) DONE
-* short/long descriptions (markdown?) DONE
-* for the links: a simple way to allow any number of links, structured in any way is to allow them to be in the description, simply. DONE
-* only places visible on the map appear on cards! question: should search bar search only visible places or all? should it then dezoom automatically to make them all visible? possible solution: the map is always linked to the visible cards, and vice-versa. changing one must affect the other. DONE
-* map on the place.html page DONE
-* center on lausanne (or cool trick: position the map as to bound neatly all existing places) DONE
-* detail: also search through long descriptions. DONE
+~~* filter by tag -> DONE~~
+~~* english / french (see https://medium.com/@nohanabil/building-a-multilingual-static-website-a-step-by-step-guide-7af238cc8505) DONE~~
+~~* short/long descriptions (markdown?) DONE~~
+~~* for the links: a simple way to allow any number of links, structured in any way is to allow them to be in the description, simply. DONE~~
+~~* only places visible on the map appear on cards! question: should search bar search only visible places or all? should it then dezoom automatically to make them all visible? possible solution: the map is always linked to the visible cards, and vice-versa. changing one must affect the other. DONE~~
+~~* map on the place.html page DONE~~
+~~* center on lausanne (or cool trick: position the map as to bound neatly all existing places) DONE~~
+~~* detail: also search through long descriptions. DONE~~
 
 ## quality of life
 * system for people to input places in a more intuitive format (csv/excel? something else), which is then automatically converted to json. perhaps a github pipeline can help with doing that automatically
 * perhaps: pop up box on markers has more info (image?<>)
 * dark mode? with a toggle? not urgent
 
-* search up to accents (écologie==ecologie) (not urgent) DONE
-* clickable pop-ups? see how smartakartan did it, but basically the user should never be annoyed trying to do something impossible DONE
-* hover on cards shows the corresponding marker on the map DONE
-* clickable tags: selects only this tag in filters. (or, select it on top of already selected ones). also clickable in the place.html page DONE
-* other "reactive" elements, everything should be connected (mainly tags<->markers<-popups>) DONE
-* option to select none (all?) of tags DONE
+~~* search up to accents (écologie==ecologie) (not urgent) DONE~~
+~~* clickable pop-ups? see how smartakartan did it, but basically the user should never be annoyed trying to do something impossible DONE~~
+~~* hover on cards shows the corresponding marker on the map DONE~~
+~~* clickable tags: selects only this tag in filters. (or, select it on top of already selected ones). also clickable in the place.html page DONE~~
+~~* other "reactive" elements, everything should be connected (mainly tags<->markers<-popups>) DONE~~
+~~* option to select none (all?) of tags DONE~~
 
 
 # Deco
@@ -37,7 +37,7 @@
 * careful about the order: maybe strange to have unipoly first? alphabetic instead?
 * logo on the tab
 
-* different color for each tag? obtained by hashing it or something for reproducibility DONE
+~~* different color for each tag? obtained by hashing it or something for reproducibility DONE~~
 
 ## Footer
 Information I want to include (either there if very short, or as link to other page):
@@ -47,7 +47,13 @@ Information I want to include (either there if very short, or as link to other p
 * cookies??? is local-storage actually cookies? if yes, I guess we remove them
 
 # Bugs / Problems
-* places.html doesn't load, error because of 'lat'? happens for "soupe populaire"
+* Affichage place.html sur mobile (card and map should be on top of each other?)
+* Carte qui glitche sur place.html (peut-être un problème de tileset?)
+* modularize map, so that updates apply to index.html and place.html
+* sort out the map zoom, first so that we can zoom if we want but the automatic fitter doesn't, and also so that hovering on many cards different quickly doesn't make us loose focus on previously seen places on the map ("Quand jarrive juste sur la carte, scroll vers les cartes, et alterne hover sur toutes les cartes rapidement, le recentrage de la carte dû aux popups finit par faire disparaitre une des cartes (plus dans le champ de vision)")
+* Ev: Carte trop horizontale, peut-être réfléchir à un autre layout? Ou la rendre fixe et faire que les cartes soient scrollable?
+
+~~* places.html doesn't load, error because of 'lat'? happens for "soupe populaire" DONE~~
 
 # other
 * link to other cool initiatives in lausanne that didn't fit on the card? for example, a site compiling water fountains? or if we want to compile them, perhaps they should be hidden by default
@@ -70,6 +76,7 @@ Information I want to include (either there if very short, or as link to other p
 * ensure places are added quickly and correctly
 * write about and contribute
 * website etc.
+* fix problems (most urgent ones)
 * worry licensing, copyright, etc.
 * worry about having a chart: what's accepted as places? what are our core values, rules?
 * a few new features (url data, structured tags, accessibility)
