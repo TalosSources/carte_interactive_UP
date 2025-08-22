@@ -31,12 +31,12 @@
 
 # Deco
 * unipoly branding
-* link to form to submit places (that we'd add by hand), with an explanation on criteria for the places. also include a form for improvement suggestions? and/or github pull requests? say we're very open to them, we want it to be a participative project, we welcome propositions from anywhere
-* perhaps a small explanation of the project, what's the aim, say it's based on smartakartan
 * make it more beautiful (including but not limited to: change the marker icon, leaflet map theme/appareance (copy smartakartan)).
 * careful about the order: maybe strange to have unipoly first? alphabetic instead?
 * logo on the tab
 
+~~* perhaps a small explanation of the project, what's the aim, say it's based on smartakartan~~
+~~* link to form to submit places (that we'd add by hand), with an explanation on criteria for the places. also include a form for improvement suggestions? and/or github pull requests? say we're very open to them, we want it to be a participative project, we welcome propositions from anywhere~~
 ~~* different color for each tag? obtained by hashing it or something for reproducibility DONE~~
 
 ## Footer
@@ -52,6 +52,7 @@ Information I want to include (either there if very short, or as link to other p
 * modularize map, so that updates apply to index.html and place.html
 * sort out the map zoom, first so that we can zoom if we want but the automatic fitter doesn't, and also so that hovering on many cards different quickly doesn't make us loose focus on previously seen places on the map ("Quand jarrive juste sur la carte, scroll vers les cartes, et alterne hover sur toutes les cartes rapidement, le recentrage de la carte dû aux popups finit par faire disparaitre une des cartes (plus dans le champ de vision)")
 * Ev: Carte trop horizontale, peut-être réfléchir à un autre layout? Ou la rendre fixe et faire que les cartes soient scrollable?
+* display glitchs: for example on the Rustine card, the tags go out of the card.
 
 ~~* places.html doesn't load, error because of 'lat'? happens for "soupe populaire" DONE~~
 
