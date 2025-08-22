@@ -107,3 +107,11 @@ footer {
 #langToggle:hover {
   background-color: #e0e0e0;
 }
+
+main a:link {
+  text-decoration: none;
+}
+
+main a:hover {
+  text-decoration: underline;
+}

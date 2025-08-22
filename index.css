@@ -48,6 +48,7 @@ margin-bottom: 1rem;
 
 .popup-link:hover .popup-card {
   color: #7a9dff;
+  text-decoration: none;
 }
 
 
@@ -137,6 +138,7 @@ color: inherit;
 .card:hover {
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   background-color: #f0f0f0;
+  text-decoration: none;
 }
 .card.highlighted {
   border: 2px solid #70a170;

@@ -48,11 +48,14 @@ if (place) {
     const languageTagsKey = `tags_${currentLang}`;
     const placeDescription = place[languageDescriptionKey] || place[`description`];
     const placeLongDescription = place[languageLongDescriptionKey] || place[`long_description`];
+    const placeWebsite = place[`website`];
     document.getElementById("title").textContent = place.name;
     
     // use HTML for descriptions: richer content
     document.getElementById("description").innerHTML = placeLongDescription || placeDescription || "";
     // document.getElementById("description").textContent = placeDescription || "";
+
+    document.getElementById("website").innerHTML = `<a href="${placeWebsite}">${placeWebsite}</a>` || "";
 
     const img = document.getElementById("image");
     if (place.image) {
