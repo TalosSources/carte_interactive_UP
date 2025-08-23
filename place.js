@@ -52,10 +52,9 @@ if (place) {
     document.getElementById("title").textContent = place.name;
     
     // use HTML for descriptions: richer content
-    document.getElementById("description").innerHTML = placeLongDescription || placeDescription || "";
-    // document.getElementById("description").textContent = placeDescription || "";
-
-    document.getElementById("website").innerHTML = `<a href="${placeWebsite}">${placeWebsite}</a>` || "";
+    document.getElementById("description").innerHTML = placeDescription || "";
+    document.getElementById("website").innerHTML = placeWebsite ? `<a href="${placeWebsite}" data-i18n="website"></a>` : "";
+    document.getElementById("longDescription").innerHTML = placeLongDescription || "";
 
     const img = document.getElementById("image");
     if (place.image) {

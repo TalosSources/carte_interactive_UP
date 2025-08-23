@@ -2,6 +2,9 @@ h1 {
     margin: 1rem 0;
 }
 
+h2, b {
+    margin: 1rem 0;
+}
 /* ---------- */
 main {
     box-sizing: border-box;
@@ -9,4 +12,5 @@ main {
     margin: 2rem auto;
     font-size: 1em;
     line-height: 1.6;
+    margin-bottom: 5rem;
 }
