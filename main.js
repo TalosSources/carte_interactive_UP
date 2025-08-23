@@ -229,9 +229,9 @@ function createCard(place, ldk, ltk) {
         markers.forEach(marker => {
             if (marker[1] === place.id) {
                 console.log("found corresponding marker!")
-                map.options.autoPan = false;
+                // map.options.autoPan = false;
                 marker[0].openPopup();
-                map.options.autoPan = true; 
+                // map.options.autoPan = true; 
                 highlightCardById(place.id, false);
                 // marker[0].getPopup().openOn(map);
             } 
@@ -258,7 +258,7 @@ function renderMarkers() {
             </a>
         `;
         const marker = L.marker([place.lat, place.lng], {icon: greenIcon}).addTo(map)
-            .bindPopup(popupHTML);
+            .bindPopup(popupHTML, {autoPan: false});
         // marker.on('popupopen', () => {
         //     highlightCardById(place.id);
         // })
