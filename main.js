@@ -185,6 +185,9 @@ function createCard(place, ldk, ltk) {
         const img = document.createElement("img");
         img.src = place.image;
         img.alt = place.name;
+        img.onerror = () => {
+            img.remove();
+        };
         card.appendChild(img);
     }
 

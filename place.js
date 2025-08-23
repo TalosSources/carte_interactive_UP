@@ -60,6 +60,9 @@ if (place) {
     if (place.image) {
     img.src = place.image;
     img.alt = place.name;
+    img.onerror = () => {
+        img.style.display = "none";
+    };
     } else {
     img.style.display = "none";
     }
