@@ -54,9 +54,9 @@ function initMap() {
 	    ext: 'png'
     });
 
-    // osm_org.addTo(map);
+    osm_org.addTo(map);
     // stadia_stamenWatercolor.addTo(map);
-    stadia_stamenToner.addTo(map);
+    // stadia_stamenToner.addTo(map);
 
     map.on("moveend", () => {
         console.log("moved!")

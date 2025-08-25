@@ -1,14 +1,9 @@
-fetch('data/places.json')
-.then(response => response.json())
-.then(data => {
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
-const place = data.find(p => p.id == id);
-initMiniMap();
+let map = [];
 
 // TODO: Modularize this one
-function initMiniMap() {
-    map = L.map('map');
+function initMiniMap(place) {
+    let map = L.map('map');
+    // map = L.map('map', {maxZoom: 16}).setView([46.5300, 6.61011], 13);
 
     // ok but not very appealing
     var osm_org = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -30,54 +25,68 @@ function initMiniMap() {
 	    ext: 'png'
     });
 
-    // osm_org.addTo(map);
+    osm_org.addTo(map);
     // stadia_stamenWatercolor.addTo(map);
-    stadia_stamenToner.addTo(map);
+    // stadia_stamenToner.addTo(map);
 
     const marker = L.marker([place.lat, place.lng]).addTo(map)
     const group = new L.featureGroup([marker]);
     // TODO: Max zoom, to avoid getting too close? 
     map.fitBounds(group.getBounds(), { padding: [20, 20] });
-    map.setZoom(16)
+    map.setZoom(16);
+
+    return map;
 }
 
-if (place) {
-    const currentLang = localStorage.getItem('language') || 'fr';
-    const languageDescriptionKey = `description_${currentLang}`;
-    const languageLongDescriptionKey = `long_description_${currentLang}`;
-    const languageTagsKey = `tags_${currentLang}`;
-    const placeDescription = place[languageDescriptionKey] || place[`description`];
-    const placeLongDescription = place[languageLongDescriptionKey] || place[`long_description`];
-    const placeWebsite = place[`website`];
-    document.getElementById("title").textContent = place.name;
-    
-    // use HTML for descriptions: richer content
-    document.getElementById("description").innerHTML = placeDescription || "";
-    document.getElementById("website").innerHTML = placeWebsite ? `<a href="${placeWebsite}" data-i18n="website"></a>` : "";
-    document.getElementById("longDescription").innerHTML = placeLongDescription || "";
+fetch('data/places.json')
+    .then(response => response.json())
+    .then(data => {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+        const place = data.find(p => p.id == id);
 
-    const img = document.getElementById("image");
-    if (place.image) {
-    img.src = place.image;
-    img.alt = place.name;
-    img.onerror = () => {
-        img.style.display = "none";
-    };
-    } else {
-    img.style.display = "none";
-    }
+        if (place) {
+            const currentLang = localStorage.getItem('language') || 'fr';
+            const languageDescriptionKey = `description_${currentLang}`;
+            const languageLongDescriptionKey = `long_description_${currentLang}`;
+            const languageTagsKey = `tags_${currentLang}`;
+            const placeDescription = place[languageDescriptionKey] || place[`description`];
+            const placeLongDescription = place[languageLongDescriptionKey] || place[`long_description`];
+            const placeWebsite = place[`website`];
+            document.getElementById("title").textContent = place.name;
+            
+            // use HTML for descriptions: richer content
+            document.getElementById("description").innerHTML = placeDescription || "";
+            document.getElementById("website").innerHTML = placeWebsite ? `<a href="${placeWebsite}" data-i18n="website"></a>` : "";
+            document.getElementById("longDescription").innerHTML = placeLongDescription || "";
 
-    const placeTags = place[languageTagsKey] || place[`tags`]
-    if (placeTags && placeTags.length) {
-    const tagsDiv = document.getElementById("tags");
-    placeTags.forEach(tag => {
-        const span = document.createElement("span");
-        span.textContent = tag;
-        span.style.backgroundColor = getTagColor(tag);
-        tagsDiv.appendChild(span);
-    });
-    }
-} else {
-    document.body.innerHTML = "<h1>Place not found</h1>";
-}
+            const img = document.getElementById("image");
+            if (place.image) {
+            img.src = place.image;
+            img.alt = place.name;
+            img.onerror = () => {
+                img.style.display = "none";
+            };
+            } else {
+            img.style.display = "none";
+            }
+
+            const placeTags = place[languageTagsKey] || place[`tags`]
+            if (placeTags && placeTags.length) {
+            const tagsDiv = document.getElementById("tags");
+            placeTags.forEach(tag => {
+                const span = document.createElement("span");
+                span.textContent = tag;
+                span.style.backgroundColor = getTagColor(tag);
+                tagsDiv.appendChild(span);
+            });
+            }
+        } else {
+            document.body.innerHTML = "<h1>Place not found</h1>";
+        }
+
+        map = initMiniMap(place);
+        // map.invalidateSize();
+        window.dispatchEvent(new Event('resize'));
+        
 });

@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
   <title data-i18n="place_details"></title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" href="general.css"/>
-  <link rel="stylesheet" href="place.css"/>
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
   />
+  <link rel="stylesheet" href="general.css"/>
+  <link rel="stylesheet" href="place.css"/>
 </head>
 <body>
   <nav id="navbar">
@@ -31,17 +32,21 @@
       <div id="map"></div>
   </main>
 
-  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-  <script src="utils.js"></script>
-  <script src="language.js"></script>
-  <script src="place.js"></script>
-
   <footer>
     <div id="footer-links">
         <a href="about.html" class="footer-link" data-i18n="about"></a>
         <a href="contribute.html" class="footer-link" data-i18n="contribute"></a>
     </div>
   </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script src="utils.js"></script>
+  <script src="language.js"></script>
+  <script src="place.js"></script>
+  <script>
+    map.invalidateSize();
+    console.log("elloo zere");
+  </script>
 
 </body>
 </html>
