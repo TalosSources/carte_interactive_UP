@@ -47,11 +47,11 @@ Information I want to include (either there if very short, or as link to other p
 * cookies??? is local-storage actually cookies? if yes, I guess we remove them
 
 # Bugs / Problems
-* Carte qui glitche sur place.html (peut-être un problème de tileset?)
-* Affichage place.html sur mobile (card and map should be on top of each other?)
-* modularize map, so that updates apply to index.html and place.html
 * Ev: Carte trop horizontale, peut-être réfléchir à un autre layout? Ou la rendre fixe et faire que les cartes soient scrollable?
 
+~~* modularize map, so that updates apply to index.html and place.html~~
+~~* Carte qui glitche sur place.html (peut-être un problème de tileset?)~~
+~~* Affichage place.html sur mobile (card and map should be on top of each other?)~~
 ~~* check that an image request was successful, if not act as if there was no image~~
 ~~* display glitchs: for example on the Rustine card, the tags go out of the card.~~
 ~~* sort out the map zoom, first so that we can zoom if we want but the automatic fitter doesn't, and also so that hovering on many cards different quickly doesn't make us loose focus on previously seen places on the map ("Quand jarrive juste sur la carte, scroll vers les cartes, et alterne hover sur toutes les cartes rapidement, le recentrage de la carte dû aux popups finit par faire disparaitre une des cartes (plus dans le champ de vision)")~~
@@ -76,7 +76,6 @@ Information I want to include (either there if very short, or as link to other p
 
 # TODO Now
 * ensure places are added quickly and correctly
-* fix problems (most urgent ones)
 * worry licensing, copyright, etc.
 * worry about having a chart: what's accepted as places? what are our core values, rules?
 * a few new features (url data, structured tags, accessibility)
