@@ -7,57 +7,7 @@ fetch('data/places.json')
     .then(response => response.json())
     .then(data => {
     allPlaces = data;
-    initMap();
-    renderTagFilters();
-    filterPlaces(); // initial render
-    });
-// var LeafIcon = L.Icon.extend({
-//     options: {
-//         iconSize:     [38, 95],        // taille de l'icône
-//         shadowSize:   [50, 64],        // taille de l'ombre
-//         iconAnchor:   [22, 94],        // point de l'icône correspondant à la position du marqueur
-//         shadowAnchor: [4, 62],         // idem pour l'ombre
-//         popupAnchor:  [-3, -76]        // point à partir duquel la popup s'ouvre par rapport à l'icône
-//     }
-// });
-// var greenIcon = new LeafIcon({
-//     iconUrl: 'https://raw.githubusercontent.com/TalosSources/carte_interactive_UP/refs/heads/static/NEW%20ICON-01.png',
-// });
-var greenIcon = L.icon({
-    iconUrl: 'res/greenIcon.png',
-    iconSize:     [33.45, 54.225],
-    // shadowSize:   [50, 64],
-    iconAnchor:   [16.5, 54.],
-    // shadowAnchor: [4, 62],
-    popupAnchor:  [0, -55],
-});
-function initMap() {
-    map = L.map('map', {maxZoom: 16}).setView([46.5300, 6.61011], 13);
-    
-    // ok but not very appealing
-    var osm_org = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-    });
-
-    // absolutely unusable but very cool
-    var stadia_stamenWatercolor = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.{ext}', {
-        minZoom: 1,
-        maxZoom: 16,
-        attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        ext: 'jpg'
-    });
-
-    var stadia_stamenToner = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.{ext}', {
-	    minZoom: 0,
-	    maxZoom: 20,
-	    attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	    ext: 'png'
-    });
-
-    osm_org.addTo(map);
-    // stadia_stamenWatercolor.addTo(map);
-    // stadia_stamenToner.addTo(map);
-
+    map = initMap();
     map.on("moveend", () => {
         console.log("moved!")
         const bounds = map.getBounds();
@@ -68,10 +18,17 @@ function initMap() {
         renderCards(visiblePlaces);
         // ???
     });
-}
+    renderTagFilters();
+    filterPlaces(); // initial render
+    });
+
 
 function fitMapToPlaces(places) {
   if (places.length === 0) return;
+  if (places.length === 1) {
+    map.setView([places[0].lat, places[0].lng], 16);
+    return;
+  }
   const group = new L.featureGroup(
     places.map(p => L.marker([p.lat, p.lng]))
   );
