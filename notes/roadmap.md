@@ -5,6 +5,8 @@
 * accessibility (need to look up how to do that properly)
 * better mobile support
 * nice place-holder for missing items, especially image. perhaps a "image-like" css element with the name or initials or smtg else?
+* sort tags, either alphabetically, or smarter, using the amount of places that have this tag, so the most useful tags appear first.
+* worry about performances: use smaller version of images, perhaps eco-mode etc.
 
 
 ~~* filter by tag -> DONE~~
