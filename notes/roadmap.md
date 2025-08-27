@@ -1,6 +1,6 @@
 # Features
 * website, perhaps adress (or descriptive place name, like a neighborhood or street or smtg)? perhaps we should ditch lat/long and replace them with addresses, and use some API to fetch the leaflet pos? or maybe leaflet does it?
-* structured tags. this could go very far, with type theory stuff. But as a beginning, there can be categories (which are predefined, and adding a new one is a developer's decision), and tags which are multiple. Then categories are selected separately from tags. They could be food, objects, third places, ... also another idea, allow an option "OR" / "AND" (way to combine multiple selected tags)
+* structured tags. this could go very far, with type theory stuff. But as a beginning, there can be categories (which are predefined, and adding a new one is a developer's decision), and tags which are multiple. Then categories are selected separately from tags. They could be food, objects, third places, ... also another idea, allow an option "OR" / "AND" (way to combine multiple selected tags). And continuing that, if we have carefully selected tags, we may have an algebraic/semantic system for tags, where for example, some super-tags exist that combine others: we would I guess manually add the tag "food" that wouldn't necessarily be featured in any specific place, but would gather places with sub-tags such as bakery, restaurant, local produce, etc. 
 * store the filter info somewhere. it could be in local storage. It could also be in the url, which would have the additional advantage of being shareable (can share a link with all thriftstores in lausanne!). also, perhaps there's an UI thing here where people don't understand that clicking on a card will lead to another page. Perhaps having that clicking on the card highlights it, and opens the corresponding popup, while a button "more information" leads to the place page. Need feedback for that, but it would at least make more sense to me, even if it doesn't lead to more efficient interaction. indeed the current hover-highlight-popup-interaction solution is a bit unsatisfying, as highlightling is lost for below cards as the mouse must go over higher cards, triggering their highlighting instead.
 * accessibility (need to look up how to do that properly)
 * better mobile support
@@ -36,6 +36,7 @@
 * make it more beautiful (including but not limited to: change the marker icon, leaflet map theme/appareance (copy smartakartan)).
 * careful about the order: maybe strange to have unipoly first? alphabetic instead?
 * logo on the tab
+* map looks bad on mobile
 
 ~~* perhaps a small explanation of the project, what's the aim, say it's based on smartakartan~~
 ~~* link to form to submit places (that we'd add by hand), with an explanation on criteria for the places. also include a form for improvement suggestions? and/or github pull requests? say we're very open to them, we want it to be a participative project, we welcome propositions from anywhere~~
@@ -49,6 +50,8 @@ Information I want to include (either there if very short, or as link to other p
 * cookies??? is local-storage actually cookies? if yes, I guess we remove them
 
 # Bugs / Problems
+* website appears only after refresh
+* what to do when places are very close on the map (e.g. satellite/unipoly)
 * Ev: Carte trop horizontale, peut-être réfléchir à un autre layout? Ou la rendre fixe et faire que les cartes soient scrollable?
 
 ~~* modularize map, so that updates apply to index.html and place.html~~
