@@ -72,6 +72,7 @@ Information I want to include (either there if very short, or as link to other p
 * should we contact the people we mapped?
 * add english to descriptions and tags
 * add websites, etc.
+* add the map of trees at epfl (See email)
 
 # Misc from smartakartan
 * several places per "initiative" (they mapped microwaves on KTH campus)
