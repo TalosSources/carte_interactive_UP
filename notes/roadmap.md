@@ -7,6 +7,7 @@
 * nice place-holder for missing items, especially image. perhaps a "image-like" css element with the name or initials or smtg else?
 * sort tags, either alphabetically, or smarter, using the amount of places that have this tag, so the most useful tags appear first.
 * worry about performances: use smaller version of images, perhaps eco-mode etc.
+* find a way to collect visit stats, and ideally even place clicks (what place got visited most often), but I guess relatively hard to do by remaining static. perhaps can be done harnessing the power of inmk/apache
 
 
 ~~* filter by tag -> DONE~~
