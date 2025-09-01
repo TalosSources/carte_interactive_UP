@@ -126,20 +126,6 @@
       "id":"Breche"
     },
     {
-      "name": "Espace autogéré",
-      "description_fr": "Lieu anarchiste autogéré",      
-      "description_en": "Self-managed anarchist place",  
-      "long_description_fr": "Lieu anarchiste qui lutte contre les oppressions systémiques, la hiérarchie et l’autorité, à l’intérieur comme à l’extérieur de ses murs.",
-      "long_description_en": "An anarchist place that fights against systemic oppression, hierarchy and authority, inside and outside its walls.",
-      "lat": 46.52249253500682,
-      "lng": 6.638034834552859,
-      "tags_fr": ["anarchiste"],
-      "tags_en": ["anarchist"],
-      "website": "https://espaceautogere.squat.net/",
-      "image": " https://espaceautogere.squat.net/wp-content/uploads/espaceautogere/2019/10/arrose2.gif",
-      "id":"Espace_autogere"
-    },
-    {
       "name": "Bibliothèque Chauderon",
       "description_fr": "Bibliothèque",
       "description_en": "Library",
@@ -347,5 +333,61 @@
       "website": "https://oblo.ch/",
       "image": "https://oblo.ch/assets/images/logo.avif",
       "id":"oblo"
+    },
+    {
+      "name": "LA PEL'",
+      "description_fr": "Association de permaculture et jardin",
+      "description_en": "Permaculture association and garden",
+      "long_description_fr": "L’Association de Permaculture Estudiantine Lausannoise (LA PEL’) est une association créée en 2013. Elle a pour missions de faire connaitre la permaculture et de partager des connaissances et réflexions sur différentes thématiques en lien avec la recherche de mode de vie durable. La PEL’ organise pour cela diverses activités : journées de jardinage sur notre terrain, visites chez des permaculteurs-trices, ballade de plantes sauvages commestibles, Cours de Design en Permaculture (CDP), projections de films, conférences…",
+      "long_description_en": "The Lausanne Student Permaculture Association (LA PEL’) is an association created in 2013. Its mission is to raise awareness of permaculture and share knowledge and ideas on various topics related to the search for sustainable lifestyles. To this end, LA PEL’ organises various activities: gardening days on our land, visits to permaculturists, walks to discover edible wild plants, Permaculture Design Courses (PDCs), film screenings, conferences, and more.",
+      "lat": 46.52207267264375,
+      "lng": 6.576567292723612,
+      "tags_fr": ["permaculture", "étudiant"],
+      "tags_en": ["permaculture", "student"],
+      "website": "https://www.asso-unil.ch/lapel/",
+      "image": "https://www.asso-unil.ch/lapel/files/2015/10/P6308858.jpg",
+      "id":"lapel"
+    },
+    {
+      "name": "UPFL",
+      "description_fr": "Friperie étudiante",
+      "description_en": "Student-led thrift shop",
+      "long_description_fr": "UPFL est le pôle d'Unipoly qui gère une friperie! Des articles de seconde main sont disponibles les mercredis soir, des ateliers de réparation et upcycling sont proposés, et des évènements sont organisés.",
+      "long_description_en": "UPFL is the Unipoly pole that runs a second-hand clothing shop! Second-hand items are available on Wednesday evenings, repair and upcycling workshops are offered, and events are organised.",
+      "lat": 46.524193978895546,
+      "lng": 6.574535119283519,
+      "tags_fr": ["étudiant", "seconde main", "friperie", "réparation"],
+      "tags_en": ["student", "second hand", "thrift shop", "repairs"],
+      "website": "https://unipoly.ch/unipoly-fashion-lab/",
+      "image": "https://unipoly.ch/wp-content/uploads/2021/09/Capture-decran-2021-09-08-a-18.08.59.png",
+      "id":"upfl"
+    },
+    {
+      "name": "Poseidon",
+      "description_fr": "Help-Desk et atelier électronique pour les étudiants de l'EPFL, l'Unil et l'HEIG-VD",
+      "description_en": "Help-Desk and electronic workshop for EPFL, Unil and HEIG-VD students",
+      "long_description_fr": "Poseidon est le help-desk de l'EPFL, complètement gratuit pour les étudiants de l'EPFL, de l'Unil et de l'HEIG-VD. Iels peuvent répondre à des questions hardware ou software, aider à résoudre tout type de problème, réparer un appareil électronique, ou t'aider à le faire. Tous les outils sont à disposition, donc tu peux faire la réparation toi-même si tu sais comment faire.",
+      "long_description_en": "Poseidon is EPFL's help desk, completely free for students at EPFL, Unil and HEIG-VD. They can answer questions about hardware or software, help solve any kind of problem, repair an electronic device, or help you do it yourself. All the tools are available, so you can do the repair yourself if you know how.",
+      "lat": 46.52014993044195,
+      "lng": 6.568015562836105,
+      "tags_fr": ["étudiant", "réparation", "électronique"],
+      "tags_en": ["student", "repairs", "electronics"],
+      "website": "https://www.epfl.ch/campus/services/en/it-services/discount-and-loan-for-personnal-computers/support/",
+      "image": "https://www.epfl.ch/campus/services/wp-content/uploads/2018/10/image-support-1.jpg",
+      "id":"poseidon"
+    },
+    {
+      "name": "Fix&Replace",
+      "description_fr": "Repair café étudiant",
+      "description_en": "Student-led repair café",
+      "long_description_fr": "Fix&Replace est un pôle d'Unipoly qui organise des repair cafés tous les premiers jeudis du mois. Tu peux venir avec n'importe quel objet ou vêtement abîmé et les bénévoles tenteront avec toi de les réparer avec tous les outils fournis sur place.",
+      "long_description_en": "Fix&Replace is a pole of Unipoly that organises repair cafés on the first Thursday of every month. You can bring along any damaged items or clothing, and volunteers will help you repair them using the tools provided on site.",
+      "lat": 46.518972850815025,
+      "lng": 6.565280049718602,
+      "tags_fr": ["étudiant", "réparation"],
+      "tags_en": ["student", "repairs"],
+      "website": "https://unipoly.ch/fix_n_replace/",
+      "image": "https://unipoly.ch/wp-content/uploads/2023/02/photo_2023-02-20_13-45-43-1024x1024.jpg",
+      "id":"fixnreplace"
     }
 ]

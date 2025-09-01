@@ -37,17 +37,21 @@ function fitMapToPlaces(places) {
 }
 
 function renderTagFilters() {
-    const tagsSet = new Set();
+    const tagCounts = {};
     allPlaces.forEach(p => {
         const currentLang = localStorage.getItem('language') || 'fr';
         const languageTagsKey = `tags_${currentLang}`;
         placeTags = p[languageTagsKey] || p[`tags`]
-        placeTags && placeTags.forEach(t => tagsSet.add(t))
+        placeTags && placeTags.forEach(t => {
+            tagCounts[t] = (tagCounts[t] || 0) + 1;
+        })
     });
-//   const tags = Array.from(tagsSet).sort().slice(0, 20); // limit to 20
+    const sortedTags = Object.entries(tagCounts)
+        .sort((a, b) => b[1] - a[1])
+        .map(entry => entry[0]);
     const tagsFilter = document.getElementById("tagsFilter");
     tagsFilter.innerHTML = ""; // Clear if re-rendering
-    tagsSet.forEach(tag => {
+    sortedTags.forEach(tag => {
         const label = document.createElement("label");
         label.style.backgroundColor = getTagColor(tag);
         const input = document.createElement("input");
