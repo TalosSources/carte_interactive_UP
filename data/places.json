@@ -390,4 +390,60 @@
       "image": "https://unipoly.ch/wp-content/uploads/2023/02/photo_2023-02-20_13-45-43-1024x1024.jpg",
       "id":"fixnreplace"
     }
+    {
+      "name": "Librairie de la Louve",
+      "description_fr": "Librairie de seconde main",
+      "description_en": "Secondhand bookstore",
+      "long_description_fr": ".",
+      "long_description_en": ".",
+      "lat": 46.521798418613024,
+      "lng": 6.632464371458499,
+      "tags_fr": ["seconde main", "bibliothèque"],
+      "tags_en": ["second hand", "library"],
+      "website": "https://www.librairiedelalouve.ch/",
+      "image": "https://static.lausanne-tourisme.ch/image/upload/f_auto,w_2500/J7c4Mlfiu9EIKQFP2Frtdk68vpHW4XLQtTQGoOFG",
+      "id":"librairiedelalouve"
+    }
+    {
+      "name": "Pavillon RebuiLT",
+      "description_fr": "Pavillion low-tech construit par des étudiant·e·x·s",
+      "description_en": "Low-tech pavilion built by students",
+      "long_description_fr": ".",
+      "long_description_en": ".",
+      "lat":  46.531349341933726, 
+      "lng": 6.566737294369748,
+      "tags_fr": ["étudiant", "collectif"],
+      "tags_en": ["student", "collective"],
+      "website": "https://rebuilt.cargo.site/",
+      "image": "https://freight.cargo.site/w/600/q/75/i/d962282fd21f8ef6fb035bdb4f254a409e1ce4638cf46dc927a41e25e11a00b0/2025_rebuiLT_SoleneHoffmann__15.jpg",
+      "id":"pavillionrebuild"
+    }
+      {
+      "name": "Pôle Sud",
+      "description_fr": "centre socio-culturel de l'Union Syndicale Vaudoise",
+      "description_en": "Union Syndicale Vaudoise Socio-Cultural Center",
+      "long_description_fr": ".",
+      "long_description_en": ".",
+      "lat":  46.52046614626582, 
+      "lng": 6.6292159586237546,
+      "tags_fr": ["association", "collectif", "théâtre"],
+      "tags_en": ["association", "collective", "theater"],
+      "website": "https://polesud.ch/",
+      "image": "https://polesud.ch/wp-content/uploads/2022/04/cropped-Polesud-logo-768x232.png",
+      "id":"polesud"
+    }
+    {
+      "name": "La Molène",
+      "description_fr": "Bibliothèque queer-féministe autogérée",
+      "description_en": "Self-managed queer-feminist library",
+      "long_description_fr": ".",
+      "long_description_en": ".",
+      "lat": 46.53054720945398, 
+      "lng": 6.621922461640008,
+      "tags_fr": ["association", "bibliothèque"],
+      "tags_en": ["association", "library"],
+      "website": "https://bibliolamolene.noblogs.org/",
+      "image": "https://bibliolamolene.noblogs.org/files/2024/03/cropped-molene_photo_1.jpg",
+      "id":"lamolene"
+    }
 ]
