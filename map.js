@@ -22,9 +22,16 @@ function initMap(maxZoom = 17) {
 	    ext: 'png'
     });
 
-    osm_org.addTo(map);
+    var CartoDB_VoyagerLabelsUnder = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
+    });
+
+    // osm_org.addTo(map);
     // stadia_stamenWatercolor.addTo(map);
     // stadia_stamenToner.addTo(map);
+    CartoDB_VoyagerLabelsUnder.addTo(map);
 
     return map;
 }
