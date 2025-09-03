@@ -389,7 +389,7 @@
       "website": "https://unipoly.ch/fix_n_replace/",
       "image": "https://unipoly.ch/wp-content/uploads/2023/02/photo_2023-02-20_13-45-43-1024x1024.jpg",
       "id":"fixnreplace"
-    }
+    },
     {
       "name": "Librairie de la Louve",
       "description_fr": "Librairie de seconde main",
@@ -403,7 +403,7 @@
       "website": "https://www.librairiedelalouve.ch/",
       "image": "https://static.lausanne-tourisme.ch/image/upload/f_auto,w_2500/J7c4Mlfiu9EIKQFP2Frtdk68vpHW4XLQtTQGoOFG",
       "id":"librairiedelalouve"
-    }
+    },
     {
       "name": "Pavillon RebuiLT",
       "description_fr": "Pavillion low-tech construit par des étudiant·e·x·s",
@@ -417,7 +417,7 @@
       "website": "https://rebuilt.cargo.site/",
       "image": "https://freight.cargo.site/w/600/q/75/i/d962282fd21f8ef6fb035bdb4f254a409e1ce4638cf46dc927a41e25e11a00b0/2025_rebuiLT_SoleneHoffmann__15.jpg",
       "id":"pavillionrebuild"
-    }
+    },
       {
       "name": "Pôle Sud",
       "description_fr": "centre socio-culturel de l'Union Syndicale Vaudoise",
@@ -431,7 +431,7 @@
       "website": "https://polesud.ch/",
       "image": "https://polesud.ch/wp-content/uploads/2022/04/cropped-Polesud-logo-768x232.png",
       "id":"polesud"
-    }
+    },
     {
       "name": "La Molène",
       "description_fr": "Bibliothèque queer-féministe autogérée",
@@ -445,5 +445,187 @@
       "website": "https://bibliolamolene.noblogs.org/",
       "image": "https://bibliolamolene.noblogs.org/files/2024/03/cropped-molene_photo_1.jpg",
       "id":"lamolene"
-    }
+    },
+    {
+    "name": "Graine Urbaine",
+    "description_fr": "Atelier et pépinière urbaine",
+    "description_en": "Urban workshop and nursery",
+    "long_description_fr": "Un espace qui mélange jardinage, ateliers pratiques et sensibilisation à l’écologie urbaine. On y apprend à cultiver en ville et à partager des savoirs sur la nature.",
+    "long_description_en": "A place combining gardening, hands-on workshops and urban ecology awareness. It’s about growing in the city and sharing knowledge about nature.",
+    "lat": 46.528446973674114, 
+    "lng": 6.626751760408851,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "https://www.graineurbaine.ch/",
+    "image": "https://static.wixstatic.com/media/a38c06_8447e8ee560c49baa796c52dff64edbc~mv2.jpg/v1/fill/w_660,h_1605,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/a38c06_8447e8ee560c49baa796c52dff64edbc~mv2.jpg",
+    "id":"graineurbaine"
+  },
+  {
+    "name": "La Demeure (Les Lents)",
+    "description_fr": "Coloc autogérée et espace culturel",
+    "description_en": "Self-managed shared house and cultural space",
+    "long_description_fr": "Une maison partagée où se croisent projets collectifs, événements culturels et vie en communauté. L’esprit est collaboratif et convivial.",
+    "long_description_en": "A shared home hosting collective projects, cultural events and community life. The atmosphere is collaborative and welcoming.",
+    "lat": 46.52531628914188,
+    "lng": 6.602072406106606,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "https://www.leslents.ch/la-demeure/",
+    "image": "https://www.leslents.ch/wp-content/uploads/2021/04/Visuel-projets2.png",
+    "id":"lademeure"
+  },
+  {
+    "name": "Espace 44",
+    "description_fr": "Atelier et galerie associative",
+    "description_en": "Artist-run studio and gallery",
+    "long_description_fr": "Ce lieu accueille des artistes et propose des expositions régulières. On y découvre une scène créative locale, dans un cadre simple et ouvert.",
+    "long_description_en": "Hosting artists and regular exhibitions, it’s a place to discover the local creative scene in a friendly, down-to-earth setting.",
+    "lat": 46.531296494014654, 
+    "lng": 6.621042796486417,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "https://espace44.ch/",
+    "image": "https://espace44.ch/wp-content/uploads/fly-images/293/image-1000x99999.jpeg",
+    "id":"espace44"
+  },
+  {
+    "name": "Globlivre",
+    "description_fr": "Librairie d’occasion internationale",
+    "description_en": "International second-hand bookstore",
+    "long_description_fr": "Un magasin spécialisé dans les livres d’occasion en plusieurs langues. On y trouve de tout, des classiques aux raretés, à petit prix.",
+    "long_description_en": "A shop specialized in second-hand books in multiple languages. You can find everything from classics to rarities, all at affordable prices.",
+    "lat": 46.53728543159219, 
+    "lng": 6.583625117709007,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "https://www.globlivres.ch/fr/",
+    "image": "https://www.globlivres.ch/static/images/logo.png",
+    "id":"globlivre"
+  },
+  {
+    "name": "Bureau Culturel Vaud",
+    "description_fr": "Service de soutien culturel",
+    "description_en": "Cultural support office",
+    "long_description_fr": "Une structure qui accompagne artistes et associations dans leurs projets. Conseils, informations et aides pratiques sont proposés gratuitement.",
+    "long_description_en": "A structure supporting artists and associations with their projects. It provides advice, information and practical assistance for free.",
+    "lat": 46.52215116503233, 
+    "lng": 6.635215562568837,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "http://lebureauculturel.ch/",
+    "image": "",
+    "id":"bureauculturelvaud"
+  },
+  {
+    "name": "La Trouvaille",
+    "description_fr": "Boutique de seconde main",
+    "description_en": "Second-hand shop",
+    "long_description_fr": "Une ressourcerie conviviale où l’on chine vêtements, objets et meubles à prix accessibles. C’est aussi un lieu qui encourage la réutilisation.",
+    "long_description_en": "A friendly thrift store offering clothes, objects and furniture at accessible prices. It also promotes reuse and sustainable living.",
+    "lat": 46.518856859665014, 
+    "lng": 6.511746726205464,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "https://www.safmorges.ch/saf/la-trouvaille",
+    "image": "https://www.safmorges.ch/images/bandeaux/saf_bandeau.jpg",
+    "id":"latrouvaille"
+  },
+  {
+    "name": "Le Récupol’",
+    "description_fr": "Atelier de récupération et recyclage",
+    "description_en": "Recycling and upcycling workshop",
+    "long_description_fr": "Ici on donne une nouvelle vie aux matériaux et objets récupérés. Un lieu d’expérimentation pour bricoler et réduire les déchets.",
+    "long_description_en": "A place where recovered materials and objects are given new life. It’s a hands-on workshop for tinkering and reducing waste.",
+    "lat": 46.52373640878044, 
+    "lng": 6.58431570233444,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "https://fae-unil.ch/recupol-2/",
+    "image": "https://fae-unil.ch/wp-content/uploads/2024/11/post-insta-1.png",
+    "id":"recupol"
+  },
+  {
+    "name": "Librairie Basta!",
+    "description_fr": "Librairie indépendante engagée",
+    "description_en": "Independent and activist bookstore",
+    "long_description_fr": "Un lieu où trouver des livres critiques, politiques et alternatifs. C’est aussi un espace d’échanges autour d’idées et de luttes actuelles.",
+    "long_description_en": "A bookstore focused on critical, political and alternative publications. It also serves as a meeting place for discussion and current struggles.",
+    "lat": 46.52,
+    "lng": 6.63,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "",
+    "image": "",
+    "id":"basta"
+  },
+  {
+    "name": "Makerspace Renens",
+    "description_fr": "Atelier partagé de fabrication",
+    "description_en": "Shared makerspace workshop",
+    "long_description_fr": "Un espace collaboratif équipé d’outils et de machines pour créer, réparer ou inventer. Ouvert à tous ceux qui veulent apprendre en faisant.",
+    "long_description_en": "A collaborative space with tools and machines for creating, repairing and inventing. Open to anyone who wants to learn by making.",
+    "lat": 46.52,
+    "lng": 6.60,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "",
+    "image": "",
+    "id":"makerspacerenens"
+  },
+  {
+    "name": "La Fièvre",
+    "description_fr": "Salle de concerts indépendante",
+    "description_en": "Independent live music venue",
+    "long_description_fr": "Un lieu dédié à la musique live, avec une programmation variée et alternative. L’ambiance est intime, portée par la passion des bénévoles.",
+    "long_description_en": "A space dedicated to live music with a diverse, alternative lineup. The atmosphere is intimate and driven by volunteer passion.",
+    "lat": 46.52,
+    "lng": 6.63,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "",
+    "image": "",
+    "id":"lafievre"
+  },
+  {
+    "name": "Dépôt-Vente d’Instruments de Musique, Ivan Prokofieff",
+    "description_fr": "Magasin d’instruments d’occasion",
+    "description_en": "Second-hand instrument shop",
+    "long_description_fr": "Une adresse connue pour acheter, vendre ou échanger des instruments de musique. Chaque instrument a une histoire et une nouvelle vie possible.",
+    "long_description_en": "A well-known spot to buy, sell or trade musical instruments. Each instrument carries a story and a chance for a new life.",
+    "lat": 46.52,
+    "lng": 6.63,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "",
+    "image": "",
+    "id":"prokofieff"
+  },
+  {
+    "name": "Le Jardin Vivant",
+    "description_fr": "Jardin pédagogique et associatif",
+    "description_en": "Educational and community garden",
+    "long_description_fr": "Un espace vert animé par des ateliers, des visites et des projets collectifs. On y découvre la biodiversité et le plaisir de cultiver ensemble.",
+    "long_description_en": "A green space with workshops, visits and collective projects. It’s about discovering biodiversity and the joy of growing together.",
+    "lat": 46.52,
+    "lng": 6.63,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "",
+    "image": "",
+    "id":"lejardinvivant"
+  },
+  {
+    "name": "Espace Dickens",
+    "description_fr": "Centre culturel et associatif",
+    "description_en": "Cultural and community center",
+    "long_description_fr": "Ce lieu accueille des activités culturelles, sociales et communautaires. On y trouve une programmation variée et des événements ouverts à tous.",
+    "long_description_en": "Hosting cultural, social and community activities, it offers a diverse program and events open to everyone.",
+    "lat": 46.52,
+    "lng": 6.63,
+    "tags_fr": [],
+    "tags_en": [],
+    "website": "",
+    "image": "",
+    "id":"espacedickens"
+  }
 ]
