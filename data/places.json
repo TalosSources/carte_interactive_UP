@@ -1,19 +1,5 @@
 [
     {
-      "name": "Unipoly",
-      "description_fr": "L'association sur les campus Unil+EPFL pour une écologie solidaire",
-      "description_en": "The association on Unil+EPFL campuses for a social ecology",
-      "long_description_fr": "L’association Unipoly vise à sensibiliser et amorcer la discussion sur des sujets sociétaux liés à l’écologie avec les étudiant·e·x·s de l’UNIL et de l’EPFL et à porter  les intérêts écologistes auprès des administrations de nos écoles.<br>Nos activités sont diverses, allant d’organiser des repas à base de nourriture invendue, jusqu’à animer une conférence d’une célèbre économiste, en passant par s’occuper de ruches d’abeilles et tenir un journal estudiantin, il y a toujours de quoi faire !<br>A travers les projets du comité de direction de l’association, et la dizaine de pôles menant à bien leurs activités de manière autonome, Unipoly cherche à offrir aux étudiant·e·x·s la meilleure plateforme possible pour mettre en pratique leur intérêt pour l’écologie et les questions sociétales.",
-      "long_description_en": "The Unipoly association aims to raise awareness and initiate discussion on societal issues related to ecology with students at UNIL and EPFL and to bring ecological interests to the administrations of our schools.<br>Our activities are diverse, ranging from organizing meals with unsold food, to hosting a lecture by a famous economist, to taking care of beehives and keeping a student newspaper, there is always something to do!<br>Through the projects of the association’s steering committee, and the ten or so poles carrying out their activities autonomously, Unipoly seeks to offer students the best possible platform to put into practice their interest in ecology and societal issues.",
-      "lat": 46.52048,
-      "lng": 6.567861,
-      "tags_fr": ["association", "étudiant"],
-      "tags_en": ["association", "student"],
-      "website": "https://unipoly.ch",
-      "image": "https://unipoly.ch/wp-content/uploads/2021/09/logo_banniere_vert_alpha-1536x478.png",
-      "id":"unipoly"
-    },
-    {
       "name": "Point Bleu",
       "description_fr": "Magasin d'objets de seconde main",
       "description_en": "Second-hand objects shop",
@@ -70,20 +56,6 @@
       "id":"Point_Velo"
     },
     {
-      "name": "La Luncheonette",
-      "description_fr": "Restauration saine et durable",
-      "description_en": "Healthy and sustainable food",
-      "long_description_fr": "La Luncheonette te propose tes plats préférés avec des ingrédients de qualité, dans une version saine et équilibrée.",
-      "long_description_en": "La Luncheonette offers your favourite dishes made with quality ingredients, in a healthy and balanced version.",
-      "lat": 46.52149044243666, 
-      "lng": 6.6323536435563035,
-      "tags_fr": ["vegan", "à manger"],
-      "tags_en": ["vegan", "food"],
-      "website": "https://www.luncheonette.ch/",
-      "image": "https://www.lausanneatable.ch/wp-content/uploads/2023/07/358123721_1018360792869717_3815462976230020703_n.webp",
-      "id":"Luncheonette"
-    },
-    {
       "name": "La Rustine",
       "description_fr": "Atelier vélo autogéré",
       "description_en": "self-managed bicycle workshop",
@@ -96,20 +68,6 @@
       "website": "https://www.larustine.bike/",
       "image": "https://www.larustine.bike/images/sticker_fin.jpg",
       "id":"Rustine"
-    },
-    {
-      "name": "Jardin aux mille mains",
-      "description_fr": "Jardin en permaculture autogéré",
-      "description_en": "Self-managed permaculture garden",
-      "long_description_fr": "Un espace collectif autogéré ouvert à touxtes qui s’inspire des principes de la permaculture.",
-      "long_description_en": "A self-managed collective space open to all, inspired by the principles of permaculture.",
-      "lat": 46.536250289595955,
-      "lng": 6.667031799446725,
-      "tags_fr": ["permaculture", "collectif"],
-      "tags_en": ["permaculture", "collective"],
-      "website": "https://www.1000mains.ch/",
-      "image": " https://www.1000mains.ch/wp-content/uploads/Jardinaux1000mains_general-1.jpg",
-      "id":"Jardin_mille_mains"
     },
     {
       "name": "La Brèche",
@@ -126,20 +84,6 @@
       "id":"Breche"
     },
     {
-      "name": "Bibliothèque Chauderon",
-      "description_fr": "Bibliothèque",
-      "description_en": "Library",
-      "long_description_fr": "Bibliothèque super sympa avec peu de place pour travailler mais moins fréquentée donc idéale pour bien se concentrer.",
-      "long_description_en": "Super cool library with little room to work, but less crowded so ideal for concentrating.",
-      "lat": 46.523464968942335,
-      "lng": 6.62513688161125,
-      "tags_fr": ["bibliothèque", "livres"],
-      "tags_en": ["library", "books"],
-      "website": "https://www.lausanne.ch/vie-pratique/culture/bibliotheques-et-archives/bibliotheques/sites-et-horaires/bibliotheque-chauderon.html",
-      "image": " https://www.lausanne.ch/.imaging/mte/lausanne/original/website/lausanne/vie-pratique/culture/bibliotheques-et-archives/bibliotheques/sites-et-horaires/bibliotheque-chauderon/contentAutogenerated/autogeneratedContainer/col1/0/simpleCarouselList/0/import/bibliotheque-chauderon-5651.2018-05-17-13-24-18.jpg",
-      "id":"Biblio_Chauderon"
-    },
-    {
       "name": "Bibliothèque Rumine",
       "description_fr": "Bibliothèque et muséum",
       "description_en": "Library and museum",
@@ -154,18 +98,46 @@
       "id":"Biblio_Rumine"
     },
     {
-      "name": "La Soupe Populaire",
-      "description_fr": "Distribution gratuite de repas",
-      "description_en": "Soup Kitchen, with free meal distributions",
-      "long_description_fr": "Distribution chaque soir et cinq midis par semaine d'un repas complet et entièrement gratuit. Toutes et tous y sont les bienvenu•e•s ! Besoin de bénévoles pour les services!",
-      "long_description_en": "Every evening and five lunches a week, a complete meal is provided, entirely free of charge. Everyone is welcome! Volunteers needed for services!",
-      "lat": 46.52193627228531,
-      "lng": 6.637337388513714,
-      "tags_fr": ["à manger"],
-      "tags_en": ["food"],
-      "website": "https://www.lausanne.ch/prestations/inclusion-et-actions-sociales-de-proximite/soupe-populaire.html",
-      "image": " https://cdn.unitycms.io/images/9iKFgXJNKlIBm-Oh_oNsgR.jpg?op=ocroped&val=1920,1281,1000,1000,0,0&sum=yXaFGkeMTLk",
-      "id":"Soupe_pop"
+      "name": "Axécycle",
+      "description_fr": "Atelier cycliste participatif",
+      "description_en": "Participatory bicycle workshop",
+      "long_description_fr": "Nous sommes un atelier cycliste ouvert à tout·e·s. Nous vous apprenons à entretenir votre vélo, et remettons en service ceux abandonnés en faisant au maximum de recyclage de pièces de seconde main, pour les remettre en circulation!",
+      "long_description_en": "We are a bicycle workshop open to everyone. We teach you how to maintain your bicycle and refurbish abandoned ones, recycling as many second-hand parts as possible to get them back on the road!",
+      "lat": 46.52457194190406,
+      "lng": 6.633571193962201,
+      "tags_fr": ["association", "vélo", "réparation"],
+      "tags_en": ["association", "bicycle", "repairs"],
+      "website": "https://axecycle.ch/",
+      "image": "https://axecycle.ch/media/images/logo.png",
+      "id":"axecycle"
+    },
+    {
+      "name": "Zelig",
+      "description_fr": "Le bar étudiant de l'Unil",
+      "description_en": "Unil's Student bar",
+      "long_description_fr": "Bar et lieu de vie étudiant associatif autogéré dans le bâtiment Géopolis de l'Unil, qui se veut un lieu de rencontre pour les étudiants. Concerts, expositions, jeux sociaux, petite bibliothèque et de bonnes bières sont disponibles.",
+      "long_description_en": "A bar and student social space run by students in the Géopolis building at the University of Lausanne, designed as a meeting place for students. Concerts, exhibitions, social games, a small library and good beers are available.",
+      "lat": 46.525999450956036,
+      "lng": 6.580033611104894,
+      "tags_fr": ["association", "bar", "étudiant", "musique"],
+      "tags_en": ["association", "bar", "student", "music"],
+      "website": "https://www.zelig.ch/",
+      "image": "https://www.zelig.ch/wp-content/uploads/2018/05/Logo-1-2.png",
+      "id":"zelig"
+    },
+    {
+      "name": "Unipoly",
+      "description_fr": "L'association sur les campus Unil+EPFL pour une écologie solidaire",
+      "description_en": "The association on Unil+EPFL campuses for a social ecology",
+      "long_description_fr": "L’association Unipoly vise à sensibiliser et amorcer la discussion sur des sujets sociétaux liés à l’écologie avec les étudiant·e·x·s de l’UNIL et de l’EPFL et à porter  les intérêts écologistes auprès des administrations de nos écoles.<br>Nos activités sont diverses, allant d’organiser des repas à base de nourriture invendue, jusqu’à animer une conférence d’une célèbre économiste, en passant par s’occuper de ruches d’abeilles et tenir un journal estudiantin, il y a toujours de quoi faire !<br>A travers les projets du comité de direction de l’association, et la dizaine de pôles menant à bien leurs activités de manière autonome, Unipoly cherche à offrir aux étudiant·e·x·s la meilleure plateforme possible pour mettre en pratique leur intérêt pour l’écologie et les questions sociétales.",
+      "long_description_en": "The Unipoly association aims to raise awareness and initiate discussion on societal issues related to ecology with students at UNIL and EPFL and to bring ecological interests to the administrations of our schools.<br>Our activities are diverse, ranging from organizing meals with unsold food, to hosting a lecture by a famous economist, to taking care of beehives and keeping a student newspaper, there is always something to do!<br>Through the projects of the association’s steering committee, and the ten or so poles carrying out their activities autonomously, Unipoly seeks to offer students the best possible platform to put into practice their interest in ecology and societal issues.",
+      "lat": 46.52048,
+      "lng": 6.567861,
+      "tags_fr": ["association", "étudiant"],
+      "tags_en": ["association", "student"],
+      "website": "https://unipoly.ch",
+      "image": "https://unipoly.ch/wp-content/uploads/2021/09/logo_banniere_vert_alpha-1536x478.png",
+      "id":"unipoly"
     },
     {
       "name": "ÄSS BAR",
@@ -209,20 +181,6 @@
       "id":"gloryland"
     },
     {
-      "name": "Axécycle",
-      "description_fr": "Atelier cycliste participatif",
-      "description_en": "Participatory bicycle workshop",
-      "long_description_fr": "Nous sommes un atelier cycliste ouvert à tout·e·s. Nous vous apprenons à entretenir votre vélo, et remettons en service ceux abandonnés en faisant au maximum de recyclage de pièces de seconde main, pour les remettre en circulation!",
-      "long_description_en": "We are a bicycle workshop open to everyone. We teach you how to maintain your bicycle and refurbish abandoned ones, recycling as many second-hand parts as possible to get them back on the road!",
-      "lat": 46.52457194190406,
-      "lng": 6.633571193962201,
-      "tags_fr": ["association", "vélo", "réparation"],
-      "tags_en": ["association", "bicycle", "repairs"],
-      "website": "https://axecycle.ch/",
-      "image": "https://axecycle.ch/media/images/logo.png",
-      "id":"axecycle"
-    },
-    {
       "name": "Satellite",
       "description_fr": "Le bar étudiant de l'EPFL",
       "description_en": "EPFL's Student bar",
@@ -235,20 +193,6 @@
       "website": "https://satellite.bar/",
       "image": "https://satellite.bar/static/static/assets/photos/satellite.jpeg",
       "id":"satellite"
-    },
-    {
-      "name": "Zelig",
-      "description_fr": "Le bar étudiant de l'Unil",
-      "description_en": "Unil's Student bar",
-      "long_description_fr": "Bar et lieu de vie étudiant associatif autogéré dans le bâtiment Géopolis de l'Unil, qui se veut un lieu de rencontre pour les étudiants. Concerts, expositions, jeux sociaux, petite bibliothèque et de bonnes bières sont disponibles.",
-      "long_description_en": "A bar and student social space run by students in the Géopolis building at the University of Lausanne, designed as a meeting place for students. Concerts, exhibitions, social games, a small library and good beers are available.",
-      "lat": 46.525999450956036,
-      "lng": 6.580033611104894,
-      "tags_fr": ["association", "bar", "étudiant", "musique"],
-      "tags_en": ["association", "bar", "student", "music"],
-      "website": "https://www.zelig.ch/",
-      "image": "https://www.zelig.ch/wp-content/uploads/2018/05/Logo-1-2.png",
-      "id":"zelig"
     },
     {
       "name": "Ferme de Bassenges",
@@ -293,6 +237,20 @@
       "id":"jardinUP"
     },
     {
+      "name": "Le Récupol’",
+      "description_fr": "Une épicerie d’invendus à l’UNIL",
+      "description_en": "Free unsold item distributions at UNIL ",
+      "long_description_fr": "Le Récupol' récupère des produits alimentaires invendus de magasins et les donne gratuitement aux étudiants sur le campus.",
+      "long_description_en": "Récupol' collects unsold food from shops and gives it to students on campus for free.",
+      "lat": 46.52373640878044, 
+      "lng": 6.58431570233444,
+      "tags_fr": ["association", "étudiant", "à manger" ],
+      "tags_en": ["association", "student", "food" ],
+      "website": "https://fae-unil.ch/recupol-2/",
+      "image": "https://fae-unil.ch/wp-content/uploads/2024/11/post-insta-1.png",
+      "id":"recupol"
+    },
+    {
       "name": "La Grange",
       "description_fr": "Théâtre expérimental pluri-disciplinaire",
       "description_en": "Experimental and pluri-disciplinary theater",
@@ -333,6 +291,20 @@
       "website": "https://oblo.ch/",
       "image": "https://oblo.ch/assets/images/logo.avif",
       "id":"oblo"
+    },
+    {
+      "name": "Jardin aux mille mains",
+      "description_fr": "Jardin en permaculture autogéré",
+      "description_en": "Self-managed permaculture garden",
+      "long_description_fr": "Un espace collectif autogéré ouvert à touxtes qui s’inspire des principes de la permaculture.",
+      "long_description_en": "A self-managed collective space open to all, inspired by the principles of permaculture.",
+      "lat": 46.536250289595955,
+      "lng": 6.667031799446725,
+      "tags_fr": ["permaculture", "collectif"],
+      "tags_en": ["permaculture", "collective"],
+      "website": "https://www.1000mains.ch/",
+      "image": " https://www.1000mains.ch/wp-content/uploads/Jardinaux1000mains_general-1.jpg",
+      "id":"Jardin_mille_mains"
     },
     {
       "name": "LA PEL'",
@@ -377,6 +349,20 @@
       "id":"poseidon"
     },
     {
+      "name": "La Soupe Populaire",
+      "description_fr": "Distribution gratuite de repas",
+      "description_en": "Soup Kitchen, with free meal distributions",
+      "long_description_fr": "Distribution chaque soir et cinq midis par semaine d'un repas complet et entièrement gratuit. Toutes et tous y sont les bienvenu•e•s ! Besoin de bénévoles pour les services!",
+      "long_description_en": "Every evening and five lunches a week, a complete meal is provided, entirely free of charge. Everyone is welcome! Volunteers needed for services!",
+      "lat": 46.52193627228531,
+      "lng": 6.637337388513714,
+      "tags_fr": ["à manger"],
+      "tags_en": ["food"],
+      "website": "https://www.lausanne.ch/prestations/inclusion-et-actions-sociales-de-proximite/soupe-populaire.html",
+      "image": " https://cdn.unitycms.io/images/9iKFgXJNKlIBm-Oh_oNsgR.jpg?op=ocroped&val=1920,1281,1000,1000,0,0&sum=yXaFGkeMTLk",
+      "id":"Soupe_pop"
+    },
+    {
       "name": "Fix&Replace",
       "description_fr": "Repair café étudiant",
       "description_en": "Student-led repair café",
@@ -403,6 +389,62 @@
       "website": "https://www.librairiedelalouve.ch/",
       "image": "https://static.lausanne-tourisme.ch/image/upload/f_auto,w_2500/J7c4Mlfiu9EIKQFP2Frtdk68vpHW4XLQtTQGoOFG",
       "id":"librairiedelalouve"
+    },
+    {
+      "name": "Kiloboutique (Rue de la Borde)",
+      "description_fr": "Friperie",
+      "description_en": "Thrift shop",
+      "long_description_fr": "Friperie avec un grand choix malgré sa taille, et une gamme de vétêment dont le coût dépend de leur poids.",
+      "long_description_en": "Second-hand shop with a wide selection despite its size, and a range of clothing priced according to weight.",
+      "lat": 46.53168566500369, 
+      "lng": 6.630230095142786,
+      "tags_fr": ["seconde main", "friperie"],
+      "tags_en": ["second hand", "thrift shop"],
+      "website": "https://kiloboutique.ch",
+      "image": "https://static.lausanne-tourisme.ch/image/upload/f_auto,w_2500/pt0CO7kcwhkkTkgMzTt1SIQ1CmRnIPWKfcDdFu7i",
+      "id":"kiloboutique_borde"
+    },
+    {
+      "name": "Ateapic (Flon)",
+      "description_fr": "Friperie",
+      "description_en": "Thrift shop",
+      "long_description_fr": "Friperie avec un bon choix et des articles de qualité, et une partie dédiée aux créateur·ice·s locaux.",
+      "long_description_en": "Second-hand shop with a good selection and quality items, and a section dedicated to local designers.",
+      "lat": 46.520724468739715, 
+      "lng": 6.628246397729413,
+      "tags_fr": ["seconde main", "friperie"],
+      "tags_en": ["second hand", "thrift shop"],
+      "website": "https://ateapic.ch/",
+      "image": "https://demarche.ch/wp-content/uploads/2022/05/Ateapic_3.jpg",
+      "id":"ateapic_flon"
+    },
+    {
+      "name": "Ateapic (Bel-Air)",
+      "description_fr": "Friperie",
+      "description_en": "Thrift shop",
+      "long_description_fr": "Friperie avec un bon choix et des articles de qualité, et une partie dédiée aux créateur·ice·s locaux.",
+      "long_description_en": "Second-hand shop with a good selection and quality items, and a section dedicated to local designers.",
+      "lat": 46.523101429842775, 
+      "lng": 6.628277463035593,
+      "tags_fr": ["seconde main", "friperie"],
+      "tags_en": ["second hand", "thrift shop"],
+      "website": "https://ateapic.ch/",
+      "image": "https://demarche.ch/wp-content/uploads/2022/05/Ateapic_1.jpg",
+      "id":"ateapic_belair"
+    },
+    {
+      "name": "Bibliothèque Chauderon",
+      "description_fr": "Bibliothèque",
+      "description_en": "Library",
+      "long_description_fr": "Bibliothèque super sympa avec peu de place pour travailler mais moins fréquentée donc idéale pour bien se concentrer.",
+      "long_description_en": "Super cool library with little room to work, but less crowded so ideal for concentrating.",
+      "lat": 46.523464968942335,
+      "lng": 6.62513688161125,
+      "tags_fr": ["bibliothèque", "livres"],
+      "tags_en": ["library", "books"],
+      "website": "https://www.lausanne.ch/vie-pratique/culture/bibliotheques-et-archives/bibliotheques/sites-et-horaires/bibliotheque-chauderon.html",
+      "image": " https://www.lausanne.ch/.imaging/mte/lausanne/original/website/lausanne/vie-pratique/culture/bibliotheques-et-archives/bibliotheques/sites-et-horaires/bibliotheque-chauderon/contentAutogenerated/autogeneratedContainer/col1/0/simpleCarouselList/0/import/bibliotheque-chauderon-5651.2018-05-17-13-24-18.jpg",
+      "id":"Biblio_Chauderon"
     },
     {
       "name": "Pavillon RebuiLT",
@@ -531,18 +573,18 @@
     "id":"latrouvaille"
   },
   {
-    "name": "Le Récupol’",
-    "description_fr": "Une épicerie d’invendus à l’UNIL",
-    "description_en": "A grocery store selling unsold items at UNIL ",
-    "long_description_fr": "Le Récupol' récupère des produits alimentaires invendus de magasins et les donne gratuitement aux étudiants sur le campus.",
-    "long_description_en": "Récupol' collects unsold food from shops and gives it to students on campus for free.",
-    "lat": 46.52373640878044, 
-    "lng": 6.58431570233444,
-    "tags_fr": ["association", "étudiant", "à manger" ],
-    "tags_en": ["association", "student", "food" ],
-    "website": "https://fae-unil.ch/recupol-2/",
-    "image": "https://fae-unil.ch/wp-content/uploads/2024/11/post-insta-1.png",
-    "id":"recupol"
+    "name": "La Luncheonette",
+    "description_fr": "Restauration saine et durable",
+    "description_en": "Healthy and sustainable food",
+    "long_description_fr": "La Luncheonette te propose tes plats préférés avec des ingrédients de qualité, dans une version saine et équilibrée.",
+    "long_description_en": "La Luncheonette offers your favourite dishes made with quality ingredients, in a healthy and balanced version.",
+    "lat": 46.52149044243666, 
+    "lng": 6.6323536435563035,
+    "tags_fr": ["vegan", "à manger"],
+    "tags_en": ["vegan", "food"],
+    "website": "https://www.luncheonette.ch/",
+    "image": "https://www.lausanneatable.ch/wp-content/uploads/2023/07/358123721_1018360792869717_3815462976230020703_n.webp",
+    "id":"Luncheonette"
   },
   {
     "name": "Librairie Basta!",
@@ -735,47 +777,5 @@
     "website": "https://lafermedugoupil.ch/",
     "image": "https://lafermedugoupil.ch/wp-content/uploads/2022/05/S21-1024x683.jpg",
     "id":"goupil"
-  },
-  {
-    "name": "Kiloboutique (Rue de la Borde)",
-    "description_fr": "Friperie",
-    "description_en": "Thrift shop",
-    "long_description_fr": "Friperie avec un grand choix malgré sa taille, et une gamme de vétêment dont le coût dépend de leur poids.",
-    "long_description_en": "Second-hand shop with a wide selection despite its size, and a range of clothing priced according to weight.",
-    "lat": 46.53168566500369, 
-    "lng": 6.630230095142786,
-    "tags_fr": ["seconde main", "friperie"],
-    "tags_en": ["second hand", "thrift shop"],
-    "website": "https://kiloboutique.ch",
-    "image": "https://static.lausanne-tourisme.ch/image/upload/f_auto,w_2500/pt0CO7kcwhkkTkgMzTt1SIQ1CmRnIPWKfcDdFu7i",
-    "id":"kiloboutique_borde"
-  },
-  {
-    "name": "Ateapic (Flon)",
-    "description_fr": "Friperie",
-    "description_en": "Thrift shop",
-    "long_description_fr": "Friperie avec un bon choix et des articles de qualité, et une partie dédiée aux créateur·ice·s locaux.",
-    "long_description_en": "Second-hand shop with a good selection and quality items, and a section dedicated to local designers.",
-    "lat": 46.520724468739715, 
-    "lng": 6.628246397729413,
-    "tags_fr": ["seconde main", "friperie"],
-    "tags_en": ["second hand", "thrift shop"],
-    "website": "https://ateapic.ch/",
-    "image": "https://demarche.ch/wp-content/uploads/2022/05/Ateapic_3.jpg",
-    "id":"ateapic_flon"
-  },
-  {
-    "name": "Ateapic (Bel-Air)",
-    "description_fr": "Friperie",
-    "description_en": "Thrift shop",
-    "long_description_fr": "Friperie avec un bon choix et des articles de qualité, et une partie dédiée aux créateur·ice·s locaux.",
-    "long_description_en": "Second-hand shop with a good selection and quality items, and a section dedicated to local designers.",
-    "lat": 46.523101429842775, 
-    "lng": 6.628277463035593,
-    "tags_fr": ["seconde main", "friperie"],
-    "tags_en": ["second hand", "thrift shop"],
-    "website": "https://ateapic.ch/",
-    "image": "https://demarche.ch/wp-content/uploads/2022/05/Ateapic_1.jpg",
-    "id":"ateapic_belair"
   }
 ]
