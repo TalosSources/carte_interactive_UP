@@ -9,6 +9,7 @@
 * worry about performances: use smaller version of images, perhaps eco-mode etc.
 * find a way to collect visit stats, and ideally even place clicks (what place got visited most often), but I guess relatively hard to do by remaining static. perhaps can be done harnessing the power of inmk/apache
 * ctrl+F opens the search bar field
+* validty checks on data (e.g. must have same numbers of tags in fr/en, stuff like that. also sanitation because you never know, we're executing html code.)
 
 
 ~~* filter by tag -> DONE~~
