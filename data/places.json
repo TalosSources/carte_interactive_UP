@@ -559,18 +559,18 @@
     "id":"basta"
   },
   {
-    "name": "Makerspace Renens",
+    "name": "MakerSpace Lausanne",
     "description_fr": "Atelier partagé de fabrication",
     "description_en": "Shared makerspace workshop",
     "long_description_fr": "Le Makerspace Lausanne est un atelier communautaire et collaboratif. C’est un espace créatif qui repose sur le partage de la connaissance et des outils dans une perspective de démocratisation des savoirs et des savoir-faire. On y vient pour réparer, créer, designer, prototyper des objets manu- facturés qu’il ne serait pas possible de réaliser pour une personne travaillant seule.",
     "long_description_en": "Makerspace Lausanne is a community-based, collaborative workshop. It is a creative space based on sharing knowledge and tools with a view to democratizing knowledge and expertise. People come here to repair, create, design, and prototype handmade objects that would be impossible for one person working alone to make.",
     "lat": 46.53245311185264, 
     "lng": 6.591111006037361,
-    "tags_fr": ["réparation"],
-    "tags_en": ["repairs"],
+    "tags_fr": ["atelier", "réparation"],
+    "tags_en": ["workshop", "repairs"],
     "website": "https://www.makerspace-renens.ch/",
-    "image": "https://www.makerspace-renens.ch/clubdesk/fileservlet?type=image&id=1000280&s=djEtWpPil-91f4AwrW5x1vhUQIKS_kd4NCHX_K5EPdDSNDE=",
-    "id":"makerspacerenens"
+    "image": "https://www.makerspace-lausanne.ch/wp-content/uploads/2020/10/bois-x-4-copie.jpg",
+    "id":"makerspacelausanne"
   },
   {
     "name": "La Fièvre",
@@ -641,5 +641,65 @@
     "website": "https://www.unil.ch/unil/fr/home/menuinst/campus/acces-et-transports/transports-et-deplacements/velo.html",
     "image": "",
     "id":"atelier_velo_unil"
+  },
+  {
+    "name": "Disc-À-Brac Records",
+    "description_fr": "Magasin de disques et vinyles (notamment d'occasion)",
+    "description_en": "Record and vinyl shop (especially second hand)",
+    "lat": 46.52348489504087,
+    "lng": 6.629747349071821,
+    "tags_fr": ["musique", "seconde main"],
+    "tags_en": ["music", "second hand"],
+    "website": "https://www.disc-a-brac.ch/dab/",
+    "image": "http://www.disc-a-brac.ch/dab/img/dab-header.jpg",
+    "id":"disc_a_brac"
+  },
+  {
+    "name": "Le Cylure",
+    "description_fr": "Bar avec une chouette carte bières indépendantes et une salle pour les événements culturels",
+    "description_en": " Bar with a great selection of craft beers and a room for cultural events ",
+    "lat": 46.52370908677682,
+    "lng": 6.629771023947951,
+    "tags_fr": ["bar", "culture"],
+    "tags_en": ["bar", "culture"],
+    "website": " https://www.instagram.com/cylure/?hl=fr ",
+    "image": " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTENCgiucvUFqBcobNAvxzNRElaRZZS6kR-Hg&s ",
+    "id":"cylure"
+  },
+  {
+    "name": "Le Cinématographe",
+    "description_fr": "Cinéma associatif",
+    "description_en": " Community cinema",
+    "lat": 46.52062271395821,
+    "lng": 6.624747147215436,
+    "tags_fr": ["cinéma"],
+    "tags_en": ["cinema"],
+    "website": " https://lecinematographe.ch/",
+    "image": "https://letemps-17455.kxcdn.com/photos/047c9d41-32bc-4140-bb00-50d3b6e4f830 ",
+    "id":"cinematographe"
+  },
+  {
+    "name": "L’espace Amaretto",
+    "description_fr": "Espace culturel (e.g expositions, concerts, roller disco)",
+    "description_en": "Cultural space (e.g., exhibitions, concerts, roller disco) ",
+    "lat": 46.52502971711564,
+    "lng": 6.61200466496692,
+    "tags_fr": ["culture"],
+    "tags_en": ["culture"],
+    "website": "https://amaretto.online/",
+    "image": "https://www.acustica-godel.ch/Amaretto/5.jpg",
+    "id":"amaretto"
+  },
+  {
+    "name": "Librairie L'Inopinée",
+    "description_fr": "Librairie indépendante spécialisée dans la bande-dessinée",
+    "description_en": "Independent bookstore specialized in comic books",
+    "lat": 46.51763822011258,
+    "lng": 6.638665250928189,
+    "tags_fr": ["librairie"],
+    "tags_en": ["bookstore"],
+    "website": "https://www.linopinee.ch/",
+    "image": "https://static.lausanne-tourisme.ch/image/upload/f_auto,w_2500/linopinee-1-efqtzj",
+    "id":"inopinee"
   }
 ]
