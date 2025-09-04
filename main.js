@@ -7,7 +7,7 @@ fetch('data/places.json')
     .then(response => response.json())
     .then(data => {
     allPlaces = data;
-    map = initMap();
+    map = initMap(maxZoom=19);
     map.on("moveend", () => {
         console.log("moved!")
         const bounds = map.getBounds();

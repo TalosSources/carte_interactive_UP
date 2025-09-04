@@ -1,5 +1,5 @@
 function initMap(maxZoom = 17) {
-    let map = L.map('map', {maxZoom: maxZoom});
+    let map = L.map('map', {maxZoom: maxZoom, minZoom:11});
     map.setView([46.5300, 6.61011], 13)
     
     // ok but not very appealing
