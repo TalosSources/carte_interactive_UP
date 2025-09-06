@@ -739,6 +739,20 @@
     "id":"amaretto"
   },
   {
+    "name": "Espace autogéré",
+    "description_fr": "Lieu anarchiste autogéré",      
+    "description_en": "Self-managed anarchist place",  
+    "long_description_fr": "Lieu anarchiste qui lutte contre les oppressions systémiques, la hiérarchie et l’autorité, à l’intérieur comme à l’extérieur de ses murs.",
+    "long_description_en": "An anarchist place that fights against systemic oppression, hierarchy and authority, inside and outside its walls.",
+    "lat": 46.52249253500682,
+    "lng": 6.638034834552859,
+    "tags_fr": ["anarchiste"],
+    "tags_en": ["anarchist"],
+    "website": "https://espaceautogere.squat.net/",
+    "image": " https://espaceautogere.squat.net/wp-content/uploads/espaceautogere/2019/10/arrose2.gif",
+    "id":"Espace_autogere"
+  },
+  {
     "name": "Librairie L'Inopinée",
     "description_fr": "Librairie indépendante spécialisée dans la bande-dessinée",
     "description_en": "Independent bookstore specialized in comic books",

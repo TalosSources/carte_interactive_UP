@@ -10,6 +10,7 @@
 * find a way to collect visit stats, and ideally even place clicks (what place got visited most often), but I guess relatively hard to do by remaining static. perhaps can be done harnessing the power of inmk/apache
 * ctrl+F opens the search bar field
 * validty checks on data (e.g. must have same numbers of tags in fr/en, stuff like that. also sanitation because you never know, we're executing html code.)
+* tag "gratuit"
 
 
 ~~* filter by tag -> DONE~~
@@ -71,7 +72,7 @@ Information I want to include (either there if very short, or as link to other p
 
 # Data
 * add many more places
-* be careful about the images. copyright? use good ones
+* be careful about the images. copyright, use good ones
 * should we contact the people we mapped?
 * add english to descriptions and tags
 * add websites, etc.
@@ -84,7 +85,8 @@ Information I want to include (either there if very short, or as link to other p
 * management for many places, such as a "load more" button. We'll look into it when we have many places.
 
 # TODO Now
-* ensure places are added quickly and correctly
-* worry licensing, copyright, etc.
-* worry about having a chart: what's accepted as places? what are our core values, rules?
+* communication: really pass the word as much as possible
+* worry copyright
 * a few new features (url data, structured tags, accessibility)
+* remaining places and some more research
+* esthetic improvements
