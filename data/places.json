@@ -454,8 +454,8 @@
       "long_description_en": "Low-tech pavilion built by students to host associations and communities, collectively and sustainably - max. 50 people.",
       "lat":  46.531349341933726, 
       "lng": 6.566737294369748,
-      "tags_fr": ["étudiant", "collectif"],
-      "tags_en": ["student", "collective"],
+      "tags_fr": ["étudiant", "collectif", "low-tech"],
+      "tags_en": ["student", "collective", "low-tech"],
       "website": "https://go.epfl.ch/rebuiLT-site",
       "image": "res/rebuilt.jpg",
       "id":"pavillionrebuilt"
