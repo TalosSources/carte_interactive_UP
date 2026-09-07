@@ -22,16 +22,27 @@ function initMap(maxZoom = 17) {
 	    ext: 'png'
     });
 
-    var CartoDB_VoyagerLabelsUnder = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 20
+    // TO REMOVE
+    // var CartoDB_VoyagerLabelsUnder = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
+    //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    //     subdomains: 'abcd',
+    //     maxZoom: 20,
+    //     apikey: 'cb1_30vq_1_19fd785ea9cb7776265e9ec2'
+    // });
+    //////////
+
+
+    var CartoDB_Voyager = L.maplibreGL({
+        style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+        apikey:'cb1_30vq_1_19fd785ea9cb7776265e9ec2'
     });
+    
 
     // osm_org.addTo(map);
     // stadia_stamenWatercolor.addTo(map);
     // stadia_stamenToner.addTo(map);
-    CartoDB_VoyagerLabelsUnder.addTo(map);
+    // CartoDB_VoyagerLabelsUnder.addTo(map);
+    CartoDB_Voyager.addTo(map)
 
     return map;
 }
